@@ -1,13 +1,15 @@
 import 'package:shelfish/models/author.dart';
 
 class Book {
-  final String _title;
-  final List<Author> _authors;
-  final DateTime _publishDate;
+  final String title;
+  final List<Author> authors;
+  final DateTime publishDate;
+  final String genre;
 
   Book(
-    this._title,
-    this._authors,
-    this._publishDate,
+    this.title,
+    this.authors,
+    this.publishDate,
+    this.genre,
   );
 }

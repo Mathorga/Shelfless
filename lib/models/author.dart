@@ -6,4 +6,9 @@ class Author {
     this._firstName,
     this._lastName,
   );
+
+  @override
+  String toString() {
+    return "$_firstName $_lastName";
+  }
 }
