@@ -1,9 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
+import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/utils/books.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,12 +18,25 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home"),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.search),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.sort),
+          ),
+        ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(12.0),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(8.0),
         children: books
             .map((Book book) => Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), side: BorderSide(color: genreColors[book.genre]!, width: 4.0)),
+                  shadowColor: genreColors[book.genre],
+                  elevation: 4.0,
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
@@ -43,6 +55,10 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ))
             .toList(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
       ),
     );
   }
