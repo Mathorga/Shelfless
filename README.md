@@ -1,4 +1,4 @@
-# shelfish
+# Shelfish
 
 A new Flutter project.
 
