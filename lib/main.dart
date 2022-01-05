@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shelfish/providers/database_provider.dart';
 
 import 'package:shelfish/screens/main_screen.dart';
 
@@ -12,12 +14,15 @@ class Shelfish extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Shelfish",
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => DatabaseProvider(),
+      child: MaterialApp(
+        title: "Shelfish",
+        theme: ThemeData(
+          primarySwatch: Colors.blueGrey,
+        ),
+        home: const MainScreen(),
       ),
-      home: const MainScreen(),
     );
   }
 }

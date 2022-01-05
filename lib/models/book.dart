@@ -2,19 +2,31 @@ import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/genre.dart';
 
 class Book {
+  final int id;
   final String title;
   final List<Author> authors;
   final DateTime publishDate;
-  final Genre genre;
+  final Genre? genre;
+  final GenreEnum genreEnum;
   final String publisher;
   final String location;
 
-  Book(
-    this.title,
-    this.authors,
-    this.publishDate,
+  Book({
+    required this.id,
+    required this.title,
+    required this.authors,
+    required this.publishDate,
     this.genre,
-    this.publisher,
-    this.location,
-  );
+    required this.genreEnum,
+    required this.publisher,
+    required this.location,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      "title": title,
+      "publishDate": publishDate.year,
+      "genre": genre,
+    };
+  }
 }
