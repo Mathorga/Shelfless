@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shelfish/providers/database_provider.dart';
 
 import 'package:shelfish/screens/main_screen.dart';
 
-void main() {
+void main() async {
+  // Init local DB.
+  await Hive.initFlutter();
+
   runApp(const Shelfish());
 }
 
