@@ -10,7 +10,7 @@ class Genre {
   final String name;
 
   @HiveField(1)
-  final Color color;
+  final int color;
 
   Genre({
     required this.name,

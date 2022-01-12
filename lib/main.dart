@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/providers/database_provider.dart';
 
 import 'package:shelfish/screens/main_screen.dart';
 
@@ -17,6 +15,8 @@ void main() async {
   Hive.registerAdapter(AuthorAdapter());
   Hive.registerAdapter(GenreAdapter());
 
+  await Hive.openBox<Book>("books");
+
   runApp(const Shelfish());
 }
 
@@ -26,15 +26,12 @@ class Shelfish extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (BuildContext context) => DatabaseProvider(),
-      child: MaterialApp(
-        title: "Shelfish",
-        theme: ThemeData(
-          primarySwatch: Colors.blueGrey,
-        ),
-        home: const MainScreen(),
+    return MaterialApp(
+      title: "Shelfish",
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
       ),
+      home: const MainScreen(),
     );
   }
 }

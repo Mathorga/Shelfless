@@ -7,8 +7,8 @@ part 'book.g.dart';
 
 @HiveType(typeId: 0)
 class Book {
-  @HiveField(0)
-  final int id;
+  // @HiveField(0)
+  // final int id;
 
   @HiveField(1)
   final String title;
@@ -20,10 +20,10 @@ class Book {
   final DateTime publishDate;
   
   @HiveField(4)
-  final Genre? genre;
+  final Genre genre;
   
-  @HiveField(5)
-  final GenreEnum genreEnum;
+  // @HiveField(5)
+  // final GenreEnum genreEnum;
   
   @HiveField(6)
   final String publisher;
@@ -32,12 +32,12 @@ class Book {
   final String location;
 
   Book({
-    required this.id,
+    // required this.id,
     required this.title,
     required this.authors,
     required this.publishDate,
-    this.genre,
-    required this.genreEnum,
+    required this.genre,
+    // required this.genreEnum,
     required this.publisher,
     required this.location,
   });

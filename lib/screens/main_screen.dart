@@ -3,13 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:provider/provider.dart';
+import 'package:hive/hive.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/providers/database_provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -25,13 +23,12 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
 
-    readFile();
+    readDb();
+    // readFile();
   }
 
   @override
   Widget build(BuildContext context) {
-    final DatabaseProvider databaseProvider = Provider.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home"),
@@ -51,8 +48,8 @@ class _MainScreenState extends State<MainScreen> {
         padding: const EdgeInsets.all(8.0),
         children: _books
             .map((Book book) => Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), side: BorderSide(color: genreColors[book.genreEnum]!, width: 4.0)),
-                  shadowColor: genreColors[book.genreEnum],
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), side: BorderSide(color: Color(book.genre.color), width: 4.0)),
+                  shadowColor: Color(book.genre.color),
                   elevation: 4.0,
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -76,11 +73,26 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          databaseProvider.openDB();
+          final Box box = Hive.box<Book>("books");
+          box.add(Book(
+              title: "test",
+              authors: [Author("Maurizio", "Micheletti")],
+              publishDate: DateTime(1978),
+              genre: Genre(name: "Thriller", color: Colors.red.value),
+              publisher: "Mondadori",
+              location: "Here")).then((int i) => print("RESULT $i"));
         },
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void readDb() {
+    final Box box = Hive.box<Book>("books");
+
+    setState(() {
+      _books.addAll(box.toMap().values.toList() as List<Book>);
+    });
   }
 
   void readFile() async {
@@ -239,11 +251,12 @@ class _MainScreenState extends State<MainScreen> {
 
       setState(() {
         _books.add(Book(
-          id: Random().nextInt(0xFFFFFFFF),
+          // id: Random().nextInt(0xFFFFFFFF),
           title: title,
           authors: authors,
           publishDate: publishDate,
-          genreEnum: genre,
+          genre: Genre(name: "Zoologia", color: Colors.amber.value),
+          // genreEnum: genre,
           publisher: publisher,
           location: location,
         ));
