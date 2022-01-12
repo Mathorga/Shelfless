@@ -44,6 +44,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^2.1.7
+  # Run the following command to generate adapters based on defined HiveTypes:
+  # flutter packages pub run build_runner build
   hive_generator: ^1.1.2
 
   # The "flutter_lints" package below contains a set of recommended lints to

@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:hive/hive.dart';
+
+part 'genre.g.dart';
+
+@HiveType(typeId: 3)
 class Genre {
+  @HiveField(0)
   final String name;
+
+  @HiveField(1)
   final Color color;
 
   Genre({

@@ -3,6 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/genre.dart';
 
+part 'book.g.dart';
+
 @HiveType(typeId: 0)
 class Book {
   @HiveField(0)
