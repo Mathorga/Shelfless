@@ -44,17 +44,28 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           ...List.generate(
             _books.length,
-            (index) => BookPreviewWidget(
-              book: _books.getAt(index)!,
-              onTap: () => setState(() {
-                _books.deleteAt(index);
-              }),
-            ),
+            (index) {
+              final Book book = _books.getAt(index)!;
+              return BookPreviewWidget(
+                book: _books.getAt(index)!,
+                onTap: () => setState(() {
+                  _books.deleteAt(index);
+                }),
+              );
+            },
           )
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          final Box box = Hive.box<Book>("books");
+          box.add(Book(
+              title: "test",
+              authors: [Author("Maurizio", "Micheletti")],
+              publishDate: 1978,
+              genre: Genre(name: "Thriller", color: Colors.red.value),
+              publisher: "Mondadori",
+              location: "Here"));
           Navigator.of(context).pushNamed(InsertBookScreen.routeName);
         },
         child: const Icon(Icons.add),
@@ -62,7 +73,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  void readFile() async {
+  /*void readFile() async {
     final String fileString = await rootBundle.loadString("assets/BIBLIOTECA.csv", cache: false);
 
     final List<String> lines = const LineSplitter().convert(fileString);
@@ -229,5 +240,5 @@ class _MainScreenState extends State<MainScreen> {
         ));
       });
     }
-  }
+  }*/
 }

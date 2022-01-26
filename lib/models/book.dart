@@ -6,12 +6,12 @@ import 'package:shelfish/models/genre.dart';
 part 'book.g.dart';
 
 @HiveType(typeId: 0)
-class Book {
+class Book extends HiveObject {
   @HiveField(1)
   final String title;
 
   @HiveField(2)
-  final List<Author> authors;
+  final HiveList<Author> authors;
 
   @HiveField(3)
   final int publishDate;

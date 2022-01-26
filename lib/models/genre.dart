@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 part 'genre.g.dart';
 
 @HiveType(typeId: 3)
-class Genre {
+class Genre extends HiveObject {
   @HiveField(0)
   final String name;
 

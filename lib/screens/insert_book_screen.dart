@@ -32,12 +32,26 @@ class InsertBookScreen extends StatelessWidget {
               const TextField(),
               const SizedBox(height: 12.0),
               const Text("Publish date"),
-              const TextField(
-                keyboardType: TextInputType.number,
+              GestureDetector(
+                onTap: () {
+                  showDatePicker(
+                    context: context,
+                    initialDate: DateTime(currentYear),
+                    firstDate: DateTime(0),
+                    lastDate: DateTime(currentYear),
+                    initialDatePickerMode: DatePickerMode.year,
+                  );
+                },
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(currentYear.toString()),
+                  ),
+                ),
               ),
               const SizedBox(height: 12.0),
               const Text("Genre"),
-              const TextField(),
+              // DropdownButton<Genre>(items: [Genre(name: name, color: color)], onChanged: (item) {}),
               const SizedBox(height: 12.0),
               const Text("Publisher"),
               const TextField(),
@@ -59,8 +73,11 @@ class InsertBookScreen extends StatelessWidget {
   }
 
   void addBook() {
-    final Box box = Hive.box<Book>("books");
-    box.add(Book(
+    final Box booksBox = Hive.box<Book>("books");
+    final Box authorsBox = Hive.box<Book>("authors");
+    final Box genresBox = Hive.box<Book>("genres");
+
+    booksBox.add(Book(
         title: "test",
         authors: [Author("Maurizio", "Micheletti")],
         publishDate: 1978,

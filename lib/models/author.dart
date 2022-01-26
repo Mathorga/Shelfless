@@ -3,20 +3,20 @@ import 'package:hive/hive.dart';
 part 'author.g.dart';
 
 @HiveType(typeId: 1)
-class Author {
+class Author extends HiveObject {
   @HiveField(0)
-  final String _firstName;
+  final String firstName;
 
   @HiveField(1)
-  final String _lastName;
+  final String lastName;
 
   Author(
-    this._firstName,
-    this._lastName,
+    this.firstName,
+    this.lastName,
   );
 
   @override
   String toString() {
-    return "$_firstName $_lastName";
+    return "$firstName $lastName";
   }
 }

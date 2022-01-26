@@ -27,9 +27,9 @@ class AuthorAdapter extends TypeAdapter<Author> {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj._firstName)
+      ..write(obj.firstName)
       ..writeByte(1)
-      ..write(obj._lastName);
+      ..write(obj.lastName);
   }
 
   @override
