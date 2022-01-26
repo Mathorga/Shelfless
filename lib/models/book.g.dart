@@ -19,7 +19,7 @@ class BookAdapter extends TypeAdapter<Book> {
     return Book(
       title: fields[1] as String,
       authors: (fields[2] as List).cast<Author>(),
-      publishDate: fields[3] as DateTime,
+      publishDate: fields[3] as int,
       genre: fields[4] as Genre,
       publisher: fields[6] as String,
       location: fields[7] as String,

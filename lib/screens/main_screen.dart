@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,8 +7,12 @@ import 'package:hive/hive.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/screens/insert_book_screen.dart';
+import 'package:shelfish/widgets/book_preview_widget.dart';
 
 class MainScreen extends StatefulWidget {
+  static const String routeName = "/main";
+
   const MainScreen({Key? key}) : super(key: key);
 
   @override
@@ -17,15 +20,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final List<Book> _books = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    readDb();
-    // readFile();
-  }
+  final Box<Book> _books = Hive.box<Book>("books");
 
   @override
   Widget build(BuildContext context) {
@@ -46,53 +41,25 @@ class _MainScreenState extends State<MainScreen> {
       body: ListView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(8.0),
-        children: _books
-            .map((Book book) => Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), side: BorderSide(color: Color(book.genre.color), width: 4.0)),
-                  shadowColor: Color(book.genre.color),
-                  elevation: 4.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          book.title,
-                          style: Theme.of(context).textTheme.headline6,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 12.0),
-                        book.authors.length <= 2
-                            ? Text(book.authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element"))
-                            : Text("${book.authors.first}, altri"),
-                      ],
-                    ),
-                  ),
-                ))
-            .toList(),
+        children: [
+          ...List.generate(
+            _books.length,
+            (index) => BookPreviewWidget(
+              book: _books.getAt(index)!,
+              onTap: () => setState(() {
+                _books.deleteAt(index);
+              }),
+            ),
+          )
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final Box box = Hive.box<Book>("books");
-          box.add(Book(
-              title: "test",
-              authors: [Author("Maurizio", "Micheletti")],
-              publishDate: DateTime(1978),
-              genre: Genre(name: "Thriller", color: Colors.red.value),
-              publisher: "Mondadori",
-              location: "Here")).then((int i) => print("RESULT $i"));
+          Navigator.of(context).pushNamed(InsertBookScreen.routeName);
         },
         child: const Icon(Icons.add),
       ),
     );
-  }
-
-  void readDb() {
-    final Box box = Hive.box<Book>("books");
-
-    setState(() {
-      _books.addAll(box.toMap().values.toList() as List<Book>);
-    });
   }
 
   void readFile() async {
@@ -244,7 +211,7 @@ class _MainScreenState extends State<MainScreen> {
       final String publisher = columns[3];
 
       // Publish date.
-      final DateTime publishDate = DateTime(int.parse(columns[4]));
+      final int publishDate = int.parse(columns[4]);
 
       // Location.
       final String location = columns[5];
