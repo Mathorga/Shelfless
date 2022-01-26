@@ -19,8 +19,8 @@ void main() async {
 
   // Open boxes.
   await Hive.openBox<Book>("books");
-  await Hive.openBox<Book>("authors");
-  await Hive.openBox<Book>("genres");
+  await Hive.openBox<Author>("authors");
+  await Hive.openBox<Genre>("genres");
 
   runApp(const Shelfish());
 }

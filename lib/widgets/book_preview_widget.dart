@@ -18,8 +18,8 @@ class BookPreviewWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), side: BorderSide(color: Color(book.genre.color), width: 4.0)),
-        shadowColor: Color(book.genre.color),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), side: BorderSide(color: Color(book.genre?.color ?? 0), width: 4.0)),
+        shadowColor: Color(book.genre?.color ?? 0),
         elevation: 4.0,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -32,9 +32,10 @@ class BookPreviewWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12.0),
-              book.authors.length <= 2
-                  ? Text(book.authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element"))
-                  : Text("${book.authors.first}, altri"),
+              if (book.authors != null)
+                book.authors!.length <= 2
+                    ? Text(book.authors!.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element"))
+                    : Text("${book.authors!.first}, altri"),
             ],
           ),
         ),

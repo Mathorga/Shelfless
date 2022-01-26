@@ -44,28 +44,25 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           ...List.generate(
             _books.length,
-            (index) {
-              final Book book = _books.getAt(index)!;
-              return BookPreviewWidget(
-                book: _books.getAt(index)!,
-                onTap: () => setState(() {
-                  _books.deleteAt(index);
-                }),
-              );
-            },
+            (int index) => BookPreviewWidget(
+              book: _books.getAt(index)!,
+              onTap: () => setState(() {
+                _books.deleteAt(index);
+              }),
+            ),
           )
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final Box box = Hive.box<Book>("books");
-          box.add(Book(
-              title: "test",
-              authors: [Author("Maurizio", "Micheletti")],
-              publishDate: 1978,
-              genre: Genre(name: "Thriller", color: Colors.red.value),
-              publisher: "Mondadori",
-              location: "Here"));
+          // final Box box = Hive.box<Book>("books");
+          // box.add(Book(
+          //     title: "test",
+          //     authors: [Author("Maurizio", "Micheletti")],
+          //     publishDate: 1978,
+          //     genre: Genre(name: "Thriller", color: Colors.red.value),
+          //     publisher: "Mondadori",
+          //     location: "Here"));
           Navigator.of(context).pushNamed(InsertBookScreen.routeName);
         },
         child: const Icon(Icons.add),

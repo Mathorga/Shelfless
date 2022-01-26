@@ -8,30 +8,30 @@ part 'book.g.dart';
 @HiveType(typeId: 0)
 class Book extends HiveObject {
   @HiveField(1)
-  final String title;
+  String title;
 
   @HiveField(2)
-  final HiveList<Author> authors;
+  HiveList<Author>? authors;
 
   @HiveField(3)
-  final int publishDate;
+  int publishDate;
 
   @HiveField(4)
-  final Genre genre;
+  Genre? genre;
 
   @HiveField(6)
-  final String publisher;
+  String publisher;
 
   @HiveField(7)
-  final String location;
+  String location;
 
   Book({
-    required this.title,
-    required this.authors,
-    required this.publishDate,
-    required this.genre,
-    required this.publisher,
-    required this.location,
+    this.title = "",
+    this.authors,
+    this.publishDate = 0,
+    this.genre,
+    this.publisher = "",
+    this.location = "",
   });
 
   Map<String, dynamic> toMap() {
