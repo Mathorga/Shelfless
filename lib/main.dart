@@ -5,8 +5,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/screens/insert_book_screen.dart';
 import 'package:shelfish/screens/main_screen.dart';
+import 'package:shelfish/screens/insert_author_screen.dart';
+import 'package:shelfish/screens/insert_book_screen.dart';
 
 void main() async {
   // Init local DB.
@@ -40,6 +41,7 @@ class Shelfish extends StatelessWidget {
       routes: {
         MainScreen.routeName: (BuildContext context) => const MainScreen(),
         InsertBookScreen.routeName: (BuildContext context) => const InsertBookScreen(),
+        InsertAuthorScreen.routeName: (BuildContext context) => const InsertAuthorScreen(),
       },
     );
   }

@@ -5,10 +5,10 @@ part 'author.g.dart';
 @HiveType(typeId: 1)
 class Author extends HiveObject {
   @HiveField(0)
-  final String firstName;
+  String firstName;
 
   @HiveField(1)
-  final String lastName;
+  String lastName;
 
   Author(
     this.firstName,

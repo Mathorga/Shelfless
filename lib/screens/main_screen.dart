@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/screens/insert_author_screen.dart';
 import 'package:shelfish/screens/insert_book_screen.dart';
 import 'package:shelfish/widgets/book_preview_widget.dart';
 
@@ -63,7 +64,31 @@ class _MainScreenState extends State<MainScreen> {
           //     genre: Genre(name: "Thriller", color: Colors.red.value),
           //     publisher: "Mondadori",
           //     location: "Here"));
-          Navigator.of(context).pushNamed(InsertBookScreen.routeName);
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("Add new"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pushNamed(InsertAuthorScreen.routeName);
+                          },
+                          child: const Text("Author")),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pushNamed(InsertBookScreen.routeName);
+                          },
+                          child: const Text("Book")),
+                    ],
+                  ),
+                );
+              });
         },
         child: const Icon(Icons.add),
       ),

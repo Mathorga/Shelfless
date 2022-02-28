@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/screens/insert_author_screen.dart';
 
 class InsertBookScreen extends StatefulWidget {
   static const String routeName = "/insert-book";
@@ -24,7 +25,6 @@ class _InsertBookScreenState extends State<InsertBookScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     book.authors = HiveList(authors);
@@ -55,47 +55,65 @@ class _InsertBookScreenState extends State<InsertBookScreen> {
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: book.authors!.map((Author author) => buildAuthorPreview(author)).toList(),
                   ),
                 ),
 
-              if (book.authors!.isEmpty)
-                Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: ElevatedButton(
-                      child: const Text("Add one"),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Authors"),
-                              content: ListView(
-                                shrinkWrap: true,
-                                children: [
-                                  ...List.generate(
-                                    authors.length + 1,
-                                    (int index) => index < authors.length
-                                        ? ListTile(leading: Text("${authors.getAt(index)!.firstName} ${authors.getAt(index)!.lastName}"))
-                                        : ListTile(
-                                            leading: const Text("Add"),
-                                            trailing: const Icon(Icons.add),
-                                            onTap: () {
-                                              // TODO Open insert author dialog.
-                                            },
-                                          ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ElevatedButton(
+                    child: const Text("Add one"),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Authors"),
+                            content: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                ...List.generate(
+                                  authors.length + 1,
+                                  (int index) => index < authors.length
+                                      ? ListTile(
+                                          leading: Text("${authors.getAt(index)!.firstName} ${authors.getAt(index)!.lastName}"),
+                                          onTap: () {
+                                            final Author author = authors.getAt(index)!;
+
+                                            // Only add the author if not already there.
+                                            if (!book.authors!.contains(author)) {
+                                              setState(() {
+                                                book.authors?.add(author);
+                                              });
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text("Author already added"),
+                                                  duration: Duration(seconds: 2),
+                                                ),
+                                              );
+                                            }
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      : ListTile(
+                                          leading: const Text("Add"),
+                                          trailing: const Icon(Icons.add),
+                                          onTap: () => Navigator.of(context).pushNamed(InsertAuthorScreen.routeName),
+                                        ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
+              ),
               const SizedBox(
                 height: 24.0,
                 child: Divider(height: 2.0),
@@ -139,19 +157,45 @@ class _InsertBookScreenState extends State<InsertBookScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {},
-          label: Row(
-            children: const [
-              Text("Done"),
-              SizedBox(width: 12.0),
-              Icon(Icons.check),
-            ],
-          )),
+        onPressed: () {},
+        label: Row(
+          children: const [
+            Text("Done"),
+            SizedBox(width: 12.0),
+            Icon(Icons.check),
+          ],
+        ),
+      ),
     );
   }
 
   Widget buildAuthorPreview(Author author) {
-    return Card(margin: const EdgeInsets.all(12.0), child: Text(author.firstName));
+    return Card(
+      margin: const EdgeInsets.all(12.0),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "${author.firstName} ${author.lastName}",
+              textAlign: TextAlign.center,
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  book.authors?.remove(author);
+                });
+              },
+              icon: Icon(
+                Icons.cancel_rounded,
+                color: Colors.red[900],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void addBook() {
