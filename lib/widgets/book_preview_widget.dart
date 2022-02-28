@@ -32,7 +32,7 @@ class BookPreviewWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12.0),
-              if (book.authors != null)
+              if (book.authors != null && book.authors!.isNotEmpty)
                 book.authors!.length <= 2
                     ? Text(book.authors!.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element"))
                     : Text("${book.authors!.first}, altri"),

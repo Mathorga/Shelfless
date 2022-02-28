@@ -17,9 +17,9 @@ class InsertBookScreen extends StatefulWidget {
 }
 
 class _InsertBookScreenState extends State<InsertBookScreen> {
-  final Box<Book> books = Hive.box<Book>("books");
-  final Box<Author> authors = Hive.box<Author>("authors");
-  final Box<Genre> genres = Hive.box<Genre>("genres");
+  final Box<Book> _books = Hive.box<Book>("books");
+  final Box<Author> _authors = Hive.box<Author>("authors");
+  final Box<Genre> _genres = Hive.box<Genre>("genres");
 
   Book book = Book();
 
@@ -27,7 +27,7 @@ class _InsertBookScreenState extends State<InsertBookScreen> {
   void initState() {
     super.initState();
 
-    book.authors = HiveList(authors);
+    book.authors = HiveList(_authors);
   }
 
   @override
@@ -45,7 +45,9 @@ class _InsertBookScreenState extends State<InsertBookScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("Title"),
-              const TextField(),
+              TextField(
+                onChanged: (String value) => book.title = value,
+              ),
               const SizedBox(
                 height: 24.0,
                 child: Divider(height: 2.0),
@@ -76,12 +78,12 @@ class _InsertBookScreenState extends State<InsertBookScreen> {
                               shrinkWrap: true,
                               children: [
                                 ...List.generate(
-                                  authors.length + 1,
-                                  (int index) => index < authors.length
+                                  _authors.length + 1,
+                                  (int index) => index < _authors.length
                                       ? ListTile(
-                                          leading: Text("${authors.getAt(index)!.firstName} ${authors.getAt(index)!.lastName}"),
+                                          leading: Text("${_authors.getAt(index)!.firstName} ${_authors.getAt(index)!.lastName}"),
                                           onTap: () {
-                                            final Author author = authors.getAt(index)!;
+                                            final Author author = _authors.getAt(index)!;
 
                                             // Only add the author if not already there.
                                             if (!book.authors!.contains(author)) {
@@ -157,7 +159,20 @@ class _InsertBookScreenState extends State<InsertBookScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          if (book.title != "" && book.authors!.isNotEmpty) {
+            // Actually save a new book.
+            _books.add(book);
+            Navigator.of(context).pop();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("No title provided"),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
+        },
         label: Row(
           children: const [
             Text("Done"),

@@ -56,14 +56,6 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // final Box box = Hive.box<Book>("books");
-          // box.add(Book(
-          //     title: "test",
-          //     authors: [Author("Maurizio", "Micheletti")],
-          //     publishDate: 1978,
-          //     genre: Genre(name: "Thriller", color: Colors.red.value),
-          //     publisher: "Mondadori",
-          //     location: "Here"));
           showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -82,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
                       ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            Navigator.of(context).pushNamed(InsertBookScreen.routeName);
+                            Navigator.of(context).pushNamed(InsertBookScreen.routeName).then((Object? value) => setState(() {}));
                           },
                           child: const Text("Book")),
                     ],
