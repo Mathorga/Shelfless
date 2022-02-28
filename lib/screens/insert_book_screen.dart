@@ -7,16 +7,16 @@ import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/screens/insert_author_screen.dart';
 
-class InsertBookScreen extends StatefulWidget {
+class EditBookScreen extends StatefulWidget {
   static const String routeName = "/insert-book";
 
-  const InsertBookScreen({Key? key}) : super(key: key);
+  const EditBookScreen({Key? key}) : super(key: key);
 
   @override
-  State<InsertBookScreen> createState() => _InsertBookScreenState();
+  State<EditBookScreen> createState() => _EditBookScreenState();
 }
 
-class _InsertBookScreenState extends State<InsertBookScreen> {
+class _EditBookScreenState extends State<EditBookScreen> {
   final Box<Book> _books = Hive.box<Book>("books");
   final Box<Author> _authors = Hive.box<Author>("authors");
   final Box<Genre> _genres = Hive.box<Genre>("genres");
@@ -104,7 +104,7 @@ class _InsertBookScreenState extends State<InsertBookScreen> {
                                       : ListTile(
                                           leading: const Text("Add"),
                                           trailing: const Icon(Icons.add),
-                                          onTap: () => Navigator.of(context).pushNamed(InsertAuthorScreen.routeName),
+                                          onTap: () => Navigator.of(context).pushNamed(EditAuthorScreen.routeName),
                                         ),
                                 ),
                               ],

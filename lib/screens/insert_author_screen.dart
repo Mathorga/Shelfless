@@ -4,16 +4,16 @@ import 'package:hive/hive.dart';
 
 import 'package:shelfish/models/author.dart';
 
-class InsertAuthorScreen extends StatefulWidget {
+class EditAuthorScreen extends StatefulWidget {
   static const String routeName = "/insert-author";
 
-  const InsertAuthorScreen({Key? key}) : super(key: key);
+  const EditAuthorScreen({Key? key}) : super(key: key);
 
   @override
-  _InsertAuthorScreenState createState() => _InsertAuthorScreenState();
+  _EditAuthorScreenState createState() => _EditAuthorScreenState();
 }
 
-class _InsertAuthorScreenState extends State<InsertAuthorScreen> {
+class _EditAuthorScreenState extends State<EditAuthorScreen> {
   final Box<Author> authors = Hive.box<Author>("authors");
 
   String firstName = "";

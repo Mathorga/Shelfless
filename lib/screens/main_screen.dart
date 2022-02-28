@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/insert_author_screen.dart';
 import 'package:shelfish/screens/insert_book_screen.dart';
 import 'package:shelfish/widgets/book_preview_widget.dart';
@@ -47,9 +48,7 @@ class _MainScreenState extends State<MainScreen> {
             _books.length,
             (int index) => BookPreviewWidget(
               book: _books.getAt(index)!,
-              onTap: () => setState(() {
-                _books.deleteAt(index);
-              }),
+              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: _books.getAt(index)).then((Object? value) => setState(() {})),
             ),
           )
         ],
@@ -68,13 +67,13 @@ class _MainScreenState extends State<MainScreen> {
                       ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            Navigator.of(context).pushNamed(InsertAuthorScreen.routeName);
+                            Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
                           },
                           child: const Text("Author")),
                       ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).pop();
-                            Navigator.of(context).pushNamed(InsertBookScreen.routeName).then((Object? value) => setState(() {}));
+                            Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
                           },
                           child: const Text("Book")),
                     ],

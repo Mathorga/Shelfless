@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/main_screen.dart';
 import 'package:shelfish/screens/insert_author_screen.dart';
 import 'package:shelfish/screens/insert_book_screen.dart';
@@ -40,8 +41,9 @@ class Shelfish extends StatelessWidget {
       home: const MainScreen(),
       routes: {
         MainScreen.routeName: (BuildContext context) => const MainScreen(),
-        InsertBookScreen.routeName: (BuildContext context) => const InsertBookScreen(),
-        InsertAuthorScreen.routeName: (BuildContext context) => const InsertAuthorScreen(),
+        BookInfoScreen.routeName: (BuildContext context) => const BookInfoScreen(),
+        EditBookScreen.routeName: (BuildContext context) => const EditBookScreen(),
+        EditAuthorScreen.routeName: (BuildContext context) => const EditAuthorScreen(),
       },
     );
   }
