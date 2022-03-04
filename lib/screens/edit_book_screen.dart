@@ -61,7 +61,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     children: book.authors!.map((Author author) => buildAuthorPreview(author)).toList(),
                   ),
                 ),
-
               Align(
                 alignment: Alignment.center,
                 child: Padding(
@@ -169,12 +168,19 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 child: Divider(height: 2.0),
               ),
               const Text("Genre"),
-              DropdownButton(
+              DropdownButton<Genre>(
                 items: List.generate(
                   _genres.length,
-                  (int index) => DropdownMenuItem(child: Text(_genres.getAt(index)?.name ?? "")),
+                  (int index) => DropdownMenuItem<Genre>(
+                    value: _genres.getAt(index),
+                    child: Text(_genres.getAt(index)?.name ?? ""),
+                  ),
                 ),
-                onChanged: (dynamic value) {},
+                value: book.genre,
+                hint: const Text("Genre"),
+                onChanged: (Genre? value) => setState(() {
+                  book.genre = value;
+                }),
               ),
               const SizedBox(
                 height: 24.0,
