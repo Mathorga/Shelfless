@@ -8,8 +8,9 @@ import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
-import 'package:shelfish/screens/insert_author_screen.dart';
-import 'package:shelfish/screens/insert_book_screen.dart';
+import 'package:shelfish/screens/edit_author_screen.dart';
+import 'package:shelfish/screens/edit_book_screen.dart';
+import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/widgets/book_preview_widget.dart';
 
 class MainScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final Box<Book> _books = Hive.box<Book>("books");
+  final Box<Genre> _genres = Hive.box<Genre>("genres");
 
   @override
   Widget build(BuildContext context) {
@@ -65,17 +67,26 @@ class _MainScreenState extends State<MainScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
-                          },
-                          child: const Text("Author")),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+                        },
+                        child: const Text("Author"),
+                      ),
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
-                          },
-                          child: const Text("Book")),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
+                        },
+                        child: const Text("Book"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+                        },
+                        child: const Text("Genre"),
+                      ),
                     ],
                   ),
                 );

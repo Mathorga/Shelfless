@@ -5,10 +5,10 @@ import 'package:hive/hive.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/screens/insert_author_screen.dart';
+import 'package:shelfish/screens/edit_author_screen.dart';
 
 class EditBookScreen extends StatefulWidget {
-  static const String routeName = "/insert-book";
+  static const String routeName = "/edit-book";
 
   const EditBookScreen({Key? key}) : super(key: key);
 
@@ -122,19 +122,45 @@ class _EditBookScreenState extends State<EditBookScreen> {
               ),
               const Text("Publish date"),
               GestureDetector(
-                onTap: () {
-                  showDatePicker(
+                onTap: () async {
+                  showDialog(
                     context: context,
-                    initialDate: DateTime(currentYear),
-                    firstDate: DateTime(0),
-                    lastDate: DateTime(currentYear),
-                    initialDatePickerMode: DatePickerMode.year,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text("Select publish year"),
+                      content: SizedBox(
+                        height: 300.0,
+                        child: YearPicker(
+                          firstDate: DateTime(0),
+                          lastDate: DateTime(currentYear),
+                          selectedDate: DateTime(currentYear),
+                          onChanged: (DateTime value) {
+                            Navigator.of(context).pop();
+                            setState(() {
+                              book.publishDate = value.year;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
                   );
+                  // DateTime? publishDate = await showDatePicker(
+                  //   context: context,
+                  //   initialDate: DateTime(currentYear),
+                  //   firstDate: DateTime(0),
+                  //   lastDate: DateTime(currentYear),
+                  //   initialDatePickerMode: DatePickerMode.year,
+                  // );
+
+                  // if (publishDate != null) {
+                  //   setState(() {
+                  //     book.publishDate = publishDate.year;
+                  //   });
+                  // }
                 },
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Text(currentYear.toString()),
+                    child: Text((book.publishDate).toString()),
                   ),
                 ),
               ),
@@ -143,7 +169,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 child: Divider(height: 2.0),
               ),
               const Text("Genre"),
-              // DropdownButton<Genre>(items: [Genre(name: name, color: color)], onChanged: (item) {}),
+              DropdownButton(
+                items: List.generate(
+                  _genres.length,
+                  (int index) => DropdownMenuItem(child: Text(_genres.getAt(index)?.name ?? "")),
+                ),
+                onChanged: (dynamic value) {},
+              ),
               const SizedBox(
                 height: 24.0,
                 child: Divider(height: 2.0),

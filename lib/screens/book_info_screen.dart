@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/screens/insert_author_screen.dart';
+import 'package:shelfish/screens/edit_author_screen.dart';
 
 class BookInfoScreen extends StatefulWidget {
   static const String routeName = "/book-info";
@@ -17,7 +17,6 @@ class BookInfoScreen extends StatefulWidget {
 }
 
 class _BookInfoScreenState extends State<BookInfoScreen> {
-
   Book? _book;
 
   @override
@@ -26,7 +25,8 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Insert Book"),
+        title: Text(_book!.title, style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -34,12 +34,6 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Title"),
-              Text(_book!.title),
-              const SizedBox(
-                height: 24.0,
-                child: Divider(height: 2.0),
-              ),
               const Text("Authors"),
               if (_book!.authors!.isNotEmpty)
                 Padding(

@@ -6,9 +6,10 @@ import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
+import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/main_screen.dart';
-import 'package:shelfish/screens/insert_author_screen.dart';
-import 'package:shelfish/screens/insert_book_screen.dart';
+import 'package:shelfish/screens/edit_author_screen.dart';
+import 'package:shelfish/screens/edit_book_screen.dart';
 
 void main() async {
   // Init local DB.
@@ -44,6 +45,7 @@ class Shelfish extends StatelessWidget {
         BookInfoScreen.routeName: (BuildContext context) => const BookInfoScreen(),
         EditBookScreen.routeName: (BuildContext context) => const EditBookScreen(),
         EditAuthorScreen.routeName: (BuildContext context) => const EditAuthorScreen(),
+        EditGenreScreen.routeName: (BuildContext context) => const EditGenreScreen(),
       },
     );
   }

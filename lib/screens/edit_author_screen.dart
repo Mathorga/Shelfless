@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 import 'package:shelfish/models/author.dart';
 
 class EditAuthorScreen extends StatefulWidget {
-  static const String routeName = "/insert-author";
+  static const String routeName = "/edit-author";
 
   const EditAuthorScreen({Key? key}) : super(key: key);
 
