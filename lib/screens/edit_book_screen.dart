@@ -170,13 +170,18 @@ class _EditBookScreenState extends State<EditBookScreen> {
               const Text("Genre"),
               DropdownButton<Genre>(
                 items: List.generate(
-                  _genres.length,
+                  _genres.length + 1,
                   (int index) => DropdownMenuItem<Genre>(
-                    value: _genres.getAt(index),
-                    child: Text(_genres.getAt(index)?.name ?? ""),
+                    value: index >= _genres.length ? null : _genres.getAt(index),
+                    child: index >= _genres.length ? const Icon(Icons.add) : Text(_genres.getAt(index)?.name ?? ""),
+                    onTap: index >= _genres.length
+                        ? () {
+                            // TODO Navigate to genre add screen and fetch it when completed.
+                          }
+                        : null,
                   ),
                 ),
-                value: book.genre,
+                value: book.genre ?? _genres.getAt(0),
                 hint: const Text("Genre"),
                 onChanged: (Genre? value) => setState(() {
                   book.genre = value;
