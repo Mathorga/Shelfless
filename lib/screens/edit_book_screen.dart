@@ -6,6 +6,7 @@ import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
+import 'package:shelfish/screens/edit_genre_screen.dart';
 
 class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
@@ -28,6 +29,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     super.initState();
 
     book.authors = HiveList(_authors);
+    book.genres = HiveList(_genres);
   }
 
   @override
@@ -44,6 +46,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Title
               const Text("Title"),
               TextField(
                 onChanged: (String value) => book.title = value,
@@ -52,13 +55,15 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
+
+              // Authors.
               const Text("Authors"),
               if (book.authors!.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: book.authors!.map((Author author) => buildAuthorPreview(author)).toList(),
+                    children: book.authors!.map((Author author) => _buildAuthorPreview(author)).toList(),
                   ),
                 ),
               Align(
@@ -119,6 +124,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
+
+              // Publish date.
               const Text("Publish date"),
               GestureDetector(
                 onTap: () async {
@@ -167,30 +174,77 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
-              const Text("Genre"),
-              DropdownButton<Genre>(
-                items: List.generate(
-                  _genres.length + 1,
-                  (int index) => DropdownMenuItem<Genre>(
-                    value: index >= _genres.length ? null : _genres.getAt(index),
-                    child: index >= _genres.length ? const Icon(Icons.add) : Text(_genres.getAt(index)?.name ?? ""),
-                    onTap: index >= _genres.length
-                        ? () {
-                            // TODO Navigate to genre add screen and fetch it when completed.
-                          }
-                        : null,
+
+              // Genres.
+              const Text("Genres"),
+              if (book.genres!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: book.genres!.map((Genre genre) => _buildGenrePreview(genre)).toList(),
                   ),
                 ),
-                value: book.genre ?? _genres.getAt(0),
-                hint: const Text("Genre"),
-                onChanged: (Genre? value) => setState(() {
-                  book.genre = value;
-                }),
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ElevatedButton(
+                    child: const Text("Add one"),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Genres"),
+                            content: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                ...List.generate(
+                                  _genres.length + 1,
+                                  (int index) => index < _genres.length
+                                      ? ListTile(
+                                          leading: Text(_genres.getAt(index)!.name),
+                                          onTap: () {
+                                            final Genre genre = _genres.getAt(index)!;
+
+                                            // Only add the author if not already there.
+                                            if (!book.genres!.contains(genre)) {
+                                              setState(() {
+                                                book.genres?.add(genre);
+                                              });
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text("Genre already added"),
+                                                  duration: Duration(seconds: 2),
+                                                ),
+                                              );
+                                            }
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      : ListTile(
+                                          leading: const Text("Add"),
+                                          trailing: const Icon(Icons.add),
+                                          onTap: () => Navigator.of(context).pushNamed(EditGenreScreen.routeName),
+                                        ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
+
+              // Publisher.
               const Text("Publisher"),
               const TextField(),
               const SizedBox(
@@ -227,7 +281,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
   }
 
-  Widget buildAuthorPreview(Author author) {
+  Widget _buildAuthorPreview(Author author) {
     return Card(
       margin: const EdgeInsets.all(12.0),
       child: Padding(
@@ -243,6 +297,35 @@ class _EditBookScreenState extends State<EditBookScreen> {
               onPressed: () {
                 setState(() {
                   book.authors?.remove(author);
+                });
+              },
+              icon: Icon(
+                Icons.cancel_rounded,
+                color: Colors.red[900],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGenrePreview(Genre genre) {
+    return Card(
+      margin: const EdgeInsets.all(12.0),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              genre.name,
+              textAlign: TextAlign.center,
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  book.genres?.remove(genre);
                 });
               },
               icon: Icon(

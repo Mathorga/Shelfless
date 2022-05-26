@@ -36,8 +36,8 @@ class Shelfish extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Shelfish",
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
+      theme: ThemeData.dark(
+        // primarySwatch: Colors.blueGrey,
       ),
       home: const MainScreen(),
       routes: {

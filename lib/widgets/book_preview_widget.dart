@@ -18,8 +18,8 @@ class BookPreviewWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), side: BorderSide(color: Color(book.genre?.color ?? 0), width: 4.0)),
-        shadowColor: Color(book.genre?.color ?? 0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0), side: BorderSide(/*color: Color(book.genre?.color ?? 0), */width: 4.0)),
+        // shadowColor: Color(book.genre?.color ?? 0),
         elevation: 4.0,
         child: Padding(
           padding: const EdgeInsets.all(12.0),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hive/hive.dart';
 
 import 'package:shelfish/models/author.dart';
@@ -55,45 +56,75 @@ class _MainScreenState extends State<MainScreen> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text("Add new"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
-                        },
-                        child: const Text("Author"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
-                        },
-                        child: const Text("Book"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pushNamed(EditGenreScreen.routeName);
-                        },
-                        child: const Text("Genre"),
-                      ),
-                    ],
-                  ),
-                );
-              });
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: SpeedDial(
+        icon: Icons.add,
+        activeIcon: Icons.close,
+        spacing: 24.0,
+        spaceBetweenChildren: 16.0,
+        childrenButtonSize: const Size(64.0, 64.0),
+        children: [
+          SpeedDialChild(
+            label: "Author",
+            child: const Icon(Icons.person_rounded),
+            onTap: () {
+              Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+            },
+          ),
+          SpeedDialChild(
+            label: "Genre",
+            child: const Icon(Icons.topic_rounded),
+            onTap: () {
+              Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+            },
+          ),
+          SpeedDialChild(
+            label: "Book",
+            child: const Icon(Icons.book_rounded),
+            onTap: () {
+              Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
+            },
+          ),
+        ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     showDialog(
+      //         context: context,
+      //         builder: (BuildContext context) {
+      //           return AlertDialog(
+      //             title: const Text("Add new"),
+      //             content: Column(
+      //               mainAxisSize: MainAxisSize.min,
+      //               crossAxisAlignment: CrossAxisAlignment.stretch,
+      //               children: [
+      //                 ElevatedButton(
+      //                   onPressed: () {
+      //                     Navigator.of(context).pop();
+      //                     Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+      //                   },
+      //                   child: const Text("Author"),
+      //                 ),
+      //                 ElevatedButton(
+      //                   onPressed: () {
+      //                     Navigator.of(context).pop();
+      //                     Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
+      //                   },
+      //                   child: const Text("Book"),
+      //                 ),
+      //                 ElevatedButton(
+      //                   onPressed: () {
+      //                     Navigator.of(context).pop();
+      //                     Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+      //                   },
+      //                   child: const Text("Genre"),
+      //                 ),
+      //               ],
+      //             ),
+      //           );
+      //         });
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 

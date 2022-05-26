@@ -17,7 +17,7 @@ class Book extends HiveObject {
   int publishDate;
 
   @HiveField(4)
-  Genre? genre;
+  HiveList<Genre>? genres;
 
   @HiveField(6)
   String publisher;
@@ -29,7 +29,7 @@ class Book extends HiveObject {
     this.title = "",
     this.authors,
     this.publishDate = 0,
-    this.genre,
+    this.genres,
     this.publisher = "",
     this.location = "",
   });
@@ -38,7 +38,7 @@ class Book extends HiveObject {
     return {
       "title": title,
       "publishDate": publishDate,
-      "genre": genre,
+      "publisher": publisher,
     };
   }
 }

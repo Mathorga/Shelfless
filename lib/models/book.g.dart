@@ -20,7 +20,7 @@ class BookAdapter extends TypeAdapter<Book> {
       title: fields[1] as String,
       authors: (fields[2] as HiveList?)?.castHiveList(),
       publishDate: fields[3] as int,
-      genre: fields[4] as Genre?,
+      genres: (fields[4] as HiveList?)?.castHiveList(),
       publisher: fields[6] as String,
       location: fields[7] as String,
     );
@@ -37,7 +37,7 @@ class BookAdapter extends TypeAdapter<Book> {
       ..writeByte(3)
       ..write(obj.publishDate)
       ..writeByte(4)
-      ..write(obj.genre)
+      ..write(obj.genres)
       ..writeByte(6)
       ..write(obj.publisher)
       ..writeByte(7)
