@@ -16,43 +16,53 @@ class BookPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Prepare border radius.
+    double borderRadius = 15.0;
+
+    // Prepare colors with custom alpha value.
+    List<Color> genreColors = book.genres.map((Genre genre) => Color(genre.color).withAlpha(0x55)).toList();
+
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          gradient: book.genres!.length >= 2
-              ? LinearGradient(colors: book.genres!.map((Genre genre) => Color(genre.color)).toList())
-              : LinearGradient(colors: [
-                  Color(book.genres!.first.color),
-                  Color(book.genres!.first.color),
-                ]),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
         ),
-        padding: const EdgeInsets.all(4.0),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            // side: BorderSide(
-            //   /*color: Color(book.genre?.color ?? 0), */ width: 4.0,
-            // ),
+        elevation: 0.0,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(borderRadius),
+            gradient: genreColors.isEmpty
+                ? const LinearGradient(colors: [
+                    Colors.transparent,
+                    Colors.transparent,
+                  ])
+                : genreColors.length >= 2
+                    ? LinearGradient(colors: genreColors)
+                    : LinearGradient(colors: [
+                        genreColors.first,
+                        genreColors.first,
+                      ]),
           ),
-          // shadowColor: Color(book.genre?.color ?? 0),
-          elevation: 0.0,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Title.
                 Text(
                   book.title,
                   style: Theme.of(context).textTheme.headline6,
                   textAlign: TextAlign.center,
                 ),
+
                 const SizedBox(height: 12.0),
-                if (book.authors != null && book.authors!.isNotEmpty)
-                  book.authors!.length <= 2
-                      ? Text(book.authors!.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element"))
-                      : Text("${book.authors!.first}, altri"),
+
+                // Authors.
+                if (book.authors.isNotEmpty)
+                  book.authors.length <= 2
+                      ? Text(book.authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element"))
+                      : Text("${book.authors.first}, others"),
               ],
             ),
           ),

@@ -22,14 +22,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
   final Box<Author> _authors = Hive.box<Author>("authors");
   final Box<Genre> _genres = Hive.box<Genre>("genres");
 
-  Book book = Book();
+  late Book book;
 
   @override
   void initState() {
     super.initState();
 
-    book.authors = HiveList(_authors);
-    book.genres = HiveList(_genres);
+    book = Book(authors: HiveList(_authors), genres: HiveList(_genres),);
   }
 
   @override
@@ -58,12 +57,12 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
               // Authors.
               const Text("Authors"),
-              if (book.authors!.isNotEmpty)
+              if (book.authors.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: book.authors!.map((Author author) => _buildAuthorPreview(author)).toList(),
+                    children: book.authors.map((Author author) => _buildAuthorPreview(author)).toList(),
                   ),
                 ),
               Align(
@@ -92,9 +91,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                               final Author author = _authors.getAt(index)!;
 
                                               // Only add the author if not already there.
-                                              if (!book.authors!.contains(author)) {
+                                              if (!book.authors.contains(author)) {
                                                 setState(() {
-                                                  book.authors?.add(author);
+                                                  book.authors.add(author);
                                                 });
                                               } else {
                                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -167,12 +166,12 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
               // Genres.
               const Text("Genres"),
-              if (book.genres!.isNotEmpty)
+              if (book.genres.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: book.genres!.map((Genre genre) => _buildGenrePreview(genre)).toList(),
+                    children: book.genres.map((Genre genre) => _buildGenrePreview(genre)).toList(),
                   ),
                 ),
               Align(
@@ -201,9 +200,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                               final Genre genre = _genres.getAt(index)!;
 
                                               // Only add the genre if not already there.
-                                              if (!book.genres!.contains(genre)) {
+                                              if (!book.genres.contains(genre)) {
                                                 setState(() {
-                                                  book.genres?.add(genre);
+                                                  book.genres.add(genre);
                                                 });
                                               } else {
                                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -250,7 +249,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          if (book.title != "" && book.authors!.isNotEmpty) {
+          if (book.title != "" && book.authors.isNotEmpty && book.genres.isNotEmpty) {
             // Actually save a new book.
             _books.add(book);
             Navigator.of(context).pop();
@@ -276,7 +275,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
   Widget _buildAuthorPreview(Author author) {
     return Card(
-      margin: const EdgeInsets.all(12.0),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
@@ -289,12 +287,12 @@ class _EditBookScreenState extends State<EditBookScreen> {
             IconButton(
               onPressed: () {
                 setState(() {
-                  book.authors?.remove(author);
+                  book.authors.remove(author);
                 });
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.cancel_rounded,
-                color: Colors.red[900],
+                color: Colors.red,
               ),
             ),
           ],
@@ -318,12 +316,12 @@ class _EditBookScreenState extends State<EditBookScreen> {
             IconButton(
               onPressed: () {
                 setState(() {
-                  book.genres?.remove(genre);
+                  book.genres.remove(genre);
                 });
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.cancel_rounded,
-                color: Colors.red[900],
+                color: Colors.red,
               ),
             ),
           ],

@@ -1,11 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:hive/hive.dart';
-
 import 'package:shelfish/models/author.dart';
+
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
@@ -26,105 +23,135 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final Box<Book> _books = Hive.box<Book>("books");
   final Box<Genre> _genres = Hive.box<Genre>("genres");
+  final Box<Author> _authors = Hive.box<Author>("authors");
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home"),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.sort),
-          ),
-        ],
-      ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(8.0),
-        children: [
-          ...List.generate(
-            _books.length,
-            (int index) => BookPreviewWidget(
-              book: _books.getAt(index)!,
-              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: _books.getAt(index)).then((Object? value) => setState(() {})),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Home"),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.search_rounded),
             ),
-          )
-        ],
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.sort_rounded),
+              onSelected: (String item) {},
+              tooltip: "Sort by",
+              itemBuilder: (BuildContext context) {
+                return {
+                  "Title",
+                  "Author",
+                  "Genre",
+                }.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            ),
+            PopupMenuButton<String>(
+              onSelected: (String item) {},
+              itemBuilder: (BuildContext context) {
+                return {
+                  "Logout",
+                  "Settings",
+                }.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            ),
+          ],
+          bottom: const TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.book_rounded)),
+              Tab(icon: Icon(Icons.topic_rounded)),
+              Tab(icon: Icon(Icons.person_rounded)),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            // Books list.
+            ListView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(8.0),
+              children: [
+                ...List.generate(
+                  _books.length,
+                  (int index) => BookPreviewWidget(
+                    book: _books.getAt(index)!,
+                    onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: _books.getAt(index)).then((Object? value) => setState(() {})),
+                  ),
+                )
+              ],
+            ),
+
+            // Genres list.
+            ListView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(8.0),
+              children: [
+                ...List.generate(
+                  _genres.length,
+                  (int index) => Text(_genres.getAt(index)!.name),
+                )
+              ],
+            ),
+
+            // Authors list.
+            ListView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(8.0),
+              children: [
+                ...List.generate(
+                  _authors.length,
+                  (int index) {
+                    Author? author = _authors.getAt(index);
+                    return Text("${author?.firstName} ${author?.lastName}");
+                  }
+                )
+              ],
+            ),
+          ],
+        ),
+        floatingActionButton: SpeedDial(
+          icon: Icons.add,
+          activeIcon: Icons.close,
+          spacing: 12.0,
+          childrenButtonSize: const Size(64.0, 64.0),
+          children: [
+            SpeedDialChild(
+              label: "Author",
+              child: const Icon(Icons.person_rounded),
+              onTap: () {
+                Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+              },
+            ),
+            SpeedDialChild(
+              label: "Genre",
+              child: const Icon(Icons.topic_rounded),
+              onTap: () {
+                Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+              },
+            ),
+            SpeedDialChild(
+              label: "Book",
+              child: const Icon(Icons.book_rounded),
+              onTap: () {
+                Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
+              },
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: SpeedDial(
-        icon: Icons.add,
-        activeIcon: Icons.close,
-        spacing: 24.0,
-        spaceBetweenChildren: 16.0,
-        childrenButtonSize: const Size(64.0, 64.0),
-        children: [
-          SpeedDialChild(
-            label: "Author",
-            child: const Icon(Icons.person_rounded),
-            onTap: () {
-              Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
-            },
-          ),
-          SpeedDialChild(
-            label: "Genre",
-            child: const Icon(Icons.topic_rounded),
-            onTap: () {
-              Navigator.of(context).pushNamed(EditGenreScreen.routeName);
-            },
-          ),
-          SpeedDialChild(
-            label: "Book",
-            child: const Icon(Icons.book_rounded),
-            onTap: () {
-              Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
-            },
-          ),
-        ],
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     showDialog(
-      //         context: context,
-      //         builder: (BuildContext context) {
-      //           return AlertDialog(
-      //             title: const Text("Add new"),
-      //             content: Column(
-      //               mainAxisSize: MainAxisSize.min,
-      //               crossAxisAlignment: CrossAxisAlignment.stretch,
-      //               children: [
-      //                 ElevatedButton(
-      //                   onPressed: () {
-      //                     Navigator.of(context).pop();
-      //                     Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
-      //                   },
-      //                   child: const Text("Author"),
-      //                 ),
-      //                 ElevatedButton(
-      //                   onPressed: () {
-      //                     Navigator.of(context).pop();
-      //                     Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
-      //                   },
-      //                   child: const Text("Book"),
-      //                 ),
-      //                 ElevatedButton(
-      //                   onPressed: () {
-      //                     Navigator.of(context).pop();
-      //                     Navigator.of(context).pushNamed(EditGenreScreen.routeName);
-      //                   },
-      //                   child: const Text("Genre"),
-      //                 ),
-      //               ],
-      //             ),
-      //           );
-      //         });
-      //   },
-      //   child: const Icon(Icons.add),
-      // ),
     );
   }
 

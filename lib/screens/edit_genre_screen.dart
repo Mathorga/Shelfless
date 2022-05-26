@@ -48,7 +48,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
           // Actually save a new genre.
           final Genre genre = Genre(
             name: name.trim(),
-            color: (Random().nextDouble() * 0xFFFFFFFF).toInt(),
+            color: (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt(),
           );
           genres.add(genre);
           Navigator.of(context).pop();

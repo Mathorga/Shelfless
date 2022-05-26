@@ -11,13 +11,13 @@ class Book extends HiveObject {
   String title;
 
   @HiveField(2)
-  HiveList<Author>? authors;
+  HiveList<Author> authors;
 
   @HiveField(3)
   int publishDate;
 
   @HiveField(4)
-  HiveList<Genre>? genres;
+  HiveList<Genre> genres;
 
   @HiveField(6)
   String publisher;
@@ -27,9 +27,9 @@ class Book extends HiveObject {
 
   Book({
     this.title = "",
-    this.authors,
+    required this.authors,
     this.publishDate = 0,
-    this.genres,
+    required this.genres,
     this.publisher = "",
     this.location = "",
   });
