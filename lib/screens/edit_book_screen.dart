@@ -125,7 +125,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 child: Divider(height: 2.0),
               ),
 
-              // Publish date.
+              // Publish year.
               const Text("Publish date"),
               GestureDetector(
                 onTap: () async {
@@ -149,19 +149,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       ),
                     ),
                   );
-                  // DateTime? publishDate = await showDatePicker(
-                  //   context: context,
-                  //   initialDate: DateTime(currentYear),
-                  //   firstDate: DateTime(0),
-                  //   lastDate: DateTime(currentYear),
-                  //   initialDatePickerMode: DatePickerMode.year,
-                  // );
-
-                  // if (publishDate != null) {
-                  //   setState(() {
-                  //     book.publishDate = publishDate.year;
-                  //   });
-                  // }
                 },
                 child: Card(
                   child: Padding(
@@ -208,7 +195,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                           onTap: () {
                                             final Genre genre = _genres.getAt(index)!;
 
-                                            // Only add the author if not already there.
+                                            // Only add the genre if not already there.
                                             if (!book.genres!.contains(genre)) {
                                               setState(() {
                                                 book.genres?.add(genre);

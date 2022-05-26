@@ -45,8 +45,11 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Actually save a new author.
-          final Genre genre = Genre(name: name.trim(), color: (Random().nextDouble() * 0xFFFFFFFF).toInt());
+          // Actually save a new genre.
+          final Genre genre = Genre(
+            name: name.trim(),
+            color: (Random().nextDouble() * 0xFFFFFFFF).toInt(),
+          );
           genres.add(genre);
           Navigator.of(context).pop();
         },
