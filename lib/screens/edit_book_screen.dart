@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/providers/authors_provider.dart';
+import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 
@@ -28,7 +31,10 @@ class _EditBookScreenState extends State<EditBookScreen> {
   void initState() {
     super.initState();
 
-    book = Book(authors: HiveList(_authors), genres: HiveList(_genres),);
+    book = Book(
+      authors: HiveList(_authors),
+      genres: HiveList(_genres),
+    );
   }
 
   @override
@@ -77,42 +83,46 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text("Authors"),
-                            content: SizedBox(
-                              width: 300.0,
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: [
-                                  ...List.generate(
-                                    _authors.length + 1,
-                                    (int index) => index < _authors.length
-                                        ? ListTile(
-                                            leading: Text("${_authors.getAt(index)!.firstName} ${_authors.getAt(index)!.lastName}"),
-                                            onTap: () {
-                                              final Author author = _authors.getAt(index)!;
+                            content: Consumer<AuthorsProvider>(
+                              // Listen to changes in saved authors.
+                              builder: (BuildContext context, AuthorsProvider provider, Widget? child) => SizedBox(
+                                width: 300.0,
+                                child: ListView(
+                                  physics: const BouncingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  children: [
+                                    ...List.generate(
+                                      _authors.length + 1,
+                                      (int index) => index < _authors.length
+                                          ? ListTile(
+                                              leading: Text("${_authors.getAt(index)!.firstName} ${_authors.getAt(index)!.lastName}"),
+                                              onTap: () {
+                                                final Author author = _authors.getAt(index)!;
 
-                                              // Only add the author if not already there.
-                                              if (!book.authors.contains(author)) {
-                                                setState(() {
-                                                  book.authors.add(author);
-                                                });
-                                              } else {
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  const SnackBar(
-                                                    content: Text("Author already added"),
-                                                    duration: Duration(seconds: 2),
-                                                  ),
-                                                );
-                                              }
-                                              Navigator.of(context).pop();
-                                            },
-                                          )
-                                        : ListTile(
-                                            leading: const Text("Add"),
-                                            trailing: const Icon(Icons.add),
-                                            onTap: () => Navigator.of(context).pushNamed(EditAuthorScreen.routeName),
-                                          ),
-                                  ),
-                                ],
+                                                // Only add the author if not already there.
+                                                if (!book.authors.contains(author)) {
+                                                  setState(() {
+                                                    book.authors.add(author);
+                                                  });
+                                                } else {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text("Author already added"),
+                                                      duration: Duration(seconds: 2),
+                                                    ),
+                                                  );
+                                                }
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          : ListTile(
+                                              leading: const Text("Add"),
+                                              trailing: const Icon(Icons.add),
+                                              onTap: () => Navigator.of(context).pushNamed(EditAuthorScreen.routeName),
+                                            ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -186,42 +196,46 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text("Genres"),
-                            content: SizedBox(
-                              width: 300.0,
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: [
-                                  ...List.generate(
-                                    _genres.length + 1,
-                                    (int index) => index < _genres.length
-                                        ? ListTile(
-                                            leading: Text(_genres.getAt(index)!.name),
-                                            onTap: () {
-                                              final Genre genre = _genres.getAt(index)!;
+                            content: Consumer<GenresProvider>(
+                              // Listen to changes in saved genres.
+                              builder: (BuildContext context, GenresProvider provider, Widget? child) => SizedBox(
+                                width: 300.0,
+                                child: ListView(
+                                  physics: const BouncingScrollPhysics(),
+                                  shrinkWrap: true,
+                                  children: [
+                                    ...List.generate(
+                                      _genres.length + 1,
+                                      (int index) => index < _genres.length
+                                          ? ListTile(
+                                              leading: Text(_genres.getAt(index)!.name),
+                                              onTap: () {
+                                                final Genre genre = _genres.getAt(index)!;
 
-                                              // Only add the genre if not already there.
-                                              if (!book.genres.contains(genre)) {
-                                                setState(() {
-                                                  book.genres.add(genre);
-                                                });
-                                              } else {
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  const SnackBar(
-                                                    content: Text("Genre already added"),
-                                                    duration: Duration(seconds: 2),
-                                                  ),
-                                                );
-                                              }
-                                              Navigator.of(context).pop();
-                                            },
-                                          )
-                                        : ListTile(
-                                            leading: const Text("Add"),
-                                            trailing: const Icon(Icons.add),
-                                            onTap: () => Navigator.of(context).pushNamed(EditGenreScreen.routeName),
-                                          ),
-                                  ),
-                                ],
+                                                // Only add the genre if not already there.
+                                                if (!book.genres.contains(genre)) {
+                                                  setState(() {
+                                                    book.genres.add(genre);
+                                                  });
+                                                } else {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text("Genre already added"),
+                                                      duration: Duration(seconds: 2),
+                                                    ),
+                                                  );
+                                                }
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          : ListTile(
+                                              leading: const Text("Add"),
+                                              trailing: const Icon(Icons.add),
+                                              onTap: () => Navigator.of(context).pushNamed(EditGenreScreen.routeName),
+                                            ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );

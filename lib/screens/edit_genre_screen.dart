@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/providers/genres_provider.dart';
 
 class EditGenreScreen extends StatefulWidget {
   static const String routeName = "/edit-genre";
@@ -16,13 +18,16 @@ class EditGenreScreen extends StatefulWidget {
 }
 
 class _EditGenreScreenState extends State<EditGenreScreen> {
-  final Box<Genre> genres = Hive.box<Genre>("genres");
+  // final Box<Genre> genres = Hive.box<Genre>("genres");
 
   String name = "";
   int color = Colors.white.value;
 
   @override
   Widget build(BuildContext context) {
+    // Fetch provider to save changes.
+    final GenresProvider genresProvider = Provider.of(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Insert Genre"),
@@ -50,7 +55,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
             name: name.trim(),
             color: (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt(),
           );
-          genres.add(genre);
+          genresProvider.addGenre(genre);
           Navigator.of(context).pop();
         },
         label: Row(

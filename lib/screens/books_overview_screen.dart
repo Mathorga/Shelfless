@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:hive/hive.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/book.dart';
+import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/screens/authors_overview_screen.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
@@ -22,10 +24,13 @@ class BooksOverviewScreen extends StatefulWidget {
 }
 
 class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
-  final Box<Book> _books = Hive.box<Book>("books");
+  // final Box<Book> _books = Hive.box<Book>("books");
 
   @override
   Widget build(BuildContext context) {
+    // Fetch the books provider and listen for changes.
+    final BooksProvider booksProvider = Provider.of(context, listen: true);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Books"),
@@ -86,10 +91,10 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
         padding: const EdgeInsets.all(8.0),
         children: [
           ...List.generate(
-            _books.length,
+            booksProvider.books.length,
             (int index) => BookPreviewWidget(
-              book: _books.getAt(index)!,
-              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: _books.getAt(index)).then((Object? value) => setState(() {})),
+              book: booksProvider.books[index],
+              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: booksProvider.books[index]),
             ),
           )
         ],
