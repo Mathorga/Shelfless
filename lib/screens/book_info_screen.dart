@@ -24,6 +24,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
     // Fetch provider.
     final BooksProvider booksProvider = Provider.of(context, listen: true);
 
+    // Fetch book.
     Book book = booksProvider.books[ModalRoute.of(context)!.settings.arguments as int];
 
     return Scaffold(
