@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/author.dart';
+import 'package:shelfish/providers/authors_provider.dart';
 
 class EditAuthorScreen extends StatefulWidget {
   static const String routeName = "/edit-author";
@@ -14,13 +15,16 @@ class EditAuthorScreen extends StatefulWidget {
 }
 
 class _EditAuthorScreenState extends State<EditAuthorScreen> {
-  final Box<Author> authors = Hive.box<Author>("authors");
+  // final Box<Author> authors = Hive.box<Author>("authors");
 
   String firstName = "";
   String lastName = "";
 
   @override
   Widget build(BuildContext context) {
+    // Fetch provider to save changes.
+    final AuthorsProvider authorsProvider = Provider.of(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Insert Author"),
@@ -53,7 +57,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
         onPressed: () {
           // Actually save a new author.
           final Author author = Author(firstName.trim(), lastName.trim());
-          authors.add(author);
+          authorsProvider.addAuthor(author);
           Navigator.of(context).pop();
         },
         label: Row(

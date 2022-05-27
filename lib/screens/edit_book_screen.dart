@@ -10,6 +10,8 @@ import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
+import 'package:shelfish/widgets/author_preview_widget.dart';
+import 'package:shelfish/widgets/genre_preview_widget.dart';
 
 class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
@@ -92,12 +94,12 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   shrinkWrap: true,
                                   children: [
                                     ...List.generate(
-                                      _authors.length + 1,
-                                      (int index) => index < _authors.length
+                                      provider.authors.length + 1,
+                                      (int index) => index < provider.authors.length
                                           ? ListTile(
-                                              leading: Text("${_authors.getAt(index)!.firstName} ${_authors.getAt(index)!.lastName}"),
+                                              leading: Text("${provider.authors[index].firstName} ${provider.authors[index].lastName}"),
                                               onTap: () {
-                                                final Author author = _authors.getAt(index)!;
+                                                final Author author = provider.authors[index];
 
                                                 // Only add the author if not already there.
                                                 if (!book.authors.contains(author)) {
@@ -205,12 +207,12 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   shrinkWrap: true,
                                   children: [
                                     ...List.generate(
-                                      _genres.length + 1,
-                                      (int index) => index < _genres.length
+                                      provider.genres.length + 1,
+                                      (int index) => index < provider.genres.length
                                           ? ListTile(
-                                              leading: Text(_genres.getAt(index)!.name),
+                                              leading: Text(provider.genres[index].name),
                                               onTap: () {
-                                                final Genre genre = _genres.getAt(index)!;
+                                                final Genre genre = provider.genres[index];
 
                                                 // Only add the genre if not already there.
                                                 if (!book.genres.contains(genre)) {
@@ -288,59 +290,46 @@ class _EditBookScreenState extends State<EditBookScreen> {
   }
 
   Widget _buildAuthorPreview(Author author) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "${author.firstName} ${author.lastName}",
-              textAlign: TextAlign.center,
-            ),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  book.authors.remove(author);
-                });
-              },
-              icon: const Icon(
-                Icons.cancel_rounded,
-                color: Colors.red,
-              ),
-            ),
-          ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: AuthorPreviewWidget(author: author),
         ),
-      ),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              book.authors.remove(author);
+            });
+          },
+          icon: const Icon(
+            Icons.cancel_rounded,
+            color: Colors.red,
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildGenrePreview(Genre genre) {
-    return Card(
-      margin: const EdgeInsets.all(12.0),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              genre.name,
-              textAlign: TextAlign.center,
-            ),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  book.genres.remove(genre);
-                });
-              },
-              icon: const Icon(
-                Icons.cancel_rounded,
-                color: Colors.red,
-              ),
-            ),
-          ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: GenrePreviewWidget(genre: genre),
         ),
-      ),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              book.genres.remove(genre);
+            });
+          },
+          icon: const Icon(
+            Icons.cancel_rounded,
+            color: Colors.red,
+          ),
+        ),
+      ],
     );
   }
 

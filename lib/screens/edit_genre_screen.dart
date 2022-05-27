@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/genre.dart';
@@ -18,7 +17,6 @@ class EditGenreScreen extends StatefulWidget {
 }
 
 class _EditGenreScreenState extends State<EditGenreScreen> {
-  // final Box<Genre> genres = Hive.box<Genre>("genres");
 
   String name = "";
   int color = Colors.white.value;
