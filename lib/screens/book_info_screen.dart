@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/widgets/author_preview_widget.dart';
+import 'package:shelfish/widgets/genre_preview_widget.dart';
 
 class BookInfoScreen extends StatefulWidget {
   static const String routeName = "/book-info";
@@ -41,7 +43,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: _book!.authors.map((Author author) => _buildAuthorPreview(author)).toList(),
+                    children: _book!.authors.map((Author author) => AuthorPreviewWidget(author: author)).toList(),
                   ),
                 ),
               const SizedBox(
@@ -65,7 +67,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: _book!.genres.map((Genre genre) => _buildGenrePreview(genre)).toList(),
+                    children: _book!.genres.map((Genre genre) => GenrePreviewWidget(genre: genre)).toList(),
                   ),
                 ),
               const SizedBox(
@@ -90,42 +92,6 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
           // TODO Navigate to edit_book_screen.
         },
         child: const Icon(Icons.edit_rounded),
-      ),
-    );
-  }
-
-  Widget _buildAuthorPreview(Author author) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "${author.firstName} ${author.lastName}",
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGenrePreview(Genre genre) {
-    return Card(
-      color: Color(genre.color).withAlpha(0x55),
-      elevation: 0.0,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              genre.name,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
       ),
     );
   }
