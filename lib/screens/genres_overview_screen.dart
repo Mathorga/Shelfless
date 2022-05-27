@@ -34,9 +34,8 @@ class _GenresOverviewScreenState extends State<GenresOverviewScreen> {
               tooltip: "Sort by",
               itemBuilder: (BuildContext context) {
                 return {
-                  "Title",
-                  "Author",
-                  "Genre",
+                  "Name",
+                  "Color",
                 }.map((String choice) {
                   return PopupMenuItem<String>(
                     value: choice,

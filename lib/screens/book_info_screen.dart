@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/providers/books_provider.dart';
+import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 
@@ -16,16 +19,17 @@ class BookInfoScreen extends StatefulWidget {
 }
 
 class _BookInfoScreenState extends State<BookInfoScreen> {
-  Book? _book;
-
   @override
   Widget build(BuildContext context) {
-    _book = ModalRoute.of(context)!.settings.arguments as Book;
+    // Fetch provider.
+    final BooksProvider booksProvider = Provider.of(context, listen: true);
+
+    Book book = booksProvider.books[ModalRoute.of(context)!.settings.arguments as int];
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _book!.title,
+          book.title,
           style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
@@ -38,12 +42,12 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
             children: [
               // Authors.
               const Text("Authors"),
-              if (_book!.authors.isNotEmpty)
+              if (book.authors.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: _book!.authors.map((Author author) => AuthorPreviewWidget(author: author)).toList(),
+                    children: book.authors.map((Author author) => AuthorPreviewWidget(author: author)).toList(),
                   ),
                 ),
               const SizedBox(
@@ -54,7 +58,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               const Text("Publish date"),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(_book!.publishDate.toString()),
+                child: Text(book.publishDate.toString()),
               ),
               const SizedBox(
                 height: 24.0,
@@ -62,12 +66,12 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
 
               // Genres.
               const Text("Genres"),
-              if (_book!.genres.isNotEmpty)
+              if (book.genres.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: _book!.genres.map((Genre genre) => GenrePreviewWidget(genre: genre)).toList(),
+                    children: book.genres.map((Genre genre) => GenrePreviewWidget(genre: genre)).toList(),
                   ),
                 ),
               const SizedBox(
@@ -78,7 +82,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               const Text("Publisher"),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(_book!.publisher),
+                child: Text(book.publisher),
               ),
               const SizedBox(
                 height: 24.0,
@@ -89,7 +93,8 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO Navigate to edit_book_screen.
+          // Navigate to edit_book_screen.
+          Navigator.of(context).pushNamed(EditBookScreen.routeName, arguments: booksProvider.books.indexOf(book));
         },
         child: const Icon(Icons.edit_rounded),
       ),

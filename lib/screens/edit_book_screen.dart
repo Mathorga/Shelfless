@@ -7,6 +7,7 @@ import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/providers/authors_provider.dart';
+import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
@@ -23,17 +24,19 @@ class EditBookScreen extends StatefulWidget {
 }
 
 class _EditBookScreenState extends State<EditBookScreen> {
-  final Box<Book> _books = Hive.box<Book>("books");
   final Box<Author> _authors = Hive.box<Author>("authors");
   final Box<Genre> _genres = Hive.box<Genre>("genres");
 
-  late Book book;
+  late Book _book;
+
+  // Insert flag: tells whether the widget is used for adding or editing a book.
+  bool _inserting = true;
 
   @override
   void initState() {
     super.initState();
 
-    book = Book(
+    _book = Book(
       authors: HiveList(_authors),
       genres: HiveList(_genres),
     );
@@ -41,11 +44,22 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Fetch provider.
+    final BooksProvider booksProvider = Provider.of(context, listen: false);
+
+    // Fetch passed arguments.
+    int? index = ModalRoute.of(context)!.settings.arguments as int?;
+    _inserting = index == null;
+
+    if (!_inserting) {
+      _book = booksProvider.books[index!];
+    }
+
     final int currentYear = DateTime.now().year;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Insert Book"),
+        title: Text("${_inserting ? "Insert" : "Edit"} Book"),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -55,8 +69,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
             children: [
               // Title
               const Text("Title"),
-              TextField(
-                onChanged: (String value) => book.title = value,
+              TextFormField(
+                initialValue: _book.title,
+                onChanged: (String value) => _book.title = value,
               ),
               const SizedBox(
                 height: 24.0,
@@ -65,12 +80,12 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
               // Authors.
               const Text("Authors"),
-              if (book.authors.isNotEmpty)
+              if (_book.authors.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: book.authors.map((Author author) => _buildAuthorPreview(author)).toList(),
+                    children: _book.authors.map((Author author) => _buildAuthorPreview(author)).toList(),
                   ),
                 ),
               Align(
@@ -102,9 +117,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                                 final Author author = provider.authors[index];
 
                                                 // Only add the author if not already there.
-                                                if (!book.authors.contains(author)) {
+                                                if (!_book.authors.contains(author)) {
                                                   setState(() {
-                                                    book.authors.add(author);
+                                                    _book.authors.add(author);
                                                   });
                                                 } else {
                                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -156,7 +171,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           onChanged: (DateTime value) {
                             Navigator.of(context).pop();
                             setState(() {
-                              book.publishDate = value.year;
+                              _book.publishDate = value.year;
                             });
                           },
                         ),
@@ -167,7 +182,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Text((book.publishDate).toString()),
+                    child: Text((_book.publishDate).toString()),
                   ),
                 ),
               ),
@@ -178,12 +193,12 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
               // Genres.
               const Text("Genres"),
-              if (book.genres.isNotEmpty)
+              if (_book.genres.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: book.genres.map((Genre genre) => _buildGenrePreview(genre)).toList(),
+                    children: _book.genres.map((Genre genre) => _buildGenrePreview(genre)).toList(),
                   ),
                 ),
               Align(
@@ -215,9 +230,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                                 final Genre genre = provider.genres[index];
 
                                                 // Only add the genre if not already there.
-                                                if (!book.genres.contains(genre)) {
+                                                if (!_book.genres.contains(genre)) {
                                                   setState(() {
-                                                    book.genres.add(genre);
+                                                    _book.genres.add(genre);
                                                   });
                                                 } else {
                                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -254,7 +269,10 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
               // Publisher.
               const Text("Publisher"),
-              const TextField(),
+              TextFormField(
+                initialValue: _book.publisher,
+                onChanged: (String value) => _book.publisher = value,
+              ),
               const SizedBox(
                 height: 24.0,
                 child: Divider(height: 2.0),
@@ -265,9 +283,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          if (book.title != "" && book.authors.isNotEmpty && book.genres.isNotEmpty) {
-            // Actually save a new book.
-            _books.add(book);
+          if (_book.title != "" && _book.authors.isNotEmpty && _book.genres.isNotEmpty) {
+            // Actually save the book.
+            _inserting ? booksProvider.addBook(_book) : booksProvider.updateBook(_book);
             Navigator.of(context).pop();
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -299,7 +317,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
         IconButton(
           onPressed: () {
             setState(() {
-              book.authors.remove(author);
+              _book.authors.remove(author);
             });
           },
           icon: const Icon(
@@ -321,7 +339,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
         IconButton(
           onPressed: () {
             setState(() {
-              book.genres.remove(genre);
+              _book.genres.remove(genre);
             });
           },
           icon: const Icon(

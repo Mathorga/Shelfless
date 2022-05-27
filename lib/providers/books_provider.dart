@@ -19,8 +19,8 @@ class BooksProvider with ChangeNotifier {
   }
 
   /// Updates the book at the given index.
-  void updateBook(int index, Book book) {
-    _books.putAt(index, book);
+  void updateBook(Book book) {
+    book.save();
     notifyListeners();
   }
 

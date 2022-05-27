@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:hive/hive.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/book.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/screens/authors_overview_screen.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
@@ -24,7 +22,6 @@ class BooksOverviewScreen extends StatefulWidget {
 }
 
 class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
-  // final Box<Book> _books = Hive.box<Book>("books");
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +91,7 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
             booksProvider.books.length,
             (int index) => BookPreviewWidget(
               book: booksProvider.books[index],
-              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: booksProvider.books[index]),
+              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: index),
             ),
           )
         ],
@@ -123,7 +120,7 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
             label: "Book",
             child: const Icon(Icons.book_rounded),
             onTap: () {
-              Navigator.of(context).pushNamed(EditBookScreen.routeName).then((Object? value) => setState(() {}));
+              Navigator.of(context).pushNamed(EditBookScreen.routeName);
             },
           ),
         ],
