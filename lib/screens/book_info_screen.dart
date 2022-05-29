@@ -25,7 +25,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
     final BooksProvider booksProvider = Provider.of(context, listen: true);
 
     // Fetch book.
-    Book book = booksProvider.books[ModalRoute.of(context)!.settings.arguments as int];
+    Book book = ModalRoute.of(context)!.settings.arguments as Book;
 
     return Scaffold(
       appBar: AppBar(
@@ -95,7 +95,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigate to edit_book_screen.
-          Navigator.of(context).pushNamed(EditBookScreen.routeName, arguments: booksProvider.books.indexOf(book));
+          Navigator.of(context).pushNamed(EditBookScreen.routeName, arguments: book);
         },
         child: const Icon(Icons.edit_rounded),
       ),

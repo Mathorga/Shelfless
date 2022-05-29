@@ -107,7 +107,7 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
             booksProvider.books.length,
             (int index) => BookPreviewWidget(
               book: booksProvider.books[index],
-              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: index),
+              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: booksProvider.books[index]),
             ),
           )
         ],

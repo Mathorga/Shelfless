@@ -52,13 +52,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
     final BooksProvider booksProvider = Provider.of(context, listen: false);
 
     // Fetch passed arguments.
-    int? index = ModalRoute.of(context)!.settings.arguments as int?;
-    _inserting = index == null;
+    Book? receivedBook = ModalRoute.of(context)!.settings.arguments as Book?;
+    _inserting = receivedBook == null;
 
-    final double dialogWidth = 300.0;
+    const double dialogWidth = 300.0;
 
     if (!_inserting) {
-      _book = booksProvider.books[index!];
+      _book = receivedBook!;
     }
 
     final int currentYear = DateTime.now().year;
