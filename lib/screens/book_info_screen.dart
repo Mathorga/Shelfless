@@ -34,6 +34,21 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
           style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Navigate to edit_book_screen.
+              Navigator.of(context).pushNamed(EditBookScreen.routeName, arguments: book);
+            },
+            icon: const Icon(Icons.edit_rounded),
+          ),
+          IconButton(
+            onPressed: () {
+              // TODO Show dialog asking the user to confirm their choice.
+            },
+            icon: const Icon(Icons.delete_rounded),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -91,13 +106,6 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to edit_book_screen.
-          Navigator.of(context).pushNamed(EditBookScreen.routeName, arguments: book);
-        },
-        child: const Icon(Icons.edit_rounded),
       ),
     );
   }
