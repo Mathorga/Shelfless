@@ -9,7 +9,9 @@ import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
+import 'package:shelfish/screens/edit_location_screen.dart';
 import 'package:shelfish/screens/genres_overview_screen.dart';
+import 'package:shelfish/screens/locations_overview_screen.dart';
 import 'package:shelfish/widgets/book_preview_widget.dart';
 
 class BooksOverviewScreen extends StatefulWidget {
@@ -45,6 +47,7 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
                 "Title",
                 "Author",
                 "Genre",
+                "Location",
               }.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
@@ -65,6 +68,10 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
                   // Navigate to the authors overview.
                   Navigator.of(context).pushNamed(AuthorsOverviewScreen.routeName);
                   break;
+                case "Location":
+                  // Navigate to the authors overview.
+                  Navigator.of(context).pushNamed(LocationsOverviewScreen.routeName);
+                  break;
                 default:
                   break;
               }
@@ -73,6 +80,7 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
               return {
                 "Genres",
                 "Authors",
+                "Locations",
               }.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
@@ -102,6 +110,13 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
         spacing: 12.0,
         childrenButtonSize: const Size(64.0, 64.0),
         children: [
+          SpeedDialChild(
+            label: "Location",
+            child: const Icon(Icons.location_on_rounded),
+            onTap: () {
+              Navigator.of(context).pushNamed(EditLocationScreen.routeName);
+            },
+          ),
           SpeedDialChild(
             label: "Author",
             child: const Icon(Icons.person_rounded),
