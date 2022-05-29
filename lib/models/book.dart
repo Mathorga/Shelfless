@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/models/store_location.dart';
 
 part 'book.g.dart';
 
@@ -23,7 +24,7 @@ class Book extends HiveObject {
   String publisher;
 
   @HiveField(7)
-  String location;
+  StoreLocation? location;
 
   Book({
     this.title = "",
@@ -31,7 +32,7 @@ class Book extends HiveObject {
     this.publishDate = 0,
     required this.genres,
     this.publisher = "",
-    this.location = "",
+    this.location,
   });
 
   Map<String, dynamic> toMap() {

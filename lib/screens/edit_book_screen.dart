@@ -6,13 +6,17 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
+import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
+import 'package:shelfish/screens/edit_location_screen.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
+import 'package:shelfish/widgets/location_preview_widget.dart';
 
 class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
@@ -50,6 +54,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
     // Fetch passed arguments.
     int? index = ModalRoute.of(context)!.settings.arguments as int?;
     _inserting = index == null;
+
+    final double dialogWidth = 300.0;
 
     if (!_inserting) {
       _book = booksProvider.books[index!];
@@ -103,7 +109,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             content: Consumer<AuthorsProvider>(
                               // Listen to changes in saved authors.
                               builder: (BuildContext context, AuthorsProvider provider, Widget? child) => SizedBox(
-                                width: 300.0,
+                                width: dialogWidth,
                                 child: ListView(
                                   physics: const BouncingScrollPhysics(),
                                   shrinkWrap: true,
@@ -163,7 +169,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     builder: (BuildContext context) => AlertDialog(
                       title: const Text("Select publish year"),
                       content: SizedBox(
-                        height: 300.0,
+                        width: dialogWidth,
                         child: YearPicker(
                           firstDate: DateTime(0),
                           lastDate: DateTime(currentYear),
@@ -216,7 +222,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             content: Consumer<GenresProvider>(
                               // Listen to changes in saved genres.
                               builder: (BuildContext context, GenresProvider provider, Widget? child) => SizedBox(
-                                width: 300.0,
+                                width: dialogWidth,
                                 child: ListView(
                                   physics: const BouncingScrollPhysics(),
                                   shrinkWrap: true,
@@ -277,6 +283,68 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
+
+              // Location.
+              const Text("Location"),
+              if (_book.location != null)
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: _buildLocationPreview(_book.location!),
+                ),
+
+              if (_book.location == null)
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: ElevatedButton(
+                      child: const Text("Select"),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Locations"),
+                              content: Consumer<StoreLocationsProvider>(
+                                // Listen to changes in saved genres.
+                                builder: (BuildContext context, StoreLocationsProvider provider, Widget? child) => SizedBox(
+                                  width: dialogWidth,
+                                  child: ListView(
+                                    physics: const BouncingScrollPhysics(),
+                                    shrinkWrap: true,
+                                    children: [
+                                      ...List.generate(
+                                        provider.locations.length + 1,
+                                        (int index) => index < provider.locations.length
+                                            ? ListTile(
+                                                leading: Text(provider.locations[index].name),
+                                                onTap: () {
+                                                  final StoreLocation location = provider.locations[index];
+
+                                                  // Set the book location.
+                                                  setState(() {
+                                                    _book.location = location;
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                              )
+                                            : ListTile(
+                                                leading: const Text("Add"),
+                                                trailing: const Icon(Icons.add),
+                                                onTap: () => Navigator.of(context).pushNamed(EditLocationScreen.routeName),
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -351,17 +419,25 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
   }
 
-  void addBook() {
-    // final Box booksBox = Hive.box<Book>("books");
-    // final Box authorsBox = Hive.box<Book>("authors");
-    // final Box genresBox = Hive.box<Book>("genres");
-
-    // booksBox.add(Book(
-    //     title: "test",
-    //     authors: [Author("Maurizio", "Micheletti")],
-    //     publishDate: 1978,
-    //     genre: Genre(name: "Thriller", color: Colors.red.value),
-    //     publisher: "Mondadori",
-    //     location: "Here"));
+  Widget _buildLocationPreview(StoreLocation location) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: LocationPreviewWidget(location: location),
+        ),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              _book.location = null;
+            });
+          },
+          icon: const Icon(
+            Icons.cancel_rounded,
+            color: Colors.red,
+          ),
+        ),
+      ],
+    );
   }
 }

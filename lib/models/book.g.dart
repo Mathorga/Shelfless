@@ -22,7 +22,7 @@ class BookAdapter extends TypeAdapter<Book> {
       publishDate: fields[3] as int,
       genres: (fields[4] as HiveList).castHiveList(),
       publisher: fields[6] as String,
-      location: fields[7] as String,
+      location: fields[7] as StoreLocation?,
     );
   }
 
