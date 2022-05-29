@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 
+import 'package:shelfish/models/book.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/screens/authors_overview_screen.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
@@ -40,14 +41,21 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
           ),
           PopupMenuButton<String>(
             icon: const Icon(Icons.sort_rounded),
-            onSelected: (String item) {},
+            onSelected: (String item) {
+              switch (item) {
+                case "Title":
+                  booksProvider.setSorting((Book book1, Book book2) => book1.title.compareTo(book2.title));
+                  break;
+                case "Publish Date":
+                  booksProvider.setSorting((Book book1, Book book2) => book1.publishDate.compareTo(book2.publishDate));
+                  break;
+              }
+            },
             tooltip: "Sort by",
             itemBuilder: (BuildContext context) {
               return {
                 "Title",
-                "Author",
-                "Genre",
-                "Location",
+                "Publish Date",
               }.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
