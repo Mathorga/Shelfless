@@ -345,6 +345,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 88.0),
             ],
           ),
         ),
