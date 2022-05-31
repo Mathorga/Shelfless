@@ -45,6 +45,36 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
           IconButton(
             onPressed: () {
               // TODO Show dialog asking the user to confirm their choice.
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Delete"),
+                    content: const Text("Are you sure you want to delete this book?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          booksProvider.deleteBook(book);
+
+                          // Pop the dialog.
+                          Navigator.of(context).pop();
+
+                          // Pop the book info screen.
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Yes"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Pop the dialog.
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("No"),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             icon: const Icon(Icons.delete_rounded),
           )

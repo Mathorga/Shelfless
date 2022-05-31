@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/store_location.dart';
 
 class StoreLocationsProvider with ChangeNotifier {
@@ -20,14 +19,14 @@ class StoreLocationsProvider with ChangeNotifier {
   }
 
   /// Updates the provided location.
-  void updateLocation(Book storeLocation) {
+  void updateLocation(StoreLocation storeLocation) {
     storeLocation.save();
     notifyListeners();
   }
 
-  /// Deletes the location at the given index.
-  void deleteLocation(int index) {
-    _locations.deleteAt(index);
+  /// Deletes the provided location.
+  void deleteLocation(StoreLocation location) {
+    location.delete();
     notifyListeners();
   }
 }

@@ -19,14 +19,14 @@ class AuthorsProvider with ChangeNotifier {
   }
 
   /// Updates the author at the given index.
-  void updateAuthor(int index, Author author) {
-    _authors.putAt(index, author);
+  void updateAuthor(Author author) {
+    author.save();
     notifyListeners();
   }
 
-  /// Deletes the author at the given index.
-  void deleteAuthor(int index) {
-    _authors.deleteAt(index);
+  /// Deletes the given author.
+  void deleteAuthor(Author author) {
+    author.delete();
     notifyListeners();
   }
 }

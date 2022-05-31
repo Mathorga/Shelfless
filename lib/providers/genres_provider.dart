@@ -18,15 +18,15 @@ class GenresProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Updates the genre at the given index.
-  void updateGenre(int index, Genre genre) {
-    _genres.putAt(index, genre);
+  /// Updates the given genre.
+  void updateGenre(Genre genre) {
+    genre.save();
     notifyListeners();
   }
 
-  /// Deletes the genre at the given index.
-  void deleteGenre(int index) {
-    _genres.deleteAt(index);
+  /// Deletes the given genre.
+  void deleteGenre(Genre genre) {
+    genre.delete();
     notifyListeners();
   }
 }

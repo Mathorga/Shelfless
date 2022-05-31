@@ -25,9 +25,9 @@ class BooksProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Deletes the book at the given index.
-  void deleteBook(int index) {
-    _books.deleteAt(index);
+  /// Deletes the given book.
+  void deleteBook(Book book) {
+    book.delete();
     notifyListeners();
   }
 
