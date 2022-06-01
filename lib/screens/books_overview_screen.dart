@@ -25,6 +25,75 @@ class BooksOverviewScreen extends StatefulWidget {
 }
 
 class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
+  AppBar _buildAppBar(BooksProvider booksProvider) {
+    return AppBar(
+      title: const Text("Books"),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.search_rounded),
+        ),
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.sort_rounded),
+          onSelected: (String item) {
+            switch (item) {
+              case "Title":
+                booksProvider.setSorting((Book book1, Book book2) => book1.title.compareTo(book2.title));
+                break;
+              case "Publish Date":
+                booksProvider.setSorting((Book book1, Book book2) => book1.publishDate.compareTo(book2.publishDate));
+                break;
+            }
+          },
+          tooltip: "Sort by",
+          itemBuilder: (BuildContext context) {
+            return {
+              "Title",
+              "Publish Date",
+            }.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+        ),
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert_rounded),
+          onSelected: (String item) {
+            switch (item) {
+              case "Genres":
+                // Navigate to the genres overview.
+                Navigator.of(context).pushNamed(GenresOverviewScreen.routeName);
+                break;
+              case "Authors":
+                // Navigate to the authors overview.
+                Navigator.of(context).pushNamed(AuthorsOverviewScreen.routeName);
+                break;
+              case "Location":
+                // Navigate to the authors overview.
+                Navigator.of(context).pushNamed(LocationsOverviewScreen.routeName);
+                break;
+              default:
+                break;
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return {
+              "Genres",
+              "Authors",
+              "Locations",
+            }.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,72 +101,22 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
     final BooksProvider booksProvider = Provider.of(context, listen: true);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Books"),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search_rounded),
-          ),
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.sort_rounded),
-            onSelected: (String item) {
-              switch (item) {
-                case "Title":
-                  booksProvider.setSorting((Book book1, Book book2) => book1.title.compareTo(book2.title));
-                  break;
-                case "Publish Date":
-                  booksProvider.setSorting((Book book1, Book book2) => book1.publishDate.compareTo(book2.publishDate));
-                  break;
-              }
-            },
-            tooltip: "Sort by",
-            itemBuilder: (BuildContext context) {
-              return {
-                "Title",
-                "Publish Date",
-              }.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          ),
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded),
-            onSelected: (String item) {
-              switch (item) {
-                case "Genres":
-                  // Navigate to the genres overview.
-                  Navigator.of(context).pushNamed(GenresOverviewScreen.routeName);
-                  break;
-                case "Authors":
-                  // Navigate to the authors overview.
-                  Navigator.of(context).pushNamed(AuthorsOverviewScreen.routeName);
-                  break;
-                case "Location":
-                  // Navigate to the authors overview.
-                  Navigator.of(context).pushNamed(LocationsOverviewScreen.routeName);
-                  break;
-                default:
-                  break;
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return {
-                "Genres",
-                "Authors",
-                "Locations",
-              }.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          ),
-        ],
+      appBar: _buildAppBar(booksProvider),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              child: Text("Filter"),
+            ),
+            ListTile(
+              title: const Text("Hello"),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
       ),
       body: ListView(
         physics: const BouncingScrollPhysics(),
