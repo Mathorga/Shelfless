@@ -11,10 +11,11 @@ import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
+import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
-import 'package:shelfish/screens/books_overview_screen.dart';
+import 'package:shelfish/screens/books_overview_screen_old.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
@@ -62,7 +63,8 @@ class Shelfish extends StatelessWidget {
         home: const MainScreen(),
         routes: {
           MainScreen.routeName: (BuildContext context) => const MainScreen(),
-          BooksOverviewScreen.routeName: (BuildContext context) => const BooksOverviewScreen(),
+          BooksScreen.routeName: (BuildContext context) => const BooksScreen(),
+          BooksOverviewScreenOld.routeName: (BuildContext context) => const BooksOverviewScreenOld(),
           LocationsOverviewScreen.routeName: (BuildContext context) => const LocationsOverviewScreen(),
           BookInfoScreen.routeName: (BuildContext context) => const BookInfoScreen(),
           EditBookScreen.routeName: (BuildContext context) => const EditBookScreen(),

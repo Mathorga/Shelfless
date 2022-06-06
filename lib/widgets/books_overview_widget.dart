@@ -21,7 +21,9 @@ class BooksOverviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Fetch the books provider and listen for changes.
-    final BooksProvider booksProvider = Provider.of(context, listen: true);
+    final BooksProvider _booksProvider = Provider.of(context, listen: true);
+
+    List<Book> _books = _booksProvider.books.where(filter ?? (Book book) => true).toList();
 
     return Scaffold(
       body: ListView(
@@ -29,10 +31,10 @@ class BooksOverviewWidget extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         children: [
           ...List.generate(
-            booksProvider.books.where(filter ?? (Book element) => true).length,
+            _books.length,
             (int index) => BookPreviewWidget(
-              book: booksProvider.books[index],
-              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: booksProvider.books[index]),
+              book: _books[index],
+              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: _books[index]),
             ),
           )
         ],

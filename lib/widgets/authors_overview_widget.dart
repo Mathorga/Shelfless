@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shelfish/models/book.dart';
 import 'package:shelfish/providers/authors_provider.dart';
+import 'package:shelfish/screens/books_screen.dart';
 
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
@@ -18,8 +20,8 @@ class AuthorsOverviewWidget extends StatefulWidget {
 class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
   @override
   Widget build(BuildContext context) {
-  final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
-  
+    final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
+
     return Scaffold(
         body: GridView.count(
           physics: const BouncingScrollPhysics(),
@@ -28,8 +30,17 @@ class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
           children: [
             ...List.generate(
               _authorsProvider.authors.length,
-              (int index) => AuthorPreviewWidget(
-                author: _authorsProvider.authors[index],
+              (int index) => GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => BooksScreen(
+                      author: _authorsProvider.authors[index],
+                    ),
+                  ),
+                ),
+                child: AuthorPreviewWidget(
+                  author: _authorsProvider.authors[index],
+                ),
               ),
             )
           ],

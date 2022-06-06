@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/book.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
-import 'package:shelfish/screens/locations_overview_screen.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
 
 class MainScreen extends StatefulWidget {

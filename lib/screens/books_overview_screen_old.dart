@@ -15,16 +15,16 @@ import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/screens/locations_overview_screen.dart';
 import 'package:shelfish/widgets/book_preview_widget.dart';
 
-class BooksOverviewScreen extends StatefulWidget {
+class BooksOverviewScreenOld extends StatefulWidget {
   static const String routeName = "/books_overview";
 
-  const BooksOverviewScreen({Key? key}) : super(key: key);
+  const BooksOverviewScreenOld({Key? key}) : super(key: key);
 
   @override
-  State<BooksOverviewScreen> createState() => _BooksOverviewScreenState();
+  State<BooksOverviewScreenOld> createState() => _BooksOverviewScreenOldState();
 }
 
-class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
+class _BooksOverviewScreenOldState extends State<BooksOverviewScreenOld> {
   AppBar _buildAppBar(BooksProvider booksProvider) {
     return AppBar(
       title: const Text("Books"),

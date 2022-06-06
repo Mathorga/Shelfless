@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shelfish/models/book.dart';
 
 import 'package:shelfish/providers/genres_provider.dart';
+import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 
@@ -18,7 +20,7 @@ class GenresOverviewWidget extends StatefulWidget {
 class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
   @override
   Widget build(BuildContext context) {
-  final GenresProvider _genresProvider = Provider.of(context, listen: true);
+    final GenresProvider _genresProvider = Provider.of(context, listen: true);
 
     return Scaffold(
         body: GridView.count(
@@ -28,8 +30,17 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
           children: [
             ...List.generate(
               _genresProvider.genres.length,
-              (int index) => GenrePreviewWidget(
-                genre: _genresProvider.genres[index],
+              (int index) => GestureDetector(
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => BooksScreen(
+                      genre: _genresProvider.genres[index],
+                    ),
+                  ),
+                ),
+                child: GenrePreviewWidget(
+                  genre: _genresProvider.genres[index],
+                ),
               ),
             )
           ],
