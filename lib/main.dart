@@ -11,15 +11,16 @@ import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
-import 'package:shelfish/screens/authors_overview_screen.dart';
+import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/books_overview_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
-import 'package:shelfish/screens/genres_overview_screen.dart';
+import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/screens/locations_overview_screen.dart';
+import 'package:shelfish/screens/main_screen.dart';
 
 void main() async {
   // Init local DB.
@@ -58,11 +59,10 @@ class Shelfish extends StatelessWidget {
         theme: ThemeData.dark(
             // primarySwatch: Colors.blueGrey,
             ),
-        home: const BooksOverviewScreen(),
+        home: const MainScreen(),
         routes: {
+          MainScreen.routeName: (BuildContext context) => const MainScreen(),
           BooksOverviewScreen.routeName: (BuildContext context) => const BooksOverviewScreen(),
-          GenresOverviewScreen.routeName: (BuildContext context) => const GenresOverviewScreen(),
-          AuthorsOverviewScreen.routeName: (BuildContext context) => const AuthorsOverviewScreen(),
           LocationsOverviewScreen.routeName: (BuildContext context) => const LocationsOverviewScreen(),
           BookInfoScreen.routeName: (BuildContext context) => const BookInfoScreen(),
           EditBookScreen.routeName: (BuildContext context) => const EditBookScreen(),

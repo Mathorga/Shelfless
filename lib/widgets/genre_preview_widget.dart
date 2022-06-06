@@ -15,16 +15,13 @@ class GenrePreviewWidget extends StatelessWidget {
     return Card(
       color: Color(genre.color).withAlpha(0x55),
       elevation: 0.0,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              genre.name,
-              textAlign: TextAlign.center,
-            ),
-          ],
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(
+            genre.name,
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );

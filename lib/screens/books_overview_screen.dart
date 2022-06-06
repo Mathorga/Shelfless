@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/providers/books_provider.dart';
-import 'package:shelfish/screens/authors_overview_screen.dart';
+import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
-import 'package:shelfish/screens/genres_overview_screen.dart';
+import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/screens/locations_overview_screen.dart';
 import 'package:shelfish/widgets/book_preview_widget.dart';
 
@@ -64,11 +64,11 @@ class _BooksOverviewScreenState extends State<BooksOverviewScreen> {
             switch (item) {
               case "Genres":
                 // Navigate to the genres overview.
-                Navigator.of(context).pushNamed(GenresOverviewScreen.routeName);
+                Navigator.of(context).pushNamed(GenresOverviewWidget.routeName);
                 break;
               case "Authors":
                 // Navigate to the authors overview.
-                Navigator.of(context).pushNamed(AuthorsOverviewScreen.routeName);
+                Navigator.of(context).pushNamed(AuthorsOverviewWidget.routeName);
                 break;
               case "Location":
                 // Navigate to the authors overview.
