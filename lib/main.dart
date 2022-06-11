@@ -56,7 +56,7 @@ class Shelfish extends StatelessWidget {
         title: "Shelfish",
         theme: ThemeData(
           colorScheme: const ColorScheme.dark(
-            primary: Colors.lightGreenAccent,
+            primary: Colors.cyanAccent,
             secondary: Colors.cyanAccent,
           ),
 
