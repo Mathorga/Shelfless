@@ -38,8 +38,22 @@ class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
                     ),
                   ),
                 ),
-                child: AuthorPreviewWidget(
-                  author: _authorsProvider.authors[index],
+                child: Stack(
+                  children: [
+                    AuthorPreviewWidget(
+                      author: _authorsProvider.authors[index],
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () {
+                          // TODO Edit instead of inserting.
+                          Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+                        },
+                        icon: const Icon(Icons.edit_rounded),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )

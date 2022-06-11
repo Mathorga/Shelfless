@@ -38,8 +38,22 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
                     ),
                   ),
                 ),
-                child: GenrePreviewWidget(
-                  genre: _genresProvider.genres[index],
+                child: Stack(
+                  children: [
+                    GenrePreviewWidget(
+                      genre: _genresProvider.genres[index],
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () {
+                          // TODO Edit instead of inserting.
+                          Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+                        },
+                        icon: const Icon(Icons.edit_rounded),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )

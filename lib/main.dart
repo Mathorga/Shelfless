@@ -12,14 +12,12 @@ import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
-import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/books_overview_screen_old.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
-import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/screens/locations_overview_screen.dart';
 import 'package:shelfish/screens/main_screen.dart';
 
@@ -57,9 +55,24 @@ class Shelfish extends StatelessWidget {
       ],
       child: MaterialApp(
         title: "Shelfish",
-        theme: ThemeData.dark(
-            // primarySwatch: Colors.blueGrey,
-            ),
+        theme: ThemeData(
+          colorScheme: const ColorScheme.dark(
+            primary: Colors.lightGreenAccent,
+            secondary: Colors.cyanAccent,
+          ),
+
+          appBarTheme: const AppBarTheme(
+            color: Colors.transparent,
+            elevation: 0.0,
+            centerTitle: true,
+          ),
+          cardTheme: CardTheme(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              elevation: 0.0),
+          // primarySwatch: Colors.blueGrey,
+        ),
         home: const MainScreen(),
         routes: {
           MainScreen.routeName: (BuildContext context) => const MainScreen(),
