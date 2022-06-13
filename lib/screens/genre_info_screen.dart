@@ -46,8 +46,8 @@ class _GenreInfoScreenState extends State<GenreInfoScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text("Delete"),
-                    content: const Text("Are you sure you want to delete this author?"),
+                    title: Text("Delete ${genre.name}?"),
+                    content: const Text("Are you sure you want to delete this genre?"),
                     actions: [
                       TextButton(
                         onPressed: () {

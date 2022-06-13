@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/utils/color_utils.dart';
 
 class GenrePreviewWidget extends StatelessWidget {
   final Genre genre;
@@ -13,7 +14,7 @@ class GenrePreviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color(genre.color).withAlpha(0x55),
+      color: genreColor(genre.color),
       elevation: 0.0,
       child: Center(
         child: Padding(

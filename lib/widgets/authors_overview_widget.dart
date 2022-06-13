@@ -23,7 +23,11 @@ class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
     final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
 
     return Scaffold(
-        body: GridView.count(
+        body: _authorsProvider.authors.isEmpty
+          ? const Center(
+              child: Text("No authors yet"),
+            )
+          : GridView.count(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.all(8.0),
           crossAxisCount: 2,

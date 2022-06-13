@@ -24,7 +24,11 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
     final GenresProvider _genresProvider = Provider.of(context, listen: true);
 
     return Scaffold(
-        body: GridView.count(
+        body: _genresProvider.genres.isEmpty
+          ? const Center(
+              child: Text("No genres yet"),
+            )
+          : GridView.count(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.all(8.0),
           crossAxisCount: 2,

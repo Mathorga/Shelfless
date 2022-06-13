@@ -26,19 +26,23 @@ class BooksOverviewWidget extends StatelessWidget {
     List<Book> _books = _booksProvider.books.where(filter ?? (Book book) => true).toList();
 
     return Scaffold(
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(8.0),
-        children: [
-          ...List.generate(
-            _books.length,
-            (int index) => BookPreviewWidget(
-              book: _books[index],
-              onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: _books[index]),
+      body: _books.isEmpty
+          ? const Center(
+              child: Text("No books yet"),
+            )
+          : ListView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(8.0),
+              children: [
+                ...List.generate(
+                  _books.length,
+                  (int index) => BookPreviewWidget(
+                    book: _books[index],
+                    onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: _books[index]),
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed(EditBookScreen.routeName);
