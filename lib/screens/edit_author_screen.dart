@@ -16,20 +16,31 @@ class EditAuthorScreen extends StatefulWidget {
 }
 
 class _EditAuthorScreenState extends State<EditAuthorScreen> {
-  // final Box<Author> authors = Hive.box<Author>("authors");
+  Author _author = Author(
+    firstName: "",
+    lastName: "",
+  );
 
-  String firstName = "";
-  String lastName = "";
+  // Insert flag: tells whether the widget is used for adding or editing an author.
+  bool _inserting = true;
 
   @override
   Widget build(BuildContext context) {
     // Fetch provider to save changes.
     final AuthorsProvider authorsProvider = Provider.of(context, listen: false);
 
+    // Fetch passed arguments.
+    Author? receivedAuthor = ModalRoute.of(context)!.settings.arguments as Author?;
+    _inserting = receivedAuthor == null;
+
+    if (!_inserting) {
+      _author = receivedAuthor!;
+    }
+
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Insert Author"),
+          title: Text("${_inserting ? "Insert" : "Edit"} Author"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -37,16 +48,18 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("First Name"),
-              TextField(
-                onChanged: (String value) => firstName = value,
+              TextFormField(
+                initialValue: _author.firstName,
+                onChanged: (String value) => _author.firstName = value,
               ),
               const SizedBox(
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
               const Text("Last Name"),
-              TextField(
-                onChanged: (String value) => lastName = value,
+              TextFormField(
+                initialValue: _author.lastName,
+                onChanged: (String value) => _author.lastName = value,
               ),
               const SizedBox(
                 height: 24.0,
@@ -57,9 +70,8 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            // Actually save a new author.
-            final Author author = Author(firstName.trim(), lastName.trim());
-            authorsProvider.addAuthor(author);
+            // Actually save the author.            
+            _inserting ? authorsProvider.addAuthor(_author) : authorsProvider.updateAuthor(_author);
             Navigator.of(context).pop();
           },
           label: Row(

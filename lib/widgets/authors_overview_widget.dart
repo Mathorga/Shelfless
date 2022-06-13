@@ -47,8 +47,8 @@ class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
                       alignment: Alignment.topRight,
                       child: IconButton(
                         onPressed: () {
-                          // TODO Edit instead of inserting.
-                          Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+                          // Edit the selected author.
+                          Navigator.of(context).pushNamed(EditAuthorScreen.routeName, arguments: _authorsProvider.authors[index]);
                         },
                         icon: const Icon(Icons.edit_rounded),
                       ),

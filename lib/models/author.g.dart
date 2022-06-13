@@ -17,8 +17,8 @@ class AuthorAdapter extends TypeAdapter<Author> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Author(
-      fields[0] as String,
-      fields[1] as String,
+      firstName: fields[0] as String,
+      lastName: fields[1] as String,
     );
   }
 

@@ -10,10 +10,10 @@ class Author extends HiveObject {
   @HiveField(1)
   String lastName;
 
-  Author(
-    this.firstName,
-    this.lastName,
-  );
+  Author({
+    required this.firstName,
+    required this.lastName,
+  });
 
   @override
   String toString() {
