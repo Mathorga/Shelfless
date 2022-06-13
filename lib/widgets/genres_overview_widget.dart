@@ -6,6 +6,7 @@ import 'package:shelfish/models/book.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
+import 'package:shelfish/screens/genre_info_screen.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 
 class GenresOverviewWidget extends StatefulWidget {
@@ -47,8 +48,8 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
                       alignment: Alignment.topRight,
                       child: IconButton(
                         onPressed: () {
-                          // TODO Edit instead of inserting.
-                          Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+                          // Go to genre info.
+                          Navigator.of(context).pushNamed(GenreInfoScreen.routeName, arguments: _genresProvider.genres[index]);
                         },
                         icon: const Icon(Icons.info_rounded),
                       ),

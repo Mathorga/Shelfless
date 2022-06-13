@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:shelfish/providers/authors_provider.dart';
+import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/books_screen.dart';
 
 import 'package:shelfish/screens/edit_author_screen.dart';
@@ -47,7 +48,7 @@ class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
                       child: IconButton(
                         onPressed: () {
                           // Edit the selected author.
-                          Navigator.of(context).pushNamed(EditAuthorScreen.routeName, arguments: _authorsProvider.authors[index]);
+                          Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: _authorsProvider.authors[index]);
                         },
                         icon: const Icon(Icons.info_rounded),
                       ),

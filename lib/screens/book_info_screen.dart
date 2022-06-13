@@ -30,7 +30,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          book.title,
+          "Book Info",
           style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
@@ -44,7 +44,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
           ),
           IconButton(
             onPressed: () {
-              // TODO Show dialog asking the user to confirm their choice.
+              // Show dialog asking the user to confirm their choice.
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -59,7 +59,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                           // Pop the dialog.
                           Navigator.of(context).pop();
 
-                          // Pop the book info screen.
+                          // Pop the info screen.
                           Navigator.of(context).pop();
                         },
                         child: const Text("Yes"),
@@ -86,6 +86,16 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Title.
+              const Text("Title"),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(book.title, style: Theme.of(context).textTheme.headline6),
+              ),
+              const SizedBox(
+                height: 24.0,
+              ),
+
               // Authors.
               const Text("Authors"),
               if (book.authors.isNotEmpty)
@@ -104,7 +114,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               const Text("Publish date"),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(book.publishDate.toString()),
+                child: Text(book.publishDate.toString(), style: Theme.of(context).textTheme.headline6),
               ),
               const SizedBox(
                 height: 24.0,
@@ -128,7 +138,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               const Text("Publisher"),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(book.publisher),
+                child: Text(book.publisher, style: Theme.of(context).textTheme.headline6),
               ),
               const SizedBox(
                 height: 24.0,

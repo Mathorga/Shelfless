@@ -11,12 +11,14 @@ import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
+import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
+import 'package:shelfish/screens/genre_info_screen.dart';
 import 'package:shelfish/screens/locations_overview_screen.dart';
 import 'package:shelfish/screens/main_screen.dart';
 
@@ -30,7 +32,7 @@ void main() async {
   Hive.registerAdapter(GenreAdapter());
   Hive.registerAdapter(StoreLocationAdapter());
 
-  // Open boxes.
+  // Open hive boxes.
   await Hive.openBox<Book>("books");
   await Hive.openBox<Author>("authors");
   await Hive.openBox<Genre>("genres");
@@ -70,7 +72,6 @@ class Shelfish extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15.0),
               ),
               elevation: 0.0),
-          // primarySwatch: Colors.blueGrey,
         ),
         home: const MainScreen(),
         routes: {
@@ -78,6 +79,8 @@ class Shelfish extends StatelessWidget {
           BooksScreen.routeName: (BuildContext context) => const BooksScreen(),
           LocationsOverviewScreen.routeName: (BuildContext context) => const LocationsOverviewScreen(),
           BookInfoScreen.routeName: (BuildContext context) => const BookInfoScreen(),
+          AuthorInfoScreen.routeName: (BuildContext context) => const AuthorInfoScreen(),
+          GenreInfoScreen.routeName: (BuildContext context) => const GenreInfoScreen(),
           EditBookScreen.routeName: (BuildContext context) => const EditBookScreen(),
           EditAuthorScreen.routeName: (BuildContext context) => const EditAuthorScreen(),
           EditGenreScreen.routeName: (BuildContext context) => const EditGenreScreen(),
