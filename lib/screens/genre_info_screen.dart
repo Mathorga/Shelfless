@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
+import 'package:shelfish/screens/edit_genre_screen.dart';
 
 class GenreInfoScreen extends StatefulWidget {
   static const String routeName = "/genre-info";
@@ -34,7 +35,7 @@ class _GenreInfoScreenState extends State<GenreInfoScreen> {
           IconButton(
             onPressed: () {
               // Navigate to edit_book_screen.
-              Navigator.of(context).pushNamed(EditAuthorScreen.routeName, arguments: genre);
+              Navigator.of(context).pushNamed(EditGenreScreen.routeName, arguments: genre);
             },
             icon: const Icon(Icons.edit_rounded),
           ),
