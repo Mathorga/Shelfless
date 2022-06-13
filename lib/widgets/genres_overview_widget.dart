@@ -50,7 +50,7 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
                           // TODO Edit instead of inserting.
                           Navigator.of(context).pushNamed(EditGenreScreen.routeName);
                         },
-                        icon: const Icon(Icons.edit_rounded),
+                        icon: const Icon(Icons.info_rounded),
                       ),
                     ),
                   ],
