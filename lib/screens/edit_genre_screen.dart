@@ -19,26 +19,48 @@ class EditGenreScreen extends StatefulWidget {
 }
 
 class _EditGenreScreenState extends State<EditGenreScreen> {
-  String name = "";
-  int color = Colors.white.value;
+  late Genre _genre;
+
+  // Insert flag: tells whether the widget is used for adding or editing an author.
+  bool _inserting = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _genre = Genre(
+      name: "",
+      color: randomColor(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     // Fetch provider to save changes.
     final GenresProvider genresProvider = Provider.of(context, listen: false);
 
+    // Fetch passed arguments.
+    Genre? receivedGenre = ModalRoute.of(context)!.settings.arguments as Genre?;
+    _inserting = receivedGenre == null;
+
+    if (!_inserting) {
+      _genre = receivedGenre!;
+    }
+
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Insert Genre"),
+          title: Text("${_inserting ? "Insert" : "Edit"} Genre"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child: ListView(
             children: [
               const Text("Name"),
-              TextField(
-                onChanged: (String value) => name = value,
+              TextFormField(
+                initialValue: _genre.name,
+                textCapitalization: TextCapitalization.words,
+                onChanged: (String value) => _genre.name = value,
               ),
               const SizedBox(
                 height: 24.0,
@@ -58,10 +80,13 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                           title: const Text("Pick a color"),
                           content: SingleChildScrollView(
                             child: ColorPicker(
-                              pickerColor: Color(color),
+                              enableAlpha: false,
+                              hexInputBar: true,
+                              pickerAreaBorderRadius: BorderRadius.circular(15.0),
+                              pickerColor: Color(_genre.color),
                               onColorChanged: (Color pickedColor) {
                                 setState(() {
-                                  color = pickedColor.value;
+                                  _genre.color = pickedColor.value;
                                 });
                               },
                             ),
@@ -84,7 +109,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15.0),
-                          color: Color(color),
+                          color: Color(_genre.color),
                         ),
                         height: 100,
                         width: double.infinity,
@@ -95,7 +120,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                             onPressed: () {
                               // Pick a random color.
                               setState(() {
-                                color = (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt();
+                                _genre.color = randomColor();
                               });
                             },
                             icon: const Icon(Icons.refresh_rounded)),
@@ -112,13 +137,8 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            // Actually save a new genre.
-            final Genre genre = Genre(
-              name: name.trim(),
-              // color: (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt(),
-              color: color,
-            );
-            genresProvider.addGenre(genre);
+            // Actually save the genre.
+            _inserting ? genresProvider.addGenre(_genre) : genresProvider.updateGenre(_genre);
             Navigator.of(context).pop();
           },
           label: Row(
@@ -132,4 +152,6 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
       ),
     );
   }
+
+  int randomColor() => (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt();
 }

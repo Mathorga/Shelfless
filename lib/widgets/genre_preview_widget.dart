@@ -14,7 +14,6 @@ class GenrePreviewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Color(genre.color),
-      elevation: 0.0,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),

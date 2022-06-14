@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:shelfish/models/book.dart';
 
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
@@ -25,47 +24,48 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
 
     return Scaffold(
         body: _genresProvider.genres.isEmpty
-          ? const Center(
-              child: Text("No genres yet"),
-            )
-          : GridView.count(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(8.0),
-          crossAxisCount: 2,
-          children: [
-            ...List.generate(
-              _genresProvider.genres.length,
-              (int index) => GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => BooksScreen(
-                      genre: _genresProvider.genres[index],
-                    ),
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    GenrePreviewWidget(
-                      genre: _genresProvider.genres[index],
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () {
-                          // Go to genre info.
-                          Navigator.of(context).pushNamed(GenreInfoScreen.routeName, arguments: _genresProvider.genres[index]);
-                        },
-                        icon: const Icon(Icons.info_rounded),
+            ? const Center(
+                child: Text("No genres yet"),
+              )
+            : GridView.count(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(8.0),
+                crossAxisCount: 2,
+                children: [
+                  ...List.generate(
+                    _genresProvider.genres.length,
+                    (int index) => GestureDetector(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => BooksScreen(
+                            genre: _genresProvider.genres[index],
+                          ),
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          GenrePreviewWidget(
+                            genre: _genresProvider.genres[index],
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              onPressed: () {
+                                // Go to genre info.
+                                Navigator.of(context).pushNamed(GenreInfoScreen.routeName, arguments: _genresProvider.genres[index]);
+                              },
+                              icon: const Icon(Icons.info_rounded),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            // Create new genre.
             Navigator.of(context).pushNamed(EditGenreScreen.routeName);
           },
           child: const Icon(Icons.add_rounded),

@@ -50,6 +50,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
               const Text("First Name"),
               TextFormField(
                 initialValue: _author.firstName,
+                textCapitalization: TextCapitalization.words,
                 onChanged: (String value) => _author.firstName = value,
               ),
               const SizedBox(
@@ -59,6 +60,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
               const Text("Last Name"),
               TextFormField(
                 initialValue: _author.lastName,
+                textCapitalization: TextCapitalization.words,
                 onChanged: (String value) => _author.lastName = value,
               ),
               const SizedBox(
@@ -70,7 +72,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            // Actually save the author.            
+            // Actually save the author.
             _inserting ? authorsProvider.addAuthor(_author) : authorsProvider.updateAuthor(_author);
             Navigator.of(context).pop();
           },

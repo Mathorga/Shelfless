@@ -80,13 +80,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 const Text("Title"),
                 TextFormField(
                   initialValue: _book.title,
+                  textCapitalization: TextCapitalization.words,
                   onChanged: (String value) => _book.title = value,
                 ),
                 const SizedBox(
                   height: 24.0,
                   child: Divider(height: 2.0),
                 ),
-      
+
                 // Authors.
                 const Text("Authors"),
                 if (_book.authors.isNotEmpty)
@@ -120,11 +121,11 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                       ...List.generate(
                                         provider.authors.length + 1,
                                         (int index) => index < provider.authors.length
-                                            ? ListTile(
-                                                leading: Text("${provider.authors[index].firstName} ${provider.authors[index].lastName}"),
+                                            // Here a ListTile could be broken by a very long author name, so an AuthorPreviewWidget (with GestureDetector) is used instead.
+                                            ? GestureDetector(
                                                 onTap: () {
                                                   final Author author = provider.authors[index];
-      
+
                                                   // Only add the author if not already there.
                                                   if (!_book.authors.contains(author)) {
                                                     setState(() {
@@ -140,7 +141,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                                   }
                                                   Navigator.of(context).pop();
                                                 },
-                                              )
+                                                child: AuthorPreviewWidget(author: provider.authors[index]))
                                             : ListTile(
                                                 leading: const Text("Add"),
                                                 trailing: const Icon(Icons.add),
@@ -162,7 +163,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   height: 24.0,
                   child: Divider(height: 2.0),
                 ),
-      
+
                 // Publish year.
                 const Text("Publish date"),
                 GestureDetector(
@@ -199,7 +200,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   height: 24.0,
                   child: Divider(height: 2.0),
                 ),
-      
+
                 // Genres.
                 const Text("Genres"),
                 if (_book.genres.isNotEmpty)
@@ -233,11 +234,10 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                       ...List.generate(
                                         provider.genres.length + 1,
                                         (int index) => index < provider.genres.length
-                                            ? ListTile(
-                                                leading: Text(provider.genres[index].name),
+                                            ? GestureDetector(
                                                 onTap: () {
                                                   final Genre genre = provider.genres[index];
-      
+
                                                   // Only add the genre if not already there.
                                                   if (!_book.genres.contains(genre)) {
                                                     setState(() {
@@ -253,6 +253,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                                   }
                                                   Navigator.of(context).pop();
                                                 },
+                                                child: GenrePreviewWidget(genre: provider.genres[index]),
                                               )
                                             : ListTile(
                                                 leading: const Text("Add"),
@@ -275,18 +276,19 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   height: 24.0,
                   child: Divider(height: 2.0),
                 ),
-      
+
                 // Publisher.
                 const Text("Publisher"),
                 TextFormField(
                   initialValue: _book.publisher,
+                  textCapitalization: TextCapitalization.words,
                   onChanged: (String value) => _book.publisher = value,
                 ),
                 const SizedBox(
                   height: 24.0,
                   child: Divider(height: 2.0),
                 ),
-      
+
                 // Location.
                 const Text("Location"),
                 if (_book.location != null)
@@ -294,7 +296,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     padding: const EdgeInsets.all(12.0),
                     child: _buildLocationPreview(_book.location!),
                   ),
-      
+
                 if (_book.location == null)
                   Align(
                     alignment: Alignment.center,
@@ -323,7 +325,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                                   leading: Text(provider.locations[index].name),
                                                   onTap: () {
                                                     final StoreLocation location = provider.locations[index];
-      
+
                                                     // Set the book location.
                                                     setState(() {
                                                       _book.location = location;
@@ -348,7 +350,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 88.0),
+                const SizedBox(height: 88.0),
               ],
             ),
           ),

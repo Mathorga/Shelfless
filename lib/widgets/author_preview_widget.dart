@@ -14,7 +14,7 @@ class AuthorPreviewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Align(
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.bottomLeft,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(

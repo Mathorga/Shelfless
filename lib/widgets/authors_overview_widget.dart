@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/books_screen.dart';
-
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 
@@ -27,10 +27,10 @@ class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
           ? const Center(
               child: Text("No authors yet"),
             )
-          : GridView.count(
+          : ListView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.all(8.0),
-          crossAxisCount: 2,
+          // crossAxisCount: 2,
           children: [
             ...List.generate(
               _authorsProvider.authors.length,
@@ -44,8 +44,11 @@ class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
                 ),
                 child: Stack(
                   children: [
-                    AuthorPreviewWidget(
-                      author: _authorsProvider.authors[index],
+                    SizedBox(
+                      height: 120.0,
+                      child: AuthorPreviewWidget(
+                        author: _authorsProvider.authors[index],
+                      ),
                     ),
                     Align(
                       alignment: Alignment.topRight,
