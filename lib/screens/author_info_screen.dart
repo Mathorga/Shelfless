@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
+import 'package:shelfish/widgets/delete_dialog.dart';
 
 class AuthorInfoScreen extends StatefulWidget {
   static const String routeName = "/author-info";
@@ -44,31 +45,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text("Delete"),
-                    content: const Text("Are you sure you want to delete this author?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          authorsProvider.deleteAuthor(author);
-
-                          // Pop the dialog.
-                          Navigator.of(context).pop();
-
-                          // Pop the info screen.
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Yes"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Pop the dialog.
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("No"),
-                      ),
-                    ],
-                  );
+                  return DeleteDialog(title: author.toString(), onYes: () => authorsProvider.deleteAuthor(author), onNo: null);
                 },
               );
             },

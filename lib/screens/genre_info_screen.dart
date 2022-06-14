@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/providers/genres_provider.dart';
-import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
+import 'package:shelfish/widgets/delete_dialog.dart';
 
 class GenreInfoScreen extends StatefulWidget {
   static const String routeName = "/genre-info";
@@ -45,31 +45,7 @@ class _GenreInfoScreenState extends State<GenreInfoScreen> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text("Delete ${genre.name}?"),
-                    content: const Text("Are you sure you want to delete this genre?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          genresProvider.deleteGenre(genre);
-
-                          // Pop the dialog.
-                          Navigator.of(context).pop();
-
-                          // Pop the info screen.
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Yes"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Pop the dialog.
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("No"),
-                      ),
-                    ],
-                  );
+                  return DeleteDialog(title: genre.name, onYes: () => genresProvider.deleteGenre(genre), onNo: null);
                 },
               );
             },

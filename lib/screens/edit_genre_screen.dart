@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,6 @@ class EditGenreScreen extends StatefulWidget {
 }
 
 class _EditGenreScreenState extends State<EditGenreScreen> {
-
   String name = "";
   int color = Colors.white.value;
 
@@ -34,8 +34,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: [
               const Text("Name"),
               TextField(
@@ -45,6 +44,69 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
+
+              // Last name.
+              const Text("Color"),
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Pick a color"),
+                          content: SingleChildScrollView(
+                            child: ColorPicker(
+                              pickerColor: Color(color),
+                              onColorChanged: (Color pickedColor) {
+                                setState(() {
+                                  color = pickedColor.value;
+                                });
+                              },
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                // Dismiss dialog.
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("OK"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Color(color),
+                        ),
+                        height: 100,
+                        width: double.infinity,
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                            onPressed: () {
+                              // Pick a random color.
+                              setState(() {
+                                color = (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt();
+                              });
+                            },
+                            icon: const Icon(Icons.refresh_rounded)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 24.0,
+              ),
             ],
           ),
         ),
@@ -53,7 +115,8 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
             // Actually save a new genre.
             final Genre genre = Genre(
               name: name.trim(),
-              color: (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt(),
+              // color: (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt(),
+              color: color,
             );
             genresProvider.addGenre(genre);
             Navigator.of(context).pop();

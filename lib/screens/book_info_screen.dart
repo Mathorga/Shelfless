@@ -54,6 +54,13 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                     actions: [
                       TextButton(
                         onPressed: () {
+                          // Pop the dialog.
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("No"),
+                      ),
+                      TextButton(
+                        onPressed: () {
                           booksProvider.deleteBook(book);
 
                           // Pop the dialog.
@@ -63,13 +70,6 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                           Navigator.of(context).pop();
                         },
                         child: const Text("Yes"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Pop the dialog.
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("No"),
                       ),
                     ],
                   );

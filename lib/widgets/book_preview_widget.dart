@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/utils/color_utils.dart';
 
 class BookPreviewWidget extends StatelessWidget {
   final Book book;
@@ -21,7 +20,7 @@ class BookPreviewWidget extends StatelessWidget {
     double borderRadius = 15.0;
 
     // Prepare colors with custom alpha value.
-    List<Color> genreColors = book.genres.map((Genre genre) => genreColor(genre.color)).toList();
+    List<Color> genreColors = book.genres.map((Genre genre) => Color(genre.color)).toList();
 
     return GestureDetector(
       onTap: onTap,
