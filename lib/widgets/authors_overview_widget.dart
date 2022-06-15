@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shelfish/models/author.dart';
 
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/screens/author_info_screen.dart';
@@ -11,7 +12,12 @@ import 'package:shelfish/widgets/author_preview_widget.dart';
 class AuthorsOverviewWidget extends StatefulWidget {
   static const String routeName = "/authors_overview";
 
-  const AuthorsOverviewWidget({Key? key}) : super(key: key);
+  final String searchValue;
+
+  const AuthorsOverviewWidget({
+    Key? key,
+    this.searchValue = "",
+  }) : super(key: key);
 
   @override
   State<AuthorsOverviewWidget> createState() => _AuthorsOverviewWidgetState();
@@ -21,51 +27,52 @@ class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
   @override
   Widget build(BuildContext context) {
     final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
+    final _authors = _authorsProvider.authors.where((Author genre) => genre.toString().toLowerCase().contains(widget.searchValue.toLowerCase())).toList();
 
     return Scaffold(
-        body: _authorsProvider.authors.isEmpty
-          ? const Center(
-              child: Text("No authors yet"),
-            )
-          : ListView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(8.0),
-          // crossAxisCount: 2,
-          children: [
-            ...List.generate(
-              _authorsProvider.authors.length,
-              (int index) => GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => BooksScreen(
-                      author: _authorsProvider.authors[index],
-                    ),
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      height: 120.0,
-                      child: AuthorPreviewWidget(
-                        author: _authorsProvider.authors[index],
+        body: _authors.isEmpty
+            ? const Center(
+                child: Text("No authors yet"),
+              )
+            : ListView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(8.0),
+                // crossAxisCount: 2,
+                children: [
+                  ...List.generate(
+                    _authors.length,
+                    (int index) => GestureDetector(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => BooksScreen(
+                            author: _authors[index],
+                          ),
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          SizedBox(
+                            height: 120.0,
+                            child: AuthorPreviewWidget(
+                              author: _authors[index],
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              onPressed: () {
+                                // Edit the selected author.
+                                Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: _authors[index]);
+                              },
+                              icon: const Icon(Icons.info_rounded),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: () {
-                          // Edit the selected author.
-                          Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: _authorsProvider.authors[index]);
-                        },
-                        icon: const Icon(Icons.info_rounded),
-                      ),
-                    ),
-                  ],
-                ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).pushNamed(EditAuthorScreen.routeName);

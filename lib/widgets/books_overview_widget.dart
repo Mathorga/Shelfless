@@ -13,9 +13,12 @@ class BooksOverviewWidget extends StatelessWidget {
   // If no filter is provided, then all books are displayed.
   final bool Function(Book)? filter;
 
+  final String searchValue;
+
   const BooksOverviewWidget({
     Key? key,
     this.filter,
+    this.searchValue = "",
   }) : super(key: key);
 
   @override
@@ -23,7 +26,7 @@ class BooksOverviewWidget extends StatelessWidget {
     // Fetch the books provider and listen for changes.
     final BooksProvider _booksProvider = Provider.of(context, listen: true);
 
-    List<Book> _books = _booksProvider.books.where(filter ?? (Book book) => true).toList();
+    List<Book> _books = _booksProvider.books.where(filter ?? (Book book) => true).where((Book book) => book.title.toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
       body: _books.isEmpty

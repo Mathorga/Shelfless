@@ -1,3 +1,4 @@
+import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,6 +7,7 @@ import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
 
+// TODO Change to LibraryOverviewScreen.
 class MainScreen extends StatefulWidget {
   static const String routeName = "/main";
 
@@ -17,8 +19,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  String _currentFilter = "";
 
-  AppBar _buildAppBar(BooksProvider booksProvider) {
+  AppBar _buildAppBar() {
     return AppBar(
       title: const Text("Shelfish"),
       backgroundColor: Colors.transparent,
@@ -34,16 +37,25 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Fetch the books provider.
-    final BooksProvider booksProvider = Provider.of(context, listen: false);
-    const List<Widget> _pages = [
-      GenresOverviewWidget(),
-      AuthorsOverviewWidget(),
-      BooksOverviewWidget(),
+    List<Widget> _pages = [
+      GenresOverviewWidget(searchValue: _currentFilter),
+      AuthorsOverviewWidget(searchValue: _currentFilter),
+      BooksOverviewWidget(searchValue: _currentFilter),
     ];
 
     return Scaffold(
-      appBar: _buildAppBar(booksProvider),
+      // appBar: _buildAppBar(),
+      appBar: EasySearchBar(
+        title: const Text("Shelfish"),
+        searchBackIconTheme: const IconThemeData(color: Colors.white),
+        searchCursorColor: Colors.white,
+        onSearch: (String value) {
+          setState(() {
+            _currentFilter = value;
+          });
+        },
+        actions: [],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0.0,
         onTap: (int selectedIndex) => setState(() => _currentIndex = selectedIndex),
