@@ -54,7 +54,30 @@ class _MainScreenState extends State<MainScreen> {
             _currentFilter = value;
           });
         },
-        actions: [],
+        actions: [
+          PopupMenuButton<String>(
+          icon: const Icon(Icons.more_vert_rounded),
+          onSelected: (String item) {
+            switch (item) {
+              case "Export":
+                // TODO Export the current library to a file.
+                break;
+              default:
+                break;
+            }
+          },
+          itemBuilder: (BuildContext context) {
+            return {
+              "Export",
+            }.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+        ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0.0,
