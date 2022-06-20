@@ -1,8 +1,7 @@
-import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:shelfish/providers/books_provider.dart';
+import 'package:easy_search_bar/easy_search_bar.dart';
+
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
@@ -55,28 +54,12 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         actions: [
-          PopupMenuButton<String>(
-          icon: const Icon(Icons.more_vert_rounded),
-          onSelected: (String item) {
-            switch (item) {
-              case "Export":
-                // TODO Export the current library to a file.
-                break;
-              default:
-                break;
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            return {
-              "Export",
-            }.map((String choice) {
-              return PopupMenuItem<String>(
-                value: choice,
-                child: Text(choice),
-              );
-            }).toList();
-          },
-        ),
+          IconButton(
+            icon: const Icon(Icons.save_alt_rounded),
+            onPressed: () {
+              // TODO Export the current library to a file.
+            },
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
