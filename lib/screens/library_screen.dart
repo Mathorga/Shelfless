@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:easy_search_bar/easy_search_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:shelfish/models/library.dart';
+import 'package:shelfish/providers/libraries_provider.dart';
 
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
@@ -9,7 +12,9 @@ import 'package:shelfish/widgets/books_overview_widget.dart';
 class LibraryScreen extends StatefulWidget {
   static const String routeName = "/library";
 
-  const LibraryScreen({Key? key}) : super(key: key);
+  const LibraryScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<LibraryScreen> createState() => _LibraryScreenState();
@@ -39,6 +44,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
       AuthorsOverviewWidget(searchValue: _currentFilter),
       BooksOverviewWidget(searchValue: _currentFilter),
     ];
+    
+    // Fetch provider.
+    final LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
+
+    // Fetch author.
+    Library _library = ModalRoute.of(context)!.settings.arguments as Library;
 
     return Scaffold(
       // appBar: _buildAppBar(),

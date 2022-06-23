@@ -19,10 +19,10 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
   @override
   Widget build(BuildContext context) {
     // Fetch provider.
-    final AuthorsProvider authorsProvider = Provider.of(context, listen: true);
+    final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
 
-    // Fetch book.
-    Author author = ModalRoute.of(context)!.settings.arguments as Author;
+    // Fetch author.
+    Author _author = ModalRoute.of(context)!.settings.arguments as Author;
 
     return Scaffold(
       appBar: AppBar(
@@ -35,7 +35,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
           IconButton(
             onPressed: () {
               // Navigate to edit_book_screen.
-              Navigator.of(context).pushNamed(EditAuthorScreen.routeName, arguments: author);
+              Navigator.of(context).pushNamed(EditAuthorScreen.routeName, arguments: _author);
             },
             icon: const Icon(Icons.edit_rounded),
           ),
@@ -45,7 +45,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return DeleteDialog(title: author.toString(), onYes: () => authorsProvider.deleteAuthor(author), onNo: null);
+                  return DeleteDialog(title: _author.toString(), onYes: () => _authorsProvider.deleteAuthor(_author), onNo: null);
                 },
               );
             },
@@ -63,7 +63,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
               const Text("First Name"),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(author.firstName, style: Theme.of(context).textTheme.headline6),
+                child: Text(_author.firstName, style: Theme.of(context).textTheme.headline6),
               ),
               const SizedBox(
                 height: 24.0,
@@ -73,7 +73,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
               const Text("Last Name"),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(author.lastName, style: Theme.of(context).textTheme.headline6),
+                child: Text(_author.lastName, style: Theme.of(context).textTheme.headline6),
               ),
               const SizedBox(
                 height: 24.0,
