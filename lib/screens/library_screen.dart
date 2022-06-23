@@ -6,17 +6,16 @@ import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
 
-// TODO Change to LibraryOverviewScreen.
-class MainScreen extends StatefulWidget {
-  static const String routeName = "/main";
+class LibraryScreen extends StatefulWidget {
+  static const String routeName = "/library";
 
-  const MainScreen({Key? key}) : super(key: key);
+  const LibraryScreen({Key? key}) : super(key: key);
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<LibraryScreen> createState() => _LibraryScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _LibraryScreenState extends State<LibraryScreen> {
   int _currentIndex = 0;
   String _currentFilter = "";
 
@@ -24,7 +23,6 @@ class _MainScreenState extends State<MainScreen> {
     return AppBar(
       title: const Text("Shelfish"),
       backgroundColor: Colors.transparent,
-      elevation: 0.0,
       actions: [
         IconButton(
           onPressed: () {},

@@ -6,10 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/models/library.dart';
 import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
+import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/books_screen.dart';
@@ -19,8 +21,9 @@ import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
 import 'package:shelfish/screens/genre_info_screen.dart';
+import 'package:shelfish/screens/libraries_overview_screen.dart';
 import 'package:shelfish/screens/locations_overview_screen.dart';
-import 'package:shelfish/screens/main_screen.dart';
+import 'package:shelfish/screens/library_screen.dart';
 
 void main() async {
   // Init local DB.
@@ -31,12 +34,14 @@ void main() async {
   Hive.registerAdapter(AuthorAdapter());
   Hive.registerAdapter(GenreAdapter());
   Hive.registerAdapter(StoreLocationAdapter());
+  Hive.registerAdapter(LibraryAdapter());
 
   // Open hive boxes.
   await Hive.openBox<Book>("books");
   await Hive.openBox<Author>("authors");
   await Hive.openBox<Genre>("genres");
   await Hive.openBox<StoreLocation>("store_locations");
+  await Hive.openBox<Library>("libraries");
 
   runApp(const Shelfish());
 }
@@ -53,6 +58,7 @@ class Shelfish extends StatelessWidget {
         ChangeNotifierProvider(create: (BuildContext contex) => GenresProvider()),
         ChangeNotifierProvider(create: (BuildContext contex) => AuthorsProvider()),
         ChangeNotifierProvider(create: (BuildContext contex) => StoreLocationsProvider()),
+        ChangeNotifierProvider(create: (BuildContext contex) => LibrariesProvider()),
       ],
       child: MaterialApp(
         title: "Shelfish",
@@ -73,9 +79,10 @@ class Shelfish extends StatelessWidget {
               ),
               elevation: 0.0),
         ),
-        home: const MainScreen(),
+        home: const LibrariesOverviewScreen(),
         routes: {
-          MainScreen.routeName: (BuildContext context) => const MainScreen(),
+          LibrariesOverviewScreen.routeName: (BuildContext context) => const LibrariesOverviewScreen(),
+          LibraryScreen.routeName: (BuildContext context) => const LibraryScreen(),
           BooksScreen.routeName: (BuildContext context) => const BooksScreen(),
           LocationsOverviewScreen.routeName: (BuildContext context) => const LocationsOverviewScreen(),
           BookInfoScreen.routeName: (BuildContext context) => const BookInfoScreen(),

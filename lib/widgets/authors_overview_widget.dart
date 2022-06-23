@@ -9,7 +9,7 @@ import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 
-class AuthorsOverviewWidget extends StatefulWidget {
+class AuthorsOverviewWidget extends StatelessWidget {
   static const String routeName = "/authors_overview";
 
   final String searchValue;
@@ -20,14 +20,9 @@ class AuthorsOverviewWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AuthorsOverviewWidget> createState() => _AuthorsOverviewWidgetState();
-}
-
-class _AuthorsOverviewWidgetState extends State<AuthorsOverviewWidget> {
-  @override
   Widget build(BuildContext context) {
     final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
-    final _authors = _authorsProvider.authors.where((Author genre) => genre.toString().toLowerCase().contains(widget.searchValue.toLowerCase())).toList();
+    final _authors = _authorsProvider.authors.where((Author genre) => genre.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
         body: _authors.isEmpty
