@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
+import 'package:shelfish/screens/edit_library_screen.dart';
 import 'package:shelfish/screens/library_screen.dart';
 import 'package:shelfish/widgets/library_preview_widget.dart';
 
@@ -28,7 +29,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
       appBar: _buildAppBar(),
       body: _libraries.isEmpty
           ? const Center(
-              child: Text("No libraries yet"),
+              child: Text("No libraries found"),
             )
           : ListView(
               physics: const BouncingScrollPhysics(),
@@ -50,10 +51,34 @@ class LibrariesOverviewScreen extends StatelessWidget {
                 )
               ],
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add_rounded),
+      floatingActionButton: SpeedDial(
+        icon: Icons.add,
+        activeIcon: Icons.close,
+        spacing: 24.0,
+        spaceBetweenChildren: 16.0,
+        childrenButtonSize: const Size(64.0, 64.0),
+        children: [
+          SpeedDialChild(
+            label: "Import",
+            child: const Icon(Icons.file_open_rounded),
+            onTap: () {
+              // TODO.
+            },
+          ),
+          SpeedDialChild(
+            label: "New",
+            child: const Icon(Icons.note_add_rounded),
+            onTap: () {
+              // Navigate to library creation screen.
+              Navigator.of(context).pushNamed(EditLibraryScreen.routeName);
+            },
+          ),
+        ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: const Icon(Icons.add_rounded),
+      // ),
     );
   }
 }

@@ -27,7 +27,7 @@ class AuthorsOverviewWidget extends StatelessWidget {
     return Scaffold(
         body: _authors.isEmpty
             ? const Center(
-                child: Text("No authors yet"),
+                child: Text("No authors found"),
               )
             : ListView(
                 physics: const BouncingScrollPhysics(),

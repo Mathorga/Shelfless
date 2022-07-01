@@ -31,7 +31,7 @@ class BooksOverviewWidget extends StatelessWidget {
     return Scaffold(
       body: _books.isEmpty
           ? const Center(
-              child: Text("No books yet"),
+              child: Text("No books found"),
             )
           : ListView(
               physics: const BouncingScrollPhysics(),

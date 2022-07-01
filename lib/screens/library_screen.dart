@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_search_bar/easy_search_bar.dart';
+
 import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
-
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
@@ -23,19 +23,6 @@ class LibraryScreen extends StatefulWidget {
 class _LibraryScreenState extends State<LibraryScreen> {
   int _currentIndex = 0;
   String _currentFilter = "";
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      title: const Text("Shelfish"),
-      backgroundColor: Colors.transparent,
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.search_rounded),
-        ),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +51,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         },
         actions: [
           IconButton(
-            icon: const Icon(Icons.save_alt_rounded),
+            icon: const Icon(Icons.arrow_downward),
             onPressed: () {
               // TODO Export the current library to a file.
             },

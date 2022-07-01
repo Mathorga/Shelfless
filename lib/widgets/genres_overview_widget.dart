@@ -32,7 +32,7 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
     return Scaffold(
         body: _genres.isEmpty
             ? const Center(
-                child: Text("No genres yet"),
+                child: Text("No genres found"),
               )
             : GridView.count(
                 physics: const BouncingScrollPhysics(),
