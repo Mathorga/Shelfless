@@ -84,7 +84,6 @@ class Shelfish extends StatelessWidget {
         routes: {
           LibrariesOverviewScreen.routeName: (BuildContext context) => const LibrariesOverviewScreen(),
           LibraryScreen.routeName: (BuildContext context) => const LibraryScreen(),
-          BooksScreen.routeName: (BuildContext context) => const BooksScreen(),
           LocationsOverviewScreen.routeName: (BuildContext context) => const LocationsOverviewScreen(),
           BookInfoScreen.routeName: (BuildContext context) => const BookInfoScreen(),
           AuthorInfoScreen.routeName: (BuildContext context) => const AuthorInfoScreen(),

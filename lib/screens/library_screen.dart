@@ -26,17 +26,27 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _pages = [
-      GenresOverviewWidget(searchValue: _currentFilter),
-      AuthorsOverviewWidget(searchValue: _currentFilter),
-      BooksOverviewWidget(searchValue: _currentFilter),
-    ];
-    
     // Fetch provider.
     final LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
 
-    // Fetch author.
-    Library _library = ModalRoute.of(context)!.settings.arguments as Library;
+    // Fetch library.
+    int _libraryIndex = ModalRoute.of(context)!.settings.arguments as int;
+    Library _library = _librariesProvider.libraries[_libraryIndex];
+
+    List<Widget> _pages = [
+      GenresOverviewWidget(
+        searchValue: _currentFilter,
+        library: _library,
+      ),
+      AuthorsOverviewWidget(
+        searchValue: _currentFilter,
+        library: _library,
+      ),
+      BooksOverviewWidget(
+        searchValue: _currentFilter,
+        library: _library,
+      ),
+    ];
 
     return Scaffold(
       // appBar: _buildAppBar(),
@@ -51,7 +61,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         },
         actions: [
           IconButton(
-            icon: const Icon(Icons.arrow_downward),
+            icon: const Icon(Icons.output_rounded),
             onPressed: () {
               // TODO Export the current library to a file.
             },

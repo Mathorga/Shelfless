@@ -40,7 +40,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                   _libraries.length,
                   (int index) => GestureDetector(
                     // Navigate to library screen.
-                    onTap: () => Navigator.of(context).pushNamed(LibraryScreen.routeName, arguments: _libraries[index]),
+                    onTap: () => Navigator.of(context).pushNamed(LibraryScreen.routeName, arguments: index),
                     child: SizedBox(
                       height: 120.0,
                       child: LibraryPreviewWidget(
@@ -60,7 +60,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
         children: [
           SpeedDialChild(
             label: "Import",
-            child: const Icon(Icons.file_open_rounded),
+            child: const Icon(Icons.input_rounded),
             onTap: () {
               // TODO.
             },
