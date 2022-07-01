@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/models/library.dart';
 
+import 'package:shelfish/models/author.dart';
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/books_screen.dart';
@@ -14,12 +13,10 @@ class AuthorsOverviewWidget extends StatelessWidget {
   static const String routeName = "/authors_overview";
 
   final String searchValue;
-  final Library library;
 
   const AuthorsOverviewWidget({
     Key? key,
     this.searchValue = "",
-    required this.library,
   }) : super(key: key);
 
   @override
@@ -42,10 +39,7 @@ class AuthorsOverviewWidget extends StatelessWidget {
                     (int index) => GestureDetector(
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (BuildContext context) => BooksScreen(
-                            author: _authors[index],
-                            library: library,
-                          ),
+                          builder: (BuildContext context) => BooksScreen(author: _authors[index]),
                         ),
                       ),
                       child: Stack(

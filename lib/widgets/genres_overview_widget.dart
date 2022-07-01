@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
@@ -14,12 +13,10 @@ class GenresOverviewWidget extends StatefulWidget {
   static const String routeName = "/genres_overview";
 
   final String searchValue;
-  final Library library;
 
   const GenresOverviewWidget({
     Key? key,
     this.searchValue = "",
-    required this.library,
   }) : super(key: key);
 
   @override
@@ -47,10 +44,7 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
                     (int index) => GestureDetector(
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (BuildContext context) => BooksScreen(
-                            genre: _genres[index],
-                            library: widget.library,
-                          ),
+                          builder: (BuildContext context) => BooksScreen(genre: _genres[index]),
                         ),
                       ),
                       child: Stack(

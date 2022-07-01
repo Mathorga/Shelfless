@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/library.dart';
+import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/widgets/book_preview_widget.dart';
@@ -11,14 +14,11 @@ class BooksOverviewWidget extends StatelessWidget {
   // If no filter is provided, then all books are displayed.
   final bool Function(Book)? filter;
 
-  final Library library;
-
   final String searchValue;
 
   const BooksOverviewWidget({
     Key? key,
     this.filter,
-    required this.library,
     this.searchValue = "",
   }) : super(key: key);
 
@@ -26,10 +26,10 @@ class BooksOverviewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // Fetch the books provider and listen for changes.
     // final BooksProvider _booksProvider = Provider.of(context, listen: true);
-    // final LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
+    final LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
 
     // List<Book> _books = _booksProvider.books.where(filter ?? (Book book) => true).where((Book book) => book.title.toLowerCase().contains(searchValue.toLowerCase())).toList();
-    List<Book> _books = library.books;
+    List<Book> _books = _librariesProvider.currentLibrary != null ? _librariesProvider.currentLibrary!.books : [];
 
     return Scaffold(
       body: _books.isEmpty

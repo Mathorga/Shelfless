@@ -6,10 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/models/library.dart';
 import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
+import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
@@ -22,7 +24,9 @@ import 'package:shelfish/widgets/unfocus_widget.dart';
 class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
 
-  const EditBookScreen({Key? key}) : super(key: key);
+  const EditBookScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<EditBookScreen> createState() => _EditBookScreenState();
@@ -49,8 +53,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Fetch provider.
-    final BooksProvider booksProvider = Provider.of(context, listen: false);
+    // Fetch providers.
+    final BooksProvider _booksProvider = Provider.of(context, listen: false);
+    final LibrariesProvider _librariesProvider = Provider.of(context, listen: false);
 
     // Fetch passed arguments.
     Book? receivedBook = ModalRoute.of(context)!.settings.arguments as Book?;
@@ -359,7 +364,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
           onPressed: () {
             if (_book.title != "" && _book.authors.isNotEmpty && _book.genres.isNotEmpty) {
               // Actually save the book.
-              _inserting ? booksProvider.addBook(_book) : booksProvider.updateBook(_book);
+              _inserting ? _booksProvider.addBook(_book) : _booksProvider.updateBook(_book);
+              _librariesProvider.addBookToCurrentLibrary(_book);
               Navigator.of(context).pop();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(

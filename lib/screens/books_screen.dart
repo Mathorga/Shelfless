@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/models/library.dart';
 import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
 
@@ -14,14 +13,12 @@ class BooksScreen extends StatelessWidget {
   final Genre? genre;
   final Author? author;
   final StoreLocation? location;
-  final Library library;
 
   const BooksScreen({
     Key? key,
     this.genre,
     this.author,
     this.location,
-    required this.library,
   }) : super(key: key);
 
   @override
@@ -39,7 +36,6 @@ class BooksScreen extends StatelessWidget {
             (genre != null ? book.genres.contains(genre) : true) &&
             (author != null ? book.authors.contains(author) : true) &&
             (location != null ? book.location == location : true),
-        library: library,
       ),
     );
   }

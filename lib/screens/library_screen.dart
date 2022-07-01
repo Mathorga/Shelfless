@@ -26,30 +26,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Fetch provider.
-    final LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
-
-    // Fetch library.
-    int _libraryIndex = ModalRoute.of(context)!.settings.arguments as int;
-    Library _library = _librariesProvider.libraries[_libraryIndex];
-
+    // Define all pages.
     List<Widget> _pages = [
-      GenresOverviewWidget(
-        searchValue: _currentFilter,
-        library: _library,
-      ),
-      AuthorsOverviewWidget(
-        searchValue: _currentFilter,
-        library: _library,
-      ),
-      BooksOverviewWidget(
-        searchValue: _currentFilter,
-        library: _library,
-      ),
+      GenresOverviewWidget(searchValue: _currentFilter),
+      AuthorsOverviewWidget(searchValue: _currentFilter),
+      BooksOverviewWidget(searchValue: _currentFilter),
     ];
 
     return Scaffold(
-      // appBar: _buildAppBar(),
       appBar: EasySearchBar(
         title: const Text("Shelfish"),
         searchBackIconTheme: const IconThemeData(color: Colors.white),

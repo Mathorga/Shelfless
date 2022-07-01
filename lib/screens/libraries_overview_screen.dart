@@ -40,7 +40,10 @@ class LibrariesOverviewScreen extends StatelessWidget {
                   _libraries.length,
                   (int index) => GestureDetector(
                     // Navigate to library screen.
-                    onTap: () => Navigator.of(context).pushNamed(LibraryScreen.routeName, arguments: index),
+                    onTap: () {
+                      _librariesProvider.setCurrenLibraryIndex(index);
+                      Navigator.of(context).pushNamed(LibraryScreen.routeName, arguments: index);
+                    },
                     child: SizedBox(
                       height: 120.0,
                       child: LibraryPreviewWidget(
