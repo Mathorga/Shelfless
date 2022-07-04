@@ -41,13 +41,13 @@ class LibrariesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setCurrenLibraryIndex(int index) {
+  void setCurrenLibraryIndex(int? index) {
     _currentIndex = index;
     notifyListeners();
   }
 
   void addBookToCurrentLibrary(Book book) {
     currentLibrary?.books.add(book);
-    notifyListeners();
+    updateLibrary(currentLibrary!);
   }
 }

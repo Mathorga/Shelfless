@@ -37,18 +37,31 @@ class LibrariesOverviewScreen extends StatelessWidget {
               // crossAxisCount: 2,
               children: [
                 ...List.generate(
-                  _libraries.length,
+                  _libraries.length + 1,
                   (int index) => GestureDetector(
                     // Navigate to library screen.
                     onTap: () {
-                      _librariesProvider.setCurrenLibraryIndex(index);
+                      _librariesProvider.setCurrenLibraryIndex(index < _libraries.length ? index : null);
                       Navigator.of(context).pushNamed(LibraryScreen.routeName, arguments: index);
                     },
                     child: SizedBox(
                       height: 120.0,
-                      child: LibraryPreviewWidget(
-                        library: _libraries[index],
-                      ),
+                      child: index < _libraries.length
+                          ? LibraryPreviewWidget(
+                              library: _libraries[index],
+                            )
+                          : const Card(
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.all(12.0),
+                                  child: Text(
+                                    "All",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ),
                     ),
                   ),
                 )
