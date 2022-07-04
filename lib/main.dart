@@ -14,7 +14,6 @@ import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/author_info_screen.dart';
-import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';

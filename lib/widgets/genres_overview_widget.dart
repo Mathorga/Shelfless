@@ -7,6 +7,7 @@ import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/genre_info_screen.dart';
+import 'package:shelfish/utils/constants.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 
 class GenresOverviewWidget extends StatefulWidget {
@@ -65,7 +66,7 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
         floatingActionButton: FloatingActionButton(

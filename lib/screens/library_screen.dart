@@ -45,6 +45,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           });
         },
         actions: [
+          // Only display the export button if actually displaying a single library.
           if (_librariesProvider.currentLibrary != null)
             IconButton(
               icon: const Icon(Icons.output_rounded),
