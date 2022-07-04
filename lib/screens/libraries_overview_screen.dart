@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:shelfish/providers/books_provider.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_library_screen.dart';
@@ -23,6 +24,8 @@ class LibrariesOverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
+    BooksProvider _booksProvider = Provider.of(context, listen: true);
+
     final _libraries = _librariesProvider.libraries;
 
     return Scaffold(
@@ -50,13 +53,13 @@ class LibrariesOverviewScreen extends StatelessWidget {
                           ? LibraryPreviewWidget(
                               library: _libraries[index],
                             )
-                          : const Card(
+                          : Card(
                               child: Align(
                                 alignment: Alignment.bottomLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.all(12.0),
+                                  padding: const EdgeInsets.all(12.0),
                                   child: Text(
-                                    "All",
+                                    "All (${_booksProvider.books.length} books)",
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
