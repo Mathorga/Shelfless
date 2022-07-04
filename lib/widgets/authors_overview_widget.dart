@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/author.dart';
+import 'package:shelfish/models/book.dart';
 import 'package:shelfish/providers/authors_provider.dart';
+import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
@@ -23,7 +25,17 @@ class AuthorsOverviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
-    final _authors = _authorsProvider.authors.where((Author genre) => genre.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
+    final LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
+
+    // Fetch all relevant authors based on the currently viewed library. All if no specific library is selected.
+    final List<Author> _unfilteredAuthors = _librariesProvider.currentLibrary != null
+        ? _librariesProvider.currentLibrary!.books
+            .map<List<Author>>((Book book) => book.authors)
+            .fold(<Author>[], (List<Author> result, List<Author> element) => result..addAll(element))
+            .toSet()
+            .toList()
+        : _authorsProvider.authors;
+    final _authors = _unfilteredAuthors.where((Author author) => author.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
         body: _authors.isEmpty
