@@ -29,14 +29,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
     // Define all pages.
     List<Widget> _pages = [
+      BooksOverviewWidget(searchValue: _currentFilter),
       GenresOverviewWidget(searchValue: _currentFilter),
       AuthorsOverviewWidget(searchValue: _currentFilter),
-      BooksOverviewWidget(searchValue: _currentFilter),
     ];
 
     return Scaffold(
       appBar: EasySearchBar(
-        title: const Text("Shelfish"),
+        title: Text(_librariesProvider.currentLibrary != null ? _librariesProvider.currentLibrary!.name : "All"),
         searchBackIconTheme: const IconThemeData(color: Colors.white),
         searchCursorColor: Colors.white,
         onSearch: (String value) {
@@ -61,16 +61,16 @@ class _LibraryScreenState extends State<LibraryScreen> {
         currentIndex: _currentIndex,
         items: const [
           BottomNavigationBarItem(
+            icon: Icon(Icons.book_rounded),
+            label: "Books",
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.category_rounded),
             label: "Genres",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_rounded),
             label: "Authors",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book_rounded),
-            label: "Books",
           ),
         ],
       ),

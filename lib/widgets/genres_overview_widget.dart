@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shelfish/models/book.dart';
 
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/providers/genres_provider.dart';
+import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/genre_info_screen.dart';
@@ -28,7 +30,17 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
   @override
   Widget build(BuildContext context) {
     final GenresProvider _genresProvider = Provider.of(context, listen: true);
-    final _genres = _genresProvider.genres.where((Genre genre) => genre.name.toLowerCase().contains(widget.searchValue.toLowerCase())).toList();
+    final LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
+
+    // Fetch all relevant genres based on the currently viewed library. All if no specific library is selected.
+    final List<Genre> _unfilteredGenres = _librariesProvider.currentLibrary != null
+        ? _librariesProvider.currentLibrary!.books
+            .map<List<Genre>>((Book book) => book.genres)
+            .fold(<Genre>[], (List<Genre> result, List<Genre> element) => result..addAll(element))
+            .toSet()
+            .toList()
+        : _genresProvider.genres;
+    final _genres = _unfilteredGenres.where((Genre genre) => genre.name.toLowerCase().contains(widget.searchValue.toLowerCase())).toList();
 
     return Scaffold(
         body: _genres.isEmpty
