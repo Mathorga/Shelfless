@@ -37,7 +37,6 @@ class LibrariesOverviewScreen extends StatelessWidget {
           : ListView(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(8.0),
-              // crossAxisCount: 2,
               children: [
                 ...List.generate(
                   _libraries.length + 1,
@@ -50,8 +49,22 @@ class LibrariesOverviewScreen extends StatelessWidget {
                     child: SizedBox(
                       height: 120.0,
                       child: index < _libraries.length
-                          ? LibraryPreviewWidget(
-                              library: _libraries[index],
+                          ? Stack(
+                              children: [
+                                LibraryPreviewWidget(
+                                  library: _libraries[index],
+                                ),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      // Go to library info.
+                                      Navigator.of(context).pushNamed(EditLibraryScreen.routeName, arguments: _libraries[index]);
+                                    },
+                                    icon: const Icon(Icons.edit_rounded),
+                                  ),
+                                ),
+                              ],
                             )
                           : Card(
                               child: Align(
