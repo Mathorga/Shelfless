@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
 
-import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
@@ -26,6 +25,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
+
     // Define all pages.
     List<Widget> _pages = [
       GenresOverviewWidget(searchValue: _currentFilter),
@@ -44,12 +45,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
           });
         },
         actions: [
-          IconButton(
-            icon: const Icon(Icons.output_rounded),
-            onPressed: () {
-              // TODO Export the current library to a file.
-            },
-          ),
+          if (_librariesProvider.currentLibrary != null)
+            IconButton(
+              icon: const Icon(Icons.output_rounded),
+              onPressed: () {
+                // TODO Export the current library to a file.
+              },
+            ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
