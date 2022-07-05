@@ -49,7 +49,6 @@ void main() async {
 class Shelfish extends StatelessWidget {
   const Shelfish({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
