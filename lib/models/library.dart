@@ -17,6 +17,10 @@ class Library extends HiveObject {
     required this.books,
   });
 
+  List<Map<String, String>> get bookMaps {
+    return books.map((Book book) => book.toMap()).toList();
+  }
+
   @override
   String toString() {
     return "$name (${books.toList().length} books)";
