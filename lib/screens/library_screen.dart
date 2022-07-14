@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
+import 'package:shelfish/models/book.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
@@ -50,6 +51,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             IconButton(
               icon: const Icon(Icons.output_rounded),
               onPressed: () {
+                _librariesProvider.currentLibrary!.books.forEach((Book book) => print(book.toMap().toString()));
                 // TODO Export the current library to a file.
               },
             ),

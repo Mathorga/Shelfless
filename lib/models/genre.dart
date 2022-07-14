@@ -14,4 +14,9 @@ class Genre extends HiveObject {
     required this.name,
     required this.color,
   });
+
+  @override
+  String toString() {
+    return name;
+  }
 }

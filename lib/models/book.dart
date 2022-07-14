@@ -38,8 +38,11 @@ class Book extends HiveObject {
   Map<String, dynamic> toMap() {
     return {
       "title": title,
+      "authors": authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value|$element"),
       "publishDate": publishDate,
+      "genres": genres.map((Genre genre) => genre.toString()).reduce((String value, String element) => "$value|$element"),
       "publisher": publisher,
+      "location": (location ?? "").toString()
     };
   }
 }
