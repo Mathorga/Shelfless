@@ -51,7 +51,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
             IconButton(
               icon: const Icon(Icons.output_rounded),
               onPressed: () {
-                print(_librariesProvider.currentLibrary!.bookMaps.toString());
+                // print(_librariesProvider.currentLibrary!.bookMaps.toString());
+                print(_librariesProvider.currentLibrary!.toCsvString());
                 // TODO Export the current library to a file.
               },
             ),

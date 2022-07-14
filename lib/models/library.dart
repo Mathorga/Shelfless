@@ -21,6 +21,16 @@ class Library extends HiveObject {
     return books.map((Book book) => book.toMap()).toList();
   }
 
+  String toCsvString() {
+    return bookMaps.map<String>((Map<String, String> bookMap) {
+      return bookMap.values.reduce((String value, String element) {
+        return "$value§$element";
+      });
+    }).reduce((String value, String element) {
+      return "$value\n$element";
+    });
+  }
+
   @override
   String toString() {
     return "$name (${books.toList().length} books)";
