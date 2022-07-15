@@ -33,6 +33,7 @@ dependencies:
   hive: ^2.0.5
   hive_flutter: ^1.1.0
   path_provider: ^2.0.11
+  file_picker: ^4.6.1
   flutter_colorpicker: ^1.0.3
   easy_search_bar: ^2.3.1
   flutter_speed_dial: ^6.0.0

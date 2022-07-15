@@ -27,7 +27,7 @@ class Library extends HiveObject {
     return bookMaps.map<String>((Map<String, String> bookMap) {
       return bookMap.values.reduce((String value, String element) {
         // Concat multiple fields.
-        return "$value|$element";
+        return "$value;$element";
       });
     }).fold(header, (String value, String element) {
       // Concat multiple lines.

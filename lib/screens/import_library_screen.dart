@@ -8,18 +8,18 @@ import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
-class EditLibraryScreen extends StatefulWidget {
-  static const String routeName = "/edit-library";
+class ImportLibraryScreen extends StatefulWidget {
+  static const String routeName = "/import-library";
 
-  const EditLibraryScreen({Key? key}) : super(key: key);
+  const ImportLibraryScreen({Key? key}) : super(key: key);
 
   @override
-  _EditLibraryScreenState createState() => _EditLibraryScreenState();
+  _ImportLibraryScreenState createState() => _ImportLibraryScreenState();
 }
 
-class _EditLibraryScreenState extends State<EditLibraryScreen> {
+class _ImportLibraryScreenState extends State<ImportLibraryScreen> {
   final Box<Book> _books = Hive.box<Book>("books");
-  
+
   late Library _library;
 
   // Insert flag: tells whether the widget is used for adding or editing an author.
@@ -41,17 +41,14 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
     final LibrariesProvider _librariesProvider = Provider.of(context, listen: false);
 
     // Fetch passed arguments.
-    Library? _receivedLibrary = ModalRoute.of(context)!.settings.arguments as Library?;
-    _inserting = _receivedLibrary == null;
-
-    if (!_inserting) {
-      _library = _receivedLibrary!;
-    }
+    // Error if no argument is passed.
+    String _libraryString = ModalRoute.of(context)!.settings.arguments as String;
+    print(_libraryString);
 
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("${_inserting ? "Insert" : "Edit"} Library"),
+          title: const Text("Import Library"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -68,6 +65,33 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
+
+              // How many header lines does the file have?
+              const Text("Header Lines"),
+
+              // What is the field separator character?
+              const Text("Fields Separator"),
+
+              // What is the element separator character in list fields?
+              const Text("List Separator"),
+
+              // Which column holds the book title?
+              const Text("Title Column"),
+
+              // Which column holds the book genres?
+              const Text("Genres Column"),
+
+              // Which column holds the book authors?
+              const Text("Authors Column"),
+
+              // Which column holds the book publisher?
+              const Text("Publisher Column"),
+
+              // Which column holds the book publish date?
+              const Text("Publish Date Column"),
+
+              // Which column holds the book location?
+              const Text("Location Column"),
             ],
           ),
         ),

@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -6,6 +11,7 @@ import 'package:shelfish/providers/books_provider.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_library_screen.dart';
+import 'package:shelfish/screens/import_library_screen.dart';
 import 'package:shelfish/screens/library_screen.dart';
 import 'package:shelfish/widgets/library_preview_widget.dart';
 
@@ -93,8 +99,21 @@ class LibrariesOverviewScreen extends StatelessWidget {
           SpeedDialChild(
             label: "Import",
             child: const Icon(Icons.input_rounded),
-            onTap: () {
-              // TODO.
+            onTap: () async {
+              // Pick a library file.
+              FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+              print(result);
+              if (result != null) {
+                File file = File(result.files.single.path!);
+
+                String fileContent = await file.readAsString();
+
+                // TODO Pass the file content as argument.
+                // Navigator.of(context).pushNamed(ImportLibraryScreen.routeName, arguments: fileContent);
+              } else {
+                // User canceled the picker
+              }
             },
           ),
           SpeedDialChild(
