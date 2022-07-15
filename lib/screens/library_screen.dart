@@ -49,9 +49,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
           // Only display the export button if actually displaying a single library.
           if (_librariesProvider.currentLibrary != null)
             IconButton(
-              icon: const Icon(Icons.output_rounded),
+              // icon: const Icon(Icons.output_rounded),
+              icon: const Icon(Icons.share_rounded),
               onPressed: () {
-                // print(_librariesProvider.currentLibrary!.bookMaps.toString());
                 print(_librariesProvider.currentLibrary!.toCsvString());
                 // TODO Export the current library to a file.
               },

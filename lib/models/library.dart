@@ -22,11 +22,15 @@ class Library extends HiveObject {
   }
 
   String toCsvString() {
+    const String header = "title|authors|publishDate|genres|publisher|location";
+
     return bookMaps.map<String>((Map<String, String> bookMap) {
       return bookMap.values.reduce((String value, String element) {
-        return "$value§$element";
+        // Concat multiple fields.
+        return "$value|$element";
       });
-    }).reduce((String value, String element) {
+    }).fold(header, (String value, String element) {
+      // Concat multiple lines.
       return "$value\n$element";
     });
   }
