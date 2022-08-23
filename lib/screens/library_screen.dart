@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:provider/provider.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
-import 'package:shelfish/models/book.dart';
 
+import 'package:shelfish/models/book.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
@@ -51,9 +56,35 @@ class _LibraryScreenState extends State<LibraryScreen> {
             IconButton(
               // icon: const Icon(Icons.output_rounded),
               icon: const Icon(Icons.share_rounded),
-              onPressed: () {
-                print(_librariesProvider.currentLibrary!.toCsvString());
-                // TODO Export the current library to a file.
+              onPressed: () async {
+                // Export the current library to a file.
+
+                // Ask for permission to read and write to external storage.
+                if (!await Permission.storage.request().isGranted) {
+                  // Either the permission was already denied before or the user just denied it.
+                  return;
+                }
+
+                // Ask for permission to access all user accessible directories.
+                if (!await Permission.manageExternalStorage.request().isGranted) {
+                  // Either the permission was already denied before or the user just denied it.
+                  return;
+                }
+
+                // Let the user pick the destination directory.
+                String? path = await FilePicker.platform.getDirectoryPath();
+
+                if (path == null) {
+                  // User canceled the picker or the path is not resolved.
+                  return;
+                }
+
+                // Open a new text file using the library name.
+                final File libraryFile = await File("$path/${_librariesProvider.currentLibrary!.name}.csv").create(recursive: true);
+
+                // Write the file.
+                // No need to await for this one, as it's the last operation.
+                libraryFile.writeAsString(_librariesProvider.currentLibrary!.toCsvString());
               },
             ),
         ],

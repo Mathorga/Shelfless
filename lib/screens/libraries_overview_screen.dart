@@ -98,7 +98,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
         children: [
           SpeedDialChild(
             label: "Import",
-            child: const Icon(Icons.input_rounded),
+            child: const Icon(Icons.upload_rounded),
             onTap: () async {
               // Pick a library file.
               FilePickerResult? result = await FilePicker.platform.pickFiles();

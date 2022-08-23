@@ -22,7 +22,7 @@ class Library extends HiveObject {
   }
 
   String toCsvString() {
-    const String header = "title|authors|publishDate|genres|publisher|location";
+    const String header = "title;authors;publishDate;genres;publisher;location";
 
     return bookMaps.map<String>((Map<String, String> bookMap) {
       return bookMap.values.reduce((String value, String element) {
