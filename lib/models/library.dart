@@ -17,6 +17,26 @@ class Library extends HiveObject {
     required this.books,
   });
 
+  Library.fromCsvString({required this.name, required String csvString}) : books = HiveList(Hive.box<Book>("books")) {
+    // Separate csv lines: each line is a book.
+    final List<String> lines = csvString.split("\n");
+
+    // The first line is skipped, as it's just a header.
+    lines.forEach((String bookString) {
+      // Separate book fields.
+      final List<String> fields = bookString.split(";");
+
+      // TODO Get authors, create them if not already present.
+
+      // TODO Get genres, create them if not already present.
+
+      // TODO Get store location, create it if not already present.
+
+      // TODO Create the book using retrieved fields.
+      // books.add(Book(title: fields[0], ));
+    });
+  }
+
   List<Map<String, String>> get bookMaps {
     return books.map((Book book) => book.toMap()).toList();
   }
