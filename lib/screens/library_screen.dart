@@ -84,7 +84,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
                 // Write the file.
                 // No need to await for this one, as it's the last operation.
-                libraryFile.writeAsString(_librariesProvider.currentLibrary!.toCsvString());
+                libraryFile.writeAsString(_librariesProvider.currentLibrary!.toSerializableString());
               },
             ),
         ],

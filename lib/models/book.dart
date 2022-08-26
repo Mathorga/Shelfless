@@ -38,11 +38,11 @@ class Book extends HiveObject {
   Map<String, String> toMap() {
     return {
       "title": title,
-      "authors": authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value/$element"),
+      "authors": authors.map((Author author) => author.toSerializableString()).reduce((String value, String element) => "$value $element"),
       "publishDate": publishDate.toString(),
-      "genres": genres.map((Genre genre) => genre.toString()).reduce((String value, String element) => "$value/$element"),
+      "genres": genres.map((Genre genre) => genre.toSerializableString()).reduce((String value, String element) => "$value $element"),
       "publisher": publisher,
-      "location": (location ?? "").toString()
+      "location": location != null ? location!.toSerializableString() : ""
     };
   }
 }

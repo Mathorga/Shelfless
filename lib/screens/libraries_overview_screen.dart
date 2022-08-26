@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/books_provider.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
@@ -70,6 +71,16 @@ class LibrariesOverviewScreen extends StatelessWidget {
                                     icon: const Icon(Icons.edit_rounded),
                                   ),
                                 ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      // Delete library.
+                                      _librariesProvider.deleteLibrary(_libraries[index]);
+                                    },
+                                    icon: const Icon(Icons.delete_rounded),
+                                  ),
+                                ),
                               ],
                             )
                           : Card(
@@ -109,6 +120,9 @@ class LibrariesOverviewScreen extends StatelessWidget {
 
                 String fileContent = await file.readAsString();
 
+                print(fileContent);
+
+                _librariesProvider.addLibrary(Library.fromSerializableString(name: "__import_test__", csvString: fileContent));
                 // TODO Pass the file content as argument.
                 // Navigator.of(context).pushNamed(ImportLibraryScreen.routeName, arguments: fileContent);
               } else {

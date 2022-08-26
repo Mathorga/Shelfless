@@ -15,8 +15,26 @@ class Author extends HiveObject {
     required this.lastName,
   });
 
+  Author.fromSerializableString(String source)
+      : firstName = "",
+        lastName = "" {
+    final List<String> parts = source.split("/");
+    firstName = parts[0];
+    lastName = parts[1];
+  }
+
   @override
   String toString() {
     return "$firstName $lastName";
+  }
+
+  @override
+  bool operator ==(Object other) => other is Author && other.runtimeType == runtimeType && other.firstName == firstName && other.lastName == lastName;
+  
+  @override
+  int get hashCode => firstName.hashCode + lastName.hashCode;
+
+  String toSerializableString() {
+    return "${firstName.replaceAll(" ", "_")}/${lastName.replaceAll(" ", "_")}";
   }
 }

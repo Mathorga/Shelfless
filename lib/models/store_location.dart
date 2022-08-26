@@ -15,4 +15,14 @@ class StoreLocation extends HiveObject {
   String toString() {
     return name;
   }
+
+  @override
+  bool operator ==(Object other) => other is StoreLocation && other.runtimeType == runtimeType && other.name == name;
+  
+  @override
+  int get hashCode => name.hashCode;
+
+  String toSerializableString() {
+    return name;
+  }
 }
