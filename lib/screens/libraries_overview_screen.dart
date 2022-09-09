@@ -114,17 +114,16 @@ class LibrariesOverviewScreen extends StatelessWidget {
               // Pick a library file.
               FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-              print(result);
               if (result != null) {
-                File file = File(result.files.single.path!);
+                // Retrieve the file name.
+                String fileName = result.files.single.name;
 
+                // Read the file.
+                File file = File(result.files.single.path!);
                 String fileContent = await file.readAsString();
 
-                print(fileContent);
-
-                _librariesProvider.addLibrary(Library.fromSerializableString(name: "__import_test__", csvString: fileContent));
-                // TODO Pass the file content as argument.
-                // Navigator.of(context).pushNamed(ImportLibraryScreen.routeName, arguments: fileContent);
+                // Create and add the library to DB.
+                _librariesProvider.addLibrary(Library.fromSerializableString(name: fileName, csvString: fileContent));
               } else {
                 // User canceled the picker
               }
