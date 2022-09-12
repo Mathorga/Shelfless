@@ -116,7 +116,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
 
               if (result != null) {
                 // Retrieve the file name.
-                String fileName = result.files.single.name;
+                String fileName = result.files.single.name.split(".").first;
 
                 // Read the file.
                 File file = File(result.files.single.path!);

@@ -32,6 +32,12 @@ class LibrariesProvider with ChangeNotifier {
 
   /// Deletes the given library.
   void deleteLibrary(Library library) {
+    // Delete all contained books first.
+    for (Book book in library.books) {
+      book.delete();
+    }
+
+    // Then delete the library record itself.
     library.delete();
     notifyListeners();
   }

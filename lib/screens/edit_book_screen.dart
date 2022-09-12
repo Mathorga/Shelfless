@@ -331,8 +331,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
           onPressed: () {
             if (_book.title != "" && _book.authors.isNotEmpty && _book.genres.isNotEmpty) {
               // Actually save the book.
-              _inserting ? _booksProvider.addBook(_book) : _booksProvider.updateBook(_book);
-              _librariesProvider.addBookToCurrentLibrary(_book);
+              if (_inserting) {
+                _booksProvider.addBook(_book);
+                _librariesProvider.addBookToCurrentLibrary(_book);
+              } else {
+                _booksProvider.updateBook(_book);
+              }
+
               Navigator.of(context).pop();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
