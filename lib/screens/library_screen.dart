@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
 
-import 'package:shelfish/models/book.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';

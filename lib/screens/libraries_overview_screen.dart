@@ -12,7 +12,6 @@ import 'package:shelfish/providers/books_provider.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_library_screen.dart';
-import 'package:shelfish/screens/import_library_screen.dart';
 import 'package:shelfish/screens/library_screen.dart';
 import 'package:shelfish/widgets/library_preview_widget.dart';
 
@@ -111,6 +110,9 @@ class LibrariesOverviewScreen extends StatelessWidget {
             label: "Import",
             child: const Icon(Icons.upload_rounded),
             onTap: () async {
+              // Clear all cached files.
+              FilePicker.platform.clearTemporaryFiles();
+
               // Pick a library file.
               FilePickerResult? result = await FilePicker.platform.pickFiles();
 
@@ -139,10 +141,6 @@ class LibrariesOverviewScreen extends StatelessWidget {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: const Icon(Icons.add_rounded),
-      // ),
     );
   }
 }
