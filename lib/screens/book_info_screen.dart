@@ -35,49 +35,65 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () {
-              // Navigate to edit_book_screen.
-              Navigator.of(context).pushNamed(EditBookScreen.routeName, arguments: book);
-            },
-            icon: const Icon(Icons.edit_rounded),
-          ),
-          IconButton(
-            onPressed: () {
-              // Show dialog asking the user to confirm their choice.
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text("Delete"),
-                    content: const Text("Are you sure you want to delete this book?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          // Pop the dialog.
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("No"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          booksProvider.deleteBook(book);
+          PopupMenuButton(
+            itemBuilder: (BuildContext context) => const [
+              PopupMenuItem(
+                value: 0,
+                child: Text("Edit"),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: Text("Delete"),
+              ),
+              PopupMenuItem(
+                value: 2,
+                child: Text("Move"),
+              ),
+            ],
+            onSelected: (int value) {
+              switch (value) {
+                case 0:
+                  // Navigate to edit_book_screen.
+                  Navigator.of(context).pushNamed(EditBookScreen.routeName, arguments: book);
+                  break;
+                case 1:
+                  // Show dialog asking the user to confirm their choice.
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Delete"),
+                        content: const Text("Are you sure you want to delete this book?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              // Pop the dialog.
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("No"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              booksProvider.deleteBook(book);
 
-                          // Pop the dialog.
-                          Navigator.of(context).pop();
+                              // Pop the dialog.
+                              Navigator.of(context).pop();
 
-                          // Pop the info screen.
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Yes"),
-                      ),
-                    ],
+                              // Pop the info screen.
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Yes"),
+                          ),
+                        ],
+                      );
+                    },
                   );
-                },
-              );
+                  break;
+                default:
+                  break;
+              }
             },
-            icon: const Icon(Icons.delete_rounded),
-          )
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -149,4 +165,6 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
       ),
     );
   }
+
+  void _buildDeleteDialog() {}
 }
