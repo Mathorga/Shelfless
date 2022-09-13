@@ -43,11 +43,11 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               ),
               PopupMenuItem(
                 value: 1,
-                child: Text("Delete"),
+                child: Text("Move to"),
               ),
               PopupMenuItem(
                 value: 2,
-                child: Text("Move"),
+                child: Text("Delete"),
               ),
             ],
             onSelected: (int value) {
@@ -56,7 +56,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                   // Navigate to edit_book_screen.
                   Navigator.of(context).pushNamed(EditBookScreen.routeName, arguments: book);
                   break;
-                case 1:
+                case 2:
                   // Show dialog asking the user to confirm their choice.
                   showDialog(
                     context: context,
