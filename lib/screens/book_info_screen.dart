@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/books_provider.dart';
+import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
@@ -21,8 +23,9 @@ class BookInfoScreen extends StatefulWidget {
 class _BookInfoScreenState extends State<BookInfoScreen> {
   @override
   Widget build(BuildContext context) {
-    // Fetch provider.
+    // Fetch providers.
     final BooksProvider booksProvider = Provider.of(context, listen: true);
+    final LibrariesProvider librariesProvider = Provider.of(context, listen: true);
 
     // Fetch book.
     Book book = ModalRoute.of(context)!.settings.arguments as Book;
@@ -111,6 +114,23 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               const SizedBox(
                 height: 24.0,
               ),
+
+              // Library.
+              if (librariesProvider.currentLibrary == null)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Library"),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child:
+                          Text(librariesProvider.libraries.firstWhere((Library library) => library.books.contains(book)).toString(), style: Theme.of(context).textTheme.headline6),
+                    ),
+                    const SizedBox(
+                      height: 24.0,
+                    ),
+                  ],
+                ),
 
               // Authors.
               const Text("Authors"),

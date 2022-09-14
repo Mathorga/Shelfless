@@ -31,7 +31,6 @@ class Library extends HiveObject {
 
     // The first line is skipped, as it's just a header.
     for (String bookString in lines.skip(1)) {
-      print(bookString);
       // Prepare book for insertion.
       final Book book = Book(authors: HiveList(_authors), genres: HiveList(_genres));
 

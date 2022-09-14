@@ -29,15 +29,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # Data distribution.
   provider: ^6.0.3
+  # Local DB.
   hive: ^2.0.5
   hive_flutter: ^1.1.0
+  # Handles asking for permissions.
   permission_handler: ^10.0.0
+  # Retrieves path to internal and external location in the device.
   path_provider: ^2.0.11
+  # Allows for selecting files (and read them).
   file_picker: ^5.0.1
+  # Color picker.
   flutter_colorpicker: ^1.0.3
+  # Search bar.
   easy_search_bar: ^2.3.1
+  # Multiple choice FAB.
   flutter_speed_dial: ^6.0.0
+  # Allows for file sharing to other apps.
+  share_plus: ^4.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
