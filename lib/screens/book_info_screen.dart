@@ -100,6 +100,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
         ],
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
