@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
@@ -52,38 +53,59 @@ class _LibraryScreenState extends State<LibraryScreen> {
         actions: [
           // Only display the export button if actually displaying a single library.
           if (_librariesProvider.currentLibrary != null)
-            IconButton(
-              // icon: const Icon(Icons.output_rounded),
-              icon: const Icon(Icons.share_rounded),
-              onPressed: () async {
-                // Export the current library to a file.
+            PopupMenuButton(
+              itemBuilder: (BuildContext context) => const [
+                PopupMenuItem(
+                  value: 0,
+                  child: Text("Share"),
+                ),
+                PopupMenuItem(
+                  value: 1,
+                  child: Text("Export"),
+                ),
+              ],
+              onSelected: (int value) async {
+                switch (value) {
+                  case 0:
+                    // Share to external app.
 
-                // Ask for permission to read and write to external storage.
-                if (!await Permission.storage.request().isGranted) {
-                  // Either the permission was already denied before or the user just denied it.
-                  return;
+                    // Save the library file locally.
+                    Directory tmpDir = await getTemporaryDirectory();
+                    String libraryFilePath = "${tmpDir.path}/${_librariesProvider.currentLibrary!.name}.csv";
+                    _librariesProvider.currentLibrary!.writeToFile(libraryFilePath);
+
+                    // Share the file that was just saved.
+                    Share.shareFiles([libraryFilePath]);
+                    break;
+                  case 1:
+                    // Export the current library to a file.
+
+                    // Ask for permission to read and write to external storage.
+                    if (!await Permission.storage.request().isGranted) {
+                      // Either the permission was already denied before or the user just denied it.
+                      return;
+                    }
+
+                    // Ask for permission to access all user accessible directories.
+                    if (!await Permission.manageExternalStorage.request().isGranted) {
+                      // Either the permission was already denied before or the user just denied it.
+                      return;
+                    }
+
+                    // Let the user pick the destination directory.
+                    String? path = await FilePicker.platform.getDirectoryPath();
+
+                    if (path == null) {
+                      // User canceled the picker or the path is not resolved.
+                      return;
+                    }
+
+                    // Write the library to file.
+                    _librariesProvider.currentLibrary!.writeToFile("$path/${_librariesProvider.currentLibrary!.name}.csv");
+                    break;
+                  default:
+                    break;
                 }
-
-                // Ask for permission to access all user accessible directories.
-                if (!await Permission.manageExternalStorage.request().isGranted) {
-                  // Either the permission was already denied before or the user just denied it.
-                  return;
-                }
-
-                // Let the user pick the destination directory.
-                String? path = await FilePicker.platform.getDirectoryPath();
-
-                if (path == null) {
-                  // User canceled the picker or the path is not resolved.
-                  return;
-                }
-
-                // Open a new text file using the library name.
-                final File libraryFile = await File("$path/${_librariesProvider.currentLibrary!.name}.csv").create(recursive: true);
-
-                // Write the file.
-                // No need to await for this one, as it's the last operation.
-                libraryFile.writeAsString(_librariesProvider.currentLibrary!.toSerializableString());
               },
             ),
         ],

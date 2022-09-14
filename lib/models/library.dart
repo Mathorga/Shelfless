@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hive/hive.dart';
 
 import 'package:shelfish/models/author.dart';
@@ -127,5 +129,14 @@ class Library extends HiveObject {
   @override
   String toString() {
     return "$name (${books.toList().length} books)";
+  }
+
+  void writeToFile(String filePath) async {
+    // Open a new text file using the library name.
+    final File libraryFile = await File(filePath).create(recursive: true);
+
+    // Write the file.
+    // No need to await for this one, as it's the last operation.
+    libraryFile.writeAsString(toSerializableString());
   }
 }

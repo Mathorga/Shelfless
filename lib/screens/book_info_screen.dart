@@ -186,6 +186,4 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
       ),
     );
   }
-
-  void _buildDeleteDialog() {}
 }
