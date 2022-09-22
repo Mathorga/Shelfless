@@ -13,6 +13,7 @@ import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
+import 'package:shelfish/widgets/publishers_overview_widget.dart';
 
 class LibraryScreen extends StatefulWidget {
   static const String routeName = "/library";
@@ -38,7 +39,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       BooksOverviewWidget(searchValue: _currentFilter),
       GenresOverviewWidget(searchValue: _currentFilter),
       AuthorsOverviewWidget(searchValue: _currentFilter),
-      AuthorsOverviewWidget(searchValue: _currentFilter),
+      PublishersOverviewWidget(searchValue: _currentFilter),
       AuthorsOverviewWidget(searchValue: _currentFilter),
     ];
 

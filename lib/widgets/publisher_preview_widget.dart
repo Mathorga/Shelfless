@@ -12,17 +12,20 @@ class PublisherPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              publisher.name,
-              textAlign: TextAlign.center,
-            ),
-          ],
+    return SizedBox(
+      width: double.infinity,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                publisher.name,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

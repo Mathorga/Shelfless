@@ -67,16 +67,16 @@ class PublishersOverviewWidget extends StatelessWidget {
                               publisher: publishers[index],
                             ),
                           ),
-                          // Align(
-                          //   alignment: Alignment.topRight,
-                          //   child: IconButton(
-                          //     onPressed: () {
-                          //       // Edit the selected author.
-                          //       Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: publishers[index]);
-                          //     },
-                          //     icon: const Icon(Icons.info_rounded),
-                          //   ),
-                          // ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              onPressed: () {
+                                // Edit the selected author.
+                                Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: publishers[index]);
+                              },
+                              icon: const Icon(Icons.info_rounded),
+                            ),
+                          ),
                         ],
                       ),
                     ),
