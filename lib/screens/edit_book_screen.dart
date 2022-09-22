@@ -7,11 +7,13 @@ import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/models/library.dart';
+import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
+import 'package:shelfish/providers/publishers_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
@@ -264,11 +266,50 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 // Publisher.
                 const Text("Publisher"),
-                TextFormField(
-                  initialValue: _book.publisher,
-                  textCapitalization: TextCapitalization.words,
-                  onChanged: (String value) => _book.publisher = value,
-                ),
+                if (_book.location != null)
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: _buildLocationPreview(_book.location!),
+                  ),
+
+                if (_book.location == null)
+                  _buildSelector(
+                    "Select",
+                    "Publishers",
+                    Consumer<PublishersProvider>(
+                      // Listen to changes in saved publishers.
+                      builder: (BuildContext context, PublishersProvider provider, Widget? child) => SizedBox(
+                        width: dialogWidth,
+                        child: ListView(
+                          physics: const BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          children: [
+                            ...List.generate(
+                              provider.publishers.length + 1,
+                              (int index) => index < provider.publishers.length
+                                  ? ListTile(
+                                      leading: Text(provider.publishers[index].name),
+                                      onTap: () {
+                                        final Publisher publisher = provider.publishers[index];
+
+                                        // Set the book location.
+                                        setState(() {
+                                          _book.publisher = publisher;
+                                        });
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  : ListTile(
+                                      leading: const Text("Add"),
+                                      trailing: const Icon(Icons.add),
+                                      onTap: () => Navigator.of(context).pushNamed(EditLocationScreen.routeName),
+                                    ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
 
                 const SeparatorWidget(
                   child: Divider(
@@ -289,7 +330,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     "Select",
                     "Locations",
                     Consumer<StoreLocationsProvider>(
-                      // Listen to changes in saved genres.
+                      // Listen to changes in saved locations.
                       builder: (BuildContext context, StoreLocationsProvider provider, Widget? child) => SizedBox(
                         width: dialogWidth,
                         child: ListView(

@@ -5,11 +5,12 @@ import 'package:hive/hive.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/models/store_location.dart';
 
 part 'library.g.dart';
 
-@HiveType(typeId: 4)
+@HiveType(typeId: 5)
 class Library extends HiveObject {
   @HiveField(0)
   String name;
@@ -26,6 +27,7 @@ class Library extends HiveObject {
     final Box<Book> _books = Hive.box<Book>("books");
     final Box<Author> _authors = Hive.box<Author>("authors");
     final Box<Genre> _genres = Hive.box<Genre>("genres");
+    final Box<Publisher> _publishers = Hive.box<Publisher>("publishers");
     final Box<StoreLocation> _locations = Hive.box<StoreLocation>("store_locations");
 
     // Separate csv lines: each line is a book.
@@ -42,7 +44,6 @@ class Library extends HiveObject {
       // Populate book fields.
       book.title = fields[0];
       book.publishDate = int.parse(fields[2]);
-      book.publisher = fields[4];
 
       // Split authors string into its composing authors.
       final List<String> authorStrings = fields[1].split(" ");
@@ -83,6 +84,21 @@ class Library extends HiveObject {
 
         book.genres.add(bookGenre);
       }
+
+      // Get the publisher, create it if not already present.
+      // Create a temporary publisher from the given string.
+      final Publisher publisher = Publisher(name: fields[4]);
+
+      // Make sure the publisher is already present in the DB, insert it otherwise.
+      Publisher bookPublisher = publisher;
+      if (!_publishers.values.contains(publisher)) {
+        _publishers.add(publisher);
+        publisher.save();
+      } else {
+        bookPublisher = _publishers.values.singleWhere((Publisher element) => element == publisher);
+      }
+
+      book.publisher = bookPublisher;
 
       // Get store location, create it if not already present.
       // Create a temporary location from the given string.

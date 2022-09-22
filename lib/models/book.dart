@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/genre.dart';
+import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/models/store_location.dart';
 
 part 'book.g.dart';
@@ -21,7 +22,7 @@ class Book extends HiveObject {
   HiveList<Genre> genres;
 
   @HiveField(6)
-  String publisher;
+  Publisher? publisher;
 
   @HiveField(7)
   StoreLocation? location;
@@ -31,7 +32,7 @@ class Book extends HiveObject {
     required this.authors,
     this.publishDate = 0,
     required this.genres,
-    this.publisher = "",
+    this.publisher,
     this.location,
   });
 
@@ -41,7 +42,7 @@ class Book extends HiveObject {
       "authors": authors.map((Author author) => author.toSerializableString()).reduce((String value, String element) => "$value $element"),
       "publishDate": publishDate.toString(),
       "genres": genres.map((Genre genre) => genre.toSerializableString()).reduce((String value, String element) => "$value $element"),
-      "publisher": publisher,
+      "publisher": publisher != null ? publisher!.toSerializableString() : "",
       "location": location != null ? location!.toSerializableString() : ""
     };
   }

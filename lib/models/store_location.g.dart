@@ -8,7 +8,7 @@ part of 'store_location.dart';
 
 class StoreLocationAdapter extends TypeAdapter<StoreLocation> {
   @override
-  final int typeId = 3;
+  final int typeId = 4;
 
   @override
   StoreLocation read(BinaryReader reader) {

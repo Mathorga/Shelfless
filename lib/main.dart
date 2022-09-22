@@ -7,11 +7,13 @@ import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/models/library.dart';
+import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
+import 'package:shelfish/providers/publishers_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/book_info_screen.dart';
@@ -34,6 +36,7 @@ void main() async {
   Hive.registerAdapter(BookAdapter());
   Hive.registerAdapter(AuthorAdapter());
   Hive.registerAdapter(GenreAdapter());
+  Hive.registerAdapter(PublisherAdapter());
   Hive.registerAdapter(StoreLocationAdapter());
   Hive.registerAdapter(LibraryAdapter());
 
@@ -41,6 +44,7 @@ void main() async {
   await Hive.openBox<Book>("books");
   await Hive.openBox<Author>("authors");
   await Hive.openBox<Genre>("genres");
+  await Hive.openBox<Publisher>("publishers");
   await Hive.openBox<StoreLocation>("store_locations");
   await Hive.openBox<Library>("libraries");
 
@@ -57,6 +61,7 @@ class Shelfish extends StatelessWidget {
         ChangeNotifierProvider(create: (BuildContext contex) => BooksProvider()),
         ChangeNotifierProvider(create: (BuildContext contex) => GenresProvider()),
         ChangeNotifierProvider(create: (BuildContext contex) => AuthorsProvider()),
+        ChangeNotifierProvider(create: (BuildContext contex) => PublishersProvider()),
         ChangeNotifierProvider(create: (BuildContext contex) => StoreLocationsProvider()),
         ChangeNotifierProvider(create: (BuildContext contex) => LibrariesProvider()),
       ],

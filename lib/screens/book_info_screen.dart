@@ -172,14 +172,16 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               ),
 
               // Publisher.
-              const Text("Publisher"),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(book.publisher, style: Theme.of(context).textTheme.headline6),
-              ),
-              const SizedBox(
-                height: 24.0,
-              ),
+              if (book.publisher != null) const Text("Publisher"),
+              if (book.publisher != null)
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(book.publisher.toString(), style: Theme.of(context).textTheme.headline6),
+                ),
+              if (book.publisher != null)
+                const SizedBox(
+                  height: 24.0,
+                ),
             ],
           ),
         ),
