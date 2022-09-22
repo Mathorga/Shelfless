@@ -15,6 +15,12 @@ class Publisher extends HiveObject {
     this.website,
   });
 
+  Publisher.fromSerializableString(String source) : name = "" {
+    final List<String> parts = source.split("/");
+    name = parts[0];
+    website = parts[1].isNotEmpty ? parts[1] : null;
+  }
+
   @override
   String toString() {
     return name + (website ?? "");

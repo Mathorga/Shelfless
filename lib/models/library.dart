@@ -87,7 +87,7 @@ class Library extends HiveObject {
 
       // Get the publisher, create it if not already present.
       // Create a temporary publisher from the given string.
-      final Publisher publisher = Publisher(name: fields[4]);
+      final Publisher publisher = Publisher.fromSerializableString(fields[4]);
 
       // Make sure the publisher is already present in the DB, insert it otherwise.
       Publisher bookPublisher = publisher;

@@ -38,6 +38,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
       BooksOverviewWidget(searchValue: _currentFilter),
       GenresOverviewWidget(searchValue: _currentFilter),
       AuthorsOverviewWidget(searchValue: _currentFilter),
+      AuthorsOverviewWidget(searchValue: _currentFilter),
+      AuthorsOverviewWidget(searchValue: _currentFilter),
     ];
 
     return Scaffold(
@@ -114,9 +116,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
         elevation: 0.0,
         onTap: (int selectedIndex) => setState(() => _currentIndex = selectedIndex),
         currentIndex: _currentIndex,
+        type: BottomNavigationBarType.fixed,
+        showUnselectedLabels: true,
+        unselectedItemColor: Theme.of(context).colorScheme.onBackground,
+        selectedIconTheme: IconTheme.of(context).copyWith(color: Theme.of(context).colorScheme.primary, size: 28.0,),
+        unselectedIconTheme: IconTheme.of(context).copyWith(size: 22.0),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.book_rounded),
+            icon: Icon(Icons.auto_stories_rounded),
             label: "Books",
           ),
           BottomNavigationBarItem(
@@ -126,6 +133,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person_rounded),
             label: "Authors",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.location_city_rounded),
+            label: "Publishers",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.auto_awesome_mosaic_rounded),
+            label: "Locations",
           ),
         ],
       ),
