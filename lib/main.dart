@@ -22,6 +22,7 @@ import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/screens/edit_library_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
+import 'package:shelfish/screens/edit_publisher_screen.dart';
 import 'package:shelfish/screens/genre_info_screen.dart';
 import 'package:shelfish/screens/import_library_screen.dart';
 import 'package:shelfish/screens/libraries_overview_screen.dart';
@@ -97,6 +98,7 @@ class Shelfish extends StatelessWidget {
           EditBookScreen.routeName: (BuildContext context) => const EditBookScreen(),
           EditAuthorScreen.routeName: (BuildContext context) => const EditAuthorScreen(),
           EditGenreScreen.routeName: (BuildContext context) => const EditGenreScreen(),
+          EditPublisherScreen.routeName: (BuildContext context) => const EditPublisherScreen(),
           EditLocationScreen.routeName: (BuildContext context) => const EditLocationScreen(),
         },
       ),

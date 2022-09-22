@@ -5,6 +5,8 @@ import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/models/library.dart';
+import 'package:shelfish/models/publisher.dart';
+import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
@@ -107,14 +109,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Title.
-              const Text("Title"),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(book.title, style: Theme.of(context).textTheme.headline6),
-              ),
-              const SizedBox(
-                height: 24.0,
-              ),
+              _buildTextInfo("Title", book.title),
 
               // Library.
               if (librariesProvider.currentLibrary == null)
@@ -148,14 +143,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               ),
 
               // Publish date.
-              const Text("Publish date"),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Text(book.publishDate.toString(), style: Theme.of(context).textTheme.headline6),
-              ),
-              const SizedBox(
-                height: 24.0,
-              ),
+              _buildTextInfo("Publish date", book.publishDate.toString()),
 
               // Genres.
               const Text("Genres"),
@@ -172,20 +160,30 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               ),
 
               // Publisher.
-              if (book.publisher != null) const Text("Publisher"),
-              if (book.publisher != null)
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Text(book.publisher.toString(), style: Theme.of(context).textTheme.headline6),
-                ),
-              if (book.publisher != null)
-                const SizedBox(
-                  height: 24.0,
-                ),
+              if (book.publisher != null) _buildTextInfo("Publisher", book.publisher!.toString()),
+
+              // Location.
+              if (book.location != null) _buildTextInfo("Location", book.location!.toString()),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextInfo(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(content, style: Theme.of(context).textTheme.headline6),
+        ),
+        const SizedBox(
+          height: 24.0,
+        ),
+      ],
     );
   }
 }

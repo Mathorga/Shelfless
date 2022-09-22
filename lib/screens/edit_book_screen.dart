@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/models/library.dart';
 import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/authors_provider.dart';
@@ -18,10 +17,12 @@ import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
+import 'package:shelfish/screens/edit_publisher_screen.dart';
 import 'package:shelfish/utils/constants.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 import 'package:shelfish/widgets/location_preview_widget.dart';
+import 'package:shelfish/widgets/publisher_preview_widget.dart';
 import 'package:shelfish/widgets/separator_widget.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
@@ -79,6 +80,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
           title: Text("${_inserting ? "Insert" : "Edit"} Book"),
         ),
         body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -266,13 +268,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 // Publisher.
                 const Text("Publisher"),
-                if (_book.location != null)
+                if (_book.publisher != null)
                   Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: _buildLocationPreview(_book.location!),
+                    child: _buildPublisherPreview(_book.publisher!),
                   ),
 
-                if (_book.location == null)
+                if (_book.publisher == null)
                   _buildSelector(
                     "Select",
                     "Publishers",
@@ -302,7 +304,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   : ListTile(
                                       leading: const Text("Add"),
                                       trailing: const Icon(Icons.add),
-                                      onTap: () => Navigator.of(context).pushNamed(EditLocationScreen.routeName),
+                                      onTap: () => Navigator.of(context).pushNamed(EditPublisherScreen.routeName),
                                     ),
                             ),
                           ],
@@ -457,6 +459,28 @@ class _EditBookScreenState extends State<EditBookScreen> {
           onPressed: () {
             setState(() {
               _book.genres.remove(genre);
+            });
+          },
+          icon: const Icon(
+            Icons.cancel_rounded,
+            color: Colors.red,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPublisherPreview(Publisher publisher) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: PublisherPreviewWidget(publisher: publisher),
+        ),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              _book.publisher = null;
             });
           },
           icon: const Icon(
