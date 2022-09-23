@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:provider/provider.dart';
 
@@ -10,7 +9,6 @@ import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/publisher_info_screen.dart';
-import 'package:shelfish/utils/constants.dart';
 import 'package:shelfish/widgets/location_preview_widget.dart';
 
 class LocationsOverviewWidget extends StatelessWidget {
