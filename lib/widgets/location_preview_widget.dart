@@ -13,16 +13,18 @@ class LocationPreviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              location.name,
-              textAlign: TextAlign.center,
-            ),
-          ],
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                location.name,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

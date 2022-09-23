@@ -43,7 +43,7 @@ class LocationsOverviewWidget extends StatelessWidget {
               )
             : GridView.count(
                 crossAxisCount: 2,
-                childAspectRatio: 16 / 9,
+                childAspectRatio: 12 / 9,
                 padding: const EdgeInsets.all(12.0),
                 physics: const BouncingScrollPhysics(),
                 children: [
