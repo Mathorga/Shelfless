@@ -1,64 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
-import 'package:shelfish/providers/authors_provider.dart';
+import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/screens/author_info_screen.dart';
+import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
+import 'package:shelfish/screens/publisher_info_screen.dart';
 import 'package:shelfish/utils/constants.dart';
-import 'package:shelfish/widgets/author_preview_widget.dart';
+import 'package:shelfish/widgets/location_preview_widget.dart';
 
-class AuthorsOverviewWidget extends StatelessWidget {
+class LocationsOverviewWidget extends StatelessWidget {
   final String searchValue;
 
-  const AuthorsOverviewWidget({
+  const LocationsOverviewWidget({
     Key? key,
     this.searchValue = "",
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
-    final LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
+    final StoreLocationsProvider locationsProvider = Provider.of(context, listen: true);
+    final LibrariesProvider librariesProvider = Provider.of(context, listen: true);
 
     // Fetch all relevant authors based on the currently viewed library. All if no specific library is selected.
-    final List<Author> _unfilteredAuthors = _librariesProvider.currentLibrary != null
-        ? _librariesProvider.currentLibrary!.books
-            .map<List<Author>>((Book book) => book.authors)
-            .fold(<Author>[], (List<Author> result, List<Author> element) => result..addAll(element))
+    final List<StoreLocation> unfilteredLocations = librariesProvider.currentLibrary != null
+        ? librariesProvider.currentLibrary!.books
+            .where((Book book) => book.publisher != null)
+            .map<StoreLocation>((Book book) => book.location!)
+            .fold(<StoreLocation>[], (List<StoreLocation> result, StoreLocation element) => result..add(element))
             .toSet()
             .toList()
-        : _authorsProvider.authors;
-    final _authors = _unfilteredAuthors.where((Author author) => author.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
+        : locationsProvider.locations;
+
+    final List<StoreLocation> locations = unfilteredLocations.where((StoreLocation publisher) => publisher.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
-        body: _authors.isEmpty
+        body: locations.isEmpty
             ? const Center(
-                child: Text("No authors found"),
+                child: Text("No locations found"),
               )
             : GridView.count(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.all(12.0),
                 crossAxisCount: 2,
+                childAspectRatio: 16 / 9,
+                padding: const EdgeInsets.all(12.0),
+                physics: const BouncingScrollPhysics(),
                 children: [
                   ...List.generate(
-                    _authors.length,
-                    (int index) => GestureDetector(
+                    locations.length,
+                    (index) => GestureDetector(
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (BuildContext context) => BooksScreen(author: _authors[index]),
+                          builder: (BuildContext context) => BooksScreen(location: locations[index]),
                         ),
                       ),
                       child: Stack(
                         children: [
                           SizedBox(
                             height: double.infinity,
-                            child: AuthorPreviewWidget(
-                              author: _authors[index],
+                            child: LocationPreviewWidget(
+                              location: locations[index],
                             ),
                           ),
                           Align(
@@ -66,7 +70,7 @@ class AuthorsOverviewWidget extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 // Edit the selected author.
-                                Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: _authors[index]);
+                                Navigator.of(context).pushNamed(PublisherInfoScreen.routeName, arguments: locations[index]);
                               },
                               icon: const Icon(Icons.settings_rounded),
                             ),
@@ -74,8 +78,7 @@ class AuthorsOverviewWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: fabAccessHeight),
+                  )
                 ],
               ),
         floatingActionButton: FloatingActionButton(

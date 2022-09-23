@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/providers/publishers_provider.dart';
-import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/publisher_info_screen.dart';
@@ -15,8 +13,6 @@ import 'package:shelfish/utils/constants.dart';
 import 'package:shelfish/widgets/publisher_preview_widget.dart';
 
 class PublishersOverviewWidget extends StatelessWidget {
-  static const String routeName = "/authors_overview";
-
   final String searchValue;
 
   const PublishersOverviewWidget({
@@ -48,7 +44,7 @@ class PublishersOverviewWidget extends StatelessWidget {
               )
             : ListView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12.0),
                 // crossAxisCount: 2,
                 children: [
                   ...List.generate(
@@ -74,7 +70,7 @@ class PublishersOverviewWidget extends StatelessWidget {
                                 // Edit the selected author.
                                 Navigator.of(context).pushNamed(PublisherInfoScreen.routeName, arguments: publishers[index]);
                               },
-                              icon: const Icon(Icons.info_rounded),
+                              icon: const Icon(Icons.settings_rounded),
                             ),
                           ),
                         ],

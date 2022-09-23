@@ -9,12 +9,9 @@ import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/genre_info_screen.dart';
-import 'package:shelfish/utils/constants.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 
 class GenresOverviewWidget extends StatefulWidget {
-  static const String routeName = "/genres_overview";
-
   final String searchValue;
 
   const GenresOverviewWidget({
@@ -49,7 +46,8 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
               )
             : GridView.count(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12.0),
+                childAspectRatio: 12 / 9,
                 crossAxisCount: 2,
                 children: [
                   ...List.generate(
@@ -72,7 +70,7 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
                                 // Go to genre info.
                                 Navigator.of(context).pushNamed(GenreInfoScreen.routeName, arguments: _genres[index]);
                               },
-                              icon: const Icon(Icons.info_rounded),
+                              icon: const Icon(Icons.settings_rounded),
                             ),
                           ),
                         ],

@@ -39,7 +39,7 @@ class BooksOverviewWidget extends StatelessWidget {
             )
           : ListView(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               children: [
                 ...List.generate(
                   _books.length,
