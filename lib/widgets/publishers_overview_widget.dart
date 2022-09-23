@@ -10,8 +10,8 @@ import 'package:shelfish/providers/publishers_provider.dart';
 import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
+import 'package:shelfish/screens/publisher_info_screen.dart';
 import 'package:shelfish/utils/constants.dart';
-import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/publisher_preview_widget.dart';
 
 class PublishersOverviewWidget extends StatelessWidget {
@@ -72,7 +72,7 @@ class PublishersOverviewWidget extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 // Edit the selected author.
-                                Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: publishers[index]);
+                                Navigator.of(context).pushNamed(PublisherInfoScreen.routeName, arguments: publishers[index]);
                               },
                               icon: const Icon(Icons.info_rounded),
                             ),

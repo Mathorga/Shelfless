@@ -28,6 +28,7 @@ import 'package:shelfish/screens/import_library_screen.dart';
 import 'package:shelfish/screens/libraries_overview_screen.dart';
 import 'package:shelfish/screens/locations_overview_screen.dart';
 import 'package:shelfish/screens/library_screen.dart';
+import 'package:shelfish/screens/publisher_info_screen.dart';
 
 void main() async {
   // Init local DB.
@@ -93,6 +94,7 @@ class Shelfish extends StatelessWidget {
           BookInfoScreen.routeName: (BuildContext context) => const BookInfoScreen(),
           AuthorInfoScreen.routeName: (BuildContext context) => const AuthorInfoScreen(),
           GenreInfoScreen.routeName: (BuildContext context) => const GenreInfoScreen(),
+          PublisherInfoScreen.routeName: (BuildContext context) => const PublisherInfoScreen(),
           ImportLibraryScreen.routeName: (BuildContext context) => const ImportLibraryScreen(),
           EditLibraryScreen.routeName: (BuildContext context) => const EditLibraryScreen(),
           EditBookScreen.routeName: (BuildContext context) => const EditBookScreen(),

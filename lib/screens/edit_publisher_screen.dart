@@ -16,19 +16,30 @@ class EditPublisherScreen extends StatefulWidget {
 }
 
 class _EditPublisherScreenState extends State<EditPublisherScreen> {
+  Publisher _publisher = Publisher(
+    name: "",
+  );
 
-  String name = "";
-  int color = Colors.white.value;
+  // Insert flag: tells whether the widget is used for adding or editing a publisher.
+  bool _inserting = true;
 
   @override
   Widget build(BuildContext context) {
     // Fetch provider to save changes.
     final PublishersProvider publishersProvider = Provider.of(context, listen: false);
 
+    // Fetch passed arguments.
+    Publisher? receivedPublisher = ModalRoute.of(context)!.settings.arguments as Publisher?;
+    _inserting = receivedPublisher == null;
+
+    if (!_inserting) {
+      _publisher = receivedPublisher!;
+    }
+
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Insert Publisher"),
+          title: Text("${_inserting ? "Insert" : "Edit"} Publisher"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -36,8 +47,10 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("Name"),
-              TextField(
-                onChanged: (String value) => name = value,
+              TextFormField(
+                initialValue: _publisher.name,
+                textCapitalization: TextCapitalization.words,
+                onChanged: (String value) => _publisher.name = value,
               ),
               const SizedBox(
                 height: 24.0,
@@ -48,11 +61,8 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            // Actually save a new genre.
-            final Publisher publisher = Publisher(
-              name: name.trim(),
-            );
-            publishersProvider.addPublisher(publisher);
+            // Actually save the author.
+            _inserting ? publishersProvider.addPublisher(_publisher) : publishersProvider.updatePublisher(_publisher);
             Navigator.of(context).pop();
           },
           label: Row(

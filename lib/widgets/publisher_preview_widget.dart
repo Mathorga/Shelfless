@@ -24,6 +24,11 @@ class PublisherPreviewWidget extends StatelessWidget {
                 publisher.name,
                 textAlign: TextAlign.center,
               ),
+              if (publisher.website != null)
+                Text(
+                  publisher.website!,
+                  textAlign: TextAlign.center,
+                ),
             ],
           ),
         ),
