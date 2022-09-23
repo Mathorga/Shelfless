@@ -35,7 +35,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: _buildAppBar(),
-      backgroundColor: ShelfishColors.librariesBackground,
+      // backgroundColor: ShelfishColors.librariesBackground,
       body: _libraries.isEmpty
           ? const Center(
               child: Text("No libraries found"),
@@ -52,49 +52,62 @@ class LibrariesOverviewScreen extends StatelessWidget {
                       _librariesProvider.setCurrenLibraryIndex(index < _libraries.length ? index : null);
                       Navigator.of(context).pushNamed(LibraryScreen.routeName, arguments: index);
                     },
-                    child: SizedBox(
-                      height: 120.0,
-                      child: index < _libraries.length
-                          ? Stack(
-                              children: [
-                                LibraryPreviewWidget(
-                                  library: _libraries[index],
-                                ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      // Go to library info.
-                                      Navigator.of(context).pushNamed(EditLibraryScreen.routeName, arguments: _libraries[index]);
-                                    },
-                                    icon: const Icon(Icons.edit_rounded),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      // Delete library.
-                                      _librariesProvider.deleteLibrary(_libraries[index]);
-                                    },
-                                    icon: const Icon(Icons.delete_rounded),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Card(
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Text(
-                                    "All (${_booksProvider.books.length} books)",
-                                    textAlign: TextAlign.center,
+                    child: index < _libraries.length
+                        ? Stack(
+                            children: [
+                              LibraryPreviewWidget(
+                                library: _libraries[index],
+                              ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: IconButton(
+                                  onPressed: () {
+                                    // Go to library info.
+                                    Navigator.of(context).pushNamed(EditLibraryScreen.routeName, arguments: _libraries[index]);
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit_rounded,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black,
+                                        blurRadius: 10.0,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: IconButton(
+                                  onPressed: () {
+                                    // Delete library.
+                                    _librariesProvider.deleteLibrary(_libraries[index]);
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete_rounded,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black,
+                                        blurRadius: 10.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Card(
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  "All (${_booksProvider.books.length} books)",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ),
-                    ),
+                          ),
                   ),
                 )
               ],

@@ -13,15 +13,32 @@ class LibraryPreviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Align(
-        alignment: Alignment.bottomLeft,
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            library.toString(),
-            textAlign: TextAlign.center,
+      child: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            height: 100.0,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(15.0),
+              ),
+              child: Image.network(
+                "https://img2.goodfon.com/wallpaper/nbig/1/4e/les-popugai-gruppa.jpg",
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-        ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                library.toString(),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

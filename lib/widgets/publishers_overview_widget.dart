@@ -43,10 +43,11 @@ class PublishersOverviewWidget extends StatelessWidget {
             ? const Center(
                 child: Text("No publishers found"),
               )
-            : ListView(
+            : GridView.count(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(12.0),
-                // crossAxisCount: 2,
+                crossAxisCount: 1,
+                childAspectRatio: 24 / 9,
                 children: [
                   ...List.generate(
                     publishers.length,
@@ -59,7 +60,7 @@ class PublishersOverviewWidget extends StatelessWidget {
                       child: Stack(
                         children: [
                           SizedBox(
-                            height: 120.0,
+                            height: double.infinity,
                             child: PublisherPreviewWidget(
                               publisher: publishers[index],
                             ),

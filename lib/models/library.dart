@@ -144,7 +144,8 @@ class Library extends HiveObject {
 
   @override
   String toString() {
-    return "$name (${books.toList().length} books)";
+    final int booksLength = books.toList().length;
+    return "$name ($booksLength ${booksLength == 1 ? "book" : "books"})";
   }
 
   void writeToFile(String filePath) async {

@@ -79,6 +79,7 @@ class Shelfish extends StatelessWidget {
             elevation: 0.0,
             centerTitle: true,
           ),
+
           cardTheme: CardTheme(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
