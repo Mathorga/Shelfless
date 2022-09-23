@@ -36,6 +36,7 @@ class AuthorsOverviewWidget extends StatelessWidget {
     final _authors = _unfilteredAuthors.where((Author author) => author.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
+        backgroundColor: Colors.transparent,
         body: _authors.isEmpty
             ? const Center(
                 child: Text("No authors found"),

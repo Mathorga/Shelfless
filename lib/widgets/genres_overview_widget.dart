@@ -40,6 +40,7 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
     final _genres = _unfilteredGenres.where((Genre genre) => genre.name.toLowerCase().contains(widget.searchValue.toLowerCase())).toList();
 
     return Scaffold(
+        backgroundColor: Colors.transparent,
         body: _genres.isEmpty
             ? const Center(
                 child: Text("No genres found"),

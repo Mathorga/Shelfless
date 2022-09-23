@@ -11,6 +11,7 @@ import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_library_screen.dart';
 import 'package:shelfish/screens/library_screen.dart';
+import 'package:shelfish/themes/shelfish_colors.dart';
 import 'package:shelfish/widgets/library_preview_widget.dart';
 
 class LibrariesOverviewScreen extends StatelessWidget {
@@ -34,6 +35,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: _buildAppBar(),
+      backgroundColor: ShelfishColors.librariesBackground,
       body: _libraries.isEmpty
           ? const Center(
               child: Text("No libraries found"),

@@ -37,6 +37,7 @@ class LocationsOverviewWidget extends StatelessWidget {
     final List<StoreLocation> locations = unfilteredLocations.where((StoreLocation publisher) => publisher.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
+        backgroundColor: Colors.transparent,
         body: locations.isEmpty
             ? const Center(
                 child: Text("No locations found"),

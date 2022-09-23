@@ -33,6 +33,7 @@ class BooksOverviewWidget extends StatelessWidget {
     List<Book> _books = _unfilteredBooks.where(filter ?? (Book book) => true).where((Book book) => book.title.toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: _books.isEmpty
           ? const Center(
               child: Text("No books found"),

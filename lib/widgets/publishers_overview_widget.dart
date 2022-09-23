@@ -38,6 +38,7 @@ class PublishersOverviewWidget extends StatelessWidget {
     final List<Publisher> publishers = unfilteredPublishers.where((Publisher publisher) => publisher.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
+        backgroundColor: Colors.transparent,
         body: publishers.isEmpty
             ? const Center(
                 child: Text("No publishers found"),

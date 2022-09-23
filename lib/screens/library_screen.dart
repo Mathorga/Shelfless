@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/libraries_overview_screen.dart';
+import 'package:shelfish/themes/shelfish_colors.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
@@ -124,6 +125,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         unselectedItemColor: Theme.of(context).colorScheme.onBackground,
         selectedIconTheme: IconTheme.of(context).copyWith(color: Theme.of(context).colorScheme.primary, size: 28.0,),
         unselectedIconTheme: IconTheme.of(context).copyWith(size: 22.0),
+        backgroundColor: Colors.transparent,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.auto_stories_rounded),
