@@ -110,9 +110,6 @@ class LibrariesOverviewScreen extends StatelessWidget {
             label: "Import",
             child: const Icon(Icons.upload_rounded),
             onTap: () async {
-              // Clear all cached files.
-              FilePicker.platform.clearTemporaryFiles();
-
               // Pick a library file.
               FilePickerResult? result = await FilePicker.platform.pickFiles();
 
