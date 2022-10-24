@@ -17,8 +17,8 @@ class Publisher extends HiveObject {
 
   Publisher.fromSerializableString(String source) : name = "" {
     final List<String> parts = source.split("/");
-    name = parts[0];
-    website = parts[1].isNotEmpty ? parts[1] : null;
+    name = parts[0].replaceAll("_", " ");
+    website = parts.length > 1 ? parts[1].isNotEmpty ? parts[1] : null : null;
   }
 
   @override

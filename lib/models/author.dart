@@ -24,9 +24,18 @@ class Author extends HiveObject {
         lastName = "",
         nationality = "" {
     final List<String> parts = source.split("/");
-    firstName = parts[0];
-    lastName = parts[1];
-    nationality = parts[2];
+
+    if (parts.isNotEmpty) {
+      firstName = parts[0].replaceAll("_", " ");
+    }
+
+    if (parts.length > 1) {
+      lastName = parts[1].replaceAll("_", " ");
+    }
+
+    if (parts.length > 2) {
+      nationality = parts[2].replaceAll("_", " ");
+    }
   }
 
   @override

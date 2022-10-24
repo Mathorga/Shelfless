@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:shelfish/utils/utils.dart';
 
 part 'genre.g.dart';
 
@@ -20,7 +21,7 @@ class Genre extends HiveObject {
         color = 0 {
     final List<String> parts = source.split("/");
     name = parts[0];
-    color = int.parse(parts[1]);
+    color = parts.length > 1 ? int.parse(parts[1]) : Utils.randomColor();
   }
 
   @override
@@ -29,10 +30,10 @@ class Genre extends HiveObject {
   }
 
   @override
-  bool operator ==(Object other) => other is Genre && other.runtimeType == runtimeType && other.name == name && other.color == color;
+  bool operator ==(Object other) => other is Genre && other.runtimeType == runtimeType && other.name == name;
   
   @override
-  int get hashCode => name.hashCode + color.hashCode;
+  int get hashCode => name.hashCode;
 
   String toSerializableString() {
     return "${name.replaceAll(" ", "_")}/$color";

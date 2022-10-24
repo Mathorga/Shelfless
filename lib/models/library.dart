@@ -44,8 +44,8 @@ class Library extends HiveObject {
       // Populate book fields.
       book.title = fields[0];
       book.publishDate = int.parse(fields[2]);
-      book.borrowed = fields[6] == "true";
-      book.edition = int.parse(fields[7]);
+      book.borrowed = fields.length > 7 ? fields[6] == "true" : false;
+      book.edition = fields.length > 8 ? int.parse(fields[7]) : 1;
 
       // Split authors string into its composing authors.
       final List<String> authorStrings = fields[1].split(" ");

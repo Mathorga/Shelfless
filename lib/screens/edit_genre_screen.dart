@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/providers/genres_provider.dart';
+import 'package:shelfish/utils/utils.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
 class EditGenreScreen extends StatefulWidget {
@@ -30,7 +31,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
 
     _genre = Genre(
       name: "",
-      color: randomColor(),
+      color: Utils.randomColor(),
     );
   }
 
@@ -120,7 +121,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                             onPressed: () {
                               // Pick a random color.
                               setState(() {
-                                _genre.color = randomColor();
+                                _genre.color = Utils.randomColor();
                               });
                             },
                             icon: const Icon(Icons.refresh_rounded)),
@@ -152,6 +153,4 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
       ),
     );
   }
-
-  int randomColor() => (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt();
 }

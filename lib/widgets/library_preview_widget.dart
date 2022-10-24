@@ -22,8 +22,8 @@ class LibraryPreviewWidget extends StatelessWidget {
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(15.0),
               ),
-              child: Image.network(
-                "https://img2.goodfon.com/wallpaper/nbig/1/4e/les-popugai-gruppa.jpg",
+              child: Image.asset(
+                "assets/images/covers/parrots.jpg",
                 fit: BoxFit.cover,
               ),
             ),
