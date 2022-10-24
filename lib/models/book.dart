@@ -27,6 +27,12 @@ class Book extends HiveObject {
   @HiveField(7)
   StoreLocation? location;
 
+  @HiveField(8)
+  bool borrowed;
+
+  @HiveField(9)
+  int edition;
+
   Book({
     this.title = "",
     required this.authors,
@@ -34,6 +40,8 @@ class Book extends HiveObject {
     required this.genres,
     this.publisher,
     this.location,
+    this.borrowed = false,
+    this.edition = 1,
   });
 
   Map<String, String> toMap() {
@@ -43,7 +51,9 @@ class Book extends HiveObject {
       "publishDate": publishDate.toString(),
       "genres": genres.map((Genre genre) => genre.toSerializableString()).reduce((String value, String element) => "$value $element"),
       "publisher": publisher != null ? publisher!.toSerializableString() : "",
-      "location": location != null ? location!.toSerializableString() : ""
+      "location": location != null ? location!.toSerializableString() : "",
+      "borrowed": borrowed.toString(),
+      "edition": edition.toString(),
     };
   }
 }

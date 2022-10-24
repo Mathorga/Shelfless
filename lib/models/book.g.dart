@@ -23,13 +23,15 @@ class BookAdapter extends TypeAdapter<Book> {
       genres: (fields[4] as HiveList).castHiveList(),
       publisher: fields[6] as Publisher?,
       location: fields[7] as StoreLocation?,
+      borrowed: fields[8] as bool,
+      edition: fields[9] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Book obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(1)
       ..write(obj.title)
       ..writeByte(2)
@@ -41,7 +43,11 @@ class BookAdapter extends TypeAdapter<Book> {
       ..writeByte(6)
       ..write(obj.publisher)
       ..writeByte(7)
-      ..write(obj.location);
+      ..write(obj.location)
+      ..writeByte(8)
+      ..write(obj.borrowed)
+      ..writeByte(9)
+      ..write(obj.edition);
   }
 
   @override

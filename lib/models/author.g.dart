@@ -19,17 +19,20 @@ class AuthorAdapter extends TypeAdapter<Author> {
     return Author(
       firstName: fields[0] as String,
       lastName: fields[1] as String,
+      nationality: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Author obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.firstName)
       ..writeByte(1)
-      ..write(obj.lastName);
+      ..write(obj.lastName)
+      ..writeByte(2)
+      ..write(obj.nationality);
   }
 
   @override

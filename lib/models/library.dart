@@ -44,6 +44,8 @@ class Library extends HiveObject {
       // Populate book fields.
       book.title = fields[0];
       book.publishDate = int.parse(fields[2]);
+      book.borrowed = fields[6] == "true";
+      book.edition = int.parse(fields[7]);
 
       // Split authors string into its composing authors.
       final List<String> authorStrings = fields[1].split(" ");
@@ -129,7 +131,7 @@ class Library extends HiveObject {
   }
 
   String toSerializableString() {
-    const String header = "title;authors;publishDate;genres;publisher;location";
+    const String header = "title;authors;publishDate;genres;publisher;location;borrowed;edition";
 
     return bookMaps.map<String>((Map<String, String> bookMap) {
       return bookMap.values.reduce((String value, String element) {
