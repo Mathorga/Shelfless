@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
 import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/books_provider.dart';
-
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_library_screen.dart';
 import 'package:shelfish/screens/library_screen.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/library_preview_widget.dart';
 
 class LibrariesOverviewScreen extends StatelessWidget {
@@ -20,49 +21,49 @@ class LibrariesOverviewScreen extends StatelessWidget {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: const Text("Libraries"),
+      title: const Text(Strings.librariesTitle),
       backgroundColor: Colors.transparent,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
-    BooksProvider _booksProvider = Provider.of(context, listen: true);
+    LibrariesProvider librariesProvider = Provider.of(context, listen: true);
+    BooksProvider booksProvider = Provider.of(context, listen: true);
 
-    final _libraries = _librariesProvider.libraries;
+    final libraries = librariesProvider.libraries;
 
     return Scaffold(
       appBar: _buildAppBar(),
       // backgroundColor: ShelfishColors.librariesBackground,
-      body: _libraries.isEmpty
+      body: libraries.isEmpty
           ? const Center(
-              child: Text("No libraries found"),
+              child: Text(Strings.noLibrariesFound),
             )
           : ListView(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(8.0),
               children: [
                 ...List.generate(
-                  _libraries.length + 1,
+                  libraries.length + 1,
                   (int index) => GestureDetector(
                     // Navigate to library screen.
                     onTap: () {
-                      _librariesProvider.setCurrenLibraryIndex(index < _libraries.length ? index : null);
+                      librariesProvider.setCurrenLibraryIndex(index < libraries.length ? index : null);
                       Navigator.of(context).pushNamed(LibraryScreen.routeName, arguments: index);
                     },
-                    child: index < _libraries.length
+                    child: index < libraries.length
                         ? Stack(
                             children: [
                               LibraryPreviewWidget(
-                                library: _libraries[index],
+                                library: libraries[index],
                               ),
                               Align(
                                 alignment: Alignment.topRight,
                                 child: IconButton(
                                   onPressed: () {
                                     // Go to library info.
-                                    Navigator.of(context).pushNamed(EditLibraryScreen.routeName, arguments: _libraries[index]);
+                                    Navigator.of(context).pushNamed(EditLibraryScreen.routeName, arguments: libraries[index]);
                                   },
                                   icon: const Icon(
                                     Icons.edit_rounded,
@@ -79,8 +80,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                                 alignment: Alignment.topLeft,
                                 child: IconButton(
                                   onPressed: () {
-                                    // Delete library.
-                                    _librariesProvider.deleteLibrary(_libraries[index]);
+                                    _showDeleteDialog(context, libraries[index]);
                                   },
                                   icon: const Icon(
                                     Icons.delete_rounded,
@@ -101,7 +101,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Text(
-                                  "All (${_booksProvider.books.length} books)",
+                                  "All (${booksProvider.books.length} books)",
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -134,7 +134,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                 String fileContent = await file.readAsString();
 
                 // Create and add the library to DB.
-                _librariesProvider.addLibrary(Library.fromSerializableString(name: fileName, csvString: fileContent));
+                librariesProvider.addLibrary(Library.fromSerializableString(name: fileName, csvString: fileContent));
               } else {
                 // User canceled the picker
               }
@@ -151,5 +151,32 @@ class LibrariesOverviewScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _showDeleteDialog(BuildContext context, Library library) {
+    LibrariesProvider librariesProvider = Provider.of(context, listen: false);
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Delete Library"),
+            content: Text("Are you sure you want to delete ${library.name}?"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    // Actually delete the library.
+                    librariesProvider.deleteLibrary(library);
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Yes")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("No")),
+            ],
+          );
+        });
   }
 }
