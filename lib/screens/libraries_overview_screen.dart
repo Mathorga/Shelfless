@@ -21,7 +21,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: const Text(EngStrings.librariesTitle),
+      title: Text(strings.librariesTitle),
       backgroundColor: Colors.transparent,
     );
   }
@@ -37,8 +37,8 @@ class LibrariesOverviewScreen extends StatelessWidget {
       appBar: _buildAppBar(),
       // backgroundColor: ShelfishColors.librariesBackground,
       body: libraries.isEmpty
-          ? const Center(
-              child: Text(EngStrings.noLibrariesFound),
+          ? Center(
+              child: Text(strings.noLibrariesFound),
             )
           : ListView(
               physics: const BouncingScrollPhysics(),
@@ -101,7 +101,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Text(
-                                  "${EngStrings.all} (${booksProvider.books.length} ${EngStrings.books})",
+                                  "${strings.all} (${booksProvider.books.length} ${strings.books})",
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -119,7 +119,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
         childrenButtonSize: const Size(64.0, 64.0),
         children: [
           SpeedDialChild(
-            label: EngStrings.importLib,
+            label: strings.importLib,
             child: const Icon(Icons.upload_rounded),
             onTap: () async {
               // Pick a library file.
@@ -141,7 +141,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
             },
           ),
           SpeedDialChild(
-            label: EngStrings.newLib,
+            label: strings.newLib,
             child: const Icon(Icons.note_add_rounded),
             onTap: () {
               // Navigate to library creation screen.
@@ -160,8 +160,8 @@ class LibrariesOverviewScreen extends StatelessWidget {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text(EngStrings.deleteLibraryTitle),
-            content: Text("${EngStrings.deleteLibraryContent} ${library.name}?"),
+            title: Text(strings.deleteLibraryTitle),
+            content: Text("${strings.deleteLibraryContent} ${library.name}?"),
             actions: [
               TextButton(
                   onPressed: () {
@@ -169,12 +169,12 @@ class LibrariesOverviewScreen extends StatelessWidget {
                     librariesProvider.deleteLibrary(library);
                     Navigator.of(context).pop();
                   },
-                  child: const Text(EngStrings.yes)),
+                  child: Text(strings.yes)),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text(EngStrings.no)),
+                  child: Text(strings.no)),
             ],
           );
         });
