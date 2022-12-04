@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
 class EditLibraryScreen extends StatefulWidget {
@@ -51,14 +52,14 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("${_inserting ? "Insert" : "Edit"} Library"),
+          title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.libraryTitle}"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Name"),
+              Text(strings.libraryInfoName),
               TextFormField(
                 initialValue: _library.name,
                 textCapitalization: TextCapitalization.words,
@@ -78,10 +79,10 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
             Navigator.of(context).pop();
           },
           label: Row(
-            children: const [
-              Text("Done"),
-              SizedBox(width: 12.0),
-              Icon(Icons.check),
+            children: [
+              Text(strings.editDone),
+              const SizedBox(width: 12.0),
+              const Icon(Icons.check),
             ],
           ),
         ),

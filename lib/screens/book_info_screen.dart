@@ -5,11 +5,10 @@ import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/models/library.dart';
-import 'package:shelfish/models/publisher.dart';
-import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 
@@ -35,24 +34,24 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Book Info",
+          strings.bookInfo,
           style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
         actions: [
           PopupMenuButton(
-            itemBuilder: (BuildContext context) => const [
+            itemBuilder: (BuildContext context) => [
               PopupMenuItem(
                 value: 0,
-                child: Text("Edit"),
+                child: Text(strings.bookEdit),
               ),
               PopupMenuItem(
                 value: 1,
-                child: Text("Move to"),
+                child: Text(strings.bookMoveTo),
               ),
               PopupMenuItem(
                 value: 2,
-                child: Text("Delete"),
+                child: Text(strings.bookDelete),
               ),
             ],
             onSelected: (int value) {
@@ -67,15 +66,15 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text("Delete"),
-                        content: const Text("Are you sure you want to delete this book?"),
+                        title: Text(strings.deleteBookTitle),
+                        content: Text(strings.deleteBookContent),
                         actions: [
                           TextButton(
                             onPressed: () {
                               // Pop the dialog.
                               Navigator.of(context).pop();
                             },
-                            child: const Text("No"),
+                            child: Text(strings.no),
                           ),
                           TextButton(
                             onPressed: () {
@@ -87,7 +86,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                               // Pop the info screen.
                               Navigator.of(context).pop();
                             },
-                            child: const Text("Yes"),
+                            child: Text(strings.yes),
                           ),
                         ],
                       );
@@ -109,14 +108,14 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Title.
-              _buildTextInfo("Title", book.title),
+              _buildTextInfo(strings.bookInfoTitle, book.title),
 
               // Library.
               if (librariesProvider.currentLibrary == null)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Library"),
+                    Text(strings.bookInfoLibrary),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child:
@@ -129,7 +128,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                 ),
 
               // Authors.
-              const Text("Authors"),
+              Text(strings.bookInfoAuthors),
               if (book.authors.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -143,10 +142,10 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               ),
 
               // Publish date.
-              _buildTextInfo("Publish date", book.publishDate.toString()),
+              _buildTextInfo(strings.bookInfoPublishDate, book.publishDate.toString()),
 
               // Genres.
-              const Text("Genres"),
+              Text(strings.bookInfoGenres),
               if (book.genres.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(12.0),
@@ -160,10 +159,10 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               ),
 
               // Publisher.
-              if (book.publisher != null) _buildTextInfo("Publisher", book.publisher!.toString()),
+              if (book.publisher != null) _buildTextInfo(strings.bookInfoPublisher, book.publisher!.toString()),
 
               // Location.
-              if (book.location != null) _buildTextInfo("Location", book.location!.toString()),
+              if (book.location != null) _buildTextInfo(strings.bookInfoLocation, book.location!.toString()),
             ],
           ),
         ),

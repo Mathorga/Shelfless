@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
 class EditLocationScreen extends StatefulWidget {
@@ -28,14 +29,14 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Insert Location"),
+          title: Text("${strings.insertTitle} ${strings.locationTitle}"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Name"),
+              Text(strings.locationInfoName),
               TextField(
                 onChanged: (String value) => name = value,
               ),
@@ -56,10 +57,10 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
             Navigator.of(context).pop();
           },
           label: Row(
-            children: const [
-              Text("Done"),
-              SizedBox(width: 12.0),
-              Icon(Icons.check),
+            children: [
+              Text(strings.editDone),
+              const SizedBox(width: 12.0),
+              const Icon(Icons.check),
             ],
           ),
         ),

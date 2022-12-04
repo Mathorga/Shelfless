@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/delete_dialog.dart';
 
 class GenreInfoScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _GenreInfoScreenState extends State<GenreInfoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Genre Info",
+          strings.genreInfo,
           style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
@@ -59,8 +60,8 @@ class _GenreInfoScreenState extends State<GenreInfoScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // First name.
-              const Text("Name"),
+              // Name.
+              Text(strings.genreInfoName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(genre.name, style: Theme.of(context).textTheme.headline6),
@@ -69,8 +70,8 @@ class _GenreInfoScreenState extends State<GenreInfoScreen> {
                 height: 24.0,
               ),
 
-              // Last name.
-              const Text("Color"),
+              // Color.
+              Text(strings.genreInfoColor),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Container(

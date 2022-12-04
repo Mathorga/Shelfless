@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/publisher.dart';
 
 import 'package:shelfish/providers/publishers_provider.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
 class EditPublisherScreen extends StatefulWidget {
@@ -39,14 +40,14 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("${_inserting ? "Insert" : "Edit"} Publisher"),
+          title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.publisherTitle}"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Name"),
+              Text(strings.publisherInfoName),
               TextFormField(
                 initialValue: _publisher.name,
                 textCapitalization: TextCapitalization.words,
@@ -66,10 +67,10 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
             Navigator.of(context).pop();
           },
           label: Row(
-            children: const [
-              Text("Done"),
-              SizedBox(width: 12.0),
-              Icon(Icons.check),
+            children: [
+              Text(strings.editDone),
+              const SizedBox(width: 12.0),
+              const Icon(Icons.check),
             ],
           ),
         ),

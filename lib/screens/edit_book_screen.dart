@@ -19,6 +19,7 @@ import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
 import 'package:shelfish/screens/edit_publisher_screen.dart';
 import 'package:shelfish/utils/constants.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 import 'package:shelfish/widgets/location_preview_widget.dart';
@@ -77,7 +78,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("${_inserting ? "Insert" : "Edit"} Book"),
+          title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -88,7 +89,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                const Text("Title"),
+                Text(strings.bookInfoTitle),
                 TextFormField(
                   initialValue: _book.title,
                   textCapitalization: TextCapitalization.words,
@@ -102,7 +103,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 ),
 
                 // Authors.
-                const Text("Authors"),
+                Text(strings.bookInfoAuthors),
                 if (_book.authors.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -113,8 +114,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
 
                 _buildSelector(
-                    "Add one",
-                    "Authors",
+                    strings.addOne,
+                    strings.bookInfoAuthors,
                     Consumer<AuthorsProvider>(
                       // Listen to changes in saved authors.
                       builder: (BuildContext context, AuthorsProvider provider, Widget? child) => SizedBox(
@@ -138,17 +139,18 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                           });
                                         } else {
                                           ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                              content: Text("Author already added"),
-                                              duration: Duration(seconds: 2),
+                                            SnackBar(
+                                              content: Text(strings.authorAlreadyAdded),
+                                              duration: const Duration(seconds: 2),
                                             ),
                                           );
                                         }
                                         Navigator.of(context).pop();
                                       },
-                                      child: AuthorPreviewWidget(author: provider.authors[index]))
+                                      child: AuthorPreviewWidget(author: provider.authors[index]),
+                                    )
                                   : ListTile(
-                                      leading: const Text("Add"),
+                                      leading: Text(strings.add),
                                       trailing: const Icon(Icons.add),
                                       onTap: () => Navigator.of(context).pushNamed(EditAuthorScreen.routeName),
                                     ),
@@ -165,13 +167,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 ),
 
                 // Publish year.
-                const Text("Publish date"),
+                Text(strings.bookInfoPublishDate),
                 GestureDetector(
                   onTap: () async {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
-                        title: const Text("Select publish year"),
+                        title: Text(strings.selectPublishYear),
                         content: SizedBox(
                           width: dialogWidth,
                           child: YearPicker(
@@ -204,7 +206,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 ),
 
                 // Genres.
-                const Text("Genres"),
+                Text(strings.bookInfoGenres),
                 if (_book.genres.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -215,8 +217,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
 
                 _buildSelector(
-                    "Add one",
-                    "Genres",
+                    strings.addOne,
+                    strings.bookInfoGenres,
                     Consumer<GenresProvider>(
                       // Listen to changes in saved genres.
                       builder: (BuildContext context, GenresProvider provider, Widget? child) => SizedBox(
@@ -239,9 +241,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                           });
                                         } else {
                                           ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                              content: Text("Genre already added"),
-                                              duration: Duration(seconds: 2),
+                                            SnackBar(
+                                              content: Text(strings.genreAlreadyAdded),
+                                              duration: const Duration(seconds: 2),
                                             ),
                                           );
                                         }
@@ -250,7 +252,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                       child: GenrePreviewWidget(genre: provider.genres[index]),
                                     )
                                   : ListTile(
-                                      leading: const Text("Add"),
+                                      leading: Text(strings.add),
                                       trailing: const Icon(Icons.add),
                                       onTap: () => Navigator.of(context).pushNamed(EditGenreScreen.routeName),
                                     ),
@@ -267,7 +269,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 ),
 
                 // Publisher.
-                const Text("Publisher"),
+                Text(strings.bookInfoPublisher),
                 if (_book.publisher != null)
                   Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -276,8 +278,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 if (_book.publisher == null)
                   _buildSelector(
-                    "Select",
-                    "Publishers",
+                    strings.select,
+                    strings.publishers,
                     Consumer<PublishersProvider>(
                       // Listen to changes in saved publishers.
                       builder: (BuildContext context, PublishersProvider provider, Widget? child) => SizedBox(
@@ -302,7 +304,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                       },
                                     )
                                   : ListTile(
-                                      leading: const Text("Add"),
+                                      leading: Text(strings.add),
                                       trailing: const Icon(Icons.add),
                                       onTap: () => Navigator.of(context).pushNamed(EditPublisherScreen.routeName),
                                     ),
@@ -320,7 +322,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 ),
 
                 // Location.
-                const Text("Location"),
+                Text(strings.bookInfoLocation),
                 if (_book.location != null)
                   Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -329,8 +331,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 if (_book.location == null)
                   _buildSelector(
-                    "Select",
-                    "Locations",
+                    strings.select,
+                    strings.locations,
                     Consumer<StoreLocationsProvider>(
                       // Listen to changes in saved locations.
                       builder: (BuildContext context, StoreLocationsProvider provider, Widget? child) => SizedBox(
@@ -355,7 +357,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                       },
                                     )
                                   : ListTile(
-                                      leading: const Text("Add"),
+                                      leading: Text(strings.add),
                                       trailing: const Icon(Icons.add),
                                       onTap: () => Navigator.of(context).pushNamed(EditLocationScreen.routeName),
                                     ),
@@ -384,18 +386,18 @@ class _EditBookScreenState extends State<EditBookScreen> {
               Navigator.of(context).pop();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("No title provided"),
-                  duration: Duration(seconds: 2),
+                SnackBar(
+                  content: Text(strings.bookErrorNoTitleProvided),
+                  duration: const Duration(seconds: 2),
                 ),
               );
             }
           },
           label: Row(
-            children: const [
-              Text("Done"),
-              SizedBox(width: 12.0),
-              Icon(Icons.check),
+            children: [
+              Text(strings.editDone),
+              const SizedBox(width: 12.0),
+              const Icon(Icons.check),
             ],
           ),
         ),

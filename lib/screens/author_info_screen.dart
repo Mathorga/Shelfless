@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/delete_dialog.dart';
 
 class AuthorInfoScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Author Info",
+          strings.authorInfo,
           style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
@@ -60,7 +61,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // First name.
-              const Text("First Name"),
+              Text(strings.firstName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(_author.firstName, style: Theme.of(context).textTheme.headline6),
@@ -70,7 +71,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
               ),
 
               // Last name.
-              const Text("Last Name"),
+              Text(strings.lastName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(_author.lastName, style: Theme.of(context).textTheme.headline6),

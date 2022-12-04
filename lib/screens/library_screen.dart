@@ -10,8 +10,6 @@ import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/screens/libraries_overview_screen.dart';
-import 'package:shelfish/themes/shelfish_colors.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';

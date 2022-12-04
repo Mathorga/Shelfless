@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/providers/publishers_provider.dart';
 import 'package:shelfish/screens/edit_publisher_screen.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/delete_dialog.dart';
 
 class PublisherInfoScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _PublisherInfoScreenState extends State<PublisherInfoScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Publisher Info",
+          strings.publisherInfo,
           style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
@@ -60,7 +61,7 @@ class _PublisherInfoScreenState extends State<PublisherInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // First name.
-              const Text("Name"),
+              Text(strings.publisherInfoName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(publisher.name, style: Theme.of(context).textTheme.headline6),

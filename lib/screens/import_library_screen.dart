@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
+import 'package:shelfish/utils/strings.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
 class ImportLibraryScreen extends StatefulWidget {
@@ -102,10 +103,10 @@ class _ImportLibraryScreenState extends State<ImportLibraryScreen> {
             Navigator.of(context).pop();
           },
           label: Row(
-            children: const [
-              Text("Done"),
-              SizedBox(width: 12.0),
-              Icon(Icons.check),
+            children: [
+              Text(strings.editDone),
+              const SizedBox(width: 12.0),
+              const Icon(Icons.check),
             ],
           ),
         ),
