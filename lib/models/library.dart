@@ -7,6 +7,7 @@ import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/models/store_location.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 
 part 'library.g.dart';
 
@@ -147,7 +148,7 @@ class Library extends HiveObject {
   @override
   String toString() {
     final int booksLength = books.toList().length;
-    return "$name ($booksLength ${booksLength == 1 ? "book" : "books"})";
+    return "$name ($booksLength ${booksLength == 1 ? strings.books : strings.books})";
   }
 
   void writeToFile(String filePath) async {

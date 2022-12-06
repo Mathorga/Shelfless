@@ -11,7 +11,7 @@ import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_library_screen.dart';
 import 'package:shelfish/screens/library_screen.dart';
-import 'package:shelfish/utils/strings.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/library_preview_widget.dart';
 
 class LibrariesOverviewScreen extends StatelessWidget {
@@ -70,7 +70,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                                     shadows: [
                                       Shadow(
                                         color: Colors.black,
-                                        blurRadius: 10.0,
+                                        blurRadius: 2.0,
                                       ),
                                     ],
                                   ),
@@ -87,7 +87,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                                     shadows: [
                                       Shadow(
                                         color: Colors.black,
-                                        blurRadius: 10.0,
+                                        blurRadius: 2.0,
                                       ),
                                     ],
                                   ),
@@ -101,7 +101,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Text(
-                                  "${strings.all} (${booksProvider.books.length} ${strings.books})",
+                                  "${strings.all} (${booksProvider.books.length} ${booksProvider.books.length == 1 ? strings.books : strings.books})",
                                   textAlign: TextAlign.center,
                                 ),
                               ),

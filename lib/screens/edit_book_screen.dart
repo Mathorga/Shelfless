@@ -19,7 +19,7 @@ import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
 import 'package:shelfish/screens/edit_publisher_screen.dart';
 import 'package:shelfish/utils/constants.dart';
-import 'package:shelfish/utils/strings.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 import 'package:shelfish/widgets/location_preview_widget.dart';

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/providers/authors_provider.dart';
-import 'package:shelfish/utils/strings.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
 class EditAuthorScreen extends StatefulWidget {
@@ -58,7 +58,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
-              Text(strings.authorInfoFirstName),
+              Text(strings.authorInfoLastName),
               TextFormField(
                 initialValue: _author.lastName,
                 textCapitalization: TextCapitalization.words,

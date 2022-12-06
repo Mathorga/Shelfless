@@ -10,6 +10,7 @@ import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
@@ -58,14 +59,14 @@ class _LibraryScreenState extends State<LibraryScreen> {
           // Only display the export button if actually displaying a single library.
           if (_librariesProvider.currentLibrary != null)
             PopupMenuButton(
-              itemBuilder: (BuildContext context) => const [
+              itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
                   value: 0,
-                  child: Text("Share"),
+                  child: Text(strings.shareLibrary),
                 ),
                 PopupMenuItem(
                   value: 1,
-                  child: Text("Export"),
+                  child: Text(strings.exportLibrary),
                 ),
               ],
               onSelected: (int value) async {
@@ -124,26 +125,26 @@ class _LibraryScreenState extends State<LibraryScreen> {
         selectedIconTheme: IconTheme.of(context).copyWith(color: Theme.of(context).colorScheme.primary, size: 28.0,),
         unselectedIconTheme: IconTheme.of(context).copyWith(size: 22.0),
         backgroundColor: Colors.transparent,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.auto_stories_rounded),
-            label: "Books",
+            icon: const Icon(Icons.auto_stories_rounded),
+            label: strings.booksSectionTitle,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.category_rounded),
-            label: "Genres",
+            icon: const Icon(Icons.category_rounded),
+            label: strings.genresSectionTitle,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_rounded),
-            label: "Authors",
+            icon: const Icon(Icons.person_rounded),
+            label: strings.authorsSectionTitle,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_city_rounded),
-            label: "Publishers",
+            icon: const Icon(Icons.location_city_rounded),
+            label: strings.publishersSectionTitle,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.auto_awesome_mosaic_rounded),
-            label: "Locations",
+            icon: const Icon(Icons.auto_awesome_mosaic_rounded),
+            label: strings.locationsSectionTitle,
           ),
         ],
       ),

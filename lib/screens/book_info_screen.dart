@@ -8,7 +8,7 @@ import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/books_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/edit_book_screen.dart';
-import 'package:shelfish/utils/strings.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 

@@ -5,7 +5,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/providers/genres_provider.dart';
-import 'package:shelfish/utils/strings.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/utils/utils.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 

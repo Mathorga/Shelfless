@@ -23,7 +23,7 @@ class LibraryPreviewWidget extends StatelessWidget {
                 top: Radius.circular(15.0),
               ),
               child: Image.asset(
-                "assets/images/covers/parrots.jpg",
+                "assets/images/covers/bookshelf.jpg",
                 fit: BoxFit.cover,
               ),
             ),
