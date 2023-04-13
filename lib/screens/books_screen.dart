@@ -7,7 +7,7 @@ import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/models/store_location.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
 
-/// Wraps a BookOverviewWidget adding an appbar that displays the applied filters.
+/// Wraps a BooksOverviewWidget adding an appbar that displays the applied filters.
 class BooksScreen extends StatelessWidget {
   static const String routeName = "/books";
 

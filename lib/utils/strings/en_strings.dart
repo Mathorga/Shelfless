@@ -117,7 +117,7 @@ class EnStrings implements Strings {
   String get addOne => "Add one";
 
   @override
-  String get add => "Add";
+  String get add => "Insert new";
 
   @override
   String get authorAlreadyAdded => "Author already added";

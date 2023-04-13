@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shelfish/themes/themes.dart';
 
 class SeparatorWidget extends StatelessWidget {
   final Widget? child;
@@ -10,9 +11,9 @@ class SeparatorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 24.0,
-      child: child,
+    return Padding(
+      padding: const EdgeInsets.all(Themes.padding),
+      child: Center(child: child),
     );
   }
 }

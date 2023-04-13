@@ -10,6 +10,7 @@ import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
+import 'package:shelfish/screens/books_filter_screen.dart';
 import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/authors_overview_widget.dart';
 import 'package:shelfish/widgets/genres_overview_widget.dart';
@@ -62,16 +63,23 @@ class _LibraryScreenState extends State<LibraryScreen> {
               itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
                   value: 0,
-                  child: Text(strings.shareLibrary),
+                  child: Text("Filter"),
                 ),
                 PopupMenuItem(
                   value: 1,
+                  child: Text(strings.shareLibrary),
+                ),
+                PopupMenuItem(
+                  value: 2,
                   child: Text(strings.exportLibrary),
                 ),
               ],
               onSelected: (int value) async {
                 switch (value) {
                   case 0:
+                    Navigator.of(context).pushNamed(BooksFilterScreen.routeName);
+                    break;
+                  case 1:
                     // Share to external app.
 
                     // Save the library file locally.
@@ -82,7 +90,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     // Share the file that was just saved.
                     Share.shareFiles([libraryFilePath]);
                     break;
-                  case 1:
+                  case 2:
                     // Export the current library to a file.
 
                     // Ask for permission to read and write to external storage.
