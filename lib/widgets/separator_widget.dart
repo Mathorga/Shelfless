@@ -12,7 +12,7 @@ class SeparatorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Themes.padding),
+      padding: const EdgeInsets.all(Themes.spacing),
       child: Center(child: child),
     );
   }

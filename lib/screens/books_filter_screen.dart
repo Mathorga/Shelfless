@@ -72,7 +72,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                 physics: const BouncingScrollPhysics(),
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 child: Padding(
-                  padding: const EdgeInsets.all(Themes.padding),
+                  padding: const EdgeInsets.all(Themes.spacing),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -80,7 +80,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                       Text(strings.bookInfoAuthors),
                       if (_selectedAuthors.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.all(Themes.padding),
+                          padding: const EdgeInsets.all(Themes.spacing),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: _selectedAuthors.map((Author author) => _buildAuthorPreview(author)).toList(),
@@ -127,7 +127,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                       Text(strings.bookInfoGenres),
                       if (_selectedGenres.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.all(Themes.padding),
+                          padding: const EdgeInsets.all(Themes.spacing),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: _selectedGenres.map((Genre genre) => _buildGenrePreview(genre)).toList(),
@@ -135,50 +135,34 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                         ),
 
                       SelectorWidget(
-                          label: Text(strings.addOne),
-                          title: Text(strings.bookInfoGenres),
-                          content: Consumer<GenresProvider>(
-                            // Listen to changes in saved genres.
-                            builder: (BuildContext context, GenresProvider provider, Widget? child) => SizedBox(
-                              width: dialogWidth,
-                              child: ListView(
-                                physics: const BouncingScrollPhysics(),
-                                shrinkWrap: true,
-                                children: [
-                                  ...List.generate(
-                                    provider.genres.length + 1,
-                                    (int index) => index < provider.genres.length
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              final Genre genre = provider.genres[index];
-
-                                              // Only add the genre if not already there.
-                                              if (!_selectedGenres.contains(genre)) {
-                                                setState(() {
-                                                  _selectedGenres.add(genre);
-                                                });
-                                              } else {
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  SnackBar(
-                                                    content: Text(strings.genreAlreadyAdded),
-                                                    duration: const Duration(seconds: 2),
-                                                  ),
-                                                );
-                                              }
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: GenrePreviewWidget(genre: provider.genres[index]),
-                                          )
-                                        : ListTile(
-                                            leading: Text(strings.add),
-                                            trailing: const Icon(Icons.add),
-                                            onTap: () => Navigator.of(context).pushNamed(EditGenreScreen.routeName),
-                                          ),
-                                  ),
-                                ],
-                              ),
+                        label: const Icon(Icons.add_rounded),
+                        title: Text(strings.bookInfoGenres),
+                        content: Consumer<GenresProvider>(
+                          builder: (BuildContext context, GenresProvider provider, Widget? child) => SearchListWidget<Genre>(
+                            children: provider.genres,
+                            filter: (Genre genre, String? filter) => filter != null ? genre.toString().toLowerCase().contains(filter) : true,
+                            builder: (Genre genre) => GestureDetector(
+                              onTap: () {
+                                // Only add the author if not already there.
+                                if (!_selectedGenres.contains(genre)) {
+                                  setState(() {
+                                    _selectedGenres.add(genre);
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(strings.authorAlreadyAdded),
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                                Navigator.of(context).pop();
+                              },
+                              child: GenrePreviewWidget(genre: genre),
                             ),
-                          )),
+                          ),
+                        ),
+                      ),
 
                       const SeparatorWidget(
                         child: Divider(
@@ -265,7 +249,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                 Expanded(
                   flex: 1,
                   child: Padding(
-                    padding: const EdgeInsets.all(Themes.padding),
+                    padding: const EdgeInsets.all(Themes.spacing),
                     child: ElevatedButton(
                       onPressed: () {},
                       child: const Text("Cancel"),
@@ -275,7 +259,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                 Expanded(
                   flex: 1,
                   child: Padding(
-                    padding: const EdgeInsets.all(Themes.padding),
+                    padding: const EdgeInsets.all(Themes.spacing),
                     child: ElevatedButton(
                       onPressed: () {},
                       child: const Text("Apply"),

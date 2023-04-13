@@ -32,6 +32,9 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
             });
           },
         ),
+
+        Themes.spacer,
+
         Expanded(
           child: SingleChildScrollView(
             physics: Themes.scrollPhysics,
