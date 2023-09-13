@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shelfish/models/library.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/books_filter_screen.dart';
@@ -35,7 +36,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
+    LibrariesProvider librariesProvider = Provider.of(context, listen: true);
 
     // Define all pages.
     List<Widget> _pages = [
@@ -48,7 +49,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
     return Scaffold(
       appBar: EasySearchBar(
-        title: Text(_librariesProvider.currentLibrary != null ? _librariesProvider.currentLibrary!.name : "All"),
+        title: Text(librariesProvider.currentLibrary != null ? librariesProvider.currentLibrary!.name : "All"),
         searchBackIconTheme: const IconThemeData(color: Colors.white),
         searchCursorColor: Colors.white,
         onSearch: (String value) {
@@ -58,12 +59,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
         },
         actions: [
           // Only display the export button if actually displaying a single library.
-          if (_librariesProvider.currentLibrary != null)
+          if (librariesProvider.currentLibrary != null)
             PopupMenuButton(
               itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
                   value: 0,
-                  child: Text("Filter"),
+                  child: Text(strings.filterLibrary),
                 ),
                 PopupMenuItem(
                   value: 1,
@@ -72,6 +73,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 PopupMenuItem(
                   value: 2,
                   child: Text(strings.exportLibrary),
+                ),
+                PopupMenuItem(
+                  value: 3,
+                  child: Text(strings.updateLibrary),
                 ),
               ],
               onSelected: (int value) async {
@@ -84,8 +89,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
                     // Save the library file locally.
                     Directory tmpDir = await getTemporaryDirectory();
-                    String libraryFilePath = "${tmpDir.path}/${_librariesProvider.currentLibrary!.name}.csv";
-                    _librariesProvider.currentLibrary!.writeToFile(libraryFilePath);
+                    String libraryFilePath = "${tmpDir.path}/${librariesProvider.currentLibrary!.name}.csv";
+                    librariesProvider.currentLibrary!.writeToFile(libraryFilePath);
 
                     // Share the file that was just saved.
                     Share.shareFiles([libraryFilePath]);
@@ -114,7 +119,27 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     }
 
                     // Write the library to file.
-                    _librariesProvider.currentLibrary!.writeToFile("$path/${_librariesProvider.currentLibrary!.name}.csv");
+                    librariesProvider.currentLibrary!.writeToFile("$path/${librariesProvider.currentLibrary!.name}.csv");
+                    break;
+                  case 3:
+                    // TODO Merge the current library with a new one from file.
+
+                    // // Pick a library file.
+                    // FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+                    // if (result != null) {
+                    //   // Retrieve the file name.
+                    //   String fileName = result.files.single.name.split(".").first;
+
+                    //   // Read the file.
+                    //   File file = File(result.files.single.path!);
+                    //   String fileContent = await file.readAsString();
+
+                    //   // Create and add the library to DB.
+                    //   librariesProvider.currentLibrary!.merge(Library.fromSerializableString(name: fileName, csvString: fileContent));
+                    // } else {
+                    //   // User canceled the picker
+                    // }
                     break;
                   default:
                     break;
@@ -130,7 +155,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
         unselectedItemColor: Theme.of(context).colorScheme.onBackground,
-        selectedIconTheme: IconTheme.of(context).copyWith(color: Theme.of(context).colorScheme.primary, size: 28.0,),
+        selectedIconTheme: IconTheme.of(context).copyWith(
+          color: Theme.of(context).colorScheme.primary,
+          size: 28.0,
+        ),
         unselectedIconTheme: IconTheme.of(context).copyWith(size: 22.0),
         backgroundColor: Colors.transparent,
         items: [

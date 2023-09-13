@@ -131,6 +131,10 @@ class Library extends HiveObject {
     return books.map((Book book) => book.toMap()).toList();
   }
 
+  void merge(Library other) {
+    // TODO.
+  }
+
   String toSerializableString() {
     const String header = "title;authors;publishDate;genres;publisher;location;borrowed;edition";
 

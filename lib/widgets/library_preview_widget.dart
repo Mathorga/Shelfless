@@ -24,6 +24,7 @@ class LibraryPreviewWidget extends StatelessWidget {
               ),
               child: Image.asset(
                 "assets/images/covers/bookshelf.png",
+                filterQuality: FilterQuality.none,
                 fit: BoxFit.cover,
               ),
             ),

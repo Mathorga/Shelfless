@@ -65,8 +65,10 @@ class Strings {
   String get authorsSectionTitle => "";
   String get publishersSectionTitle => "";
   String get locationsSectionTitle => "";
+  String get filterLibrary => "";
   String get shareLibrary => "";
   String get exportLibrary => "";
+  String get updateLibrary => "";
 }
 
 Strings get strings {

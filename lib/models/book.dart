@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 import 'package:shelfish/models/author.dart';
@@ -56,4 +57,21 @@ class Book extends HiveObject {
       "edition": edition.toString(),
     };
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Book &&
+      other.runtimeType == runtimeType &&
+      other.title == title &&
+      other.publishDate == publishDate &&
+      other.publisher == publisher &&
+      other.location == location &&
+      other.borrowed == borrowed &&
+      other.edition == edition &&
+      listEquals(other.authors, authors) &&
+      listEquals(other.genres, genres);
+
+  @override
+  int get hashCode =>
+      title.hashCode + publishDate.hashCode + publisher.hashCode + location.hashCode + borrowed.hashCode + edition.hashCode + Object.hashAll(authors) + Object.hashAll(genres);
 }
