@@ -14,6 +14,7 @@ import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/providers/publishers_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
+import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
@@ -251,8 +252,10 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(Themes.spacing),
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Cancel"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(strings.filterCancel),
                     ),
                   ),
                 ),
@@ -261,8 +264,16 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(Themes.spacing),
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Apply"),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => BooksScreen(
+                            author: _selectedAuthors.isNotEmpty ? _selectedAuthors.first : null,
+                            genre: _selectedGenres.isNotEmpty ? _selectedGenres.first : null,
+                            publisher: _selectedPublishers.isNotEmpty ? _selectedPublishers.first : null,
+                          ),
+                        ));
+                      },
+                      child: Text(strings.filterApply),
                     ),
                   ),
                 ),

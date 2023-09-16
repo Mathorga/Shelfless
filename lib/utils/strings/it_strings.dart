@@ -70,4 +70,6 @@ class ItStrings implements Strings {
   @override String get exportLibrary => "Esporta";
   @override String get updateLibrary => "Aggiorna";
   @override String get filterTitle => "Filtro";
+  @override String get filterApply => "Applica";
+  @override String get filterCancel => "Annulla";
 }

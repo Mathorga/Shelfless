@@ -68,4 +68,6 @@ class EnStrings implements Strings {
   @override String get exportLibrary => "Export";
   @override String get updateLibrary => "Update";
   @override String get filterTitle => "Filter";
+  @override String get filterApply => "Apply";
+  @override String get filterCancel => "Cancel";
 }

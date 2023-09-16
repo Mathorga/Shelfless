@@ -70,6 +70,8 @@ class Strings {
   String get exportLibrary => "";
   String get updateLibrary => "";
   String get filterTitle => "";
+  String get filterApply => "";
+  String get filterCancel => "";
 }
 
 Strings get strings {
