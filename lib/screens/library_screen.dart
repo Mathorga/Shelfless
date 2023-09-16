@@ -32,7 +32,7 @@ class LibraryScreen extends StatefulWidget {
 
 class _LibraryScreenState extends State<LibraryScreen> {
   int _currentIndex = 0;
-  String _currentFilter = "";
+  String _searchValue = "";
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +40,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
     // Define all pages.
     List<Widget> _pages = [
-      BooksOverviewWidget(searchValue: _currentFilter),
-      GenresOverviewWidget(searchValue: _currentFilter),
-      AuthorsOverviewWidget(searchValue: _currentFilter),
-      PublishersOverviewWidget(searchValue: _currentFilter),
-      LocationsOverviewWidget(searchValue: _currentFilter),
+      BooksOverviewWidget(searchValue: _searchValue),
+      GenresOverviewWidget(searchValue: _searchValue),
+      AuthorsOverviewWidget(searchValue: _searchValue),
+      PublishersOverviewWidget(searchValue: _searchValue),
+      LocationsOverviewWidget(searchValue: _searchValue),
     ];
 
     return Scaffold(
@@ -54,7 +54,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
         searchCursorColor: Colors.white,
         onSearch: (String value) {
           setState(() {
-            _currentFilter = value;
+            _searchValue = value;
           });
         },
         actions: [

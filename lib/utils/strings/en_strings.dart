@@ -67,4 +67,5 @@ class EnStrings implements Strings {
   @override String get shareLibrary => "Share";
   @override String get exportLibrary => "Export";
   @override String get updateLibrary => "Update";
+  @override String get filterTitle => "Filter";
 }

@@ -74,18 +74,17 @@ class Shelfish extends StatelessWidget {
             primary: Colors.cyanAccent,
             secondary: Colors.cyanAccent,
           ),
-
           appBarTheme: const AppBarTheme(
             color: Colors.transparent,
             elevation: 0.0,
             centerTitle: true,
           ),
-
           cardTheme: CardTheme(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              elevation: 0.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            elevation: 0.0,
+          ),
         ),
         home: const LibrariesOverviewScreen(),
         routes: {

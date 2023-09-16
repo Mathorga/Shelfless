@@ -69,6 +69,7 @@ class Strings {
   String get shareLibrary => "";
   String get exportLibrary => "";
   String get updateLibrary => "";
+  String get filterTitle => "";
 }
 
 Strings get strings {
