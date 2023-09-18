@@ -33,6 +33,7 @@ class Strings {
   String get bookInfoPublishDate => "";
   String get bookInfoGenres => "";
   String get bookInfoPublisher => "";
+  String get bookInfoPublishers => "";
   String get bookInfoLocation => "";
   String get insertTitle => "";
   String get editTitle => "";

@@ -33,6 +33,7 @@ class ItStrings implements Strings {
   @override String get bookInfoPublishDate => "Anno di pubblicazione";
   @override String get bookInfoGenres => "Generi";
   @override String get bookInfoPublisher => "Editore";
+  @override String get bookInfoPublishers => "Editori";
   @override String get bookInfoLocation => "Posizione";
   @override String get insertTitle => "Inserisci";
   @override String get editTitle => "Modifica";

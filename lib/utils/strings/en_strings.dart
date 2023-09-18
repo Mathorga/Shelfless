@@ -31,6 +31,7 @@ class EnStrings implements Strings {
   @override String get bookInfoPublishDate => "Publish date";
   @override String get bookInfoGenres => "Genres";
   @override String get bookInfoPublisher => "Publisher";
+  @override String get bookInfoPublishers => "Publishers";
   @override String get bookInfoLocation => "Location";
   @override String get insertTitle => "Insert";
   @override String get editTitle => "Edit";
