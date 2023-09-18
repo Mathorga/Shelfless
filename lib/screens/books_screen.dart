@@ -5,6 +5,7 @@ import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/models/store_location.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/books_overview_widget.dart';
 
 /// Wraps a BooksOverviewWidget adding an appbar that displays the applied filters.
@@ -28,7 +29,7 @@ class BooksScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Filtered books"),
+        title: Text(strings.filteredBooksTitle),
       ),
       body: BooksOverviewWidget(
         filter: (Book book) =>

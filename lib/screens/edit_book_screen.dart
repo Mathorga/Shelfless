@@ -18,7 +18,7 @@ import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
 import 'package:shelfish/screens/edit_publisher_screen.dart';
-import 'package:shelfish/themes/shelfish_colors.dart';
+import 'package:shelfish/themes/shelfless_colors.dart';
 import 'package:shelfish/utils/constants.dart';
 import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
@@ -385,15 +385,41 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
   }
 
-  Widget _buildAuthorPreview(Author author) => _buildPreview(AuthorPreviewWidget(author: author));
+  Widget _buildAuthorPreview(Author author) => _buildPreview(
+        AuthorPreviewWidget(author: author),
+        onDelete: () {
+          setState(() {
+            _book.authors.remove(author);
+          });
+        },
+      );
 
-  Widget _buildGenrePreview(Genre genre) => _buildPreview(GenrePreviewWidget(genre: genre));
-  
-  Widget _buildPublisherPreview(Publisher publisher) => _buildPreview(PublisherPreviewWidget(publisher: publisher));
-  
-  Widget _buildLocationPreview(StoreLocation location) => _buildPreview(LocationPreviewWidget(location: location));
+  Widget _buildGenrePreview(Genre genre) => _buildPreview(
+        GenrePreviewWidget(genre: genre),
+        onDelete: () {
+          setState(() {
+            _book.genres.remove(genre);
+          });
+        },
+      );
 
-  Widget _buildPreview(Widget child) {
+  Widget _buildPublisherPreview(Publisher publisher) => _buildPreview(
+        PublisherPreviewWidget(publisher: publisher),
+        onDelete: () {
+          setState(() {
+            _book.publisher = null;
+          });
+        },
+      );
+
+  Widget _buildLocationPreview(StoreLocation location) => _buildPreview(
+        LocationPreviewWidget(location: location),
+        onDelete: () {
+          _book.location = null;
+        },
+      );
+
+  Widget _buildPreview(Widget child, {void Function()? onDelete}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -402,13 +428,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
         ),
         TextButton(
           onPressed: () {
-            setState(() {
-              _book.location = null;
-            });
+            onDelete?.call();
+            // setState(() {
+            //   _book.location = null;
+            // });
           },
           child: Icon(
             Icons.close_rounded,
-            color: ShelfishColors.error,
+            color: ShelflessColors.error,
           ),
         ),
       ],

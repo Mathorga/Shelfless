@@ -8,6 +8,7 @@ import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/providers/publishers_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
+import 'package:shelfish/screens/edit_publisher_screen.dart';
 import 'package:shelfish/screens/publisher_info_screen.dart';
 import 'package:shelfish/utils/constants.dart';
 import 'package:shelfish/widgets/publisher_preview_widget.dart';
@@ -84,7 +85,7 @@ class PublishersOverviewWidget extends StatelessWidget {
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+            Navigator.of(context).pushNamed(EditPublisherScreen.routeName);
           },
           child: const Icon(Icons.add_rounded),
         ));

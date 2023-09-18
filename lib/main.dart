@@ -83,7 +83,7 @@ class Shelfish extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
-            elevation: 0.0,
+            elevation: 6.0,
           ),
         ),
         home: const LibrariesOverviewScreen(),

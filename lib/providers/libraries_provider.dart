@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
 
 import 'package:shelfish/models/library.dart';
@@ -55,5 +56,10 @@ class LibrariesProvider with ChangeNotifier {
   void addBookToCurrentLibrary(Book book) {
     currentLibrary?.books.add(book);
     updateLibrary(currentLibrary!);
+  }
+
+  /// Tells whether any book in the given library is by the given author or not.
+  bool authorInCurrentLibrary(Author author) {
+    return currentLibrary != null && currentLibrary!.books.any((Book book) => book.authors.contains(author));
   }
 }
