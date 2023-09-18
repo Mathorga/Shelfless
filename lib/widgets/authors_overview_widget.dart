@@ -51,7 +51,9 @@ class AuthorsOverviewWidget extends StatelessWidget {
                     (int index) => GestureDetector(
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (BuildContext context) => BooksScreen(author: _authors[index]),
+                          builder: (BuildContext context) => BooksScreen(
+                            authors: {_authors[index]},
+                          ),
                         ),
                       ),
                       child: Stack(

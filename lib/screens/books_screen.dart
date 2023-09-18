@@ -11,15 +11,15 @@ import 'package:shelfish/widgets/books_overview_widget.dart';
 class BooksScreen extends StatelessWidget {
   static const String routeName = "/books";
 
-  final Genre? genre;
-  final Author? author;
+  final Set<Genre> genres;
+  final Set<Author> authors;
   final Publisher? publisher;
   final StoreLocation? location;
 
   const BooksScreen({
     Key? key,
-    this.genre,
-    this.author,
+    this.genres = const {},
+    this.authors = const {},
     this.publisher,
     this.location,
   }) : super(key: key);
@@ -28,17 +28,12 @@ class BooksScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text((genre != null ? genre!.name : "") +
-            (genre != null && author != null ? " - " : "") +
-            (author != null ? author.toString() : "") +
-            (author != null && location != null ? " - " : "") +
-            (publisher != null ? publisher!.name : "") +
-            (location != null ? location!.name : "")),
+        title: Text("Filtered books"),
       ),
       body: BooksOverviewWidget(
         filter: (Book book) =>
-            (genre != null ? book.genres.contains(genre) : true) &&
-            (author != null ? book.authors.contains(author) : true) &&
+            (genres.isNotEmpty ? book.genres.any((Genre genre) => genres.contains(genre)) : true) &&
+            (authors.isNotEmpty ? book.authors.any((Author author) => authors.contains(author)) : true) &&
             (publisher != null ? book.publisher == publisher : true) &&
             (location != null ? book.location == location : true),
       ),

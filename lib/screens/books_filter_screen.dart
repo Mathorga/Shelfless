@@ -267,8 +267,8 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) => BooksScreen(
-                            author: _selectedAuthors.isNotEmpty ? _selectedAuthors.first : null,
-                            genre: _selectedGenres.isNotEmpty ? _selectedGenres.first : null,
+                            authors: _selectedAuthors.toSet(),
+                            genres: _selectedGenres.toSet(),
                             publisher: _selectedPublishers.isNotEmpty ? _selectedPublishers.first : null,
                           ),
                         ));

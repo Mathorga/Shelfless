@@ -56,7 +56,9 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
                     (int index) => GestureDetector(
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (BuildContext context) => BooksScreen(genre: _genres[index]),
+                          builder: (BuildContext context) => BooksScreen(
+                            genres: {_genres[index]},
+                          ),
                         ),
                       ),
                       child: Stack(
