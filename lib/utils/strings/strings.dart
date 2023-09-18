@@ -72,6 +72,7 @@ class Strings {
   String get filterTitle => "";
   String get filterApply => "";
   String get filterCancel => "";
+  String get filteredBooksTitle => "";
 }
 
 Strings get strings {

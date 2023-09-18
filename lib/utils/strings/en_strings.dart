@@ -70,4 +70,5 @@ class EnStrings implements Strings {
   @override String get filterTitle => "Filter";
   @override String get filterApply => "Apply";
   @override String get filterCancel => "Cancel";
+  @override String get filteredBooksTitle => "Filtered books";
 }

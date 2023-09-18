@@ -72,4 +72,5 @@ class ItStrings implements Strings {
   @override String get filterTitle => "Filtro";
   @override String get filterApply => "Applica";
   @override String get filterCancel => "Annulla";
+  @override String get filteredBooksTitle => "Libri filtrati";
 }
