@@ -33,6 +33,7 @@ class Strings {
   String get bookInfoPublishDate => "";
   String get bookInfoGenres => "";
   String get bookInfoPublisher => "";
+  String get bookInfoPublishers => "";
   String get bookInfoLocation => "";
   String get insertTitle => "";
   String get editTitle => "";
@@ -69,6 +70,10 @@ class Strings {
   String get shareLibrary => "";
   String get exportLibrary => "";
   String get updateLibrary => "";
+  String get filterTitle => "";
+  String get filterApply => "";
+  String get filterCancel => "";
+  String get filteredBooksTitle => "";
 }
 
 Strings get strings {

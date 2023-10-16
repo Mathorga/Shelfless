@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-class SelectorWidget extends StatelessWidget {
+/// Simple elevated button which opens up a dialog.
+class DialogButtonWidget extends StatelessWidget {
   final Widget label;
   final Widget title;
   final Widget content;
 
-  const SelectorWidget({
+  const DialogButtonWidget({
     Key? key,
     required this.label,
     required this.title,

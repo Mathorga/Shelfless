@@ -31,6 +31,7 @@ class EnStrings implements Strings {
   @override String get bookInfoPublishDate => "Publish date";
   @override String get bookInfoGenres => "Genres";
   @override String get bookInfoPublisher => "Publisher";
+  @override String get bookInfoPublishers => "Publishers";
   @override String get bookInfoLocation => "Location";
   @override String get insertTitle => "Insert";
   @override String get editTitle => "Edit";
@@ -67,4 +68,8 @@ class EnStrings implements Strings {
   @override String get shareLibrary => "Share";
   @override String get exportLibrary => "Export";
   @override String get updateLibrary => "Update";
+  @override String get filterTitle => "Filter";
+  @override String get filterApply => "Apply";
+  @override String get filterCancel => "Cancel";
+  @override String get filteredBooksTitle => "Filtered books";
 }

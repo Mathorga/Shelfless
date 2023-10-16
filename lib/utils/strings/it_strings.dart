@@ -33,6 +33,7 @@ class ItStrings implements Strings {
   @override String get bookInfoPublishDate => "Anno di pubblicazione";
   @override String get bookInfoGenres => "Generi";
   @override String get bookInfoPublisher => "Editore";
+  @override String get bookInfoPublishers => "Editori";
   @override String get bookInfoLocation => "Posizione";
   @override String get insertTitle => "Inserisci";
   @override String get editTitle => "Modifica";
@@ -69,4 +70,8 @@ class ItStrings implements Strings {
   @override String get shareLibrary => "Condividi";
   @override String get exportLibrary => "Esporta";
   @override String get updateLibrary => "Aggiorna";
+  @override String get filterTitle => "Filtro";
+  @override String get filterApply => "Applica";
+  @override String get filterCancel => "Annulla";
+  @override String get filteredBooksTitle => "Libri filtrati";
 }

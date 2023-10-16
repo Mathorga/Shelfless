@@ -22,22 +22,14 @@ class AuthorsOverviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
-    final LibrariesProvider _librariesProvider = Provider.of(context, listen: true);
+    final AuthorsProvider authorsProvider = Provider.of(context, listen: true);
+    final LibrariesProvider librariesProvider = Provider.of(context, listen: true);
 
-    // Fetch all relevant authors based on the currently viewed library. All if no specific library is selected.
-    final List<Author> _unfilteredAuthors = _librariesProvider.currentLibrary != null
-        ? _librariesProvider.currentLibrary!.books
-            .map<List<Author>>((Book book) => book.authors)
-            .fold(<Author>[], (List<Author> result, List<Author> element) => result..addAll(element))
-            .toSet()
-            .toList()
-        : _authorsProvider.authors;
-    final _authors = _unfilteredAuthors.where((Author author) => author.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
+    final List<Author> authors = authorsProvider.authors.where((Author author) => author.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
         backgroundColor: Colors.transparent,
-        body: _authors.isEmpty
+        body: authors.isEmpty
             ? const Center(
                 child: Text("No authors found"),
               )
@@ -47,33 +39,43 @@ class AuthorsOverviewWidget extends StatelessWidget {
                 crossAxisCount: 2,
                 children: [
                   ...List.generate(
-                    _authors.length,
-                    (int index) => GestureDetector(
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => BooksScreen(author: _authors[index]),
+                    authors.length,
+                    (int index) => Stack(
+                      children: [
+                        SizedBox(
+                          height: double.infinity,
+                          child: AuthorPreviewWidget(
+                            author: authors[index],
+                            onTap: () {
+                              if (librariesProvider.currentLibrary == null) {
+                                return;
+                              }
+
+                              if (!librariesProvider.currentLibrary!.books.any((Book book) => book.authors.contains(authors[index]))) {
+                                return;
+                              }
+
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) => BooksScreen(
+                                    authors: {authors[index]},
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      child: Stack(
-                        children: [
-                          SizedBox(
-                            height: double.infinity,
-                            child: AuthorPreviewWidget(
-                              author: _authors[index],
-                            ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            onPressed: () {
+                              // Edit the selected author.
+                              Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: authors[index]);
+                            },
+                            icon: const Icon(Icons.settings_rounded),
                           ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                              onPressed: () {
-                                // Edit the selected author.
-                                Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: _authors[index]);
-                              },
-                              icon: const Icon(Icons.settings_rounded),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: fabAccessHeight),

@@ -14,6 +14,7 @@ import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/providers/publishers_provider.dart';
 import 'package:shelfish/providers/store_locations_provider.dart';
+import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
@@ -25,7 +26,7 @@ import 'package:shelfish/widgets/author_preview_widget.dart';
 import 'package:shelfish/widgets/search_list_widget.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 import 'package:shelfish/widgets/publisher_preview_widget.dart';
-import 'package:shelfish/widgets/selector_widget.dart';
+import 'package:shelfish/widgets/dialog_button_widget.dart';
 import 'package:shelfish/widgets/separator_widget.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
@@ -63,7 +64,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(strings.filterLibrary),
+          title: Text(strings.filterTitle),
         ),
         body: Column(
           children: [
@@ -87,7 +88,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                           ),
                         ),
 
-                      SelectorWidget(
+                      DialogButtonWidget(
                         label: const Icon(Icons.add_rounded),
                         title: Text(strings.bookInfoAuthors),
                         content: Consumer<AuthorsProvider>(
@@ -134,7 +135,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                           ),
                         ),
 
-                      SelectorWidget(
+                      DialogButtonWidget(
                         label: const Icon(Icons.add_rounded),
                         title: Text(strings.bookInfoGenres),
                         content: Consumer<GenresProvider>(
@@ -181,7 +182,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                           ),
                         ),
 
-                      SelectorWidget(
+                      DialogButtonWidget(
                           label: Text(strings.addOne),
                           title: Text(strings.bookInfoPublisher),
                           content: Consumer<PublishersProvider>(
@@ -251,8 +252,10 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(Themes.spacing),
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Cancel"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(strings.filterCancel),
                     ),
                   ),
                 ),
@@ -261,8 +264,16 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(Themes.spacing),
                     child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Apply"),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => BooksScreen(
+                            authors: _selectedAuthors.toSet(),
+                            genres: _selectedGenres.toSet(),
+                            publisher: _selectedPublishers.isNotEmpty ? _selectedPublishers.first : null,
+                          ),
+                        ));
+                      },
+                      child: Text(strings.filterApply),
                     ),
                   ),
                 ),
