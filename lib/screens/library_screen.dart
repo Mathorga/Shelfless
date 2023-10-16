@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shelfish/models/library.dart';
 
 import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/books_filter_screen.dart';
@@ -159,7 +158,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
           color: Theme.of(context).colorScheme.primary,
           size: 28.0,
         ),
-        unselectedIconTheme: IconTheme.of(context).copyWith(size: 22.0),
+        unselectedIconTheme: IconTheme.of(context).copyWith(
+          size: 22.0,
+        ),
         backgroundColor: Colors.transparent,
         items: [
           BottomNavigationBarItem(

@@ -63,7 +63,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Filter"),
+          title: Text(strings.filterLibrary),
         ),
         body: Column(
           children: [

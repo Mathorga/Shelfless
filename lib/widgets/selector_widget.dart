@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shelfish/themes/themes.dart';
 
 class SelectorWidget extends StatelessWidget {
   final Widget label;

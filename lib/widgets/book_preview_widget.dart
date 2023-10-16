@@ -30,16 +30,20 @@ class BookPreviewWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(borderRadius),
             gradient: genreColors.isEmpty
-                ? const LinearGradient(colors: [
-                    Colors.transparent,
-                    Colors.transparent,
-                  ])
+                ? const LinearGradient(
+                    colors: [
+                      Colors.transparent,
+                      Colors.transparent,
+                    ],
+                  )
                 : genreColors.length >= 2
                     ? LinearGradient(colors: genreColors)
-                    : LinearGradient(colors: [
-                        genreColors.first,
-                        genreColors.first,
-                      ]),
+                    : LinearGradient(
+                        colors: [
+                          genreColors.first,
+                          genreColors.first,
+                        ],
+                      ),
           ),
           child: Padding(
             padding: const EdgeInsets.all(12.0),
