@@ -36,7 +36,10 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
           IconButton(
             onPressed: () {
               // Navigate to edit_book_screen.
-              Navigator.of(context).pushNamed(EditAuthorScreen.routeName, arguments: _author);
+              Navigator.of(context).pushNamed(
+                EditAuthorScreen.routeName,
+                arguments: _author,
+              );
             },
             icon: const Icon(Icons.edit_rounded),
           ),
