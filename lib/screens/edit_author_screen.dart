@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/providers/authors_provider.dart';
+import 'package:shelfish/themes/themes.dart';
 import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
@@ -48,7 +49,9 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // First name.
               Text(strings.authorInfoFirstName),
+              Themes.spacer,
               TextFormField(
                 initialValue: _author.firstName,
                 textCapitalization: TextCapitalization.words,
@@ -58,7 +61,10 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
                 height: 24.0,
                 child: Divider(height: 2.0),
               ),
+
+              // Last name.
               Text(strings.authorInfoLastName),
+              Themes.spacer,
               TextFormField(
                 initialValue: _author.lastName,
                 textCapitalization: TextCapitalization.words,

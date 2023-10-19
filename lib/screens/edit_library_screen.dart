@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfish/models/book.dart';
 import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/libraries_provider.dart';
+import 'package:shelfish/themes/themes.dart';
 import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/unfocus_widget.dart';
 
@@ -60,6 +61,7 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(strings.libraryInfoName),
+              Themes.spacer,
               TextFormField(
                 initialValue: _library.name,
                 textCapitalization: TextCapitalization.words,
