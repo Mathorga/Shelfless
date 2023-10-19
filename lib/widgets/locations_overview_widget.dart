@@ -9,6 +9,7 @@ import 'package:shelfish/providers/store_locations_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/publisher_info_screen.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/location_preview_widget.dart';
 
 class LocationsOverviewWidget extends StatelessWidget {
@@ -39,8 +40,8 @@ class LocationsOverviewWidget extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: locations.isEmpty
-            ? const Center(
-                child: Text("No locations found"),
+            ? Center(
+                child: Text(strings.noLocationsFound),
               )
             : GridView.count(
                 crossAxisCount: 2,

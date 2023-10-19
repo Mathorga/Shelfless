@@ -19,6 +19,7 @@ import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
 import 'package:shelfish/screens/edit_publisher_screen.dart';
 import 'package:shelfish/themes/shelfless_colors.dart';
+import 'package:shelfish/themes/themes.dart';
 import 'package:shelfish/utils/constants.dart';
 import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
@@ -93,6 +94,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
               children: [
                 // Title
                 Text(strings.bookInfoTitle),
+                Themes.spacer,
                 TextFormField(
                   initialValue: _book.title,
                   textCapitalization: TextCapitalization.words,
@@ -107,6 +109,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 // Authors.
                 Text(strings.bookInfoAuthors),
+                Themes.spacer,
                 if (_book.authors.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -117,6 +120,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
 
                 DialogButtonWidget(
+                  alignment: Alignment.centerRight,
                   label: const Icon(Icons.add_rounded),
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -168,6 +172,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 // Publish year.
                 Text(strings.bookInfoPublishDate),
+                Themes.spacer,
                 GestureDetector(
                   onTap: () async {
                     showDialog(
@@ -207,6 +212,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 // Genres.
                 Text(strings.bookInfoGenres),
+                Themes.spacer,
                 if (_book.genres.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -217,6 +223,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
 
                 DialogButtonWidget(
+                  alignment: Alignment.centerRight,
                   label: const Icon(Icons.add_rounded),
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -265,6 +272,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 // Publisher.
                 Text(strings.bookInfoPublisher),
+                Themes.spacer,
                 if (_book.publisher != null)
                   Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -273,6 +281,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 if (_book.publisher == null)
                   DialogButtonWidget(
+                    alignment: Alignment.centerRight,
                     label: Text(strings.select),
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -312,6 +321,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 // Location.
                 Text(strings.bookInfoLocation),
+                Themes.spacer,
                 if (_book.location != null)
                   Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -320,6 +330,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                 if (_book.location == null)
                   DialogButtonWidget(
+                    alignment: Alignment.centerRight,
                     label: Text(strings.select),
                     title: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

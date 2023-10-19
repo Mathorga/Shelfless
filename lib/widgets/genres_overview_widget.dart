@@ -9,6 +9,7 @@ import 'package:shelfish/providers/libraries_provider.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/screens/genre_info_screen.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/genre_preview_widget.dart';
 
 class GenresOverviewWidget extends StatefulWidget {
@@ -42,8 +43,8 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: _genres.isEmpty
-            ? const Center(
-                child: Text("No genres found"),
+            ? Center(
+                child: Text(strings.noGenresFound),
               )
             : GridView.count(
                 physics: const BouncingScrollPhysics(),

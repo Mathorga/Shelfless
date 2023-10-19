@@ -5,7 +5,6 @@ import 'package:shelfish/utils/strings/strings.dart';
 /// Italian strings.
 class ItStrings implements Strings {
   @override String get librariesTitle => "Biblioteche";
-  @override String get noLibrariesFound => "Nessuna biblioteca";
   @override String get all => "Tutti";
   @override String get book => "libro";
   @override String get books => "libri";
@@ -74,4 +73,10 @@ class ItStrings implements Strings {
   @override String get filterApply => "Applica";
   @override String get filterCancel => "Annulla";
   @override String get filteredBooksTitle => "Libri filtrati";
+  @override String get noLibrariesFound => "Nessuna biblioteca";
+  @override String get noAuthorsFound => "Nessun autore trovato";
+  @override String get noGenresFound => "Nessun genere trovato";
+  @override String get noLocationsFound => "Nessuna posizione trovata";
+  @override String get noPublishersFound => "Nessun editore trovato";
+  @override String get noBooksFound => "Nessun libro trovato";
 }

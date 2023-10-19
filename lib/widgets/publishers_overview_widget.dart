@@ -11,6 +11,7 @@ import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/screens/edit_publisher_screen.dart';
 import 'package:shelfish/screens/publisher_info_screen.dart';
 import 'package:shelfish/utils/constants.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/publisher_preview_widget.dart';
 
 class PublishersOverviewWidget extends StatelessWidget {
@@ -41,8 +42,8 @@ class PublishersOverviewWidget extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: publishers.isEmpty
-            ? const Center(
-                child: Text("No publishers found"),
+            ? Center(
+                child: Text(strings.noPublishersFound),
               )
             : GridView.count(
                 physics: const BouncingScrollPhysics(),

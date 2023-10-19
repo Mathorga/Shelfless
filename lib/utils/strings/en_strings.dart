@@ -3,7 +3,6 @@ import 'package:shelfish/utils/strings/strings.dart';
 /// English strings.
 class EnStrings implements Strings {
   @override String get librariesTitle => "Libraries";
-  @override String get noLibrariesFound => "No libraries found";
   @override String get all => "All";
   @override String get book => "book";
   @override String get books => "books";
@@ -72,4 +71,10 @@ class EnStrings implements Strings {
   @override String get filterApply => "Apply";
   @override String get filterCancel => "Cancel";
   @override String get filteredBooksTitle => "Filtered books";
+  @override String get noLibrariesFound => "No libraries found";
+  @override String get noAuthorsFound => "No authors found";
+  @override String get noGenresFound => "No genres found";
+  @override String get noLocationsFound => "No locations found";
+  @override String get noPublishersFound => "No publishers found";
+  @override String get noBooksFound => "No books found";
 }

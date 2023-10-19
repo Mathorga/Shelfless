@@ -10,6 +10,7 @@ import 'package:shelfish/screens/author_info_screen.dart';
 import 'package:shelfish/screens/books_screen.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/utils/constants.dart';
+import 'package:shelfish/utils/strings/strings.dart';
 import 'package:shelfish/widgets/author_preview_widget.dart';
 
 class AuthorsOverviewWidget extends StatelessWidget {
@@ -30,8 +31,8 @@ class AuthorsOverviewWidget extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.transparent,
         body: authors.isEmpty
-            ? const Center(
-                child: Text("No authors found"),
+            ? Center(
+                child: Text(strings.noAuthorsFound),
               )
             : GridView.count(
                 physics: const BouncingScrollPhysics(),

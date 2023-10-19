@@ -5,7 +5,6 @@ import 'package:shelfish/utils/strings/it_strings.dart';
 
 class Strings {
   String get librariesTitle => "";
-  String get noLibrariesFound => "";
   String get all => "";
   String get book => "";
   String get books => "";
@@ -74,6 +73,12 @@ class Strings {
   String get filterApply => "";
   String get filterCancel => "";
   String get filteredBooksTitle => "";
+  String get noLibrariesFound => "";
+  String get noAuthorsFound => "";
+  String get noGenresFound => "";
+  String get noLocationsFound => "";
+  String get noPublishersFound => "";
+  String get noBooksFound => "";
 }
 
 Strings get strings {

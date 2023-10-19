@@ -24,12 +24,12 @@ import 'package:shelfish/screens/edit_book_screen.dart';
 import 'package:shelfish/screens/edit_library_screen.dart';
 import 'package:shelfish/screens/edit_location_screen.dart';
 import 'package:shelfish/screens/edit_publisher_screen.dart';
-import 'package:shelfish/screens/edit_screen.dart';
 import 'package:shelfish/screens/genre_info_screen.dart';
 import 'package:shelfish/screens/import_library_screen.dart';
 import 'package:shelfish/screens/libraries_overview_screen.dart';
 import 'package:shelfish/screens/library_screen.dart';
 import 'package:shelfish/screens/publisher_info_screen.dart';
+import 'package:shelfish/themes/themes.dart';
 
 void main() async {
   // Init local DB.
@@ -85,6 +85,21 @@ class Shelfish extends StatelessWidget {
               borderRadius: BorderRadius.circular(15.0),
             ),
             elevation: 6.0,
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Themes.radius),
+              ),
+            ),
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            border: OutlineInputBorder(
+              borderSide: const BorderSide(
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(Themes.radius),
+            ),
           ),
         ),
         home: const LibrariesOverviewScreen(),
