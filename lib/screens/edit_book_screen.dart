@@ -93,274 +93,272 @@ class _EditBookScreenState extends State<EditBookScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Title
-                Text(strings.bookInfoTitle),
-                Themes.spacer,
-                TextFormField(
-                  initialValue: _book.title,
-                  textCapitalization: TextCapitalization.words,
-                  onChanged: (String value) => _book.title = value,
-                ),
-
-                const SeparatorWidget(
-                  child: Divider(
-                    height: 2.0,
+                _buildSection([
+                  Text(strings.bookInfoTitle),
+                  Themes.spacer,
+                  TextFormField(
+                    initialValue: _book.title,
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: (String value) => _book.title = value,
                   ),
-                ),
+                ]),
 
                 // Authors.
-                Text(strings.bookInfoAuthors),
-                Themes.spacer,
-                if (_book.authors.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: _book.authors.map((Author author) => _buildAuthorPreview(author)).toList(),
-                    ),
-                  ),
-
-                DialogButtonWidget(
-                  alignment: Alignment.centerRight,
-                  label: const Icon(Icons.add_rounded),
-                  title: Row(
+                _buildSection([
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(strings.bookInfoAuthors),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
-                        },
-                        child: Text(strings.add),
-                      ),
-                    ],
-                  ),
-                  content: Consumer<AuthorsProvider>(
-                    builder: (BuildContext context, AuthorsProvider provider, Widget? child) => SearchListWidget<Author>(
-                      children: provider.authors,
-                      filter: (Author author, String? filter) => filter != null ? author.toString().toLowerCase().contains(filter) : true,
-                      builder: (Author author) => GestureDetector(
-                        onTap: () {
-                          // Only add the author if not already there.
-                          if (!_book.authors.contains(author)) {
-                            setState(() {
-                              _book.authors.add(author);
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(strings.authorAlreadyAdded),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          }
-                          Navigator.of(context).pop();
-                        },
-                        child: AuthorPreviewWidget(
-                          author: author,
-                          live: false,
+                      DialogButtonWidget(
+                        label: const Icon(Icons.add_rounded),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(strings.bookInfoAuthors),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+                              },
+                              child: Text(strings.add),
+                            ),
+                          ],
                         ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SeparatorWidget(
-                  child: Divider(
-                    height: 2.0,
-                  ),
-                ),
-
-                // Publish year.
-                Text(strings.bookInfoPublishDate),
-                Themes.spacer,
-                GestureDetector(
-                  onTap: () async {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        title: Text(strings.selectPublishYear),
-                        content: SizedBox(
-                          width: dialogWidth,
-                          child: YearPicker(
-                            firstDate: DateTime(0),
-                            lastDate: DateTime(currentYear),
-                            selectedDate: DateTime(currentYear),
-                            onChanged: (DateTime value) {
-                              Navigator.of(context).pop();
-                              setState(() {
-                                _book.publishDate = value.year;
-                              });
-                            },
+                        content: Consumer<AuthorsProvider>(
+                          builder: (BuildContext context, AuthorsProvider provider, Widget? child) => SearchListWidget<Author>(
+                            children: provider.authors,
+                            filter: (Author author, String? filter) => filter != null ? author.toString().toLowerCase().contains(filter) : true,
+                            builder: (Author author) => GestureDetector(
+                              onTap: () {
+                                // Only add the author if not already there.
+                                if (!_book.authors.contains(author)) {
+                                  setState(() {
+                                    _book.authors.add(author);
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(strings.authorAlreadyAdded),
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                                Navigator.of(context).pop();
+                              },
+                              child: AuthorPreviewWidget(
+                                author: author,
+                                live: false,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    );
-                  },
-                  child: Card(
-                    child: Padding(
+                    ],
+                  ),
+                  Themes.spacer,
+                  if (_book.authors.isNotEmpty)
+                    Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: Text((_book.publishDate).toString()),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: _book.authors.map((Author author) => _buildAuthorPreview(author)).toList(),
+                      ),
+                    ),
+                ]),
+
+                // Publish year.
+                _buildSection([
+                  Text(strings.bookInfoPublishDate),
+                  Themes.spacer,
+                  GestureDetector(
+                    onTap: () async {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text(strings.selectPublishYear),
+                          content: SizedBox(
+                            width: dialogWidth,
+                            child: YearPicker(
+                              firstDate: DateTime(0),
+                              lastDate: DateTime(currentYear),
+                              selectedDate: DateTime(currentYear),
+                              onChanged: (DateTime value) {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  _book.publishDate = value.year;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text((_book.publishDate).toString()),
+                      ),
                     ),
                   ),
-                ),
-
-                const SeparatorWidget(
-                  child: Divider(
-                    height: 2.0,
-                  ),
-                ),
+                ]),
 
                 // Genres.
-                Text(strings.bookInfoGenres),
-                Themes.spacer,
-                if (_book.genres.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: _book.genres.map((Genre genre) => _buildGenrePreview(genre)).toList(),
-                    ),
-                  ),
-
-                DialogButtonWidget(
-                  alignment: Alignment.centerRight,
-                  label: const Icon(Icons.add_rounded),
-                  title: Row(
+                _buildSection([
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(strings.bookInfoGenres),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed(EditGenreScreen.routeName);
-                        },
-                        child: Text(strings.add),
+                      DialogButtonWidget(
+                        alignment: Alignment.centerRight,
+                        label: const Icon(Icons.add_rounded),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(strings.bookInfoGenres),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+                              },
+                              child: Text(strings.add),
+                            ),
+                          ],
+                        ),
+                        content: Consumer<GenresProvider>(
+                          builder: (BuildContext context, GenresProvider provider, Widget? child) => SearchListWidget<Genre>(
+                            children: provider.genres,
+                            filter: (Genre genre, String? filter) => filter != null ? genre.toString().toLowerCase().contains(filter) : true,
+                            builder: (Genre genre) => GestureDetector(
+                              onTap: () {
+                                // Only add the author if not already there.
+                                if (!_book.genres.contains(genre)) {
+                                  setState(() {
+                                    _book.genres.add(genre);
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(strings.authorAlreadyAdded),
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                                Navigator.of(context).pop();
+                              },
+                              child: GenrePreviewWidget(genre: genre),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  content: Consumer<GenresProvider>(
-                    builder: (BuildContext context, GenresProvider provider, Widget? child) => SearchListWidget<Genre>(
-                      children: provider.genres,
-                      filter: (Genre genre, String? filter) => filter != null ? genre.toString().toLowerCase().contains(filter) : true,
-                      builder: (Genre genre) => GestureDetector(
-                        onTap: () {
-                          // Only add the author if not already there.
-                          if (!_book.genres.contains(genre)) {
-                            setState(() {
-                              _book.genres.add(genre);
-                            });
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(strings.authorAlreadyAdded),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          }
-                          Navigator.of(context).pop();
-                        },
-                        child: GenrePreviewWidget(genre: genre),
+                  Themes.spacer,
+                  if (_book.genres.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: _book.genres.map((Genre genre) => _buildGenrePreview(genre)).toList(),
                       ),
                     ),
-                  ),
-                ),
-
-                const SeparatorWidget(
-                  child: Divider(
-                    height: 2.0,
-                  ),
-                ),
+                ]),
 
                 // Publisher.
-                Text(strings.bookInfoPublisher),
-                Themes.spacer,
-                if (_book.publisher != null)
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: _buildPublisherPreview(_book.publisher!),
-                  ),
-
-                if (_book.publisher == null)
-                  DialogButtonWidget(
-                    alignment: Alignment.centerRight,
-                    label: Text(strings.select),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(strings.publishers),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(EditPublisherScreen.routeName);
-                          },
-                          child: Text(strings.add),
+                _buildSection([
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(strings.bookInfoPublisher),
+                      if (_book.publisher == null)
+                        DialogButtonWidget(
+                          alignment: Alignment.centerRight,
+                          label: Text(strings.select),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(strings.publishers),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed(EditPublisherScreen.routeName);
+                                },
+                                child: Text(strings.add),
+                              ),
+                            ],
+                          ),
+                          content: Consumer<PublishersProvider>(
+                            builder: (BuildContext context, PublishersProvider provider, Widget? child) => SearchListWidget<Publisher>(
+                              children: provider.publishers,
+                              filter: (Publisher publisher, String? filter) => filter != null ? publisher.toString().toLowerCase().contains(filter) : true,
+                              builder: (Publisher publisher) => ListTile(
+                                leading: Text(publisher.name),
+                                onTap: () {
+                                  // Set the book location.
+                                  setState(() {
+                                    _book.publisher = publisher;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
-                    content: Consumer<PublishersProvider>(
-                      builder: (BuildContext context, PublishersProvider provider, Widget? child) => SearchListWidget<Publisher>(
-                        children: provider.publishers,
-                        filter: (Publisher publisher, String? filter) => filter != null ? publisher.toString().toLowerCase().contains(filter) : true,
-                        builder: (Publisher publisher) => ListTile(
-                          leading: Text(publisher.name),
-                          onTap: () {
-                            // Set the book location.
-                            setState(() {
-                              _book.publisher = publisher;
-                            });
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
-                    ),
+                    ],
                   ),
-
-                const SeparatorWidget(
-                  child: Divider(
-                    height: 2.0,
-                  ),
-                ),
+                  Themes.spacer,
+                  if (_book.publisher != null)
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: _buildPublisherPreview(_book.publisher!),
+                    ),
+                ]),
 
                 // Location.
-                Text(strings.bookInfoLocation),
-                Themes.spacer,
-                if (_book.location != null)
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: _buildLocationPreview(_book.location!),
+                _buildSection([
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(strings.bookInfoLocation),
+                      if (_book.location == null)
+                        DialogButtonWidget(
+                          alignment: Alignment.centerRight,
+                          label: Text(strings.select),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(strings.locations),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed(EditLocationScreen.routeName);
+                                },
+                                child: Text(strings.add),
+                              ),
+                            ],
+                          ),
+                          content: Consumer<StoreLocationsProvider>(
+                            builder: (BuildContext context, StoreLocationsProvider provider, Widget? child) => SearchListWidget<StoreLocation>(
+                              children: provider.locations,
+                              filter: (StoreLocation location, String? filter) => filter != null ? location.toString().toLowerCase().contains(filter) : true,
+                              builder: (StoreLocation location) => ListTile(
+                                leading: Text(location.name),
+                                onTap: () {
+                                  // Set the book location.
+                                  setState(() {
+                                    _book.location = location;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
+                  Themes.spacer,
+                  if (_book.location != null)
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: _buildLocationPreview(_book.location!),
+                    ),
+                ]),
 
-                if (_book.location == null)
-                  DialogButtonWidget(
-                    alignment: Alignment.centerRight,
-                    label: Text(strings.select),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(strings.locations),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(EditLocationScreen.routeName);
-                          },
-                          child: Text(strings.add),
-                        ),
-                      ],
-                    ),
-                    content: Consumer<StoreLocationsProvider>(
-                      builder: (BuildContext context, StoreLocationsProvider provider, Widget? child) => SearchListWidget<StoreLocation>(
-                        children: provider.locations,
-                        filter: (StoreLocation location, String? filter) => filter != null ? location.toString().toLowerCase().contains(filter) : true,
-                        builder: (StoreLocation location) => ListTile(
-                          leading: Text(location.name),
-                          onTap: () {
-                            // Set the book location.
-                            setState(() {
-                              _book.location = location;
-                            });
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
                 const SizedBox(height: fabAccessHeight),
               ],
             ),
@@ -393,6 +391,23 @@ class _EditBookScreenState extends State<EditBookScreen> {
               const SizedBox(width: 12.0),
               const Icon(Icons.check),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSection(List<Widget> children) {
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+
+    return SizedBox(
+      width: mediaQuery.size.width,
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(Themes.spacing),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: children,
           ),
         ),
       ),
