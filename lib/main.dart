@@ -29,6 +29,7 @@ import 'package:shelfish/screens/import_library_screen.dart';
 import 'package:shelfish/screens/libraries_overview_screen.dart';
 import 'package:shelfish/screens/library_screen.dart';
 import 'package:shelfish/screens/publisher_info_screen.dart';
+import 'package:shelfish/themes/shelfless_colors.dart';
 import 'package:shelfish/themes/themes.dart';
 
 void main() async {
@@ -71,9 +72,10 @@ class Shelfish extends StatelessWidget {
       child: MaterialApp(
         title: "Shelfish",
         theme: ThemeData(
-          colorScheme: const ColorScheme.dark(
-            primary: Colors.cyanAccent,
-            secondary: Colors.cyanAccent,
+          colorScheme: ColorScheme.dark(
+            primary: ShelflessColors.primary,
+            secondary: ShelflessColors.secondary,
+            background: ShelflessColors.mainBackground,
           ),
           appBarTheme: const AppBarTheme(
             color: Colors.transparent,
@@ -98,6 +100,11 @@ class Shelfish extends StatelessWidget {
               borderSide: const BorderSide(
                 width: 2.0,
               ),
+              borderRadius: BorderRadius.circular(Themes.radius),
+            ),
+          ),
+          dialogTheme: DialogTheme(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Themes.radius),
             ),
           ),

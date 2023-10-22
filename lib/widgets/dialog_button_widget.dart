@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:shelfish/themes/themes.dart';
+
 /// Simple elevated button which opens up a dialog.
 class DialogButtonWidget extends StatelessWidget {
   final Widget label;
@@ -24,6 +26,7 @@ class DialogButtonWidget extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
+              insetPadding: const EdgeInsets.all(Themes.spacing),
               title: title,
               content: content,
             );

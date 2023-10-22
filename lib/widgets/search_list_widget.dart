@@ -25,6 +25,7 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         TextFormField(
           decoration: const InputDecoration(labelText: "Search"),
@@ -34,13 +35,12 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
             });
           },
         ),
-
         Themes.spacer,
-
         Expanded(
           child: SingleChildScrollView(
             physics: Themes.scrollPhysics,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 ...widget.children.where((T element) => widget.filter(element, _filter)).map(widget.builder),
               ],
