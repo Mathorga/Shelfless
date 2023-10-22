@@ -6,6 +6,7 @@ import 'package:shelfless/models/author.dart';
 import 'package:shelfless/providers/authors_provider.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditAuthorScreen extends StatefulWidget {
@@ -50,29 +51,29 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // First name.
-              Text(strings.authorInfoFirstName),
-              Themes.spacer,
-              TextFormField(
-                initialValue: _author.firstName,
-                textCapitalization: TextCapitalization.words,
-                onChanged: (String value) => _author.firstName = value,
-              ),
-              const SizedBox(
-                height: 24.0,
-                child: Divider(height: 2.0),
+              EditSectionWidget(
+                children: [
+                  Text(strings.authorInfoFirstName),
+                  Themes.spacer,
+                  TextFormField(
+                    initialValue: _author.firstName,
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: (String value) => _author.firstName = value,
+                  ),
+                ],
               ),
 
               // Last name.
-              Text(strings.authorInfoLastName),
-              Themes.spacer,
-              TextFormField(
-                initialValue: _author.lastName,
-                textCapitalization: TextCapitalization.words,
-                onChanged: (String value) => _author.lastName = value,
-              ),
-              const SizedBox(
-                height: 24.0,
-                child: Divider(height: 2.0),
+              EditSectionWidget(
+                children: [
+                  Text(strings.authorInfoLastName),
+                  Themes.spacer,
+                  TextFormField(
+                    initialValue: _author.lastName,
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: (String value) => _author.lastName = value,
+                  ),
+                ],
               ),
             ],
           ),
