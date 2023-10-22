@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:shelfish/dialogs/delete_dialog.dart';
 
 import 'package:shelfish/models/library.dart';
 import 'package:shelfish/providers/books_provider.dart';
@@ -157,26 +158,17 @@ class LibrariesOverviewScreen extends StatelessWidget {
     LibrariesProvider librariesProvider = Provider.of(context, listen: false);
 
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(strings.deleteLibraryTitle),
-            content: Text("${strings.deleteLibraryContent} ${library.name}?"),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    // Actually delete the library.
-                    librariesProvider.deleteLibrary(library);
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(strings.yes)),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(strings.no)),
-            ],
-          );
-        });
+      context: context,
+      builder: (context) {
+        return DeleteDialog(
+          title: Text(strings.deleteLibraryTitle),
+          content: Text("${strings.deleteLibraryContent} ${library.name}?"),
+          onConfirm: () {
+            // Actually delete the library.
+            librariesProvider.deleteLibrary(library);
+          },
+        );
+      },
+    );
   }
 }

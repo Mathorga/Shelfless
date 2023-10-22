@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shelfish/dialogs/delete_dialog.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/models/book.dart';
@@ -65,30 +66,13 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(strings.deleteBookTitle),
+                      return DeleteDialog(
+                        title: Text("${strings.deleteBookTitle} ${book.title}"),
                         content: Text(strings.deleteBookContent),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              // Pop the dialog.
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(strings.no),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              booksProvider.deleteBook(book);
-
-                              // Pop the dialog.
-                              Navigator.of(context).pop();
-
-                              // Pop the info screen.
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(strings.yes),
-                          ),
-                        ],
+                        onConfirm: () {
+                          booksProvider.deleteBook(book);
+                          Navigator.of(context).pop();
+                        },
                       );
                     },
                   );

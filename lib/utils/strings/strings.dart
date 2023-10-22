@@ -79,6 +79,7 @@ class Strings {
   String get noLocationsFound => "";
   String get noPublishersFound => "";
   String get noBooksFound => "";
+  String get search => "";
 }
 
 Strings get strings {

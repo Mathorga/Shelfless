@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 
+import 'package:shelfish/dialogs/delete_dialog.dart';
 import 'package:shelfish/models/publisher.dart';
 import 'package:shelfish/providers/publishers_provider.dart';
 import 'package:shelfish/screens/edit_publisher_screen.dart';
 import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/delete_dialog.dart';
 
 class PublisherInfoScreen extends StatefulWidget {
   static const String routeName = "/publisher-info";
@@ -46,7 +47,10 @@ class _PublisherInfoScreenState extends State<PublisherInfoScreen> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return DeleteDialog(title: publisher.toString(), onYes: () => publishersProvider.deletePublisher(publisher), onNo: null);
+                  return DeleteDialog(
+                    title: Text("$publisher"),
+                    onConfirm: () => publishersProvider.deletePublisher(publisher),
+                  );
                 },
               );
             },

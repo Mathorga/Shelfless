@@ -72,6 +72,7 @@ class Shelfish extends StatelessWidget {
       child: MaterialApp(
         title: "Shelfish",
         theme: ThemeData(
+          scaffoldBackgroundColor: ShelflessColors.mainBackground,
           colorScheme: ColorScheme.dark(
             primary: ShelflessColors.primary,
             secondary: ShelflessColors.secondary,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shelfish/dialogs/delete_dialog.dart';
 
 import 'package:shelfish/models/author.dart';
 import 'package:shelfish/providers/authors_provider.dart';
 import 'package:shelfish/screens/edit_author_screen.dart';
 import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/delete_dialog.dart';
 
 class AuthorInfoScreen extends StatefulWidget {
   static const String routeName = "/author-info";
@@ -49,7 +49,10 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return DeleteDialog(title: _author.toString(), onYes: () => _authorsProvider.deleteAuthor(_author), onNo: null);
+                  return DeleteDialog(
+                    title: Text("$_author"),
+                    onConfirm: () => _authorsProvider.deleteAuthor(_author),
+                  );
                 },
               );
             },

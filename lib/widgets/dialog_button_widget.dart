@@ -7,14 +7,12 @@ class DialogButtonWidget extends StatelessWidget {
   final Widget label;
   final Widget title;
   final Widget content;
-  final Alignment alignment;
 
   const DialogButtonWidget({
     Key? key,
     required this.label,
     required this.title,
     required this.content,
-    this.alignment = Alignment.center,
   }) : super(key: key);
 
   @override

@@ -10,8 +10,8 @@ class ShelflessColors {
 
   static Color get mainContentActive => const Color(0xFF5C5C5C);
   static Color get mainContentInactive => const Color(0xFF333333);
-  static Color get mainBackground => const Color(0xFF111111);
-  static Color get lightBackground => const Color(0xFF3C3C3C);
+  static Color get mainBackground => const Color(0xFF222222);
+  static Color get lightBackground => const Color(0xFF2C2C2C);
   static Color get onMainContentActive => const Color(0xFFFAFAFA);
   static Color get onMainContentInactive => const Color(0xFF7F7F7F);
 }

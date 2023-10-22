@@ -40,7 +40,6 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
           child: SingleChildScrollView(
             physics: Themes.scrollPhysics,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 ...widget.children.where((T element) => widget.filter(element, _filter)).map(widget.builder),
               ],

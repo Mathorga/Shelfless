@@ -77,4 +77,5 @@ class EnStrings implements Strings {
   @override String get noLocationsFound => "No locations found";
   @override String get noPublishersFound => "No publishers found";
   @override String get noBooksFound => "No books found";
+  @override String get search => "Search";
 }

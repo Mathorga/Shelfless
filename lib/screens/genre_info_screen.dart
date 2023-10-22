@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 
+import 'package:shelfish/dialogs/delete_dialog.dart';
 import 'package:shelfish/models/genre.dart';
 import 'package:shelfish/providers/genres_provider.dart';
 import 'package:shelfish/screens/edit_genre_screen.dart';
 import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/delete_dialog.dart';
 
 class GenreInfoScreen extends StatefulWidget {
   static const String routeName = "/genre-info";
@@ -46,7 +47,10 @@ class _GenreInfoScreenState extends State<GenreInfoScreen> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return DeleteDialog(title: genre.name, onYes: () => genresProvider.deleteGenre(genre), onNo: null);
+                  return DeleteDialog(
+                    title: Text(genre.name),
+                    onConfirm: () => genresProvider.deleteGenre(genre),
+                  );
                 },
               );
             },

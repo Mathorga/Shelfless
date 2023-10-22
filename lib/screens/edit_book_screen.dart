@@ -223,7 +223,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         children: [
                           Text(strings.bookInfoGenres),
                           DialogButtonWidget(
-                            alignment: Alignment.centerRight,
                             label: const Icon(Icons.add_rounded),
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -290,7 +289,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           Text(strings.bookInfoPublisher),
                           if (_book.publisher == null)
                             DialogButtonWidget(
-                              alignment: Alignment.centerRight,
                               label: Text(strings.select),
                               title: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -345,7 +343,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           Text(strings.bookInfoLocation),
                           if (_book.location == null)
                             DialogButtonWidget(
-                              alignment: Alignment.centerRight,
                               label: Text(strings.select),
                               title: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
