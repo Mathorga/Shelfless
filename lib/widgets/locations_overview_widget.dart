@@ -8,6 +8,8 @@ import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/store_locations_provider.dart';
 import 'package:shelfless/screens/books_screen.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
+import 'package:shelfless/screens/edit_location_screen.dart';
+import 'package:shelfless/screens/location_info_screen.dart';
 import 'package:shelfless/screens/publisher_info_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/location_preview_widget.dart';
@@ -70,7 +72,7 @@ class LocationsOverviewWidget extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 // Edit the selected author.
-                                Navigator.of(context).pushNamed(PublisherInfoScreen.routeName, arguments: locations[index]);
+                                Navigator.of(context).pushNamed(LocationInfoScreen.routeName, arguments: locations[index]);
                               },
                               icon: const Icon(Icons.settings_rounded),
                             ),
@@ -83,7 +85,7 @@ class LocationsOverviewWidget extends StatelessWidget {
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+            Navigator.of(context).pushNamed(EditLocationScreen.routeName);
           },
           child: const Icon(Icons.add_rounded),
         ));

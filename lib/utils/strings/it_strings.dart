@@ -18,6 +18,7 @@ class ItStrings implements Strings {
   @override String get authorInfo => "Scheda Autore";
   @override String get genreInfo => "Scheda Genere";
   @override String get publisherInfo => "Scheda Editore";
+  @override String get locationInfo => "Scheda Posizione";
   @override String get bookInfo => "Scheda Libro";
   @override String get firstName => "Nome";
   @override String get lastName => "Cognome";

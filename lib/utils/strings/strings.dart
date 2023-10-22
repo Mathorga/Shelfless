@@ -18,6 +18,7 @@ class Strings {
   String get authorInfo => "";
   String get genreInfo => "";
   String get publisherInfo => "";
+  String get locationInfo => "";
   String get bookInfo => "";
   String get firstName => "";
   String get lastName => "";

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:shelfless/models/publisher.dart';
 
+import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/providers/publishers_provider.dart';
+import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditPublisherScreen extends StatefulWidget {
@@ -47,15 +49,16 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(strings.publisherInfoName),
-              TextFormField(
-                initialValue: _publisher.name,
-                textCapitalization: TextCapitalization.words,
-                onChanged: (String value) => _publisher.name = value,
-              ),
-              const SizedBox(
-                height: 24.0,
-                child: Divider(height: 2.0),
+              EditSectionWidget(
+                children: [
+                  Text(strings.publisherInfoName),
+                  Themes.spacer,
+                  TextFormField(
+                    initialValue: _publisher.name,
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: (String value) => _publisher.name = value,
+                  ),
+                ],
               ),
             ],
           ),

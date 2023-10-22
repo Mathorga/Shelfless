@@ -28,6 +28,7 @@ import 'package:shelfless/screens/genre_info_screen.dart';
 import 'package:shelfless/screens/import_library_screen.dart';
 import 'package:shelfless/screens/libraries_overview_screen.dart';
 import 'package:shelfless/screens/library_screen.dart';
+import 'package:shelfless/screens/location_info_screen.dart';
 import 'package:shelfless/screens/publisher_info_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -119,6 +120,7 @@ class Shelfish extends StatelessWidget {
           AuthorInfoScreen.routeName: (BuildContext context) => const AuthorInfoScreen(),
           GenreInfoScreen.routeName: (BuildContext context) => const GenreInfoScreen(),
           PublisherInfoScreen.routeName: (BuildContext context) => const PublisherInfoScreen(),
+          LocationInfoScreen.routeName: (BuildContext context) => const LocationInfoScreen(),
           ImportLibraryScreen.routeName: (BuildContext context) => const ImportLibraryScreen(),
           EditLibraryScreen.routeName: (BuildContext context) => const EditLibraryScreen(),
           EditBookScreen.routeName: (BuildContext context) => const EditBookScreen(),

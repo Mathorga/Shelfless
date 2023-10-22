@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/store_locations_provider.dart';
+import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditLocationScreen extends StatefulWidget {
@@ -17,7 +19,6 @@ class EditLocationScreen extends StatefulWidget {
 }
 
 class _EditLocationScreenState extends State<EditLocationScreen> {
-
   String name = "";
   int color = Colors.white.value;
 
@@ -36,13 +37,14 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(strings.locationInfoName),
-              TextField(
-                onChanged: (String value) => name = value,
-              ),
-              const SizedBox(
-                height: 24.0,
-                child: Divider(height: 2.0),
+              EditSectionWidget(
+                children: [
+                  Text(strings.locationInfoName),
+                  Themes.spacer,
+                  TextField(
+                    onChanged: (String value) => name = value,
+                  ),
+                ],
               ),
             ],
           ),

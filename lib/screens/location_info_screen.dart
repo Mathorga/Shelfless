@@ -3,41 +3,41 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shelfless/dialogs/delete_dialog.dart';
-import 'package:shelfless/models/publisher.dart';
-import 'package:shelfless/providers/publishers_provider.dart';
-import 'package:shelfless/screens/edit_publisher_screen.dart';
+import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/providers/store_locations_provider.dart';
+import 'package:shelfless/screens/edit_location_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 
-class PublisherInfoScreen extends StatefulWidget {
-  static const String routeName = "/publisher-info";
+class LocationInfoScreen extends StatefulWidget {
+  static const String routeName = "/location-info";
 
-  const PublisherInfoScreen({Key? key}) : super(key: key);
+  const LocationInfoScreen({Key? key}) : super(key: key);
 
   @override
-  State<PublisherInfoScreen> createState() => _PublisherInfoScreenState();
+  State<LocationInfoScreen> createState() => _LocationInfoScreenState();
 }
 
-class _PublisherInfoScreenState extends State<PublisherInfoScreen> {
+class _LocationInfoScreenState extends State<LocationInfoScreen> {
   @override
   Widget build(BuildContext context) {
     // Fetch provider.
-    final PublishersProvider publishersProvider = Provider.of(context, listen: true);
+    final StoreLocationsProvider locationsProvider = Provider.of(context, listen: true);
 
-    // Fetch publisher.
-    Publisher publisher = ModalRoute.of(context)!.settings.arguments as Publisher;
+    // Fetch location.
+    StoreLocation location = ModalRoute.of(context)!.settings.arguments as StoreLocation;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          strings.publisherInfo,
+          strings.locationInfo,
           style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
-              // Navigate to edit_book_screen.
-              Navigator.of(context).pushNamed(EditPublisherScreen.routeName, arguments: publisher);
+              // Navigate to edit screen.
+              Navigator.of(context).pushNamed(EditLocationScreen.routeName, arguments: location);
             },
             icon: const Icon(Icons.edit_rounded),
           ),
@@ -48,8 +48,8 @@ class _PublisherInfoScreenState extends State<PublisherInfoScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return DeleteDialog(
-                    title: Text("$publisher"),
-                    onConfirm: () => publishersProvider.deletePublisher(publisher),
+                    title: Text("$location"),
+                    onConfirm: () => locationsProvider.deleteLocation(location),
                   );
                 },
               );
@@ -65,11 +65,11 @@ class _PublisherInfoScreenState extends State<PublisherInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Name.
-              Text(strings.publisherInfoName),
+              Text(strings.locationInfoName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
-                  publisher.name,
+                  location.name,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
