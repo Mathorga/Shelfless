@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/themes/shelfless_colors.dart';
-import 'package:shelfish/themes/themes.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/themes/themes.dart';
 
 class AuthorPreviewWidget extends StatelessWidget {
   final Author author;

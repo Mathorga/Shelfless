@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfish/models/library.dart';
+import 'package:shelfless/models/library.dart';
 
 class LibraryPreviewWidget extends StatelessWidget {
   final Library library;

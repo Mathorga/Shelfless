@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shelfish/dialogs/delete_dialog.dart';
+import 'package:shelfless/dialogs/delete_dialog.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/providers/authors_provider.dart';
-import 'package:shelfish/screens/edit_author_screen.dart';
-import 'package:shelfish/utils/strings/strings.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/providers/authors_provider.dart';
+import 'package:shelfless/screens/edit_author_screen.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 class AuthorInfoScreen extends StatefulWidget {
   static const String routeName = "/author-info";

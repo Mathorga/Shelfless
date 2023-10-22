@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/dialogs/delete_dialog.dart';
-import 'package:shelfish/models/publisher.dart';
-import 'package:shelfish/providers/publishers_provider.dart';
-import 'package:shelfish/screens/edit_publisher_screen.dart';
-import 'package:shelfish/utils/strings/strings.dart';
+import 'package:shelfless/dialogs/delete_dialog.dart';
+import 'package:shelfless/models/publisher.dart';
+import 'package:shelfless/providers/publishers_provider.dart';
+import 'package:shelfless/screens/edit_publisher_screen.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 class PublisherInfoScreen extends StatefulWidget {
   static const String routeName = "/publisher-info";

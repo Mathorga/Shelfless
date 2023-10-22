@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/models/publisher.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/providers/publishers_provider.dart';
-import 'package:shelfish/screens/books_screen.dart';
-import 'package:shelfish/screens/edit_author_screen.dart';
-import 'package:shelfish/screens/edit_publisher_screen.dart';
-import 'package:shelfish/screens/publisher_info_screen.dart';
-import 'package:shelfish/utils/constants.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/publisher_preview_widget.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/publisher.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/providers/publishers_provider.dart';
+import 'package:shelfless/screens/books_screen.dart';
+import 'package:shelfless/screens/edit_author_screen.dart';
+import 'package:shelfless/screens/edit_publisher_screen.dart';
+import 'package:shelfless/screens/publisher_info_screen.dart';
+import 'package:shelfless/utils/constants.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/publisher_preview_widget.dart';
 
 class PublishersOverviewWidget extends StatelessWidget {
   final String searchValue;

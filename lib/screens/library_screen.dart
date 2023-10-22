@@ -8,15 +8,16 @@ import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shelfless/models/library.dart';
 
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/screens/books_filter_screen.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/authors_overview_widget.dart';
-import 'package:shelfish/widgets/genres_overview_widget.dart';
-import 'package:shelfish/widgets/books_overview_widget.dart';
-import 'package:shelfish/widgets/locations_overview_widget.dart';
-import 'package:shelfish/widgets/publishers_overview_widget.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/screens/books_filter_screen.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/authors_overview_widget.dart';
+import 'package:shelfless/widgets/genres_overview_widget.dart';
+import 'package:shelfless/widgets/books_overview_widget.dart';
+import 'package:shelfless/widgets/locations_overview_widget.dart';
+import 'package:shelfless/widgets/publishers_overview_widget.dart';
 
 class LibraryScreen extends StatefulWidget {
   static const String routeName = "/library";
@@ -121,24 +122,25 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     librariesProvider.currentLibrary!.writeToFile("$path/${librariesProvider.currentLibrary!.name}.csv");
                     break;
                   case 3:
-                    // TODO Merge the current library with a new one from file.
+                    // Merge the current library with a new one from file.
 
-                    // // Pick a library file.
-                    // FilePickerResult? result = await FilePicker.platform.pickFiles();
+                    // Pick a library file.
+                    FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-                    // if (result != null) {
-                    //   // Retrieve the file name.
-                    //   String fileName = result.files.single.name.split(".").first;
+                    if (result != null) {
+                      // Retrieve the file name.
+                      String fileName = result.files.single.name.split(".").first;
 
-                    //   // Read the file.
-                    //   File file = File(result.files.single.path!);
-                    //   String fileContent = await file.readAsString();
+                      // Read the file.
+                      File file = File(result.files.single.path!);
+                      String fileContent = await file.readAsString();
 
-                    //   // Create and add the library to DB.
-                    //   librariesProvider.currentLibrary!.merge(Library.fromSerializableString(name: fileName, csvString: fileContent));
-                    // } else {
-                    //   // User canceled the picker
-                    // }
+                      // Create and add the library to DB.
+                      librariesProvider.currentLibrary!.merge(Library.fromSerializableString(
+                        name: fileName,
+                        csvString: fileContent,
+                      ));
+                    }
                     break;
                   default:
                     break;

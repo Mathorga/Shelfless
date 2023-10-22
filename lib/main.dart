@@ -3,34 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/models/library.dart';
-import 'package:shelfish/models/publisher.dart';
-import 'package:shelfish/models/store_location.dart';
-import 'package:shelfish/providers/authors_provider.dart';
-import 'package:shelfish/providers/books_provider.dart';
-import 'package:shelfish/providers/genres_provider.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/providers/publishers_provider.dart';
-import 'package:shelfish/providers/store_locations_provider.dart';
-import 'package:shelfish/screens/author_info_screen.dart';
-import 'package:shelfish/screens/book_info_screen.dart';
-import 'package:shelfish/screens/books_filter_screen.dart';
-import 'package:shelfish/screens/edit_genre_screen.dart';
-import 'package:shelfish/screens/edit_author_screen.dart';
-import 'package:shelfish/screens/edit_book_screen.dart';
-import 'package:shelfish/screens/edit_library_screen.dart';
-import 'package:shelfish/screens/edit_location_screen.dart';
-import 'package:shelfish/screens/edit_publisher_screen.dart';
-import 'package:shelfish/screens/genre_info_screen.dart';
-import 'package:shelfish/screens/import_library_screen.dart';
-import 'package:shelfish/screens/libraries_overview_screen.dart';
-import 'package:shelfish/screens/library_screen.dart';
-import 'package:shelfish/screens/publisher_info_screen.dart';
-import 'package:shelfish/themes/shelfless_colors.dart';
-import 'package:shelfish/themes/themes.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/models/library.dart';
+import 'package:shelfless/models/publisher.dart';
+import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/providers/authors_provider.dart';
+import 'package:shelfless/providers/books_provider.dart';
+import 'package:shelfless/providers/genres_provider.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/providers/publishers_provider.dart';
+import 'package:shelfless/providers/store_locations_provider.dart';
+import 'package:shelfless/screens/author_info_screen.dart';
+import 'package:shelfless/screens/book_info_screen.dart';
+import 'package:shelfless/screens/books_filter_screen.dart';
+import 'package:shelfless/screens/edit_genre_screen.dart';
+import 'package:shelfless/screens/edit_author_screen.dart';
+import 'package:shelfless/screens/edit_book_screen.dart';
+import 'package:shelfless/screens/edit_library_screen.dart';
+import 'package:shelfless/screens/edit_location_screen.dart';
+import 'package:shelfless/screens/edit_publisher_screen.dart';
+import 'package:shelfless/screens/genre_info_screen.dart';
+import 'package:shelfless/screens/import_library_screen.dart';
+import 'package:shelfless/screens/libraries_overview_screen.dart';
+import 'package:shelfless/screens/library_screen.dart';
+import 'package:shelfless/screens/publisher_info_screen.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/themes/themes.dart';
 
 void main() async {
   // Init local DB.
@@ -108,6 +108,7 @@ class Shelfish extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Themes.radius),
             ),
+            backgroundColor: ShelflessColors.lightBackground,
           ),
         ),
         home: const LibrariesOverviewScreen(),

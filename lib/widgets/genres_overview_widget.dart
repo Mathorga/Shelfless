@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:shelfish/models/book.dart';
+import 'package:shelfless/models/book.dart';
 
-import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/providers/genres_provider.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/screens/books_screen.dart';
-import 'package:shelfish/screens/edit_genre_screen.dart';
-import 'package:shelfish/screens/genre_info_screen.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/genre_preview_widget.dart';
+import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/providers/genres_provider.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/screens/books_screen.dart';
+import 'package:shelfless/screens/edit_genre_screen.dart';
+import 'package:shelfless/screens/genre_info_screen.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/genre_preview_widget.dart';
 
 class GenresOverviewWidget extends StatefulWidget {
   final String searchValue;

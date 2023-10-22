@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:shelfish/utils/utils.dart';
+import 'package:shelfless/utils/utils.dart';
 
 part 'genre.g.dart';
 
@@ -18,7 +18,7 @@ class Genre extends HiveObject {
 
   Genre.fromSerializableString(String source)
       : name = "",
-        color = 0 {
+        color = 0x00000000 {
     final List<String> parts = source.split("/");
     name = parts[0];
     color = parts.length > 1 ? int.parse(parts[1]) : Utils.randomColor();

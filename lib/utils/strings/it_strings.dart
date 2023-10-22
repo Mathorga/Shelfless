@@ -1,6 +1,6 @@
 
 
-import 'package:shelfish/utils/strings/strings.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 /// Italian strings.
 class ItStrings implements Strings {

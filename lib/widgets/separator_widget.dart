@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfish/themes/themes.dart';
+import 'package:shelfless/themes/themes.dart';
 
 class SeparatorWidget extends StatelessWidget {
   final Widget? child;

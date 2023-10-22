@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/models/library.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/themes/themes.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/unfocus_widget.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/library.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditLibraryScreen extends StatefulWidget {
   static const String routeName = "/edit-library";

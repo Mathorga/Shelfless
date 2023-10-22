@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/models/publisher.dart';
-import 'package:shelfish/models/store_location.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/books_overview_widget.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/models/publisher.dart';
+import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/books_overview_widget.dart';
 
 /// Wraps a BooksOverviewWidget adding an appbar that displays the applied filters.
 class BooksScreen extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shelfish/themes/shelfless_colors.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
 
-import 'package:shelfish/utils/strings/strings.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 class DeleteDialog extends StatelessWidget {
   final Widget? title;

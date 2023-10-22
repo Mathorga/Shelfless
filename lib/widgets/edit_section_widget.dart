@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:shelfish/themes/shelfless_colors.dart';
-import 'package:shelfish/themes/themes.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/themes/themes.dart';
 
 /// Default wrapper for edit sections.
 class EditSectionWidget extends StatelessWidget {

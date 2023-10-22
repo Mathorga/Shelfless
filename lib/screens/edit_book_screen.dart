@@ -1,37 +1,35 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/models/publisher.dart';
-import 'package:shelfish/models/store_location.dart';
-import 'package:shelfish/providers/authors_provider.dart';
-import 'package:shelfish/providers/books_provider.dart';
-import 'package:shelfish/providers/genres_provider.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/providers/publishers_provider.dart';
-import 'package:shelfish/providers/store_locations_provider.dart';
-import 'package:shelfish/screens/edit_author_screen.dart';
-import 'package:shelfish/screens/edit_genre_screen.dart';
-import 'package:shelfish/screens/edit_location_screen.dart';
-import 'package:shelfish/screens/edit_publisher_screen.dart';
-import 'package:shelfish/themes/shelfless_colors.dart';
-import 'package:shelfish/themes/themes.dart';
-import 'package:shelfish/utils/constants.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/author_preview_widget.dart';
-import 'package:shelfish/widgets/edit_section_widget.dart';
-import 'package:shelfish/widgets/genre_preview_widget.dart';
-import 'package:shelfish/widgets/location_preview_widget.dart';
-import 'package:shelfish/widgets/publisher_preview_widget.dart';
-import 'package:shelfish/widgets/search_list_widget.dart';
-import 'package:shelfish/widgets/dialog_button_widget.dart';
-import 'package:shelfish/widgets/unfocus_widget.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/models/publisher.dart';
+import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/providers/authors_provider.dart';
+import 'package:shelfless/providers/books_provider.dart';
+import 'package:shelfless/providers/genres_provider.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/providers/publishers_provider.dart';
+import 'package:shelfless/providers/store_locations_provider.dart';
+import 'package:shelfless/screens/edit_author_screen.dart';
+import 'package:shelfless/screens/edit_genre_screen.dart';
+import 'package:shelfless/screens/edit_location_screen.dart';
+import 'package:shelfless/screens/edit_publisher_screen.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/constants.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/author_preview_widget.dart';
+import 'package:shelfless/widgets/edit_section_widget.dart';
+import 'package:shelfless/widgets/genre_preview_widget.dart';
+import 'package:shelfless/widgets/location_preview_widget.dart';
+import 'package:shelfless/widgets/publisher_preview_widget.dart';
+import 'package:shelfless/widgets/search_list_widget.dart';
+import 'package:shelfless/widgets/dialog_button_widget.dart';
+import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
@@ -60,6 +58,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     _book = Book(
       authors: HiveList(_authors),
       genres: HiveList(_genres),
+      publishDate: DateTime.now().year,
     );
   }
 
@@ -193,7 +192,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                 child: YearPicker(
                                   firstDate: DateTime(0),
                                   lastDate: DateTime(currentYear),
-                                  selectedDate: DateTime(currentYear),
+                                  selectedDate: DateTime(_book.publishDate),
+                                  currentDate: DateTime(_book.publishDate),
+                                  initialDate: DateTime(_book.publishDate),
                                   onChanged: (DateTime value) {
                                     Navigator.of(context).pop();
                                     setState(() {
@@ -205,10 +206,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             ),
                           );
                         },
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text((_book.publishDate).toString()),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacing),
+                              child: Center(child: Text((_book.publishDate).toString())),
+                            ),
                           ),
                         ),
                       ),
@@ -460,7 +464,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
   Widget _buildLocationPreview(StoreLocation location) => _buildPreview(
         LocationPreviewWidget(location: location),
         onDelete: () {
-          _book.location = null;
+          setState(() {
+            _book.location = null;
+          });
         },
       );
 

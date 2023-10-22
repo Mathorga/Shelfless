@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfish/models/genre.dart';
+import 'package:shelfless/models/genre.dart';
 
 class GenrePreviewWidget extends StatelessWidget {
   final Genre genre;

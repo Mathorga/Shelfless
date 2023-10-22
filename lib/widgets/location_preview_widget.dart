@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfish/models/store_location.dart';
+import 'package:shelfless/models/store_location.dart';
 
 class LocationPreviewWidget extends StatelessWidget {
   final StoreLocation location;

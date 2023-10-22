@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:shelfish/models/store_location.dart';
+import 'package:shelfless/models/store_location.dart';
 
 class StoreLocationsProvider with ChangeNotifier {
   final Box<StoreLocation> _locations = Hive.box<StoreLocation>("store_locations");

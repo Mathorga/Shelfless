@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/providers/authors_provider.dart';
-import 'package:shelfish/themes/themes.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/unfocus_widget.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/providers/authors_provider.dart';
+import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditAuthorScreen extends StatefulWidget {
   static const String routeName = "/edit-author";

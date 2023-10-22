@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:hive/hive.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/models/publisher.dart';
-import 'package:shelfish/models/store_location.dart';
-import 'package:shelfish/utils/strings/strings.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/models/publisher.dart';
+import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 part 'library.g.dart';
 
@@ -65,7 +65,9 @@ class Library extends HiveObject {
           bookAuthor = _authors.values.singleWhere((Author element) => element == author);
         }
 
-        book.authors.add(bookAuthor);
+        if (!book.authors.contains(bookAuthor)) {
+          book.authors.add(bookAuthor);
+        }
       }
 
       // Split genres string into its composing genres.
@@ -85,7 +87,9 @@ class Library extends HiveObject {
           bookGenre = _genres.values.singleWhere((Genre element) => element == genre);
         }
 
-        book.genres.add(bookGenre);
+        if (!book.genres.contains(bookGenre)) {
+          book.genres.add(bookGenre);
+        }
       }
 
       // Get the publisher, create it if not already present.
@@ -118,12 +122,19 @@ class Library extends HiveObject {
 
       book.location = bookLocation;
 
-      // Save the book to the DB.
-      _books.add(book);
-      book.save();
+      // Save the book to the DB if not already present.
+      Book finalBook = book;
+      if (!_books.values.contains(book)) {
+        _books.add(book);
+        book.save();
+      } else {
+        finalBook = _books.values.singleWhere((Book element) => element == book);
+      }
 
       // Add the book to the library.
-      books.add(book);
+      if (!books.contains(finalBook)) {
+        books.add(finalBook);
+      }
     }
   }
 
@@ -131,8 +142,18 @@ class Library extends HiveObject {
     return books.map((Book book) => book.toMap()).toList();
   }
 
+  /// Merges [other] into [this].
   void merge(Library other) {
-    // TODO.
+    // Loop through books and save those who are not already in library.
+    // TODO This needs a lot of refinement.
+    for (Book book in other.books) {
+      if (!books.contains(book)) {
+        books.add(book);
+      }
+    }
+
+    // Save the library when merge is done.
+    save();
   }
 
   String toSerializableString() {

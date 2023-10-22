@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/models/publisher.dart';
-import 'package:shelfish/models/store_location.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/models/publisher.dart';
+import 'package:shelfless/models/store_location.dart';
 
 part 'book.g.dart';
 

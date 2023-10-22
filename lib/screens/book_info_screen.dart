@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shelfish/dialogs/delete_dialog.dart';
+import 'package:shelfless/dialogs/delete_dialog.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/models/library.dart';
-import 'package:shelfish/providers/books_provider.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/screens/edit_book_screen.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/author_preview_widget.dart';
-import 'package:shelfish/widgets/genre_preview_widget.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/models/library.dart';
+import 'package:shelfless/providers/books_provider.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/screens/edit_book_screen.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/author_preview_widget.dart';
+import 'package:shelfless/widgets/genre_preview_widget.dart';
 
 class BookInfoScreen extends StatefulWidget {
   static const String routeName = "/book-info";

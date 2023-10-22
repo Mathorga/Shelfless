@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfish/themes/themes.dart';
+import 'package:shelfless/themes/themes.dart';
 
 /// Simple searchable list of elements.
 class SearchListWidget<T> extends StatefulWidget {

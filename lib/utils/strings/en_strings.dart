@@ -1,4 +1,4 @@
-import 'package:shelfish/utils/strings/strings.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 /// English strings.
 class EnStrings implements Strings {

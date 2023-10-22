@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfish/models/publisher.dart';
+import 'package:shelfless/models/publisher.dart';
 
 class PublisherPreviewWidget extends StatelessWidget {
   final Publisher publisher;

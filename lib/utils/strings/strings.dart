@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:shelfish/utils/strings/en_strings.dart';
-import 'package:shelfish/utils/strings/it_strings.dart';
+import 'package:shelfless/utils/strings/en_strings.dart';
+import 'package:shelfless/utils/strings/it_strings.dart';
 
 class Strings {
   String get librariesTitle => "";

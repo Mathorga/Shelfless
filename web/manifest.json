@@ -1,6 +1,6 @@
 {
-    "name": "shelfish",
-    "short_name": "shelfish",
+    "name": "shelfless",
+    "short_name": "shelfless",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

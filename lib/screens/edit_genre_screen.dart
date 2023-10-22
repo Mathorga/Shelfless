@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/providers/genres_provider.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/utils/utils.dart';
-import 'package:shelfish/widgets/unfocus_widget.dart';
+import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/providers/genres_provider.dart';
+import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/utils/utils.dart';
+import 'package:shelfless/widgets/edit_section_widget.dart';
+import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditGenreScreen extends StatefulWidget {
   static const String routeName = "/edit-genre";
@@ -56,79 +58,86 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
           padding: const EdgeInsets.all(12.0),
           child: ListView(
             children: [
-              Text(strings.genreInfoName),
-              TextFormField(
-                initialValue: _genre.name,
-                textCapitalization: TextCapitalization.words,
-                onChanged: (String value) => _genre.name = value,
-              ),
-              const SizedBox(
-                height: 24.0,
-                child: Divider(height: 2.0),
+              EditSectionWidget(
+                children: [
+                  Text(strings.genreInfoName),
+                  Themes.spacer,
+                  TextFormField(
+                    initialValue: _genre.name,
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: (String value) => _genre.name = value,
+                  ),
+                ],
               ),
 
               // Last name.
-              Text(strings.genreInfoColor),
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(strings.genrePickColor),
-                          content: SingleChildScrollView(
-                            child: ColorPicker(
-                              enableAlpha: false,
-                              hexInputBar: true,
-                              pickerAreaBorderRadius: BorderRadius.circular(15.0),
-                              pickerColor: Color(_genre.color),
-                              onColorChanged: (Color pickedColor) {
-                                setState(() {
-                                  _genre.color = pickedColor.value;
-                                });
-                              },
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                // Dismiss dialog.
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(strings.ok),
-                            ),
-                          ],
+              EditSectionWidget(
+                children: [
+                  Text(strings.genreInfoColor),
+                  Themes.spacer,
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(strings.genrePickColor),
+                              content: SingleChildScrollView(
+                                child: ColorPicker(
+                                  enableAlpha: false,
+                                  hexInputBar: true,
+                                  pickerAreaBorderRadius: BorderRadius.circular(15.0),
+                                  pickerColor: Color(_genre.color),
+                                  onColorChanged: (Color pickedColor) {
+                                    setState(() {
+                                      _genre.color = pickedColor.value;
+                                    });
+                                  },
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    // Dismiss dialog.
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(strings.ok),
+                                ),
+                              ],
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15.0),
-                          color: Color(_genre.color),
-                        ),
-                        height: 100,
-                        width: double.infinity,
+                      child: Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.0),
+                              color: Color(_genre.color),
+                            ),
+                            height: 100,
+                            width: double.infinity,
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                                onPressed: () {
+                                  // Pick a random color.
+                                  setState(() {
+                                    _genre.color = Utils.randomColor();
+                                  });
+                                },
+                                icon: const Icon(Icons.refresh_rounded)),
+                          ),
+                        ],
                       ),
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                            onPressed: () {
-                              // Pick a random color.
-                              setState(() {
-                                _genre.color = Utils.randomColor();
-                              });
-                            },
-                            icon: const Icon(Icons.refresh_rounded)),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
+
               const SizedBox(
                 height: 24.0,
               ),

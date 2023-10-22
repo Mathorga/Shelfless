@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/models/store_location.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/providers/store_locations_provider.dart';
-import 'package:shelfish/screens/books_screen.dart';
-import 'package:shelfish/screens/edit_author_screen.dart';
-import 'package:shelfish/screens/publisher_info_screen.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/location_preview_widget.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/providers/store_locations_provider.dart';
+import 'package:shelfless/screens/books_screen.dart';
+import 'package:shelfless/screens/edit_author_screen.dart';
+import 'package:shelfless/screens/publisher_info_screen.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/location_preview_widget.dart';
 
 class LocationsOverviewWidget extends StatelessWidget {
   final String searchValue;

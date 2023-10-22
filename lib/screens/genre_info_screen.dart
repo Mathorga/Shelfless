@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/dialogs/delete_dialog.dart';
-import 'package:shelfish/models/genre.dart';
-import 'package:shelfish/providers/genres_provider.dart';
-import 'package:shelfish/screens/edit_genre_screen.dart';
-import 'package:shelfish/utils/strings/strings.dart';
+import 'package:shelfless/dialogs/delete_dialog.dart';
+import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/providers/genres_provider.dart';
+import 'package:shelfless/screens/edit_genre_screen.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 class GenreInfoScreen extends StatefulWidget {
   static const String routeName = "/genre-info";

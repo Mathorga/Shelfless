@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:shelfish/models/publisher.dart';
+import 'package:shelfless/models/publisher.dart';
 
 class PublishersProvider with ChangeNotifier {
   final Box<Publisher> _publishers = Hive.box<Publisher>("publishers");

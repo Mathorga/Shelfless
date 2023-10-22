@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/models/book.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/models/book.dart';
 
-import 'package:shelfish/models/library.dart';
+import 'package:shelfless/models/library.dart';
 
 class LibrariesProvider with ChangeNotifier {
   final Box<Library> _libraries = Hive.box<Library>("libraries");

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/author.dart';
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/providers/authors_provider.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/screens/author_info_screen.dart';
-import 'package:shelfish/screens/books_screen.dart';
-import 'package:shelfish/screens/edit_author_screen.dart';
-import 'package:shelfish/utils/constants.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/author_preview_widget.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/providers/authors_provider.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/screens/author_info_screen.dart';
+import 'package:shelfless/screens/books_screen.dart';
+import 'package:shelfless/screens/edit_author_screen.dart';
+import 'package:shelfless/utils/constants.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/author_preview_widget.dart';
 
 class AuthorsOverviewWidget extends StatelessWidget {
   final String searchValue;

@@ -1,4 +1,4 @@
-package com.example.shelfish
+package glyder.app.shelfless
 
 import io.flutter.embedding.android.FlutterActivity
 

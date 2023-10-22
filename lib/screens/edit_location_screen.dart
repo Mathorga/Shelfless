@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/store_location.dart';
-import 'package:shelfish/providers/store_locations_provider.dart';
-import 'package:shelfish/utils/strings/strings.dart';
-import 'package:shelfish/widgets/unfocus_widget.dart';
+import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/providers/store_locations_provider.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditLocationScreen extends StatefulWidget {
   static const String routeName = "/edit-location";

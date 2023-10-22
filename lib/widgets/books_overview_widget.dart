@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:shelfish/models/book.dart';
-import 'package:shelfish/providers/books_provider.dart';
-import 'package:shelfish/providers/libraries_provider.dart';
-import 'package:shelfish/screens/book_info_screen.dart';
-import 'package:shelfish/screens/edit_book_screen.dart';
-import 'package:shelfish/widgets/book_preview_widget.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/providers/books_provider.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/screens/book_info_screen.dart';
+import 'package:shelfless/screens/edit_book_screen.dart';
+import 'package:shelfless/widgets/book_preview_widget.dart';
 
 class BooksOverviewWidget extends StatelessWidget {
   // The filter function is used to display a subset of all available books.
