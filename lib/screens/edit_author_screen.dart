@@ -38,9 +38,9 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
     _author = widget.author != null
         ? widget.author!.copy()
         : Author(
-    firstName: "",
-    lastName: "",
-  );
+            firstName: "",
+            lastName: "",
+          );
   }
 
   @override

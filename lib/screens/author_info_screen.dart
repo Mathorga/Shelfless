@@ -7,23 +7,20 @@ import 'package:shelfless/providers/authors_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 
-class AuthorInfoScreen extends StatefulWidget {
+class AuthorInfoScreen extends StatelessWidget {
   static const String routeName = "/author-info";
 
-  const AuthorInfoScreen({Key? key}) : super(key: key);
+  final Author author;
 
-  @override
-  State<AuthorInfoScreen> createState() => _AuthorInfoScreenState();
-}
+  const AuthorInfoScreen({
+    Key? key,
+    required this.author,
+  }) : super(key: key);
 
-class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
   @override
   Widget build(BuildContext context) {
     // Fetch provider.
     final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
-
-    // Fetch author.
-    Author _author = ModalRoute.of(context)!.settings.arguments as Author;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +36,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => EditAuthorScreen(
-                    author: _author,
+                    author: author,
                   ),
                 ),
               );
@@ -53,8 +50,8 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return DeleteDialog(
-                    title: Text("$_author"),
-                    onConfirm: () => _authorsProvider.deleteAuthor(_author),
+                    title: Text("$author"),
+                    onConfirm: () => _authorsProvider.deleteAuthor(author),
                   );
                 },
               );
@@ -73,7 +70,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
               Text(strings.firstName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(_author.firstName, style: Theme.of(context).textTheme.headline6),
+                child: Text(author.firstName, style: Theme.of(context).textTheme.headline6),
               ),
               const SizedBox(
                 height: 24.0,
@@ -83,7 +80,7 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
               Text(strings.lastName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(_author.lastName, style: Theme.of(context).textTheme.headline6),
+                child: Text(author.lastName, style: Theme.of(context).textTheme.headline6),
               ),
               const SizedBox(
                 height: 24.0,

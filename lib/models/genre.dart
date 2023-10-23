@@ -24,6 +24,20 @@ class Genre extends HiveObject {
     color = parts.length > 1 ? int.parse(parts[1]) : Utils.randomColor();
   }
 
+  /// Creates and returns a copy of [this].
+  Genre copy() {
+    return Genre(
+      name: name,
+      color: color,
+    );
+  }
+
+  /// Copies all attributes from [other].
+  void copyFrom(Genre other) {
+    name = other.name;
+    color = other.color;
+  }
+
   @override
   String toString() {
     return name;

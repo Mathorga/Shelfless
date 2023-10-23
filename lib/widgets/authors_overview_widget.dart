@@ -71,7 +71,11 @@ class AuthorsOverviewWidget extends StatelessWidget {
                           child: IconButton(
                             onPressed: () {
                               // Edit the selected author.
-                              Navigator.of(context).pushNamed(AuthorInfoScreen.routeName, arguments: authors[index]);
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) => AuthorInfoScreen(author: authors[index]),
+                                ),
+                              );
                             },
                             icon: const Icon(Icons.settings_rounded),
                           ),

@@ -14,7 +14,12 @@ import 'package:shelfless/widgets/unfocus_widget.dart';
 class EditGenreScreen extends StatefulWidget {
   static const String routeName = "/edit-genre";
 
-  const EditGenreScreen({Key? key}) : super(key: key);
+  final Genre? genre;
+
+  const EditGenreScreen({
+    Key? key,
+    this.genre,
+  }) : super(key: key);
 
   @override
   _EditGenreScreenState createState() => _EditGenreScreenState();
@@ -30,24 +35,20 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
   void initState() {
     super.initState();
 
-    _genre = Genre(
-      name: "",
-      color: Utils.randomColor(),
-    );
+    _inserting = widget.genre == null;
+
+    _genre = widget.genre != null
+        ? widget.genre!.copy()
+        : Genre(
+            name: "",
+            color: Utils.randomColor(),
+          );
   }
 
   @override
   Widget build(BuildContext context) {
     // Fetch provider to save changes.
     final GenresProvider genresProvider = Provider.of(context, listen: false);
-
-    // Fetch passed arguments.
-    Genre? receivedGenre = ModalRoute.of(context)!.settings.arguments as Genre?;
-    _inserting = receivedGenre == null;
-
-    if (!_inserting) {
-      _genre = receivedGenre!;
-    }
 
     return UnfocusWidget(
       child: Scaffold(
@@ -147,7 +148,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             // Actually save the genre.
-            _inserting ? genresProvider.addGenre(_genre) : genresProvider.updateGenre(_genre);
+            _inserting ? genresProvider.addGenre(_genre) : genresProvider.updateGenre(widget.genre!..copyFrom(_genre));
             Navigator.of(context).pop();
           },
           label: Row(

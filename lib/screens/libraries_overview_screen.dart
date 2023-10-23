@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:shelfless/dialogs/delete_dialog.dart';
 
+import 'package:shelfless/dialogs/delete_dialog.dart';
 import 'package:shelfless/models/library.dart';
 import 'package:shelfless/providers/books_provider.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
@@ -64,7 +64,11 @@ class LibrariesOverviewScreen extends StatelessWidget {
                                 child: IconButton(
                                   onPressed: () {
                                     // Go to library info.
-                                    Navigator.of(context).pushNamed(EditLibraryScreen.routeName, arguments: libraries[index]);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) => EditLibraryScreen(library: libraries[index]),
+                                      ),
+                                    );
                                   },
                                   icon: const Icon(
                                     Icons.edit_rounded,
@@ -146,7 +150,11 @@ class LibrariesOverviewScreen extends StatelessWidget {
             child: const Icon(Icons.note_add_rounded),
             onTap: () {
               // Navigate to library creation screen.
-              Navigator.of(context).pushNamed(EditLibraryScreen.routeName);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const EditLibraryScreen(),
+                ),
+              );
             },
           ),
         ],

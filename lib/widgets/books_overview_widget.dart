@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/providers/books_provider.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/screens/book_info_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
 
@@ -46,7 +47,7 @@ class BooksOverviewWidget extends StatelessWidget {
                   (int index) => BookPreviewWidget(
                     book: _books[index],
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => EditBookScreen(book: _books[index]),
+                      builder: (BuildContext context) => BookInfoScreen(book: _books[index]),
                     )),
                   ),
                 )

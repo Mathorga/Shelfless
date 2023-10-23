@@ -15,20 +15,10 @@ import 'package:shelfless/providers/genres_provider.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/publishers_provider.dart';
 import 'package:shelfless/providers/store_locations_provider.dart';
-import 'package:shelfless/screens/author_info_screen.dart';
-import 'package:shelfless/screens/book_info_screen.dart';
 import 'package:shelfless/screens/books_filter_screen.dart';
-import 'package:shelfless/screens/edit_genre_screen.dart';
-import 'package:shelfless/screens/edit_author_screen.dart';
-import 'package:shelfless/screens/edit_book_screen.dart';
-import 'package:shelfless/screens/edit_library_screen.dart';
-import 'package:shelfless/screens/edit_location_screen.dart';
-import 'package:shelfless/screens/edit_publisher_screen.dart';
-import 'package:shelfless/screens/genre_info_screen.dart';
 import 'package:shelfless/screens/import_library_screen.dart';
 import 'package:shelfless/screens/libraries_overview_screen.dart';
 import 'package:shelfless/screens/library_screen.dart';
-import 'package:shelfless/screens/location_info_screen.dart';
 import 'package:shelfless/screens/publisher_info_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -71,7 +61,7 @@ class Shelfish extends StatelessWidget {
         ChangeNotifierProvider(create: (BuildContext contex) => LibrariesProvider()),
       ],
       child: MaterialApp(
-        title: "Shelfish",
+        title: "Shelfless",
         theme: ThemeData(
           scaffoldBackgroundColor: ShelflessColors.mainBackground,
           colorScheme: ColorScheme.dark(
@@ -116,17 +106,8 @@ class Shelfish extends StatelessWidget {
         routes: {
           LibrariesOverviewScreen.routeName: (BuildContext context) => const LibrariesOverviewScreen(),
           LibraryScreen.routeName: (BuildContext context) => const LibraryScreen(),
-          BookInfoScreen.routeName: (BuildContext context) => const BookInfoScreen(),
-          AuthorInfoScreen.routeName: (BuildContext context) => const AuthorInfoScreen(),
-          GenreInfoScreen.routeName: (BuildContext context) => const GenreInfoScreen(),
           PublisherInfoScreen.routeName: (BuildContext context) => const PublisherInfoScreen(),
-          LocationInfoScreen.routeName: (BuildContext context) => const LocationInfoScreen(),
           ImportLibraryScreen.routeName: (BuildContext context) => const ImportLibraryScreen(),
-          EditLibraryScreen.routeName: (BuildContext context) => const EditLibraryScreen(),
-          EditAuthorScreen.routeName: (BuildContext context) => const EditAuthorScreen(),
-          EditGenreScreen.routeName: (BuildContext context) => const EditGenreScreen(),
-          EditPublisherScreen.routeName: (BuildContext context) => const EditPublisherScreen(),
-          EditLocationScreen.routeName: (BuildContext context) => const EditLocationScreen(),
           BooksFilterScreen.routeName: (BuildContext context) => const BooksFilterScreen(),
         },
       ),

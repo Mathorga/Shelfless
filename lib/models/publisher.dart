@@ -21,6 +21,20 @@ class Publisher extends HiveObject {
     website = parts.length > 1 ? parts[1].isNotEmpty ? parts[1] : null : null;
   }
 
+  /// Creates and returns a copy of [this].
+  Publisher copy() {
+    return Publisher(
+      name: name,
+      website: website,
+    );
+  }
+
+  /// Copies all attributes from [other].
+  void copyFrom(Publisher other) {
+    name = other.name;
+    website = other.website;
+  }
+
   @override
   String toString() {
     return name + (website ?? "");

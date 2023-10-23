@@ -11,6 +11,18 @@ class StoreLocation extends HiveObject {
     required this.name,
   });
 
+  /// Creates and returns a copy of [this].
+  StoreLocation copy() {
+    return StoreLocation(
+      name: name,
+    );
+  }
+
+  /// Copies all attributes from [other].
+  void copyFrom(StoreLocation other) {
+    name = other.name;
+  }
+
   @override
   String toString() {
     return name;

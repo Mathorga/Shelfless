@@ -72,7 +72,11 @@ class LocationsOverviewWidget extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 // Edit the selected author.
-                                Navigator.of(context).pushNamed(LocationInfoScreen.routeName, arguments: locations[index]);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) => LocationInfoScreen(location: locations[index]),
+                                  ),
+                                );
                               },
                               icon: const Icon(Icons.settings_rounded),
                             ),
@@ -85,7 +89,11 @@ class LocationsOverviewWidget extends StatelessWidget {
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).pushNamed(EditLocationScreen.routeName);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) => const EditLocationScreen(),
+              ),
+            );
           },
           child: const Icon(Icons.add_rounded),
         ));

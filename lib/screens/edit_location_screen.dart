@@ -12,15 +12,35 @@ import 'package:shelfless/widgets/unfocus_widget.dart';
 class EditLocationScreen extends StatefulWidget {
   static const String routeName = "/edit-location";
 
-  const EditLocationScreen({Key? key}) : super(key: key);
+  final StoreLocation? location;
+
+  const EditLocationScreen({
+    Key? key,
+    this.location,
+  }) : super(key: key);
 
   @override
   _EditLocationScreenState createState() => _EditLocationScreenState();
 }
 
 class _EditLocationScreenState extends State<EditLocationScreen> {
-  String name = "";
-  int color = Colors.white.value;
+  late StoreLocation _location;
+
+  // Insert flag: tells whether the widget is used for adding or editing.
+  bool _inserting = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _inserting = widget.location == null;
+
+    _location = widget.location != null
+        ? widget.location!.copy()
+        : StoreLocation(
+            name: "",
+          );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +61,10 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                 children: [
                   Text(strings.locationInfoName),
                   Themes.spacer,
-                  TextField(
-                    onChanged: (String value) => name = value,
+                  TextFormField(
+                    initialValue: _location.name,
+                    textCapitalization: TextCapitalization.words,
+                    onChanged: (String value) => _location.name = value,
                   ),
                 ],
               ),
@@ -51,11 +73,8 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            // Actually save a new genre.
-            final StoreLocation location = StoreLocation(
-              name: name.trim(),
-            );
-            locationsProvider.addLocation(location);
+            // Actually save the location.
+            _inserting ? locationsProvider.addLocation(_location) : locationsProvider.updateLocation(widget.location!..copyFrom(_location));
             Navigator.of(context).pop();
           },
           label: Row(

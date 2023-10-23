@@ -13,7 +13,12 @@ import 'package:shelfless/widgets/unfocus_widget.dart';
 class EditLibraryScreen extends StatefulWidget {
   static const String routeName = "/edit-library";
 
-  const EditLibraryScreen({Key? key}) : super(key: key);
+  final Library? library;
+
+  const EditLibraryScreen({
+    Key? key,
+    this.library,
+  }) : super(key: key);
 
   @override
   _EditLibraryScreenState createState() => _EditLibraryScreenState();
@@ -21,7 +26,7 @@ class EditLibraryScreen extends StatefulWidget {
 
 class _EditLibraryScreenState extends State<EditLibraryScreen> {
   final Box<Book> _books = Hive.box<Book>("books");
-  
+
   late Library _library;
 
   // Insert flag: tells whether the widget is used for adding or editing an author.
@@ -31,7 +36,11 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
   void initState() {
     super.initState();
 
-    _library = Library(
+    _inserting = widget.library == null;
+
+    _library = widget.library != null
+        ? widget.library!.copy()
+        : Library(
       name: "",
       books: HiveList(_books),
     );
@@ -41,14 +50,6 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
   Widget build(BuildContext context) {
     // Fetch provider to save changes.
     final LibrariesProvider _librariesProvider = Provider.of(context, listen: false);
-
-    // Fetch passed arguments.
-    Library? _receivedLibrary = ModalRoute.of(context)!.settings.arguments as Library?;
-    _inserting = _receivedLibrary == null;
-
-    if (!_inserting) {
-      _library = _receivedLibrary!;
-    }
 
     return UnfocusWidget(
       child: Scaffold(
@@ -77,7 +78,7 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             // Actually save the author.
-            _inserting ? _librariesProvider.addLibrary(_library) : _librariesProvider.updateLibrary(_library);
+            _inserting ? _librariesProvider.addLibrary(_library) : _librariesProvider.updateLibrary(widget.library!..copyFrom(_library));
             Navigator.of(context).pop();
           },
           label: Row(

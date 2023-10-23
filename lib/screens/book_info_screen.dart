@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shelfless/dialogs/delete_dialog.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:shelfless/dialogs/delete_dialog.dart';
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/genre.dart';
@@ -13,30 +14,27 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/author_preview_widget.dart';
 import 'package:shelfless/widgets/genre_preview_widget.dart';
 
-class BookInfoScreen extends StatefulWidget {
+class BookInfoScreen extends StatelessWidget {
   static const String routeName = "/book-info";
 
-  const BookInfoScreen({Key? key}) : super(key: key);
+  final Book book;
 
-  @override
-  State<BookInfoScreen> createState() => _BookInfoScreenState();
-}
+  const BookInfoScreen({
+    Key? key,
+    required this.book,
+  }) : super(key: key);
 
-class _BookInfoScreenState extends State<BookInfoScreen> {
   @override
   Widget build(BuildContext context) {
     // Fetch providers.
     final BooksProvider booksProvider = Provider.of(context, listen: true);
     final LibrariesProvider librariesProvider = Provider.of(context, listen: true);
 
-    // Fetch book.
-    Book book = ModalRoute.of(context)!.settings.arguments as Book;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
           strings.bookInfo,
-          style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
         actions: [
@@ -94,7 +92,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Title.
-              _buildTextInfo(strings.bookInfoTitle, book.title),
+              _buildTextInfo(context, strings.bookInfoTitle, book.title),
 
               // Library.
               if (librariesProvider.currentLibrary == null)
@@ -128,7 +126,7 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               ),
 
               // Publish date.
-              _buildTextInfo(strings.bookInfoPublishDate, book.publishDate.toString()),
+              _buildTextInfo(context, strings.bookInfoPublishDate, book.publishDate.toString()),
 
               // Genres.
               Text(strings.bookInfoGenres),
@@ -145,10 +143,10 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               ),
 
               // Publisher.
-              if (book.publisher != null) _buildTextInfo(strings.bookInfoPublisher, book.publisher!.toString()),
+              if (book.publisher != null) _buildTextInfo(context, strings.bookInfoPublisher, book.publisher!.toString()),
 
               // Location.
-              if (book.location != null) _buildTextInfo(strings.bookInfoLocation, book.location!.toString()),
+              if (book.location != null) _buildTextInfo(context, strings.bookInfoLocation, book.location!.toString()),
             ],
           ),
         ),
@@ -156,14 +154,14 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
     );
   }
 
-  Widget _buildTextInfo(String title, String content) {
+  Widget _buildTextInfo(BuildContext context, String title, String content) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title),
         Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Text(content, style: Theme.of(context).textTheme.headline6),
+          child: Text(content, style: Theme.of(context).textTheme.titleLarge),
         ),
         const SizedBox(
           height: 24.0,

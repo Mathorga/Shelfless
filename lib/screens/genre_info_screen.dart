@@ -8,36 +8,37 @@ import 'package:shelfless/providers/genres_provider.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 
-class GenreInfoScreen extends StatefulWidget {
+class GenreInfoScreen extends StatelessWidget {
   static const String routeName = "/genre-info";
 
-  const GenreInfoScreen({Key? key}) : super(key: key);
+  final Genre genre;
 
-  @override
-  State<GenreInfoScreen> createState() => _GenreInfoScreenState();
-}
+  const GenreInfoScreen({
+    Key? key,
+    required this.genre,
+  }) : super(key: key);
 
-class _GenreInfoScreenState extends State<GenreInfoScreen> {
   @override
   Widget build(BuildContext context) {
     // Fetch provider.
     final GenresProvider genresProvider = Provider.of(context, listen: true);
 
-    // Fetch book.
-    Genre genre = ModalRoute.of(context)!.settings.arguments as Genre;
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
           strings.genreInfo,
-          style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
               // Navigate to edit_book_screen.
-              Navigator.of(context).pushNamed(EditGenreScreen.routeName, arguments: genre);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => EditGenreScreen(genre: genre),
+                ),
+              );
             },
             icon: const Icon(Icons.edit_rounded),
           ),

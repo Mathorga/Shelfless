@@ -138,6 +138,22 @@ class Library extends HiveObject {
     }
   }
 
+  /// Creates and returns a copy of [this].
+  Library copy() {
+    final Box<Book> _books = Hive.box<Book>("books");
+
+    return Library(
+      name: name,
+      books: HiveList(_books)..addAll(books),
+    );
+  }
+
+  /// Copies all attributes from [other].
+  void copyFrom(Library other) {
+    name = other.name;
+    books = other.books;
+  }
+
   List<Map<String, String>> get bookMaps {
     return books.map((Book book) => book.toMap()).toList();
   }

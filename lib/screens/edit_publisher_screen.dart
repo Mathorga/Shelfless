@@ -12,19 +12,35 @@ import 'package:shelfless/widgets/unfocus_widget.dart';
 class EditPublisherScreen extends StatefulWidget {
   static const String routeName = "/edit-publisher";
 
-  const EditPublisherScreen({Key? key}) : super(key: key);
+  final Publisher? publisher;
+
+  const EditPublisherScreen({
+    Key? key,
+    required this.publisher,
+  }) : super(key: key);
 
   @override
   _EditPublisherScreenState createState() => _EditPublisherScreenState();
 }
 
 class _EditPublisherScreenState extends State<EditPublisherScreen> {
-  Publisher _publisher = Publisher(
-    name: "",
-  );
+  late Publisher _publisher;
 
   // Insert flag: tells whether the widget is used for adding or editing a publisher.
   bool _inserting = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _inserting = widget.publisher == null;
+
+    _publisher = widget.publisher != null
+        ? widget.publisher!.copy()
+        : Publisher(
+            name: "",
+          );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +82,7 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             // Actually save the author.
-            _inserting ? publishersProvider.addPublisher(_publisher) : publishersProvider.updatePublisher(_publisher);
+            _inserting ? publishersProvider.addPublisher(_publisher) : publishersProvider.updatePublisher(widget.publisher!..copyFrom(_publisher));
             Navigator.of(context).pop();
           },
           label: Row(

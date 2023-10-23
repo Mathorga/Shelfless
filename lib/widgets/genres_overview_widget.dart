@@ -72,7 +72,11 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
                             child: IconButton(
                               onPressed: () {
                                 // Go to genre info.
-                                Navigator.of(context).pushNamed(GenreInfoScreen.routeName, arguments: _genres[index]);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) => GenreInfoScreen(genre: _genres[index]),
+                                  ),
+                                );
                               },
                               icon: const Icon(Icons.settings_rounded),
                             ),
@@ -86,7 +90,9 @@ class _GenresOverviewWidgetState extends State<GenresOverviewWidget> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             // Create new genre.
-            Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (BuildContext context) => const EditGenreScreen()),
+            );
           },
           child: const Icon(Icons.add_rounded),
         ));
