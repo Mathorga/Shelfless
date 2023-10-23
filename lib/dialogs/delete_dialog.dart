@@ -40,6 +40,5 @@ class DeleteDialog extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 }

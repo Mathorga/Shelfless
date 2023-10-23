@@ -1,4 +1,3 @@
-import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hive/hive.dart';
@@ -7,20 +6,14 @@ import 'package:provider/provider.dart';
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/genre.dart';
 import 'package:shelfless/models/publisher.dart';
-import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/authors_provider.dart';
 import 'package:shelfless/providers/books_provider.dart';
 import 'package:shelfless/providers/genres_provider.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/publishers_provider.dart';
-import 'package:shelfless/providers/store_locations_provider.dart';
 import 'package:shelfless/screens/books_screen.dart';
-import 'package:shelfless/screens/edit_author_screen.dart';
-import 'package:shelfless/screens/edit_genre_screen.dart';
-import 'package:shelfless/screens/edit_location_screen.dart';
 import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/themes/themes.dart';
-import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/author_preview_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';

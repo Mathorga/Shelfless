@@ -7,7 +7,6 @@ import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/publishers_provider.dart';
 import 'package:shelfless/screens/books_screen.dart';
-import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/screens/publisher_info_screen.dart';
 import 'package:shelfless/utils/constants.dart';
