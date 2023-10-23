@@ -45,6 +45,35 @@ class Book extends HiveObject {
     this.edition = 1,
   });
 
+  /// Creates and returns a copy of [this].
+  Book copy() {
+    final Box<Author> _authors = Hive.box<Author>("authors");
+    final Box<Genre> _genres = Hive.box<Genre>("genres");
+
+    return Book(
+      title: title,
+      authors: HiveList(_authors)..addAll(authors),
+      publishDate: publishDate,
+      genres: HiveList(_genres)..addAll(genres),
+      publisher: publisher,
+      location: location,
+      borrowed: borrowed,
+      edition: edition,
+    );
+  }
+
+  /// Copies all attributes from [other].
+  void copyFrom(Book other) {
+    title = other.title;
+    authors = other.authors;
+    publishDate = other.publishDate;
+    genres = other.genres;
+    publisher = other.publisher;
+    location = other.location;
+    borrowed = other.borrowed;
+    edition = other.edition;
+  }
+
   Map<String, String> toMap() {
     return {
       "title": title,

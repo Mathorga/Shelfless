@@ -34,8 +34,11 @@ import 'package:shelfless/widgets/unfocus_widget.dart';
 class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
 
+  final Book? book;
+
   const EditBookScreen({
     Key? key,
+    this.book,
   }) : super(key: key);
 
   @override
@@ -55,11 +58,15 @@ class _EditBookScreenState extends State<EditBookScreen> {
   void initState() {
     super.initState();
 
-    _book = Book(
-      authors: HiveList(_authors),
-      genres: HiveList(_genres),
-      publishDate: DateTime.now().year,
-    );
+    _inserting = widget.book == null;
+
+    _book = widget.book != null
+        ? widget.book!.copy()
+        : Book(
+            authors: HiveList(_authors),
+            genres: HiveList(_genres),
+            publishDate: DateTime.now().year,
+          );
   }
 
   @override
@@ -68,15 +75,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     final BooksProvider _booksProvider = Provider.of(context, listen: false);
     final LibrariesProvider _librariesProvider = Provider.of(context, listen: false);
 
-    // Fetch passed arguments.
-    Book? receivedBook = ModalRoute.of(context)!.settings.arguments as Book?;
-    _inserting = receivedBook == null;
-
     const double dialogWidth = 300.0;
-
-    if (!_inserting) {
-      _book = receivedBook!;
-    }
 
     final int currentYear = DateTime.now().year;
 
@@ -243,26 +242,54 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             content: Consumer<GenresProvider>(
                               builder: (BuildContext context, GenresProvider provider, Widget? child) => SearchListWidget<Genre>(
                                 children: provider.genres,
+                                multiple: true,
                                 filter: (Genre genre, String? filter) => filter != null ? genre.toString().toLowerCase().contains(filter) : true,
-                                builder: (Genre genre) => GestureDetector(
-                                  onTap: () {
-                                    // Only add the author if not already there.
+                                builder: (Genre genre) => GenrePreviewWidget(genre: genre),
+                                onElementsSelected: (Set<Genre> selectedGenres) {
+                                  // Prefetch handlers.
+                                  final NavigatorState navigator = Navigator.of(context);
+
+                                  bool duplicates = false;
+                                  for (Genre genre in selectedGenres) {
                                     if (!_book.genres.contains(genre)) {
-                                      setState(() {
-                                        _book.genres.add(genre);
-                                      });
+                                      _book.genres.add(genre);
                                     } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(strings.authorAlreadyAdded),
-                                          duration: const Duration(seconds: 2),
-                                        ),
-                                      );
+                                      duplicates = true;
                                     }
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: GenrePreviewWidget(genre: genre),
-                                ),
+                                  }
+
+                                  if (duplicates) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(strings.authorAlreadyAdded),
+                                        duration: const Duration(milliseconds: 1000),
+                                      ),
+                                    );
+                                  }
+
+                                  setState(() {});
+
+                                  navigator.pop();
+                                },
+                                // builder: (Genre genre) => GestureDetector(
+                                //   onTap: () {
+                                //     // Only add the author if not already there.
+                                //     if (!_book.genres.contains(genre)) {
+                                //       setState(() {
+                                //         _book.genres.add(genre);
+                                //       });
+                                //     } else {
+                                //       ScaffoldMessenger.of(context).showSnackBar(
+                                //         SnackBar(
+                                //           content: Text(strings.authorAlreadyAdded),
+                                //           duration: const Duration(seconds: 2),
+                                //         ),
+                                //       );
+                                //     }
+                                //     Navigator.of(context).pop();
+                                //   },
+                                //   child: GenrePreviewWidget(genre: genre),
+                                // ),
                               ),
                             ),
                           ),
@@ -406,7 +433,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 _booksProvider.addBook(_book);
                 _librariesProvider.addBookToCurrentLibrary(_book);
               } else {
-                _booksProvider.updateBook(_book);
+                _booksProvider.updateBook(widget.book!..copyFrom(_book));
               }
 
               Navigator.of(context).pop();

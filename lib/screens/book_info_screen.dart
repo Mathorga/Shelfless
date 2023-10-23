@@ -59,7 +59,9 @@ class _BookInfoScreenState extends State<BookInfoScreen> {
               switch (value) {
                 case 0:
                   // Navigate to edit_book_screen.
-                  Navigator.of(context).pushNamed(EditBookScreen.routeName, arguments: book);
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => EditBookScreen(book: book),
+                  ));
                   break;
                 case 2:
                   // Show dialog asking the user to confirm their choice.
