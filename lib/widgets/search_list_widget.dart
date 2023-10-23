@@ -90,17 +90,22 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
           ),
         ),
         if (widget.multiple)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          Column(
             children: [
-              ElevatedButton(
-                onPressed: () => widget.onCancel,
-                child: Text(strings.no),
-              ),
               Themes.spacer,
-              ElevatedButton(
-                onPressed: () => widget.onElementsSelected?.call(_selection),
-                child: Text(strings.yes),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => widget.onCancel,
+                    child: Text(strings.no),
+                  ),
+                  Themes.spacer,
+                  ElevatedButton(
+                    onPressed: () => widget.onElementsSelected?.call(_selection),
+                    child: Text(strings.yes),
+                  ),
+                ],
               ),
             ],
           ),

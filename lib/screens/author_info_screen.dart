@@ -29,16 +29,19 @@ class _AuthorInfoScreenState extends State<AuthorInfoScreen> {
       appBar: AppBar(
         title: Text(
           strings.authorInfo,
-          style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
+          style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.white),
         ),
         centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
               // Navigate to edit_book_screen.
-              Navigator.of(context).pushNamed(
-                EditAuthorScreen.routeName,
-                arguments: _author,
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => EditAuthorScreen(
+                    author: _author,
+                  ),
+                ),
               );
             },
             icon: const Icon(Icons.edit_rounded),

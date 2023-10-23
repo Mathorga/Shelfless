@@ -38,6 +38,22 @@ class Author extends HiveObject {
     }
   }
 
+  /// Creates and returns a copy of [this].
+  Author copy() {
+    return Author(
+      firstName: firstName,
+      lastName: lastName,
+      nationality: nationality,
+    );
+  }
+
+  /// Copies all attributes from [other].
+  void copyFrom(Author other) {
+    firstName = other.firstName;
+    lastName = other.lastName;
+    nationality = other.nationality;
+  }
+
   @override
   String toString() {
     return "$firstName $lastName";

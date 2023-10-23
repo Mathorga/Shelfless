@@ -122,7 +122,11 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                 Text(strings.bookInfoAuthors),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) => const EditAuthorScreen(),
+                                      ),
+                                    );
                                   },
                                   child: Text(strings.add),
                                 ),
@@ -271,25 +275,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                                   navigator.pop();
                                 },
-                                // builder: (Genre genre) => GestureDetector(
-                                //   onTap: () {
-                                //     // Only add the author if not already there.
-                                //     if (!_book.genres.contains(genre)) {
-                                //       setState(() {
-                                //         _book.genres.add(genre);
-                                //       });
-                                //     } else {
-                                //       ScaffoldMessenger.of(context).showSnackBar(
-                                //         SnackBar(
-                                //           content: Text(strings.authorAlreadyAdded),
-                                //           duration: const Duration(seconds: 2),
-                                //         ),
-                                //       );
-                                //     }
-                                //     Navigator.of(context).pop();
-                                //   },
-                                //   child: GenrePreviewWidget(genre: genre),
-                                // ),
                               ),
                             ),
                           ),

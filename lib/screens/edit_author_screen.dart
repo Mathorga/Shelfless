@@ -12,33 +12,41 @@ import 'package:shelfless/widgets/unfocus_widget.dart';
 class EditAuthorScreen extends StatefulWidget {
   static const String routeName = "/edit-author";
 
-  const EditAuthorScreen({Key? key}) : super(key: key);
+  final Author? author;
+
+  const EditAuthorScreen({
+    Key? key,
+    this.author,
+  }) : super(key: key);
 
   @override
   _EditAuthorScreenState createState() => _EditAuthorScreenState();
 }
 
 class _EditAuthorScreenState extends State<EditAuthorScreen> {
-  Author _author = Author(
-    firstName: "",
-    lastName: "",
-  );
+  late Author _author;
 
   // Insert flag: tells whether the widget is used for adding or editing an author.
   bool _inserting = true;
 
   @override
+  void initState() {
+    super.initState();
+
+    _inserting = widget.author == null;
+
+    _author = widget.author != null
+        ? widget.author!.copy()
+        : Author(
+    firstName: "",
+    lastName: "",
+  );
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Fetch provider to save changes.
     final AuthorsProvider authorsProvider = Provider.of(context, listen: false);
-
-    // Fetch passed arguments.
-    Author? receivedAuthor = ModalRoute.of(context)!.settings.arguments as Author?;
-    _inserting = receivedAuthor == null;
-
-    if (!_inserting) {
-      _author = receivedAuthor!;
-    }
 
     return UnfocusWidget(
       child: Scaffold(
@@ -81,7 +89,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
             // Actually save the author.
-            _inserting ? authorsProvider.addAuthor(_author) : authorsProvider.updateAuthor(_author);
+            _inserting ? authorsProvider.addAuthor(_author) : authorsProvider.updateAuthor(widget.author!..copyFrom(_author));
             Navigator.of(context).pop();
           },
           label: Row(

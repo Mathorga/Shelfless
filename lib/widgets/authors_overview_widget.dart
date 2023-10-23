@@ -84,7 +84,11 @@ class AuthorsOverviewWidget extends StatelessWidget {
               ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).pushNamed(EditAuthorScreen.routeName);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) => const EditAuthorScreen(),
+              ),
+            );
           },
           child: const Icon(Icons.add_rounded),
         ));

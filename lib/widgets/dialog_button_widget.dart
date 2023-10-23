@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/themes/themes.dart';
@@ -17,6 +19,8 @@ class DialogButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+
     return ElevatedButton(
       child: label,
       onPressed: () {
@@ -24,9 +28,12 @@ class DialogButtonWidget extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              insetPadding: const EdgeInsets.all(Themes.spacing),
+              // insetPadding: const EdgeInsets.all(Themes.spacing),
               title: title,
-              content: content,
+              content: SizedBox(
+                width: min(mediaQuery.size.width, Themes.maxContentWidth),
+                child: content,
+              ),
             );
           },
         );

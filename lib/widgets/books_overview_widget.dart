@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/providers/books_provider.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
-import 'package:shelfless/screens/book_info_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
 
@@ -46,7 +45,9 @@ class BooksOverviewWidget extends StatelessWidget {
                   _books.length,
                   (int index) => BookPreviewWidget(
                     book: _books[index],
-                    onTap: () => Navigator.of(context).pushNamed(BookInfoScreen.routeName, arguments: _books[index]),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => EditBookScreen(book: _books[index]),
+                    )),
                   ),
                 )
               ],
@@ -54,7 +55,9 @@ class BooksOverviewWidget extends StatelessWidget {
       floatingActionButton: _librariesProvider.currentLibrary != null
           ? FloatingActionButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(EditBookScreen.routeName);
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const EditBookScreen(),
+                ));
               },
               child: const Icon(Icons.add_rounded),
             )
