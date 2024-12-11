@@ -69,7 +69,7 @@ class GenreInfoScreen extends StatelessWidget {
               Text(strings.genreInfoName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(genre.name, style: Theme.of(context).textTheme.headline6),
+                child: Text(genre.name, style: Theme.of(context).textTheme.displaySmall),
               ),
               const SizedBox(
                 height: 24.0,

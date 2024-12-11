@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:easy_search_bar/easy_search_bar.dart';
+// import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shelfless/models/library.dart';
 
@@ -48,107 +48,108 @@ class _LibraryScreenState extends State<LibraryScreen> {
     ];
 
     return Scaffold(
-      appBar: EasySearchBar(
-        title: Text(librariesProvider.currentLibrary != null ? librariesProvider.currentLibrary!.name : "All"),
-        searchBackIconTheme: const IconThemeData(color: Colors.white),
-        searchCursorColor: Colors.white,
-        onSearch: (String value) {
-          setState(() {
-            _searchValue = value;
-          });
-        },
-        actions: [
-          // Only display the export button if actually displaying a single library.
-          if (librariesProvider.currentLibrary != null)
-            PopupMenuButton(
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem(
-                  value: 0,
-                  child: Text(strings.filterLibrary),
-                ),
-                PopupMenuItem(
-                  value: 1,
-                  child: Text(strings.shareLibrary),
-                ),
-                PopupMenuItem(
-                  value: 2,
-                  child: Text(strings.exportLibrary),
-                ),
-                PopupMenuItem(
-                  value: 3,
-                  child: Text(strings.updateLibrary),
-                ),
-              ],
-              onSelected: (int value) async {
-                switch (value) {
-                  case 0:
-                    Navigator.of(context).pushNamed(BooksFilterScreen.routeName);
-                    break;
-                  case 1:
-                    // Share to external app.
+      // appBar: EasySearchBar(
+      //   title: Text(librariesProvider.currentLibrary != null ? librariesProvider.currentLibrary!.name : "All"),
+      //   searchBackIconTheme: const IconThemeData(color: Colors.white),
+      //   searchCursorColor: Colors.white,
+      //   onSearch: (String value) {
+      //     setState(() {
+      //       _searchValue = value;
+      //     });
+      //   },
+      //   actions: [
+      //     // Only display the export button if actually displaying a single library.
+      //     if (librariesProvider.currentLibrary != null)
+      //       PopupMenuButton(
+      //         itemBuilder: (BuildContext context) => [
+      //           PopupMenuItem(
+      //             value: 0,
+      //             child: Text(strings.filterLibrary),
+      //           ),
+      //           PopupMenuItem(
+      //             value: 1,
+      //             child: Text(strings.shareLibrary),
+      //           ),
+      //           PopupMenuItem(
+      //             value: 2,
+      //             child: Text(strings.exportLibrary),
+      //           ),
+      //           PopupMenuItem(
+      //             value: 3,
+      //             child: Text(strings.updateLibrary),
+      //           ),
+      //         ],
+      //         onSelected: (int value) async {
+      //           switch (value) {
+      //             case 0:
+      //               Navigator.of(context).pushNamed(BooksFilterScreen.routeName);
+      //               break;
+      //             case 1:
+      //               // Share to external app.
 
-                    // Save the library file locally.
-                    Directory tmpDir = await getTemporaryDirectory();
-                    String libraryFilePath = "${tmpDir.path}/${librariesProvider.currentLibrary!.name}.csv";
-                    librariesProvider.currentLibrary!.writeToFile(libraryFilePath);
+      //               // Save the library file locally.
+      //               Directory tmpDir = await getTemporaryDirectory();
+      //               String libraryFilePath = "${tmpDir.path}/${librariesProvider.currentLibrary!.name}.csv";
+      //               librariesProvider.currentLibrary!.writeToFile(libraryFilePath);
+      //               XFile libraryFile = XFile(libraryFilePath);
 
-                    // Share the file that was just saved.
-                    Share.shareFiles([libraryFilePath]);
-                    break;
-                  case 2:
-                    // Export the current library to a file.
+      //               // Share the file that was just saved.
+      //               Share.shareXFiles([libraryFile]);
+      //               break;
+      //             case 2:
+      //               // Export the current library to a file.
 
-                    // Ask for permission to read and write to external storage.
-                    if (!await Permission.storage.request().isGranted) {
-                      // Either the permission was already denied before or the user just denied it.
-                      return;
-                    }
+      //               // Ask for permission to read and write to external storage.
+      //               if (!await Permission.storage.request().isGranted) {
+      //                 // Either the permission was already denied before or the user just denied it.
+      //                 return;
+      //               }
 
-                    // Ask for permission to access all user accessible directories.
-                    if (!await Permission.manageExternalStorage.request().isGranted) {
-                      // Either the permission was already denied before or the user just denied it.
-                      return;
-                    }
+      //               // Ask for permission to access all user accessible directories.
+      //               if (!await Permission.manageExternalStorage.request().isGranted) {
+      //                 // Either the permission was already denied before or the user just denied it.
+      //                 return;
+      //               }
 
-                    // Let the user pick the destination directory.
-                    String? path = await FilePicker.platform.getDirectoryPath();
+      //               // Let the user pick the destination directory.
+      //               String? path = await FilePicker.platform.getDirectoryPath();
 
-                    if (path == null) {
-                      // User canceled the picker or the path is not resolved.
-                      return;
-                    }
+      //               if (path == null) {
+      //                 // User canceled the picker or the path is not resolved.
+      //                 return;
+      //               }
 
-                    // Write the library to file.
-                    librariesProvider.currentLibrary!.writeToFile("$path/${librariesProvider.currentLibrary!.name}.csv");
-                    break;
-                  case 3:
-                    // Merge the current library with a new one from file.
+      //               // Write the library to file.
+      //               librariesProvider.currentLibrary!.writeToFile("$path/${librariesProvider.currentLibrary!.name}.csv");
+      //               break;
+      //             case 3:
+      //               // Merge the current library with a new one from file.
 
-                    // Pick a library file.
-                    FilePickerResult? result = await FilePicker.platform.pickFiles();
+      //               // Pick a library file.
+      //               FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-                    if (result != null) {
-                      // Retrieve the file name.
-                      String fileName = result.files.single.name.split(".").first;
+      //               if (result != null) {
+      //                 // Retrieve the file name.
+      //                 String fileName = result.files.single.name.split(".").first;
 
-                      // Read the file.
-                      File file = File(result.files.single.path!);
-                      String fileContent = await file.readAsString();
+      //                 // Read the file.
+      //                 File file = File(result.files.single.path!);
+      //                 String fileContent = await file.readAsString();
 
-                      // Create and add the library to DB.
-                      librariesProvider.currentLibrary!.merge(Library.fromSerializableString(
-                        name: fileName,
-                        csvString: fileContent,
-                      ));
-                    }
-                    break;
-                  default:
-                    break;
-                }
-              },
-            ),
-        ],
-      ),
+      //                 // Create and add the library to DB.
+      //                 librariesProvider.currentLibrary!.merge(Library.fromSerializableString(
+      //                   name: fileName,
+      //                   csvString: fileContent,
+      //                 ));
+      //               }
+      //               break;
+      //             default:
+      //               break;
+      //           }
+      //         },
+      //       ),
+      //   ],
+      // ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0.0,
         onTap: (int selectedIndex) => setState(() => _currentIndex = selectedIndex),

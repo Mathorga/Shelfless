@@ -70,7 +70,7 @@ class AuthorInfoScreen extends StatelessWidget {
               Text(strings.firstName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(author.firstName, style: Theme.of(context).textTheme.headline6),
+                child: Text(author.firstName, style: Theme.of(context).textTheme.displaySmall),
               ),
               const SizedBox(
                 height: 24.0,
@@ -80,7 +80,7 @@ class AuthorInfoScreen extends StatelessWidget {
               Text(strings.lastName),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text(author.lastName, style: Theme.of(context).textTheme.headline6),
+                child: Text(author.lastName, style: Theme.of(context).textTheme.displaySmall),
               ),
               const SizedBox(
                 height: 24.0,

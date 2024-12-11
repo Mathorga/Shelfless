@@ -103,7 +103,7 @@ class BookInfoScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child:
-                          Text(librariesProvider.libraries.firstWhere((Library library) => library.books.contains(book)).toString(), style: Theme.of(context).textTheme.headline6),
+                          Text(librariesProvider.libraries.firstWhere((Library library) => library.books.contains(book)).toString(), style: Theme.of(context).textTheme.displaySmall),
                     ),
                     const SizedBox(
                       height: 24.0,
