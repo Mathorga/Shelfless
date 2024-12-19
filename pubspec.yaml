@@ -29,28 +29,36 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   # Data distribution.
   provider: ^6.1.2
+
   # Local DB.
   hive: ^2.2.3
   hive_flutter: 1.1.0
+  sqflite: 2.4.1
+
   # Handles asking for permissions.
   permission_handler: ^11.3.1
+
   # Retrieves path to internal and external location in the device.
   path_provider: ^2.1.5
+
   # Allows for selecting files (and read them).
-  file_picker:
-    git:
-      url: https://github.com/abdelaziz-mahdy/flutter_file_picker
-      ref: fix-flutter-3.27-compile-error
+  file_picker: 8.1.6
+
   # Color picker.
   flutter_colorpicker: ^1.1.0
+
   # Search bar.
   material_floating_search_bar_2: ^0.5.0
+
   # Multiple choice FAB.
   flutter_speed_dial: ^7.0.0
+
   # Allows for file sharing to other apps.
   share_plus: ^10.1.2
+
   # Publish date picker.
   numberpicker: 2.1.2
 
