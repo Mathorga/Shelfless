@@ -66,7 +66,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                 physics: const BouncingScrollPhysics(),
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 child: Padding(
-                  padding: const EdgeInsets.all(Themes.spacing),
+                  padding: const EdgeInsets.all(Themes.spacingMedium),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -74,7 +74,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                       Text(strings.bookInfoAuthors),
                       if (_selectedAuthors.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.all(Themes.spacing),
+                          padding: const EdgeInsets.all(Themes.spacingMedium),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: _selectedAuthors.map((Author author) => _buildAuthorPreview(author)).toList(),
@@ -121,7 +121,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                       Text(strings.bookInfoGenres),
                       if (_selectedGenres.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.all(Themes.spacing),
+                          padding: const EdgeInsets.all(Themes.spacingMedium),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: _selectedGenres.map((Genre genre) => _buildGenrePreview(genre)).toList(),
@@ -243,7 +243,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                 Expanded(
                   flex: 1,
                   child: Padding(
-                    padding: const EdgeInsets.all(Themes.spacing),
+                    padding: const EdgeInsets.all(Themes.spacingMedium),
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -255,7 +255,7 @@ class _BooksFilterScreenState extends State<BooksFilterScreen> {
                 Expanded(
                   flex: 1,
                   child: Padding(
-                    padding: const EdgeInsets.all(Themes.spacing),
+                    padding: const EdgeInsets.all(Themes.spacingMedium),
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(

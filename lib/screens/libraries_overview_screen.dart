@@ -51,7 +51,17 @@ class LibrariesOverviewScreen extends StatelessWidget {
                     // Navigate to library screen.
                     onTap: () {
                       librariesProvider.setCurrenLibraryIndex(index < libraries.length ? index : null);
-                      Navigator.of(context).pushNamed(LibraryScreen.routeName, arguments: index);
+                      Library? library = librariesProvider.currentLibrary;
+
+                      if (library == null) return;
+
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => LibraryScreen(
+                            library: library,
+                          ),
+                        ),
+                      );
                     },
                     child: index < libraries.length
                         ? Stack(

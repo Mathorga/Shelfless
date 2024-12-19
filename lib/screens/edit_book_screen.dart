@@ -88,7 +88,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
           physics: const BouncingScrollPhysics(),
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Padding(
-            padding: const EdgeInsets.all(Themes.spacing),
+            padding: const EdgeInsets.all(Themes.spacingMedium),
             child: SizedBox(
               width: double.infinity,
               child: Column(
@@ -213,7 +213,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           width: double.infinity,
                           child: Card(
                             child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacing),
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
                               child: Center(child: Text((_book.publishDate).toString())),
                             ),
                           ),

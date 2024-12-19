@@ -84,7 +84,7 @@ class Shelfish extends StatelessWidget {
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(Themes.radius),
+                borderRadius: BorderRadius.circular(Themes.radiusMedium),
               ),
             ),
           ),
@@ -93,12 +93,12 @@ class Shelfish extends StatelessWidget {
               borderSide: const BorderSide(
                 width: 2.0,
               ),
-              borderRadius: BorderRadius.circular(Themes.radius),
+              borderRadius: BorderRadius.circular(Themes.radiusMedium),
             ),
           ),
           dialogTheme: DialogTheme(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(Themes.radius),
+              borderRadius: BorderRadius.circular(Themes.radiusMedium),
             ),
             backgroundColor: ShelflessColors.lightBackground,
           ),
@@ -106,7 +106,6 @@ class Shelfish extends StatelessWidget {
         home: const LibrariesOverviewScreen(),
         routes: {
           LibrariesOverviewScreen.routeName: (BuildContext context) => const LibrariesOverviewScreen(),
-          LibraryScreen.routeName: (BuildContext context) => const LibraryScreen(),
           PublisherInfoScreen.routeName: (BuildContext context) => const PublisherInfoScreen(),
           ImportLibraryScreen.routeName: (BuildContext context) => const ImportLibraryScreen(),
           BooksFilterScreen.routeName: (BuildContext context) => const BooksFilterScreen(),

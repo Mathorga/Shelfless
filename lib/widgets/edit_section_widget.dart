@@ -22,7 +22,7 @@ class EditSectionWidget extends StatelessWidget {
       child: Card(
         color: ShelflessColors.lightBackground,
         child: Padding(
-          padding: const EdgeInsets.all(Themes.spacing),
+          padding: const EdgeInsets.all(Themes.spacingMedium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: children,

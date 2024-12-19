@@ -12,18 +12,23 @@ import 'package:shelfless/models/library.dart';
 
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/screens/books_filter_screen.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_overview_widget.dart';
 import 'package:shelfless/widgets/genres_overview_widget.dart';
 import 'package:shelfless/widgets/books_overview_widget.dart';
 import 'package:shelfless/widgets/locations_overview_widget.dart';
 import 'package:shelfless/widgets/publishers_overview_widget.dart';
+import 'package:shelfless/widgets/separator_widget.dart';
 
 class LibraryScreen extends StatefulWidget {
   static const String routeName = "/library";
+  final Library library;
 
   const LibraryScreen({
     Key? key,
+    required this.library,
   }) : super(key: key);
 
   @override
@@ -37,6 +42,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
     LibrariesProvider librariesProvider = Provider.of(context, listen: true);
+    final EdgeInsets screenPadding = MediaQuery.paddingOf(context);
+    final ThemeData theme = Theme.of(context);
 
     // Define all pages.
     List<Widget> _pages = [
@@ -48,117 +55,28 @@ class _LibraryScreenState extends State<LibraryScreen> {
     ];
 
     return Scaffold(
-      // appBar: EasySearchBar(
-      //   title: Text(librariesProvider.currentLibrary != null ? librariesProvider.currentLibrary!.name : "All"),
-      //   searchBackIconTheme: const IconThemeData(color: Colors.white),
-      //   searchCursorColor: Colors.white,
-      //   onSearch: (String value) {
-      //     setState(() {
-      //       _searchValue = value;
-      //     });
-      //   },
-      //   actions: [
-      //     // Only display the export button if actually displaying a single library.
-      //     if (librariesProvider.currentLibrary != null)
-      //       PopupMenuButton(
-      //         itemBuilder: (BuildContext context) => [
-      //           PopupMenuItem(
-      //             value: 0,
-      //             child: Text(strings.filterLibrary),
-      //           ),
-      //           PopupMenuItem(
-      //             value: 1,
-      //             child: Text(strings.shareLibrary),
-      //           ),
-      //           PopupMenuItem(
-      //             value: 2,
-      //             child: Text(strings.exportLibrary),
-      //           ),
-      //           PopupMenuItem(
-      //             value: 3,
-      //             child: Text(strings.updateLibrary),
-      //           ),
-      //         ],
-      //         onSelected: (int value) async {
-      //           switch (value) {
-      //             case 0:
-      //               Navigator.of(context).pushNamed(BooksFilterScreen.routeName);
-      //               break;
-      //             case 1:
-      //               // Share to external app.
-
-      //               // Save the library file locally.
-      //               Directory tmpDir = await getTemporaryDirectory();
-      //               String libraryFilePath = "${tmpDir.path}/${librariesProvider.currentLibrary!.name}.csv";
-      //               librariesProvider.currentLibrary!.writeToFile(libraryFilePath);
-      //               XFile libraryFile = XFile(libraryFilePath);
-
-      //               // Share the file that was just saved.
-      //               Share.shareXFiles([libraryFile]);
-      //               break;
-      //             case 2:
-      //               // Export the current library to a file.
-
-      //               // Ask for permission to read and write to external storage.
-      //               if (!await Permission.storage.request().isGranted) {
-      //                 // Either the permission was already denied before or the user just denied it.
-      //                 return;
-      //               }
-
-      //               // Ask for permission to access all user accessible directories.
-      //               if (!await Permission.manageExternalStorage.request().isGranted) {
-      //                 // Either the permission was already denied before or the user just denied it.
-      //                 return;
-      //               }
-
-      //               // Let the user pick the destination directory.
-      //               String? path = await FilePicker.platform.getDirectoryPath();
-
-      //               if (path == null) {
-      //                 // User canceled the picker or the path is not resolved.
-      //                 return;
-      //               }
-
-      //               // Write the library to file.
-      //               librariesProvider.currentLibrary!.writeToFile("$path/${librariesProvider.currentLibrary!.name}.csv");
-      //               break;
-      //             case 3:
-      //               // Merge the current library with a new one from file.
-
-      //               // Pick a library file.
-      //               FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-      //               if (result != null) {
-      //                 // Retrieve the file name.
-      //                 String fileName = result.files.single.name.split(".").first;
-
-      //                 // Read the file.
-      //                 File file = File(result.files.single.path!);
-      //                 String fileContent = await file.readAsString();
-
-      //                 // Create and add the library to DB.
-      //                 librariesProvider.currentLibrary!.merge(Library.fromSerializableString(
-      //                   name: fileName,
-      //                   csvString: fileContent,
-      //                 ));
-      //               }
-      //               break;
-      //             default:
-      //               break;
-      //           }
-      //         },
-      //       ),
-      //   ],
-      // ),
+      appBar: AppBar(
+        title: Text(
+          widget.library.name,
+          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.help_outline_rounded),
+            onPressed: () {},
+          )
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0.0,
         onTap: (int selectedIndex) => setState(() => _currentIndex = selectedIndex),
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,
-        unselectedItemColor: Theme.of(context).colorScheme.onBackground,
+        unselectedItemColor: theme.colorScheme.onBackground,
         selectedIconTheme: IconTheme.of(context).copyWith(
-          color: Theme.of(context).colorScheme.primary,
+          color: theme.colorScheme.primary,
           size: 28.0,
         ),
         unselectedIconTheme: IconTheme.of(context).copyWith(
@@ -188,8 +106,188 @@ class _LibraryScreenState extends State<LibraryScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: _pages[_currentIndex],
+      body: Padding(
+        padding: const EdgeInsets.all(Themes.spacingMedium),
+        child: Column(
+          children: [
+            Card(
+              elevation: 0.0,
+              margin: const EdgeInsets.all(0.0),
+              child: Padding(
+                padding: const EdgeInsets.all(Themes.spacingLarge),
+                child: Column(
+                  spacing: Themes.spacingMedium,
+                  children: [
+                    SingleChildScrollView(
+                      physics: Themes.scrollPhysics,
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        spacing: Themes.spacingXLarge,
+                        children: [
+                          Card(
+                            color: ShelflessColors.secondary,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingSmall),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.favorite_rounded,
+                                    size: Themes.iconSizeLarge,
+                                  ),
+                                  Text(
+                                    "Favorites",
+                                    style: theme.textTheme.labelSmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: ShelflessColors.primary,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingSmall),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.star_rounded,
+                                    size: Themes.iconSizeLarge,
+                                  ),
+                                  Text(
+                                    "Highlights",
+                                    style: theme.textTheme.labelSmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: ShelflessColors.secondary,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingSmall),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.favorite_rounded,
+                                    size: Themes.iconSizeLarge,
+                                  ),
+                                  Text(
+                                    "Favorites",
+                                    style: theme.textTheme.labelSmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: ShelflessColors.primary,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingSmall),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.star_rounded,
+                                    size: Themes.iconSizeLarge,
+                                  ),
+                                  Text(
+                                    "Highlights",
+                                    style: theme.textTheme.labelSmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: ShelflessColors.secondary,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingSmall),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.favorite_rounded,
+                                    size: Themes.iconSizeLarge,
+                                  ),
+                                  Text(
+                                    "Favorites",
+                                    style: theme.textTheme.labelSmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Card(
+                            color: ShelflessColors.primary,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingSmall),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.star_rounded,
+                                    size: Themes.iconSizeLarge,
+                                  ),
+                                  Text(
+                                    "Highlights",
+                                    style: theme.textTheme.labelSmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(
+                      color: ShelflessColors.onMainBackgroundInactive,
+                      thickness: 2.0,
+                      height: Themes.spacingSmall,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            spacing: Themes.spacingMedium,
+                            children: [
+                              Row(
+                                spacing: Themes.spacingMedium,
+                                children: [
+                                  Icon(Icons.book_rounded),
+                                  Text("${widget.library.books.length}"),
+                                ],
+                              ),
+                              Row(
+                                spacing: Themes.spacingMedium,
+                                children: [
+                                  Icon(Icons.edit_rounded),
+                                  Text("${widget.library.books.length}"),
+                                ],
+                              ),
+                              Row(
+                                spacing: Themes.spacingMedium,
+                                children: [
+                                  Icon(Icons.color_lens_rounded),
+                                  Text("${widget.library.books.length}"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Icon(Icons.search_rounded),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: _pages[_currentIndex],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

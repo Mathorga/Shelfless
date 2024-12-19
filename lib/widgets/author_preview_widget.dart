@@ -37,7 +37,7 @@ class AuthorPreviewWidget extends StatelessWidget {
         child: Align(
           alignment: Alignment.bottomLeft,
           child: Padding(
-            padding: const EdgeInsets.all(Themes.spacing),
+            padding: const EdgeInsets.all(Themes.spacingMedium),
             child: Text(
               "${author.firstName} ${author.lastName}",
               textAlign: TextAlign.center,
