@@ -111,173 +111,184 @@ class _LibraryScreenState extends State<LibraryScreen> {
         child: Column(
           children: [
             Card(
+              clipBehavior: Clip.antiAlias,
               elevation: 0.0,
               margin: const EdgeInsets.all(0.0),
-              child: Padding(
-                padding: const EdgeInsets.all(Themes.spacingLarge),
-                child: Column(
-                  spacing: Themes.spacingMedium,
-                  children: [
-                    SingleChildScrollView(
-                      physics: Themes.scrollPhysics,
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        spacing: Themes.spacingXLarge,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      ShelflessColors.glyderDark,
+                      ShelflessColors.glyderLight,
+                    ],
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(Themes.spacingLarge),
+                  child: Column(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      SingleChildScrollView(
+                        physics: Themes.scrollPhysics,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          spacing: Themes.spacingXLarge,
+                          children: [
+                            Card(
+                              color: ShelflessColors.secondary,
+                              child: Padding(
+                                padding: const EdgeInsets.all(Themes.spacingSmall),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.favorite_rounded,
+                                      size: Themes.iconSizeLarge,
+                                    ),
+                                    Text(
+                                      "Favorites",
+                                      style: theme.textTheme.labelSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Card(
+                              color: ShelflessColors.primary,
+                              child: Padding(
+                                padding: const EdgeInsets.all(Themes.spacingSmall),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.star_rounded,
+                                      size: Themes.iconSizeLarge,
+                                    ),
+                                    Text(
+                                      "Highlights",
+                                      style: theme.textTheme.labelSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Card(
+                              color: ShelflessColors.secondary,
+                              child: Padding(
+                                padding: const EdgeInsets.all(Themes.spacingSmall),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.favorite_rounded,
+                                      size: Themes.iconSizeLarge,
+                                    ),
+                                    Text(
+                                      "Favorites",
+                                      style: theme.textTheme.labelSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Card(
+                              color: ShelflessColors.primary,
+                              child: Padding(
+                                padding: const EdgeInsets.all(Themes.spacingSmall),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.star_rounded,
+                                      size: Themes.iconSizeLarge,
+                                    ),
+                                    Text(
+                                      "Highlights",
+                                      style: theme.textTheme.labelSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Card(
+                              color: ShelflessColors.secondary,
+                              child: Padding(
+                                padding: const EdgeInsets.all(Themes.spacingSmall),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.favorite_rounded,
+                                      size: Themes.iconSizeLarge,
+                                    ),
+                                    Text(
+                                      "Favorites",
+                                      style: theme.textTheme.labelSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Card(
+                              color: ShelflessColors.primary,
+                              child: Padding(
+                                padding: const EdgeInsets.all(Themes.spacingSmall),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.star_rounded,
+                                      size: Themes.iconSizeLarge,
+                                    ),
+                                    Text(
+                                      "Highlights",
+                                      style: theme.textTheme.labelSmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        color: ShelflessColors.onMainBackgroundInactive,
+                        thickness: 2.0,
+                        height: Themes.spacingSmall,
+                      ),
+                      Row(
                         children: [
-                          Card(
-                            color: ShelflessColors.secondary,
-                            child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingSmall),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.favorite_rounded,
-                                    size: Themes.iconSizeLarge,
-                                  ),
-                                  Text(
-                                    "Favorites",
-                                    style: theme.textTheme.labelSmall,
-                                  ),
-                                ],
-                              ),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              spacing: Themes.spacingMedium,
+                              children: [
+                                Row(
+                                  spacing: Themes.spacingMedium,
+                                  children: [
+                                    Icon(Icons.book_rounded),
+                                    Text("${widget.library.books.length}"),
+                                  ],
+                                ),
+                                Row(
+                                  spacing: Themes.spacingMedium,
+                                  children: [
+                                    Icon(Icons.edit_rounded),
+                                    Text("${widget.library.books.length}"),
+                                  ],
+                                ),
+                                Row(
+                                  spacing: Themes.spacingMedium,
+                                  children: [
+                                    Icon(Icons.color_lens_rounded),
+                                    Text("${widget.library.books.length}"),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          Card(
-                            color: ShelflessColors.primary,
-                            child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingSmall),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.star_rounded,
-                                    size: Themes.iconSizeLarge,
-                                  ),
-                                  Text(
-                                    "Highlights",
-                                    style: theme.textTheme.labelSmall,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Card(
-                            color: ShelflessColors.secondary,
-                            child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingSmall),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.favorite_rounded,
-                                    size: Themes.iconSizeLarge,
-                                  ),
-                                  Text(
-                                    "Favorites",
-                                    style: theme.textTheme.labelSmall,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Card(
-                            color: ShelflessColors.primary,
-                            child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingSmall),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.star_rounded,
-                                    size: Themes.iconSizeLarge,
-                                  ),
-                                  Text(
-                                    "Highlights",
-                                    style: theme.textTheme.labelSmall,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Card(
-                            color: ShelflessColors.secondary,
-                            child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingSmall),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.favorite_rounded,
-                                    size: Themes.iconSizeLarge,
-                                  ),
-                                  Text(
-                                    "Favorites",
-                                    style: theme.textTheme.labelSmall,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Card(
-                            color: ShelflessColors.primary,
-                            child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingSmall),
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.star_rounded,
-                                    size: Themes.iconSizeLarge,
-                                  ),
-                                  Text(
-                                    "Highlights",
-                                    style: theme.textTheme.labelSmall,
-                                  ),
-                                ],
-                              ),
-                            ),
+                          GestureDetector(
+                            onTap: () {},
+                            child: Icon(Icons.search_rounded),
                           ),
                         ],
                       ),
-                    ),
-                    Divider(
-                      color: ShelflessColors.onMainBackgroundInactive,
-                      thickness: 2.0,
-                      height: Themes.spacingSmall,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            spacing: Themes.spacingMedium,
-                            children: [
-                              Row(
-                                spacing: Themes.spacingMedium,
-                                children: [
-                                  Icon(Icons.book_rounded),
-                                  Text("${widget.library.books.length}"),
-                                ],
-                              ),
-                              Row(
-                                spacing: Themes.spacingMedium,
-                                children: [
-                                  Icon(Icons.edit_rounded),
-                                  Text("${widget.library.books.length}"),
-                                ],
-                              ),
-                              Row(
-                                spacing: Themes.spacingMedium,
-                                children: [
-                                  Icon(Icons.color_lens_rounded),
-                                  Text("${widget.library.books.length}"),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: Icon(Icons.search_rounded),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
