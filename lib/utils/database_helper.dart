@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/library.dart';
 
@@ -94,6 +95,9 @@ class DatabaseHelper {
       """
       CREATE TABLE $authorsTable(
         ${authorsTable}_id INTEGER PRIMARY KEY AUTOINCREMENT
+        ${authorsTable}_first_name TEXT NOT NULL
+        ${authorsTable}_last_name TEXT NOT NULL
+        ${authorsTable}_nationality TEXT
       )
       """,
     );
@@ -199,5 +203,15 @@ class DatabaseHelper {
     for (Map<String, dynamic> genreRelMap in book.genresMaps()) {
       await _db.insert(bookGenreRelTable, genreRelMap);
     }
+  }
+
+  Future<Author?> getAuthor(int id) async {
+    final List<Map<String, dynamic>> rawData = await _db.query(
+      authorsTable,
+      where: "${authorsTable}_id = ?",
+      whereArgs: [id],
+    );
+
+    return rawData.isEmpty ? null : Author.fromMap(rawData.first);
   }
 }

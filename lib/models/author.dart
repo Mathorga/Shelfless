@@ -1,3 +1,5 @@
+import 'package:shelfless/utils/database_helper.dart';
+
 class Author {
   int? id;
 
@@ -14,23 +16,19 @@ class Author {
     this.nationality = "",
   });
 
-  Author.fromSerializableString(String source)
-      : firstName = "",
-        lastName = "",
-        nationality = "" {
-    final List<String> parts = source.split("/");
+  Author.fromMap(Map<String, dynamic> map)
+      : id = map["${DatabaseHelper.authorsTable}_id"],
+        firstName = map["${DatabaseHelper.authorsTable}_first_name"],
+        lastName = map["${DatabaseHelper.authorsTable}_last_name"],
+        nationality = map["${DatabaseHelper.authorsTable}_nationality"];
 
-    if (parts.isNotEmpty) {
-      firstName = parts[0].replaceAll("_", " ");
-    }
-
-    if (parts.length > 1) {
-      lastName = parts[1].replaceAll("_", " ");
-    }
-
-    if (parts.length > 2) {
-      nationality = parts[2].replaceAll("_", " ");
-    }
+  Map<String, dynamic> toMap() {
+    return {
+      "${DatabaseHelper.authorsTable}_id": id,
+      "${DatabaseHelper.authorsTable}_first_name": firstName,
+      "${DatabaseHelper.authorsTable}_last_name": lastName,
+      "${DatabaseHelper.authorsTable}_nationality": nationality,
+    };
   }
 
   /// Creates and returns a copy of [this].
@@ -60,8 +58,4 @@ class Author {
 
   @override
   int get hashCode => firstName.hashCode + lastName.hashCode + nationality.hashCode;
-
-  String toSerializableString() {
-    return "${firstName.replaceAll(" ", "_")}/${lastName.replaceAll(" ", "_")}/${nationality.replaceAll(" ", "_")}";
-  }
 }

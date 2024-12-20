@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shelfless/dialogs/delete_dialog.dart';
 
 import 'package:shelfless/models/author.dart';
-import 'package:shelfless/providers/authors_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 
@@ -19,9 +18,6 @@ class AuthorInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Fetch provider.
-    final AuthorsProvider _authorsProvider = Provider.of(context, listen: true);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(

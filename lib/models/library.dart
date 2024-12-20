@@ -1,20 +1,18 @@
 import 'dart:io';
 
-import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
-import 'package:shelfless/models/genre.dart';
-import 'package:shelfless/models/publisher.dart';
-import 'package:shelfless/models/store_location.dart';
-import 'package:shelfless/utils/strings/strings.dart';
 
 class Library {
   int? id;
 
   String name;
 
+  List<Book> books;
+
   Library({
     this.id,
     required this.name,
+    this.books = const [],
   });
 
   // Library.fromMap({required Map<String, dynamic> map}):
