@@ -80,7 +80,7 @@ class DatabaseHelper {
         ${booksTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
         ${booksTable}_title TEXT NOT NULL,
         ${booksTable}_library_id INTEGER,
-        ${booksTable}_publishDate INTEGER NOT NULL,
+        ${booksTable}_publish_date INTEGER NOT NULL,
         ${booksTable}_publisher_id INTEGER,
         ${booksTable}_location_id INTEGER,
         ${booksTable}_borrowed BOOL,
@@ -151,6 +151,20 @@ class DatabaseHelper {
     );
   }
 
+  String get booksWithAuthorId => """
+  SELECT $booksTable.*, ${bookAuthorRelTable}_id
+  FROM $booksTable JOIN $bookAuthorRelTable
+  ON ${booksTable}_id = ${bookAuthorRelTable}_book_id
+  ORDER_BY ${booksTable}_id ASC
+  """;
+
+  String get booksWithGenreId => """
+  SELECT $booksTable.*, ${bookGenreRelTable}_id
+  FROM $booksTable JOIN $bookGenreRelTable
+  ON ${booksTable}_id = ${bookGenreRelTable}_book_id
+  ORDER_BY ${booksTable}_id ASC
+  """;
+
   /// Returns all stored libraries.
   Future<List<Library>?> get libraries async {
     // Fetch all books sorted by library.
@@ -160,16 +174,30 @@ class DatabaseHelper {
     // );
 
     // TODO
-    // final List<Map<String, dynamic>> rawData = await _db.rawQuery(
-    //   """
-    //   SELECT $booksTable.*, $authorsTable.*
-    //   FROM $booksTable JOIN $authorsTable
-    //   ON
-    //   """,
-    // );
+    final List<Map<String, dynamic>> rawData = await _db.rawQuery(
+      """
+      SELECT books_with_author_id.*, books_with_genre_id.*
+      FROM ($booksWithAuthorId) AS books_with_author_id JOIN ($booksWithGenreId) AS books_with_genre_id
+      ON books_with_author_id.${booksTable}_id = books_with_genre_id.${booksTable}_id
+      ORDER BY books_with_author_id.${booksTable}_id ASC
+      """,
+    );
 
     // final List<Book> books = rawData.map((Map<String, dynamic> element) => Book.fromMap(element)).toList();
 
     // return rawData.map((Map<String, dynamic> element) => Library.fromMap(element)).toList();
+  }
+
+  Future<void> insertBook(Book book) async {
+    // Insert the new book.
+    await _db.insert(booksTable, book.toMap());
+
+    // Insert new records in all relationship tables as well.
+    for (Map<String, dynamic> authorRelMap in book.authorsMaps()) {
+      await _db.insert(bookAuthorRelTable, authorRelMap);
+    }
+    for (Map<String, dynamic> genreRelMap in book.genresMaps()) {
+      await _db.insert(bookGenreRelTable, genreRelMap);
+    }
   }
 }

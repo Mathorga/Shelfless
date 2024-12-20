@@ -1,11 +1,14 @@
 import 'package:shelfless/utils/utils.dart';
 
 class Genre {
+  int? id;
+
   String name;
 
   int color;
 
   Genre({
+    this.id,
     required this.name,
     required this.color,
   });

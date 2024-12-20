@@ -1,4 +1,6 @@
 class Author {
+  int? id;
+
   String firstName;
 
   String lastName;
@@ -6,6 +8,7 @@ class Author {
   String nationality;
 
   Author({
+    this.id,
     required this.firstName,
     required this.lastName,
     this.nationality = "",

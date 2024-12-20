@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'package:shelfless/models/author.dart';
-import 'package:shelfless/models/book.dart';
-import 'package:shelfless/models/genre.dart';
-import 'package:shelfless/models/library.dart';
-import 'package:shelfless/models/publisher.dart';
-import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/authors_provider.dart';
 import 'package:shelfless/providers/books_provider.dart';
 import 'package:shelfless/providers/genres_provider.dart';
@@ -19,31 +12,11 @@ import 'package:shelfless/screens/books_filter_screen.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/screens/import_library_screen.dart';
 import 'package:shelfless/screens/libraries_overview_screen.dart';
-import 'package:shelfless/screens/library_screen.dart';
 import 'package:shelfless/screens/publisher_info_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 
 void main() async {
-  // Init local DB.
-  await Hive.initFlutter();
-
-  // Register adapters.
-  Hive.registerAdapter(BookAdapter());
-  Hive.registerAdapter(AuthorAdapter());
-  Hive.registerAdapter(GenreAdapter());
-  Hive.registerAdapter(PublisherAdapter());
-  Hive.registerAdapter(StoreLocationAdapter());
-  Hive.registerAdapter(LibraryAdapter());
-
-  // Open hive boxes.
-  await Hive.openBox<Book>("books");
-  await Hive.openBox<Author>("authors");
-  await Hive.openBox<Genre>("genres");
-  await Hive.openBox<Publisher>("publishers");
-  await Hive.openBox<StoreLocation>("store_locations");
-  await Hive.openBox<Library>("libraries");
-
   runApp(const Shelfish());
 }
 

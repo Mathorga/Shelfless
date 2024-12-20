@@ -149,7 +149,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                 String fileContent = await file.readAsString();
 
                 // Create and add the library to DB.
-                librariesProvider.addLibrary(Library.fromSerializableString(name: fileName, csvString: fileContent));
+                // librariesProvider.addLibrary(Library.fromSerializableString(name: fileName, csvString: fileContent));
               } else {
                 // User canceled the picker
               }

@@ -34,8 +34,6 @@ dependencies:
   provider: ^6.1.2
 
   # Local DB.
-  hive: ^2.2.3
-  hive_flutter: 1.1.0
   sqflite: 2.4.1
 
   # Handles asking for permissions.
