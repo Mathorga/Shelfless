@@ -1,16 +1,8 @@
-import 'package:hive/hive.dart';
-
-part 'author.g.dart';
-
-@HiveType(typeId: 1)
-class Author extends HiveObject {
-  @HiveField(0)
+class Author {
   String firstName;
 
-  @HiveField(1)
   String lastName;
 
-  @HiveField(2)
   String nationality;
 
   Author({

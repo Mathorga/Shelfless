@@ -1,10 +1,4 @@
-import 'package:hive/hive.dart';
-
-part 'store_location.g.dart';
-
-@HiveType(typeId: 4)
-class StoreLocation extends HiveObject {
-  @HiveField(0)
+class StoreLocation {
   String name;
 
   StoreLocation({

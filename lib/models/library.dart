@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:hive/hive.dart';
-
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/genre.dart';
@@ -9,35 +7,26 @@ import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 
-part 'library.g.dart';
-
-@HiveType(typeId: 5)
-class Library extends HiveObject {
-  @HiveField(0)
+class Library {
   String name;
 
-  @HiveField(1)
-  HiveList<Book> books;
+  List<Book> books;
 
   Library({
     required this.name,
     required this.books,
   });
 
-  Library.fromSerializableString({required this.name, required String csvString}) : books = HiveList(Hive.box<Book>("books")) {
-    final Box<Book> _books = Hive.box<Book>("books");
-    final Box<Author> _authors = Hive.box<Author>("authors");
-    final Box<Genre> _genres = Hive.box<Genre>("genres");
-    final Box<Publisher> _publishers = Hive.box<Publisher>("publishers");
-    final Box<StoreLocation> _locations = Hive.box<StoreLocation>("store_locations");
+  // Library.fromMap({required Map<String, dynamic> map}):
 
+  Library.fromSerializableString({required this.name, required String csvString}) : books = [] {
     // Separate csv lines: each line is a book.
     final List<String> lines = csvString.split("\n");
 
-    // The first line is skipped, as it's just a header.
+    // The first line is skipped, since it's just a header.
     for (String bookString in lines.skip(1)) {
       // Prepare book for insertion.
-      final Book book = Book(authors: HiveList(_authors), genres: HiveList(_genres));
+      final Book book = Book();
 
       // Separate book fields.
       final List<String> fields = bookString.split(";");
@@ -58,12 +47,6 @@ class Library extends HiveObject {
 
         // Make sure the author is already present in the DB, insert it otherwise.
         Author bookAuthor = author;
-        if (!_authors.values.contains(author)) {
-          _authors.add(author);
-          author.save();
-        } else {
-          bookAuthor = _authors.values.singleWhere((Author element) => element == author);
-        }
 
         if (!book.authors.contains(bookAuthor)) {
           book.authors.add(bookAuthor);
@@ -80,12 +63,6 @@ class Library extends HiveObject {
 
         // Make sure the genre is already present in the DB, insert it otherwise.
         Genre bookGenre = genre;
-        if (!_genres.values.contains(genre)) {
-          _genres.add(genre);
-          genre.save();
-        } else {
-          bookGenre = _genres.values.singleWhere((Genre element) => element == genre);
-        }
 
         if (!book.genres.contains(bookGenre)) {
           book.genres.add(bookGenre);
@@ -98,12 +75,6 @@ class Library extends HiveObject {
 
       // Make sure the publisher is already present in the DB, insert it otherwise.
       Publisher bookPublisher = publisher;
-      if (!_publishers.values.contains(publisher)) {
-        _publishers.add(publisher);
-        publisher.save();
-      } else {
-        bookPublisher = _publishers.values.singleWhere((Publisher element) => element == publisher);
-      }
 
       book.publisher = bookPublisher;
 
@@ -113,23 +84,11 @@ class Library extends HiveObject {
 
       // Make sure the location is already present in the DB, insert it otherwise.
       StoreLocation bookLocation = location;
-      if (!_locations.values.contains(location)) {
-        _locations.add(location);
-        location.save();
-      } else {
-        bookLocation = _locations.values.singleWhere((StoreLocation element) => element == location);
-      }
 
       book.location = bookLocation;
 
       // Save the book to the DB if not already present.
       Book finalBook = book;
-      if (!_books.values.contains(book)) {
-        _books.add(book);
-        book.save();
-      } else {
-        finalBook = _books.values.singleWhere((Book element) => element == book);
-      }
 
       // Add the book to the library.
       if (!books.contains(finalBook)) {
@@ -140,18 +99,16 @@ class Library extends HiveObject {
 
   /// Creates and returns a copy of [this].
   Library copy() {
-    final Box<Book> _books = Hive.box<Book>("books");
-
     return Library(
       name: name,
-      books: HiveList(_books)..addAll(books),
+      books: [...books],
     );
   }
 
   /// Copies all attributes from [other].
   void copyFrom(Library other) {
     name = other.name;
-    books = other.books;
+    books = [...other.books];
   }
 
   List<Map<String, String>> get bookMaps {
@@ -168,8 +125,7 @@ class Library extends HiveObject {
       }
     }
 
-    // Save the library when merge is done.
-    save();
+    // TODO Save the library when merge is done.
   }
 
   String toSerializableString() {

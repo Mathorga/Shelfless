@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/library.dart';
 
 import 'package:sqflite/sqflite.dart';
 
@@ -14,12 +16,21 @@ class DatabaseHelper {
 
   late Database _db;
 
+  static const String librariesTable = "libraries";
+  static const String booksTable = "books";
+  static const String authorsTable = "authors";
+  static const String genresTable = "genres";
+  static const String publishersTable = "publishers";
+  static const String locationsTable = "locations";
+  static const String bookAuthorRelTable = "book_author_rel";
+  static const String bookGenreRelTable = "book_genre_rel";
+
   Future<void> openDB() async {
     // Avoid errors caused by flutter upgrade.
     WidgetsFlutterBinding.ensureInitialized();
     // Open the database and store the reference.
     _db = await openDatabase(
-      "${await getDatabasesPath()}/smart_field_database.db",
+      "${await getDatabasesPath()}/shelfless.db",
       version: 1,
       onCreate: (Database db, int version) async {
         // Perform upgrades from version 1 to the current version.
@@ -52,17 +63,28 @@ class DatabaseHelper {
 
   /// Performs database definition for version 1.
   static Future<void> upgradeVersion1(Database db) async {
+    // Libraries table.
+    await db.execute(
+      """
+      CREATE TABLE $librariesTable(
+        ${librariesTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${librariesTable}_name TEXT NOT NULL
+      )
+      """,
+    );
+
     // Books table.
     await db.execute(
       """
-      CREATE TABLE books(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        publishDate INTEGER NOT NULL,
-        publisher INTEGER,
-        location INTEGER,
-        borrowed BOOL,
-        edition INTEGER DEFAULT 0
+      CREATE TABLE $booksTable(
+        ${booksTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${booksTable}_title TEXT NOT NULL,
+        ${booksTable}_library_id INTEGER,
+        ${booksTable}_publishDate INTEGER NOT NULL,
+        ${booksTable}_publisher_id INTEGER,
+        ${booksTable}_location_id INTEGER,
+        ${booksTable}_borrowed BOOL,
+        ${booksTable}_edition INTEGER DEFAULT 0
       )
       """,
     );
@@ -70,8 +92,8 @@ class DatabaseHelper {
     // Authors table.
     await db.execute(
       """
-      CREATE TABLE authors(
-        id INTEGER PRIMARY KEY AUTOINCREMENT
+      CREATE TABLE $authorsTable(
+        ${authorsTable}_id INTEGER PRIMARY KEY AUTOINCREMENT
       )
       """,
     );
@@ -79,10 +101,10 @@ class DatabaseHelper {
     // Genres table.
     await db.execute(
       """
-      CREATE TABLE genres(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        color INTEGER DEFAULT 0xFF000000
+      CREATE TABLE $genresTable(
+        ${genresTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${genresTable}_name TEXT NOT NULL,
+        ${genresTable}_color INTEGER DEFAULT 0xFF000000
       )
       """,
     );
@@ -90,10 +112,10 @@ class DatabaseHelper {
     // Publishers table.
     await db.execute(
       """
-      CREATE TABLE publishers(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        website TEXT
+      CREATE TABLE $publishersTable(
+        ${publishersTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${publishersTable}_name TEXT NOT NULL,
+        ${publishersTable}_website TEXT
       )
       """,
     );
@@ -101,9 +123,9 @@ class DatabaseHelper {
     // Locations table.
     await db.execute(
       """
-      CREATE TABLE locations(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL
+      CREATE TABLE $locationsTable(
+        ${locationsTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${locationsTable}_name TEXT NOT NULL
       )
       """,
     );
@@ -111,21 +133,43 @@ class DatabaseHelper {
     // Books to authors relationship table.
     await db.execute(
       """
-      CREATE TABLE book_author_rel(
-        book_id INTEGER PRIMARY KEY,
-        author_id INTEGER PRIMARY KEY
+      CREATE TABLE $bookAuthorRelTable(
+        ${bookAuthorRelTable}_book_id INTEGER PRIMARY KEY,
+        ${bookAuthorRelTable}_author_id INTEGER PRIMARY KEY
       )
-      """
+      """,
     );
 
     // Books to genres relationship table.
     await db.execute(
       """
-      CREATE TABLE book_genre_rel(
-        book_id INTEGER PRIMARY KEY,
-        genre_id INTEGER PRIMARY KEY
+      CREATE TABLE $bookGenreRelTable(
+        ${bookGenreRelTable}_book_id INTEGER PRIMARY KEY,
+        ${bookGenreRelTable}_genre_id INTEGER PRIMARY KEY
       )
-      """
+      """,
     );
+  }
+
+  /// Returns all stored libraries.
+  Future<List<Library>?> get libraries async {
+    // Fetch all books sorted by library.
+    // final List<Map<String, dynamic>> rawData = await _db.query(
+    //   "$booksTable JOIN $authorsTable ON $booksTable.authorId = $authorsTable.id",
+    //   orderBy: "libraryId, id DESC",
+    // );
+
+    // TODO
+    // final List<Map<String, dynamic>> rawData = await _db.rawQuery(
+    //   """
+    //   SELECT $booksTable.*, $authorsTable.*
+    //   FROM $booksTable JOIN $authorsTable
+    //   ON
+    //   """,
+    // );
+
+    // final List<Book> books = rawData.map((Map<String, dynamic> element) => Book.fromMap(element)).toList();
+
+    // return rawData.map((Map<String, dynamic> element) => Library.fromMap(element)).toList();
   }
 }

@@ -1,44 +1,32 @@
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/genre.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/store_location.dart';
 
-part 'book.g.dart';
-
-@HiveType(typeId: 0)
-class Book extends HiveObject {
-  @HiveField(1)
+class Book {
   String title;
 
-  @HiveField(2)
-  HiveList<Author> authors;
+  List<Author> authors;
 
-  @HiveField(3)
   int publishDate;
 
-  @HiveField(4)
-  HiveList<Genre> genres;
+  List<Genre> genres;
 
-  @HiveField(6)
   Publisher? publisher;
 
-  @HiveField(7)
   StoreLocation? location;
 
-  @HiveField(8)
   bool borrowed;
 
-  @HiveField(9)
   int edition;
 
   Book({
     this.title = "",
-    required this.authors,
+    this.authors = const [],
     this.publishDate = 0,
-    required this.genres,
+    this.genres = const [],
     this.publisher,
     this.location,
     this.borrowed = false,
@@ -47,14 +35,11 @@ class Book extends HiveObject {
 
   /// Creates and returns a copy of [this].
   Book copy() {
-    final Box<Author> _authors = Hive.box<Author>("authors");
-    final Box<Genre> _genres = Hive.box<Genre>("genres");
-
     return Book(
       title: title,
-      authors: HiveList(_authors)..addAll(authors),
+      authors: [...authors],
       publishDate: publishDate,
-      genres: HiveList(_genres)..addAll(genres),
+      genres: [...genres],
       publisher: publisher,
       location: location,
       borrowed: borrowed,

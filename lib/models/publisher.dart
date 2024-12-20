@@ -1,13 +1,6 @@
-import 'package:hive/hive.dart';
-
-part 'publisher.g.dart';
-
-@HiveType(typeId: 3)
-class Publisher extends HiveObject {
-  @HiveField(0)
+class Publisher {
   String name;
 
-  @HiveField(1)
   String? website;
 
   Publisher({
