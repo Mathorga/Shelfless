@@ -10,7 +10,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shelfless/models/library.dart';
 
-import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/screens/books_filter_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -41,12 +40,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    LibrariesProvider librariesProvider = Provider.of(context, listen: true);
+    // LibrariesProvider librariesProvider = Provider.of(context, listen: true);
     final EdgeInsets screenPadding = MediaQuery.paddingOf(context);
     final ThemeData theme = Theme.of(context);
 
     // Define all pages.
-    List<Widget> _pages = [
+    List<Widget> pages = [
       BooksOverviewWidget(searchValue: _searchValue),
       GenresOverviewWidget(searchValue: _searchValue),
       AuthorsOverviewWidget(searchValue: _searchValue),
@@ -294,7 +293,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             ),
             Expanded(
               child: Center(
-                child: _pages[_currentIndex],
+                child: pages[_currentIndex],
               ),
             ),
           ],
