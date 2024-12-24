@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/library.dart';
+import 'package:shelfless/utils/database_helper.dart';
 
 class LibraryProvider with ChangeNotifier {
   // Private instance.
@@ -13,4 +15,9 @@ class LibraryProvider with ChangeNotifier {
   static LibraryProvider get instance => _instance;
 
   Library? library;
+
+  /// Asks the DB for the library with the prodided [id].
+  static void fetchLibrary(int id) {
+    DatabaseHelper
+  }
 }

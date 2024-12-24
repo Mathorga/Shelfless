@@ -81,7 +81,7 @@ class DatabaseHelper {
         ${booksTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
         ${booksTable}_title TEXT NOT NULL,
         ${booksTable}_library_id INTEGER,
-        ${booksTable}_publish_date INTEGER NOT NULL,
+        ${booksTable}_publish_year INTEGER NOT NULL,
         ${booksTable}_publisher_id INTEGER,
         ${booksTable}_location_id INTEGER,
         ${booksTable}_borrowed BOOL,
@@ -190,6 +190,16 @@ class DatabaseHelper {
     // final List<Book> books = rawData.map((Map<String, dynamic> element) => Book.fromMap(element)).toList();
 
     // return rawData.map((Map<String, dynamic> element) => Library.fromMap(element)).toList();
+  }
+
+  Future<void> getBooks(int libraryId) async {
+    final List<Map<String, dynamic>> rawData = await _db.rawQuery(
+      """
+      TODO
+      """
+    );
+
+    return rawData.map((Map<String, dynamic> element) => Book)
   }
 
   Future<void> insertBook(Book book) async {

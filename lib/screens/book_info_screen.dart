@@ -126,7 +126,7 @@ class BookInfoScreen extends StatelessWidget {
               ),
 
               // Publish date.
-              _buildTextInfo(context, strings.bookInfoPublishDate, book.publishDate.toString()),
+              _buildTextInfo(context, strings.bookInfoPublishDate, book.publishYear.toString()),
 
               // Genres.
               Text(strings.bookInfoGenres),

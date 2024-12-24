@@ -13,7 +13,7 @@ class Book {
 
   int libraryId;
 
-  int publishDate;
+  int publishYear;
 
   int? publisherId;
 
@@ -31,7 +31,7 @@ class Book {
     this.id,
     this.title = "",
     required this.libraryId,
-    this.publishDate = 0,
+    this.publishYear = 0,
     this.publisherId,
     this.locationId,
     this.borrowed = false,
@@ -40,14 +40,24 @@ class Book {
     this.genreIds = const [],
   });
 
-  // Book.fromMap({required Map<String, dynamic> map}) : title = map["title"], authors;
+  Book.fromMap({required Map<String, dynamic> map})
+      : id = map["${DatabaseHelper.booksTable}_id"],
+        title = map["${DatabaseHelper.booksTable}_title"],
+        libraryId = map["${DatabaseHelper.booksTable}_library_id"],
+        publishYear = map["${DatabaseHelper.booksTable}_publish_year"],
+        publisherId = map["${DatabaseHelper.booksTable}_publisher_id"],
+        locationId = map["${DatabaseHelper.booksTable}_location_id"],
+        borrowed = map["${DatabaseHelper.booksTable}_borrowed"],
+        edition = map["${DatabaseHelper.booksTable}_edition"],
+        authorIds = map["author_ids"],
+        genreIds = map["genre_ids"];
 
   /// Creates and returns a copy of [this].
   Book copy() {
     return Book(
       title: title,
       libraryId: libraryId,
-      publishDate: publishDate,
+      publishYear: publishYear,
       publisherId: publisherId,
       locationId: locationId,
       borrowed: borrowed,
@@ -61,7 +71,7 @@ class Book {
   void copyFrom(Book other) {
     title = other.title;
     libraryId = other.libraryId;
-    publishDate = other.publishDate;
+    publishYear = other.publishYear;
     publisherId = other.publisherId;
     locationId = other.locationId;
     borrowed = other.borrowed;
@@ -75,7 +85,7 @@ class Book {
       "${DatabaseHelper.booksTable}_id": id,
       "${DatabaseHelper.booksTable}_title": title,
       "${DatabaseHelper.booksTable}_librry_id": libraryId,
-      "${DatabaseHelper.booksTable}_publish_date": publishDate,
+      "${DatabaseHelper.booksTable}_publish_year": publishYear,
       "${DatabaseHelper.booksTable}_publisher_id": publisherId,
       "${DatabaseHelper.booksTable}_location_id": locationId,
       "${DatabaseHelper.booksTable}_borrowed": borrowed,
@@ -96,7 +106,7 @@ class Book {
       other is Book &&
       other.runtimeType == runtimeType &&
       other.title == title &&
-      other.publishDate == publishDate &&
+      other.publishYear == publishYear &&
       other.publisherId == publisherId &&
       other.locationId == locationId &&
       other.borrowed == borrowed &&
@@ -107,7 +117,7 @@ class Book {
   @override
   int get hashCode =>
       title.hashCode +
-      publishDate.hashCode +
+      publishYear.hashCode +
       publisherId.hashCode +
       locationId.hashCode +
       borrowed.hashCode +

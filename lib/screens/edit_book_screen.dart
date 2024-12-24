@@ -65,7 +65,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
         : Book(
             authors: HiveList(_authors),
             genres: HiveList(_genres),
-            publishDate: DateTime.now().year,
+            publishYear: DateTime.now().year,
           );
   }
 
@@ -195,13 +195,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                 child: YearPicker(
                                   firstDate: DateTime(0),
                                   lastDate: DateTime(currentYear),
-                                  selectedDate: DateTime(_book.publishDate),
-                                  currentDate: DateTime(_book.publishDate),
-                                  initialDate: DateTime(_book.publishDate),
+                                  selectedDate: DateTime(_book.publishYear),
+                                  currentDate: DateTime(_book.publishYear),
+                                  initialDate: DateTime(_book.publishYear),
                                   onChanged: (DateTime value) {
                                     Navigator.of(context).pop();
                                     setState(() {
-                                      _book.publishDate = value.year;
+                                      _book.publishYear = value.year;
                                     });
                                   },
                                 ),
@@ -214,7 +214,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           child: Card(
                             child: Padding(
                               padding: const EdgeInsets.all(Themes.spacingMedium),
-                              child: Center(child: Text((_book.publishDate).toString())),
+                              child: Center(child: Text((_book.publishYear).toString())),
                             ),
                           ),
                         ),
