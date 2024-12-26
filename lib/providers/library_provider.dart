@@ -18,6 +18,6 @@ class LibraryProvider with ChangeNotifier {
 
   /// Asks the DB for the library with the prodided [id].
   static void fetchLibrary(int id) {
-    DatabaseHelper
+    DatabaseHelper.instance.fetchLibrary(id);
   }
 }

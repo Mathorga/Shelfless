@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
@@ -156,17 +157,37 @@ class DatabaseHelper {
   }
 
   String get booksWithAuthorId => """
-  SELECT $booksTable.*, ${bookAuthorRelTable}_id
+  SELECT $booksTable.*, ${bookAuthorRelTable}_author_id
   FROM $booksTable JOIN $bookAuthorRelTable
   ON ${booksTable}_id = ${bookAuthorRelTable}_book_id
   ORDER_BY ${booksTable}_id ASC
   """;
 
   String get booksWithGenreId => """
-  SELECT $booksTable.*, ${bookGenreRelTable}_id
+  SELECT $booksTable.*, ${bookGenreRelTable}_genre_id
   FROM $booksTable JOIN $bookGenreRelTable
   ON ${booksTable}_id = ${bookGenreRelTable}_book_id
   ORDER_BY ${booksTable}_id ASC
+  """;
+
+  String get booksWithAggregateAuthorIds => """
+  SELECT *, CONCAT(${bookAuthorRelTable}_author_id) AS author_ids
+  FROM ($booksWithAuthorId)
+  GROUP BY ${booksTable}_id
+  """;
+
+  String get booksWithAggregateGenreIds => """
+  SELECT *, CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
+  FROM ($booksWithGenreId)
+  GROUP BY ${booksTable}_id
+  """;
+
+  String get books => """
+  SELECT books_with_authors.*, books_with_genres.genre_ids
+  FROM ($booksWithAggregateAuthorIds) AS books_with_authors
+  JOIN ($booksWithAggregateGenreIds) AS books_with_genres
+  ON books_with_author.${booksTable}_id = books_with_genre.${booksTable}_id
+  ORDER BY books_with_author.${booksTable}_id ASC
   """;
 
   /// Returns all stored libraries.
@@ -192,14 +213,29 @@ class DatabaseHelper {
     // return rawData.map((Map<String, dynamic> element) => Library.fromMap(element)).toList();
   }
 
-  Future<void> getBooks(int libraryId) async {
-    final List<Map<String, dynamic>> rawData = await _db.rawQuery(
-      """
-      TODO
-      """
-    );
+  Future<Library> fetchLibrary(int libraryId) async {
+    final List<Book> books = await getBooks(libraryId);
 
-    return rawData.map((Map<String, dynamic> element) => Book)
+    final List<Map<String, dynamic>> rawData = await _db.rawQuery("""
+      SELECT *
+      FROM $librariesTable
+      WHERE ${librariesTable}_id = $libraryId
+      ORDER BY ${librariesTable}_id
+      LIMIT 1
+      """);
+
+    return Library(
+      id: libraryId,
+      name: rawData.firstOrNull?["${librariesTable}_name"],
+      books: books,
+    );
+  }
+
+  Future<List<Book>> getBooks(int libraryId) async {
+    final List<Map<String, dynamic>> rawData = await _db.rawQuery(books);
+    return rawData
+        .map((Map<String, dynamic> element) => Book.fromMap(map: element))
+        .toList();
   }
 
   Future<void> insertBook(Book book) async {
