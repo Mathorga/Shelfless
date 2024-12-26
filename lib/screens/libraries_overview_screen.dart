@@ -8,10 +8,11 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import 'package:shelfless/dialogs/delete_dialog.dart';
 import 'package:shelfless/models/library.dart';
-import 'package:shelfless/providers/books_provider.dart';
-import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/models/library_preview.dart';
+import 'package:shelfless/providers/library_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/screens/library_screen.dart';
+import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/library_preview_widget.dart';
 
@@ -29,103 +30,138 @@ class LibrariesOverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LibrariesProvider librariesProvider = Provider.of(context, listen: true);
-    BooksProvider booksProvider = Provider.of(context, listen: true);
-
-    final libraries = librariesProvider.libraries;
-
+    final List<LibraryPreview> libraries;
     return Scaffold(
       appBar: _buildAppBar(),
       // backgroundColor: ShelfishColors.librariesBackground,
-      body: libraries.isEmpty
-          ? Center(
+      body: FutureBuilder(
+        future: DatabaseHelper.instance.getLibraries(),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<LibraryPreview>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(strings.genericError),
+            );
+          }
+
+          final List<LibraryPreview>? libraries = snapshot.data;
+
+          if (libraries == null || libraries.isEmpty) {
+            return Center(
               child: Text(strings.noLibrariesFound),
-            )
-          : ListView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(8.0),
-              children: [
-                ...List.generate(
-                  libraries.length + 1,
-                  (int index) => GestureDetector(
-                    // Navigate to library screen.
-                    onTap: () {
-                      librariesProvider.setCurrenLibraryIndex(index < libraries.length ? index : null);
-                      Library? library = librariesProvider.currentLibrary;
+            );
+          }
 
-                      if (library == null) return;
+          return ListView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(8.0),
+            children: [
+              ...List.generate(
+                libraries.length + 1,
+                (int index) => GestureDetector(
+                  // Navigate to library screen.
+                  onTap: () async {
+                    final int? libraryId = libraries[index].id;
 
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => LibraryScreen(
-                            library: library,
-                          ),
+                    // Head out if, for any reason, the selected library has no id.
+                    if (libraryId == null) {
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text(strings.warning),
+                          content: Text(strings.genericError),
                         ),
                       );
-                    },
-                    child: index < libraries.length
-                        ? Stack(
-                            children: [
-                              LibraryPreviewWidget(
-                                library: libraries[index],
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: IconButton(
-                                  onPressed: () {
-                                    // Go to library info.
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) => EditLibraryScreen(library: libraries[index]),
-                                      ),
-                                    );
-                                  },
-                                  icon: const Icon(
-                                    Icons.edit_rounded,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black,
-                                        blurRadius: 2.0,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: IconButton(
-                                  onPressed: () {
-                                    _showDeleteDialog(context, libraries[index]);
-                                  },
-                                  icon: const Icon(
-                                    Icons.delete_rounded,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black,
-                                        blurRadius: 2.0,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Card(
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Text(
-                                  "${strings.all} (${booksProvider.books.length} ${booksProvider.books.length == 1 ? strings.books : strings.books})",
-                                  textAlign: TextAlign.center,
-                                ),
+
+                      return;
+                    }
+
+                    final Library library =
+                        await DatabaseHelper.instance.getLibrary(libraryId);
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => LibraryScreen(
+                          library: library,
+                        ),
+                      ),
+                    );
+                  },
+                  child: index < libraries.length
+                      ? Stack(
+                          children: [
+                            LibraryPreviewWidget(
+                              library: libraries[index],
+                            ),
+                            // Align(
+                            //   alignment: Alignment.topRight,
+                            //   child: IconButton(
+                            //     onPressed: () {
+                            //       // Go to library info.
+                            //       Navigator.of(context).push(
+                            //         MaterialPageRoute(
+                            //           builder: (BuildContext context) =>
+                            //               EditLibraryScreen(
+                            //             library: libraries[index],
+                            //           ),
+                            //         ),
+                            //       );
+                            //     },
+                            //     icon: const Icon(
+                            //       Icons.edit_rounded,
+                            //       shadows: [
+                            //         Shadow(
+                            //           color: Colors.black,
+                            //           blurRadius: 2.0,
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                            // Align(
+                            //   alignment: Alignment.topLeft,
+                            //   child: IconButton(
+                            //     onPressed: () {
+                            //       _showDeleteDialog(context, libraries[index]);
+                            //     },
+                            //     icon: const Icon(
+                            //       Icons.delete_rounded,
+                            //       shadows: [
+                            //         Shadow(
+                            //           color: Colors.black,
+                            //           blurRadius: 2.0,
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        )
+                      : Card(
+                          child: Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Text(
+                                "TANTI LIBRI",
+                                // "${strings.all} (${booksProvider.books.length} ${booksProvider.books.length == 1 ? strings.book : strings.books})",
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),
-                  ),
-                )
-              ],
-            ),
+                        ),
+                ),
+              )
+            ],
+          );
+        },
+      ),
       floatingActionButton: SpeedDial(
         icon: Icons.add,
         activeIcon: Icons.close,
@@ -172,21 +208,21 @@ class LibrariesOverviewScreen extends StatelessWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, Library library) {
-    LibrariesProvider librariesProvider = Provider.of(context, listen: false);
+  // void _showDeleteDialog(BuildContext context, Library library) {
+  //   LibrariesProvider librariesProvider = Provider.of(context, listen: false);
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return DeleteDialog(
-          title: Text(strings.deleteLibraryTitle),
-          content: Text("${strings.deleteLibraryContent} ${library.name}?"),
-          onConfirm: () {
-            // Actually delete the library.
-            librariesProvider.deleteLibrary(library);
-          },
-        );
-      },
-    );
-  }
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return DeleteDialog(
+  //         title: Text(strings.deleteLibraryTitle),
+  //         content: Text("${strings.deleteLibraryContent} ${library.name}?"),
+  //         onConfirm: () {
+  //           // Actually delete the library.
+  //           librariesProvider.deleteLibrary(library);
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 }

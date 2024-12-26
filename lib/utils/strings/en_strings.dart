@@ -79,4 +79,6 @@ class EnStrings implements Strings {
   @override String get noPublishersFound => "No publishers found";
   @override String get noBooksFound => "No books found";
   @override String get search => "Search";
+  @override String get warning => "Warning";
+  @override String get genericError => "An error occurred";
 }

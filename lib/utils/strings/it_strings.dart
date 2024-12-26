@@ -81,4 +81,6 @@ class ItStrings implements Strings {
   @override String get noPublishersFound => "Nessun editore trovato";
   @override String get noBooksFound => "Nessun libro trovato";
   @override String get search => "Cerca";
+  @override String get warning => "Attenzione";
+  @override String get genericError => "Si è verificato un errore";
 }

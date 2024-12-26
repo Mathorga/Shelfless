@@ -81,6 +81,8 @@ class Strings {
   String get noPublishersFound => "";
   String get noBooksFound => "";
   String get search => "";
+  String get warning => "";
+  String get genericError => "";
 }
 
 Strings get strings {
