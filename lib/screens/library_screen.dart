@@ -46,7 +46,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
     // Define all pages.
     List<Widget> pages = [
-      BooksOverviewWidget(searchValue: _searchValue),
+      BooksOverviewWidget(),
       // GenresOverviewWidget(searchValue: _searchValue),
       // AuthorsOverviewWidget(searchValue: _searchValue),
       // PublishersOverviewWidget(searchValue: _searchValue),

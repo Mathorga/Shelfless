@@ -30,7 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  collection: ^1.19.1
+  collection: ^1.19.0
 
   # Data distribution.
   provider: ^6.1.2

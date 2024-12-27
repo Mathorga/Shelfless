@@ -7,8 +7,10 @@ import 'package:shelfless/screens/libraries_overview_screen.dart';
 import 'package:shelfless/screens/publisher_info_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/database_helper.dart';
 
 void main() async {
+  await DatabaseHelper.instance.openDB();
   runApp(const Shelfish());
 }
 
@@ -62,10 +64,10 @@ class Shelfish extends StatelessWidget {
       home: const LibrariesOverviewScreen(),
       routes: {
         LibrariesOverviewScreen.routeName: (BuildContext context) => const LibrariesOverviewScreen(),
-        PublisherInfoScreen.routeName: (BuildContext context) => const PublisherInfoScreen(),
-        ImportLibraryScreen.routeName: (BuildContext context) => const ImportLibraryScreen(),
-        BooksFilterScreen.routeName: (BuildContext context) => const BooksFilterScreen(),
-        EditGenreScreen.routeName: (BuildContext context) => const EditGenreScreen(),
+        // PublisherInfoScreen.routeName: (BuildContext context) => const PublisherInfoScreen(),
+        // ImportLibraryScreen.routeName: (BuildContext context) => const ImportLibraryScreen(),
+        // BooksFilterScreen.routeName: (BuildContext context) => const BooksFilterScreen(),
+        // EditGenreScreen.routeName: (BuildContext context) => const EditGenreScreen(),
       },
     );
   }

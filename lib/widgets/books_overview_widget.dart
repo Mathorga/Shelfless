@@ -7,28 +7,34 @@ import 'package:shelfless/screens/book_info_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
 
-class BooksOverviewWidget extends StatelessWidget {
-  // The filter function is used to display a subset of all available books.
-  // If no filter is provided, then all books are displayed.
-  final bool Function(Book)? filter;
-
-  final String searchValue;
+class BooksOverviewWidget extends StatefulWidget {
+  final List<Book> books;
 
   const BooksOverviewWidget({
     Key? key,
-    this.filter,
-    this.searchValue = "",
+    this.books = const [],
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    // List<Book> _books = _booksProvider.books.where(filter ?? (Book book) => true).where((Book book) => book.title.toLowerCase().contains(searchValue.toLowerCase())).toList();
-    List<Book> _unfilteredBooks = _librariesProvider.currentLibrary != null ? _librariesProvider.currentLibrary!.books : _booksProvider.books;
-    List<Book> _books = _unfilteredBooks.where(filter ?? (Book book) => true).where((Book book) => book.title.toLowerCase().contains(searchValue.toLowerCase())).toList();
+  State<BooksOverviewWidget> createState() =>
+      _filteredBooksOverviewWidgetState();
+}
 
+class _filteredBooksOverviewWidgetState extends State<BooksOverviewWidget> {
+  List<Book> _filteredBooks = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _filteredBooks = [...widget.books];
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: _books.isEmpty
+      body: _filteredBooks.isEmpty
           ? const Center(
               child: Text("No books found"),
             )
@@ -37,26 +43,28 @@ class BooksOverviewWidget extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               children: [
                 ...List.generate(
-                  _books.length,
+                  _filteredBooks.length,
                   (int index) => BookPreviewWidget(
-                    book: _books[index],
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => BookInfoScreen(book: _books[index]),
-                    )),
+                    book: _filteredBooks[index],
+                    // onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (BuildContext context) => BookInfoScreen(
+                    //     book: _filteredBooks[index],
+                    //   ),
+                    // )),
                   ),
                 )
               ],
             ),
-      floatingActionButton: _librariesProvider.currentLibrary != null
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const EditBookScreen(),
-                ));
-              },
-              child: const Icon(Icons.add_rounded),
-            )
-          : null,
+      // floatingActionButton: _librariesProvider.currentLibrary != null
+      //     ? FloatingActionButton(
+      //         onPressed: () {
+      //           Navigator.of(context).push(MaterialPageRoute(
+      //             builder: (BuildContext context) => const EditBookScreen(),
+      //           ));
+      //         },
+      //         child: const Icon(Icons.add_rounded),
+      //       )
+      //     : null,
     );
   }
 }

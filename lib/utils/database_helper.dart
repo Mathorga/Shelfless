@@ -96,9 +96,9 @@ class DatabaseHelper {
     await db.execute(
       """
       CREATE TABLE $authorsTable(
-        ${authorsTable}_id INTEGER PRIMARY KEY AUTOINCREMENT
-        ${authorsTable}_first_name TEXT NOT NULL
-        ${authorsTable}_last_name TEXT NOT NULL
+        ${authorsTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ${authorsTable}_first_name TEXT NOT NULL,
+        ${authorsTable}_last_name TEXT NOT NULL,
         ${authorsTable}_nationality TEXT
       )
       """,
