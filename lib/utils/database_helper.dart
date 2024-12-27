@@ -249,6 +249,15 @@ class DatabaseHelper {
     }
   }
 
+  Future<void> insertLibrary(Library library) async {
+    int id = await _db.insert(librariesTable, library.toMap());
+    library.id = id;
+  }
+
+  Future<void> updateLibrary(Library library) async {
+    await _db.update(librariesTable, library.toMap());
+  }
+
   Future<Author?> getAuthor(int id) async {
     final List<Map<String, dynamic>> rawData = await _db.query(
       authorsTable,

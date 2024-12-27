@@ -196,11 +196,11 @@ class LibrariesOverviewScreen extends StatelessWidget {
             child: const Icon(Icons.note_add_rounded),
             onTap: () {
               // Navigate to library creation screen.
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (BuildContext context) => const EditLibraryScreen(),
-              //   ),
-              // );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const EditLibraryScreen(),
+                ),
+              );
             },
           ),
         ],

@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:shelfless/models/book.dart';
+import 'package:shelfless/utils/database_helper.dart';
 
 class Library {
   int? id;
@@ -14,6 +13,11 @@ class Library {
     required this.name,
     this.books = const [],
   });
+
+  Map<String, dynamic> toMap() => {
+    "${DatabaseHelper.librariesTable}_id": id,
+    "${DatabaseHelper.librariesTable}_name": name,
+  };
 
   // Library.fromMap({required Map<String, dynamic> map}):
 
