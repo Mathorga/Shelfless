@@ -31,13 +31,13 @@ class LibrariesOverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<LibraryPreview> libraries;
+
     return Scaffold(
       appBar: _buildAppBar(),
       // backgroundColor: ShelfishColors.librariesBackground,
       body: FutureBuilder(
         future: DatabaseHelper.instance.getLibraries(),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<LibraryPreview>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<LibraryPreview>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
@@ -82,8 +82,7 @@ class LibrariesOverviewScreen extends StatelessWidget {
                       return;
                     }
 
-                    final Library library =
-                        await DatabaseHelper.instance.getLibrary(libraryId);
+                    final Library library = await DatabaseHelper.instance.getLibrary(libraryId);
 
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -99,48 +98,47 @@ class LibrariesOverviewScreen extends StatelessWidget {
                             LibraryPreviewWidget(
                               library: libraries[index],
                             ),
-                            // Align(
-                            //   alignment: Alignment.topRight,
-                            //   child: IconButton(
-                            //     onPressed: () {
-                            //       // Go to library info.
-                            //       Navigator.of(context).push(
-                            //         MaterialPageRoute(
-                            //           builder: (BuildContext context) =>
-                            //               EditLibraryScreen(
-                            //             library: libraries[index],
-                            //           ),
-                            //         ),
-                            //       );
-                            //     },
-                            //     icon: const Icon(
-                            //       Icons.edit_rounded,
-                            //       shadows: [
-                            //         Shadow(
-                            //           color: Colors.black,
-                            //           blurRadius: 2.0,
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-                            // Align(
-                            //   alignment: Alignment.topLeft,
-                            //   child: IconButton(
-                            //     onPressed: () {
-                            //       _showDeleteDialog(context, libraries[index]);
-                            //     },
-                            //     icon: const Icon(
-                            //       Icons.delete_rounded,
-                            //       shadows: [
-                            //         Shadow(
-                            //           color: Colors.black,
-                            //           blurRadius: 2.0,
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                onPressed: () {
+                                  // Go to library info.
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) => EditLibraryScreen(
+                                        libraryId: libraries[index].id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.edit_rounded,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black,
+                                      blurRadius: 2.0,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: IconButton(
+                                onPressed: () {
+                                  // _showDeleteDialog(context, libraries[index]);
+                                },
+                                icon: const Icon(
+                                  Icons.delete_rounded,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black,
+                                      blurRadius: 2.0,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         )
                       : Card(
@@ -194,9 +192,9 @@ class LibrariesOverviewScreen extends StatelessWidget {
           SpeedDialChild(
             label: strings.newLib,
             child: const Icon(Icons.note_add_rounded),
-            onTap: () {
+            onTap: () async {
               // Navigate to library creation screen.
-              Navigator.of(context).push(
+              await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => const EditLibraryScreen(),
                 ),
