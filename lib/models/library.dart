@@ -25,11 +25,11 @@ class Library extends HiveObject {
   });
 
   Library.fromSerializableString({required this.name, required String csvString}) : books = HiveList(Hive.box<Book>("books")) {
-    final Box<Book> _books = Hive.box<Book>("books");
-    final Box<Author> _authors = Hive.box<Author>("authors");
-    final Box<Genre> _genres = Hive.box<Genre>("genres");
-    final Box<Publisher> _publishers = Hive.box<Publisher>("publishers");
-    final Box<StoreLocation> _locations = Hive.box<StoreLocation>("store_locations");
+    final Box<Book> books = Hive.box<Book>("books");
+    final Box<Author> authors = Hive.box<Author>("authors");
+    final Box<Genre> genres = Hive.box<Genre>("genres");
+    final Box<Publisher> publishers = Hive.box<Publisher>("publishers");
+    final Box<StoreLocation> locations = Hive.box<StoreLocation>("store_locations");
 
     // Separate csv lines: each line is a book.
     final List<String> lines = csvString.split("\n");
@@ -37,7 +37,7 @@ class Library extends HiveObject {
     // The first line is skipped, as it's just a header.
     for (String bookString in lines.skip(1)) {
       // Prepare book for insertion.
-      final Book book = Book(authors: HiveList(_authors), genres: HiveList(_genres));
+      final Book book = Book(authors: HiveList(authors), genres: HiveList(genres));
 
       // Separate book fields.
       final List<String> fields = bookString.split(";");
@@ -58,11 +58,11 @@ class Library extends HiveObject {
 
         // Make sure the author is already present in the DB, insert it otherwise.
         Author bookAuthor = author;
-        if (!_authors.values.contains(author)) {
-          _authors.add(author);
+        if (!authors.values.contains(author)) {
+          authors.add(author);
           author.save();
         } else {
-          bookAuthor = _authors.values.singleWhere((Author element) => element == author);
+          bookAuthor = authors.values.singleWhere((Author element) => element == author);
         }
 
         if (!book.authors.contains(bookAuthor)) {
@@ -80,11 +80,11 @@ class Library extends HiveObject {
 
         // Make sure the genre is already present in the DB, insert it otherwise.
         Genre bookGenre = genre;
-        if (!_genres.values.contains(genre)) {
-          _genres.add(genre);
+        if (!genres.values.contains(genre)) {
+          genres.add(genre);
           genre.save();
         } else {
-          bookGenre = _genres.values.singleWhere((Genre element) => element == genre);
+          bookGenre = genres.values.singleWhere((Genre element) => element == genre);
         }
 
         if (!book.genres.contains(bookGenre)) {
@@ -98,11 +98,11 @@ class Library extends HiveObject {
 
       // Make sure the publisher is already present in the DB, insert it otherwise.
       Publisher bookPublisher = publisher;
-      if (!_publishers.values.contains(publisher)) {
-        _publishers.add(publisher);
+      if (!publishers.values.contains(publisher)) {
+        publishers.add(publisher);
         publisher.save();
       } else {
-        bookPublisher = _publishers.values.singleWhere((Publisher element) => element == publisher);
+        bookPublisher = publishers.values.singleWhere((Publisher element) => element == publisher);
       }
 
       book.publisher = bookPublisher;
@@ -113,26 +113,26 @@ class Library extends HiveObject {
 
       // Make sure the location is already present in the DB, insert it otherwise.
       StoreLocation bookLocation = location;
-      if (!_locations.values.contains(location)) {
-        _locations.add(location);
+      if (!locations.values.contains(location)) {
+        locations.add(location);
         location.save();
       } else {
-        bookLocation = _locations.values.singleWhere((StoreLocation element) => element == location);
+        bookLocation = locations.values.singleWhere((StoreLocation element) => element == location);
       }
 
       book.location = bookLocation;
 
       // Save the book to the DB if not already present.
       Book finalBook = book;
-      if (!_books.values.contains(book)) {
-        _books.add(book);
+      if (!books.values.contains(book)) {
+        books.add(book);
         book.save();
       } else {
-        finalBook = _books.values.singleWhere((Book element) => element == book);
+        finalBook = books.values.singleWhere((Book element) => element == book);
       }
 
       // Add the book to the library.
-      if (!books.contains(finalBook)) {
+      if (!books.containsKey(finalBook)) {
         books.add(finalBook);
       }
     }

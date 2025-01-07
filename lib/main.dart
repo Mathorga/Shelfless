@@ -19,7 +19,6 @@ import 'package:shelfless/screens/books_filter_screen.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/screens/import_library_screen.dart';
 import 'package:shelfless/screens/libraries_overview_screen.dart';
-import 'package:shelfless/screens/library_screen.dart';
 import 'package:shelfless/screens/publisher_info_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -68,7 +67,7 @@ class Shelfish extends StatelessWidget {
           colorScheme: ColorScheme.dark(
             primary: ShelflessColors.primary,
             secondary: ShelflessColors.secondary,
-            background: ShelflessColors.mainBackground,
+            surface: ShelflessColors.mainBackground,
           ),
           appBarTheme: const AppBarTheme(
             color: Colors.transparent,

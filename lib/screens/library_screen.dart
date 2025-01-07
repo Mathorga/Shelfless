@@ -1,17 +1,9 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart';
-// import 'package:easy_search_bar/easy_search_bar.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:shelfless/models/library.dart';
 
+import 'package:shelfless/models/library.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
-import 'package:shelfless/screens/books_filter_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
@@ -20,7 +12,6 @@ import 'package:shelfless/widgets/genres_overview_widget.dart';
 import 'package:shelfless/widgets/books_overview_widget.dart';
 import 'package:shelfless/widgets/locations_overview_widget.dart';
 import 'package:shelfless/widgets/publishers_overview_widget.dart';
-import 'package:shelfless/widgets/separator_widget.dart';
 
 class LibraryScreen extends StatefulWidget {
   static const String routeName = "/library";
@@ -66,44 +57,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
             icon: Icon(Icons.help_outline_rounded),
             onPressed: () {},
           )
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 0.0,
-        onTap: (int selectedIndex) => setState(() => _currentIndex = selectedIndex),
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        unselectedItemColor: theme.colorScheme.onBackground,
-        selectedIconTheme: IconTheme.of(context).copyWith(
-          color: theme.colorScheme.primary,
-          size: 28.0,
-        ),
-        unselectedIconTheme: IconTheme.of(context).copyWith(
-          size: 22.0,
-        ),
-        backgroundColor: Colors.transparent,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.auto_stories_rounded),
-            label: strings.booksSectionTitle,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.category_rounded),
-            label: strings.genresSectionTitle,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person_rounded),
-            label: strings.authorsSectionTitle,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.location_city_rounded),
-            label: strings.publishersSectionTitle,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.auto_awesome_mosaic_rounded),
-            label: strings.locationsSectionTitle,
-          ),
         ],
       ),
       body: Padding(
