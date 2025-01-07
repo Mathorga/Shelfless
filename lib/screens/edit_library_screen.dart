@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfless/models/library.dart';
+import 'package:shelfless/models/library_element.dart';
+import 'package:shelfless/models/library_preview.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/themes/themes.dart';
-import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditLibraryScreen extends StatefulWidget {
   static const String routeName = "/edit-library";
 
-  final int? libraryId;
+  final LibraryPreview? library;
 
   const EditLibraryScreen({
     Key? key,
-    this.libraryId,
+    this.library,
   }) : super(key: key);
 
   @override
@@ -21,9 +22,7 @@ class EditLibraryScreen extends StatefulWidget {
 }
 
 class _EditLibraryScreenState extends State<EditLibraryScreen> {
-  Library? _library;
-
-  bool _loadingLibrary = true;
+  LibraryPreview? _library;
 
   // Insert flag: tells whether the widget is used for adding or editing an author.
   bool _inserting = true;
@@ -32,23 +31,9 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
   void initState() {
     super.initState();
 
-    _inserting = widget.libraryId == null;
+    _inserting = widget.library == null;
 
-    if (widget.libraryId == null) {
-      WidgetsBinding.instance.addPostFrameCallback((Duration duration) => Navigator.of(context).pop());
-      return;
-    }
-
-    _fetchLibrary();
-  }
-
-  /// Asks the DB for the library with the provided id.
-  Future<void> _fetchLibrary() async {
-    _library = await DatabaseHelper.instance.getLibrary(widget.libraryId!);
-
-    setState(() {
-      _loadingLibrary = false;
-    });
+    _library = widget.library ?? LibraryPreview(libraryElement: LibraryElement());
   }
 
   @override
@@ -69,9 +54,9 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
                   Text(strings.libraryInfoName),
                   Themes.spacer,
                   TextFormField(
-                    initialValue: _library?.name,
+                    initialValue: _library?.libraryElement.name,
                     textCapitalization: TextCapitalization.words,
-                    onChanged: (String value) => _library?.name = value,
+                    onChanged: (String value) => _library?.libraryElement.name = value,
                   ),
                   const SizedBox(
                     height: 24.0,
@@ -83,7 +68,7 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
                 // Actually save the library.
-                _inserting ? DatabaseHelper.instance.insertLibrary(_library!) : DatabaseHelper.instance.updateLibrary(_library!);
+                _inserting ? LibrariesProvider.instance.addLibrary(_library!) : LibrariesProvider.instance.updateLibrary(_library!);
                 Navigator.of(context).pop();
               },
               label: Row(
@@ -95,7 +80,7 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
               ),
             ),
           ),
-          if (_loadingLibrary)
+          if (_library == null)
             Center(
               child: CircularProgressIndicator(),
             ),

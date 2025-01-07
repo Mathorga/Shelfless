@@ -1,20 +1,24 @@
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/models/library_element.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 class LibraryPreview {
-  int? id;
-
-  String name;
+  LibraryElement libraryElement;
 
   int booksCount;
 
   LibraryPreview({
-    this.id,
-    required this.name,
+    required this.libraryElement,
     this.booksCount = 0,
   });
 
   LibraryPreview.fromMap(Map<String, dynamic> map)
-      : id = map["${DatabaseHelper.librariesTable}_id"],
-        name = map["${DatabaseHelper.librariesTable}_id"],
-        booksCount = map["books_count"];
+      : libraryElement = LibraryElement.fromMap(map),
+        booksCount = map["books_count"] ?? 0;
+
+  Map<String, dynamic> toElementMap() => libraryElement.toMap();
+
+  @override
+  String toString() {
+    return "${libraryElement.name} $booksCount ${booksCount == 1 ? strings.book : strings.books}";
+  }
 }

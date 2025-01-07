@@ -1,11 +1,13 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
+
+import 'package:collection/collection.dart';
+import 'package:sqflite/sqflite.dart';
+
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/library.dart';
+import 'package:shelfless/models/library_element.dart';
 import 'package:shelfless/models/library_preview.dart';
-
-import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
   // Private instance.
@@ -202,7 +204,7 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> rawData = await _db.rawQuery(
       """
       SELECT $librariesTable.*, bcbli.books_count AS books_count
-      FROM $librariesTable JOIN ($booksCountByLibraryId) AS bcbli
+      FROM $librariesTable LEFT JOIN ($booksCountByLibraryId) AS bcbli
       ON ${librariesTable}_id = bcbli.library_id
       ORDER BY ${librariesTable}_id ASC
       """,
@@ -231,9 +233,7 @@ class DatabaseHelper {
 
   Future<List<Book>> getBooks(int libraryId) async {
     final List<Map<String, dynamic>> rawData = await _db.rawQuery(books);
-    return rawData
-        .map((Map<String, dynamic> element) => Book.fromMap(map: element))
-        .toList();
+    return rawData.map((Map<String, dynamic> element) => Book.fromMap(map: element)).toList();
   }
 
   Future<void> insertBook(Book book) async {
@@ -254,8 +254,31 @@ class DatabaseHelper {
     library.id = id;
   }
 
+  /// Inserts the provided library in DB and sets its id with the one provided by the DB itself.
+  Future<void> insertLibraryElement(LibraryElement libraryElement) async {
+    int id = await _db.insert(librariesTable, libraryElement.toMap());
+    libraryElement.id = id;
+  }
+
   Future<void> updateLibrary(Library library) async {
     await _db.update(librariesTable, library.toMap());
+  }
+
+  Future<void> updateLibraryElement(LibraryElement libraryElement) async {
+    await _db.update(
+      librariesTable,
+      libraryElement.toMap(),
+      where: "${librariesTable}_id = ?",
+      whereArgs: [libraryElement.id],
+    );
+  }
+
+  Future<void> deleteLibraryElement(LibraryElement libraryElement) async {
+    await _db.delete(
+      librariesTable,
+      where: "${librariesTable}_id = ?",
+      whereArgs: [libraryElement.id],
+    );
   }
 
   Future<Author?> getAuthor(int id) async {
