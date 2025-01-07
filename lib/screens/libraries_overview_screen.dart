@@ -8,6 +8,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:shelfless/models/library.dart';
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/providers/library_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/screens/library_screen.dart';
 import 'package:shelfless/utils/database_helper.dart';
@@ -71,6 +72,8 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                   return;
                 }
 
+                LibraryProvider.instance.fetchLibrary(libraryId);
+
                 final Library library = await DatabaseHelper.instance.getLibrary(libraryId);
 
                 navigator.push(
@@ -82,6 +85,7 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                 );
               },
               child: index < LibrariesProvider.instance.libraries.length
+                  // Library preview.
                   ? Stack(
                       children: [
                         LibraryPreviewWidget(
@@ -130,6 +134,8 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                         ),
                       ],
                     )
+
+                  // All libraries.
                   : Card(
                       child: Align(
                         alignment: Alignment.bottomLeft,
@@ -161,14 +167,15 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
               FilePickerResult? result = await FilePicker.platform.pickFiles();
 
               if (result != null) {
-                // Retrieve the file name.
-                String fileName = result.files.single.name.split(".").first;
+                // TODO
+                // // Retrieve the file name.
+                // String fileName = result.files.single.name.split(".").first;
 
-                // Read the file.
-                File file = File(result.files.single.path!);
-                String fileContent = await file.readAsString();
+                // // Read the file.
+                // File file = File(result.files.single.path!);
+                // String fileContent = await file.readAsString();
 
-                // Create and add the library to DB.
+                // // Create and add the library to DB.
                 // librariesProvider.addLibrary(Library.fromSerializableString(name: fileName, csvString: fileContent));
               } else {
                 // User canceled the picker
