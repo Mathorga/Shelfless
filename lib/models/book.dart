@@ -11,7 +11,7 @@ class Book {
 
   String title;
 
-  int libraryId;
+  int? libraryId;
 
   int publishYear;
 

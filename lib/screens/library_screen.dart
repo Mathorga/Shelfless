@@ -6,11 +6,11 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shelfless/models/library.dart';
 
 import 'package:shelfless/screens/books_filter_screen.dart';
+import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
@@ -304,7 +304,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           final NavigatorState navigator = Navigator.of(context);
 
           // TODO Navigate to EditBookScreen
-          // navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
+          navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
         },
         child: Icon(Icons.add_rounded),
       ),
