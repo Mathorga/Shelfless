@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/library.dart';
-import 'package:shelfless/models/library_element.dart';
+import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/models/library_preview.dart';
 
 class DatabaseHelper {
@@ -233,7 +233,7 @@ class DatabaseHelper {
     );
   }
 
-  Future<LibraryElement?> getLibraryElement(int libraryId) async {
+  Future<RawLibrary?> getRawLibrary(int libraryId) async {
     final List<Map<String, dynamic>> rawData = await _db.query(
       librariesTable,
       where: "${librariesTable}_id = ?",
@@ -241,7 +241,7 @@ class DatabaseHelper {
       limit: 1,
     );
 
-    return rawData.map((Map<String, dynamic> element) => LibraryElement.fromMap(element)).firstOrNull;
+    return rawData.map((Map<String, dynamic> element) => RawLibrary.fromMap(element)).firstOrNull;
   }
 
   Future<List<Book>> getLibraryBooks(int libraryId) async {
@@ -251,7 +251,7 @@ class DatabaseHelper {
 
   Future<void> insertBook(Book book) async {
     // Insert the new book.
-    await _db.insert(booksTable, book.toMap());
+    await _db.insert(booksTable, book.raw.toMap());
 
     // Insert new records in all relationship tables as well.
     for (Map<String, dynamic> authorRelMap in book.authorsMaps()) {
@@ -268,7 +268,7 @@ class DatabaseHelper {
   }
 
   /// Inserts the provided library in DB and sets its id with the one provided by the DB itself.
-  Future<void> insertLibraryElement(LibraryElement libraryElement) async {
+  Future<void> insertRawLibrary(RawLibrary libraryElement) async {
     int id = await _db.insert(librariesTable, libraryElement.toMap());
     libraryElement.id = id;
   }
@@ -277,7 +277,7 @@ class DatabaseHelper {
     await _db.update(librariesTable, library.toMap());
   }
 
-  Future<void> updateLibraryElement(LibraryElement libraryElement) async {
+  Future<void> updateRawLibrary(RawLibrary libraryElement) async {
     await _db.update(
       librariesTable,
       libraryElement.toMap(),
@@ -286,7 +286,7 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> deleteLibraryElement(LibraryElement libraryElement) async {
+  Future<void> deleteRawLibrary(RawLibrary libraryElement) async {
     await _db.delete(
       librariesTable,
       where: "${librariesTable}_id = ?",

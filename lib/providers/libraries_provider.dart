@@ -27,7 +27,7 @@ class LibrariesProvider with ChangeNotifier {
 
   Future<void> addLibrary(LibraryPreview libraryPreview) async {
     // Save the library to DB.
-    await DatabaseHelper.instance.insertLibraryElement(libraryPreview.libraryElement);
+    await DatabaseHelper.instance.insertRawLibrary(libraryPreview.raw);
 
     // Store the library in memory.
     libraries.add(libraryPreview);
@@ -36,14 +36,14 @@ class LibrariesProvider with ChangeNotifier {
   }
 
   Future<void> updateLibrary(LibraryPreview libraryPreview) async {
-    await DatabaseHelper.instance.updateLibraryElement(libraryPreview.libraryElement);
+    await DatabaseHelper.instance.updateRawLibrary(libraryPreview.raw);
 
     notifyListeners();
   }
 
   Future<void> deleteLibrary(LibraryPreview libraryPreview) async {
     // TODO Also delete all books related to the provided library id.
-    await DatabaseHelper.instance.deleteLibraryElement(libraryPreview.libraryElement);
+    await DatabaseHelper.instance.deleteRawLibrary(libraryPreview.raw);
 
     libraries.remove(libraryPreview);
 

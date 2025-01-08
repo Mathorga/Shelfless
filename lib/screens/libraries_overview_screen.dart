@@ -62,7 +62,7 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                       // Prefetch handlers before async gaps.
                       final NavigatorState navigator = Navigator.of(context);
 
-                      final int? libraryId = LibrariesProvider.instance.libraries[index].libraryElement.id;
+                      final int? libraryId = LibrariesProvider.instance.libraries[index].raw.id;
 
                       // Head out if, for any reason, the selected library has no id.
                       if (libraryId == null) {

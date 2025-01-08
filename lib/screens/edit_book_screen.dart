@@ -6,6 +6,7 @@ import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/genre.dart';
 import 'package:shelfless/models/publisher.dart';
+import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_provider.dart';
@@ -55,8 +56,10 @@ class _EditBookScreenState extends State<EditBookScreen> {
     _book = widget.book != null
         ? widget.book!.copy()
         : Book(
-            libraryId: LibraryProvider.instance.library?.id,
-            publishYear: DateTime.now().year,
+            raw: RawBook(
+              libraryId: LibraryProvider.instance.library?.id,
+              publishYear: DateTime.now().year,
+            ),
           );
   }
 
@@ -70,7 +73,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
+          title: Text(
+              "${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -88,9 +92,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       Text(strings.bookInfoTitle),
                       Themes.spacer,
                       TextFormField(
-                        initialValue: _book.title,
+                        initialValue: _book.raw.title,
                         textCapitalization: TextCapitalization.words,
-                        onChanged: (String value) => _book.title = value,
+                        onChanged: (String value) => _book.raw.title = value,
                       ),
                     ],
                   ),
@@ -183,13 +187,12 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                 child: YearPicker(
                                   firstDate: DateTime(0),
                                   lastDate: DateTime(currentYear),
-                                  selectedDate: DateTime(_book.publishYear),
-                                  currentDate: DateTime(_book.publishYear),
-                                  initialDate: DateTime(_book.publishYear),
+                                  selectedDate: DateTime(_book.raw.publishYear),
+                                  currentDate: DateTime(_book.raw.publishYear),
                                   onChanged: (DateTime value) {
                                     Navigator.of(context).pop();
                                     setState(() {
-                                      _book.publishYear = value.year;
+                                      _book.raw.publishYear = value.year;
                                     });
                                   },
                                 ),
@@ -201,8 +204,10 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           width: double.infinity,
                           child: Card(
                             child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingMedium),
-                              child: Center(child: Text((_book.publishYear).toString())),
+                              padding:
+                                  const EdgeInsets.all(Themes.spacingMedium),
+                              child: Center(
+                                  child: Text((_book.raw.publishYear).toString())),
                             ),
                           ),
                         ),
@@ -292,37 +297,37 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         children: [
                           Text(strings.bookInfoPublisher),
                           // if (_book.publisherId == null)
-                            // DialogButtonWidget(
-                            //   label: Text(strings.select),
-                            //   title: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //     children: [
-                            //       Text(strings.publishers),
-                            //       TextButton(
-                            //         onPressed: () {
-                            //           // Navigator.of(context).pushNamed(EditPublisherScreen.routeName);
-                            //         },
-                            //         child: Text(strings.add),
-                            //       ),
-                            //     ],
-                            //   ),
-                            //   content: Consumer<PublishersProvider>(
-                            //     builder: (BuildContext context, PublishersProvider provider, Widget? child) => SearchListWidget<Publisher>(
-                            //       children: provider.publishers,
-                            //       filter: (Publisher publisher, String? filter) => filter != null ? publisher.toString().toLowerCase().contains(filter) : true,
-                            //       builder: (Publisher publisher) => ListTile(
-                            //         leading: Text(publisher.name),
-                            //         onTap: () {
-                            //           // Set the book location.
-                            //           setState(() {
-                            //             _book.publisher = publisher;
-                            //           });
-                            //           Navigator.of(context).pop();
-                            //         },
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
+                          // DialogButtonWidget(
+                          //   label: Text(strings.select),
+                          //   title: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       Text(strings.publishers),
+                          //       TextButton(
+                          //         onPressed: () {
+                          //           // Navigator.of(context).pushNamed(EditPublisherScreen.routeName);
+                          //         },
+                          //         child: Text(strings.add),
+                          //       ),
+                          //     ],
+                          //   ),
+                          //   content: Consumer<PublishersProvider>(
+                          //     builder: (BuildContext context, PublishersProvider provider, Widget? child) => SearchListWidget<Publisher>(
+                          //       children: provider.publishers,
+                          //       filter: (Publisher publisher, String? filter) => filter != null ? publisher.toString().toLowerCase().contains(filter) : true,
+                          //       builder: (Publisher publisher) => ListTile(
+                          //         leading: Text(publisher.name),
+                          //         onTap: () {
+                          //           // Set the book location.
+                          //           setState(() {
+                          //             _book.publisher = publisher;
+                          //           });
+                          //           Navigator.of(context).pop();
+                          //         },
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                       // if (_book.publisher != null)
@@ -346,37 +351,37 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         children: [
                           Text(strings.bookInfoLocation),
                           // if (_book.locationId == null)
-                            // DialogButtonWidget(
-                            //   label: Text(strings.select),
-                            //   title: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //     children: [
-                            //       Text(strings.locations),
-                            //       TextButton(
-                            //         onPressed: () {
-                            //           // Navigator.of(context).pushNamed(EditLocationScreen.routeName);
-                            //         },
-                            //         child: Text(strings.add),
-                            //       ),
-                            //     ],
-                            //   ),
-                            //   content: Consumer<StoreLocationsProvider>(
-                            //     builder: (BuildContext context, StoreLocationsProvider provider, Widget? child) => SearchListWidget<StoreLocation>(
-                            //       children: provider.locations,
-                            //       filter: (StoreLocation location, String? filter) => filter != null ? location.toString().toLowerCase().contains(filter) : true,
-                            //       builder: (StoreLocation location) => ListTile(
-                            //         leading: Text(location.name),
-                            //         onTap: () {
-                            //           // Set the book location.
-                            //           setState(() {
-                            //             _book.location = location;
-                            //           });
-                            //           Navigator.of(context).pop();
-                            //         },
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
+                          // DialogButtonWidget(
+                          //   label: Text(strings.select),
+                          //   title: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       Text(strings.locations),
+                          //       TextButton(
+                          //         onPressed: () {
+                          //           // Navigator.of(context).pushNamed(EditLocationScreen.routeName);
+                          //         },
+                          //         child: Text(strings.add),
+                          //       ),
+                          //     ],
+                          //   ),
+                          //   content: Consumer<StoreLocationsProvider>(
+                          //     builder: (BuildContext context, StoreLocationsProvider provider, Widget? child) => SearchListWidget<StoreLocation>(
+                          //       children: provider.locations,
+                          //       filter: (StoreLocation location, String? filter) => filter != null ? location.toString().toLowerCase().contains(filter) : true,
+                          //       builder: (StoreLocation location) => ListTile(
+                          //         leading: Text(location.name),
+                          //         onTap: () {
+                          //           // Set the book location.
+                          //           setState(() {
+                          //             _book.location = location;
+                          //           });
+                          //           Navigator.of(context).pop();
+                          //         },
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                       // if (_book.location != null)

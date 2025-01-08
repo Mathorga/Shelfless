@@ -1,16 +1,16 @@
 import 'package:shelfless/utils/database_helper.dart';
 
-class LibraryElement {
+class RawLibrary {
   int? id;
 
   String name;
 
-  LibraryElement({
+  RawLibrary({
     this.id,
     this.name = "",
   });
 
-  LibraryElement.fromMap(Map<String, dynamic> map)
+  RawLibrary.fromMap(Map<String, dynamic> map)
       : id = map["${DatabaseHelper.librariesTable}_id"],
         name = map["${DatabaseHelper.librariesTable}_name"];
 
