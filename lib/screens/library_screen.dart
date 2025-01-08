@@ -299,6 +299,15 @@ class _LibraryScreenState extends State<LibraryScreen> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final NavigatorState navigator = Navigator.of(context);
+
+          // TODO Navigate to EditBookScreen
+          // navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
+        },
+        child: Icon(Icons.add_rounded),
+      ),
     );
   }
 }

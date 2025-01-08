@@ -54,7 +54,7 @@ dependencies:
   material_floating_search_bar_2: ^0.5.0
 
   # Multiple choice FAB.
-  flutter_speed_dial: ^7.0.0
+  flutter_expandable_fab: ^2.3.0
 
   # Allows for file sharing to other apps.
   share_plus: ^10.1.2

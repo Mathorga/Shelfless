@@ -1,6 +1,5 @@
 // import 'package:flutter/material.dart';
 
-// import 'package:hive/hive.dart';
 // import 'package:provider/provider.dart';
 
 // import 'package:shelfless/models/author.dart';
@@ -46,9 +45,6 @@
 // }
 
 // class _EditBookScreenState extends State<EditBookScreen> {
-//   final Box<Author> _authors = Hive.box<Author>("authors");
-//   final Box<Genre> _genres = Hive.box<Genre>("genres");
-
 //   late Book _book;
 
 //   // Insert flag: tells whether the widget is used for adding or editing a book.

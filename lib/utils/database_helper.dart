@@ -142,8 +142,9 @@ class DatabaseHelper {
     await db.execute(
       """
       CREATE TABLE $bookAuthorRelTable(
-        ${bookAuthorRelTable}_book_id INTEGER PRIMARY KEY,
-        ${bookAuthorRelTable}_author_id INTEGER PRIMARY KEY
+        ${bookAuthorRelTable}_book_id INTEGER,
+        ${bookAuthorRelTable}_author_id INTEGER,
+        PRIMARY KEY (${bookAuthorRelTable}_book_id, ${bookAuthorRelTable}_author_id)
       )
       """,
     );
@@ -152,8 +153,9 @@ class DatabaseHelper {
     await db.execute(
       """
       CREATE TABLE $bookGenreRelTable(
-        ${bookGenreRelTable}_book_id INTEGER PRIMARY KEY,
-        ${bookGenreRelTable}_genre_id INTEGER PRIMARY KEY
+        ${bookGenreRelTable}_book_id INTEGER,
+        ${bookGenreRelTable}_genre_id INTEGER,
+        PRIMARY KEY (${bookGenreRelTable}_book_id, ${bookGenreRelTable}_genre_id)
       )
       """,
     );
@@ -163,24 +165,24 @@ class DatabaseHelper {
   SELECT $booksTable.*, ${bookAuthorRelTable}_author_id
   FROM $booksTable JOIN $bookAuthorRelTable
   ON ${booksTable}_id = ${bookAuthorRelTable}_book_id
-  ORDER_BY ${booksTable}_id ASC
+  ORDER BY ${booksTable}_id ASC
   """;
 
   String get booksWithGenreId => """
   SELECT $booksTable.*, ${bookGenreRelTable}_genre_id
   FROM $booksTable JOIN $bookGenreRelTable
   ON ${booksTable}_id = ${bookGenreRelTable}_book_id
-  ORDER_BY ${booksTable}_id ASC
+  ORDER BY ${booksTable}_id ASC
   """;
 
   String get booksWithAggregateAuthorIds => """
-  SELECT *, CONCAT(${bookAuthorRelTable}_author_id) AS author_ids
+  SELECT *, GROUP_CONCAT(${bookAuthorRelTable}_author_id) AS author_ids
   FROM ($booksWithAuthorId)
   GROUP BY ${booksTable}_id
   """;
 
   String get booksWithAggregateGenreIds => """
-  SELECT *, CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
+  SELECT *, GROUP_CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
   FROM ($booksWithGenreId)
   GROUP BY ${booksTable}_id
   """;
@@ -189,8 +191,8 @@ class DatabaseHelper {
   SELECT books_with_authors.*, books_with_genres.genre_ids
   FROM ($booksWithAggregateAuthorIds) AS books_with_authors
   JOIN ($booksWithAggregateGenreIds) AS books_with_genres
-  ON books_with_author.${booksTable}_id = books_with_genre.${booksTable}_id
-  ORDER BY books_with_author.${booksTable}_id ASC
+  ON books_with_authors.${booksTable}_id = books_with_genres.${booksTable}_id
+  ORDER BY books_with_authors.${booksTable}_id ASC
   """;
 
   String get booksCountByLibraryId => """
@@ -214,7 +216,7 @@ class DatabaseHelper {
   }
 
   Future<Library> getLibrary(int libraryId) async {
-    final List<Book> books = await getBooks(libraryId);
+    final List<Book> books = await getLibraryBooks(libraryId);
 
     final List<Map<String, dynamic>> rawData = await _db.rawQuery("""
       SELECT *
@@ -231,7 +233,18 @@ class DatabaseHelper {
     );
   }
 
-  Future<List<Book>> getBooks(int libraryId) async {
+  Future<LibraryElement?> getLibraryElement(int libraryId) async {
+    final List<Map<String, dynamic>> rawData = await _db.query(
+      librariesTable,
+      where: "${librariesTable}_id = ?",
+      whereArgs: [libraryId],
+      limit: 1,
+    );
+
+    return rawData.map((Map<String, dynamic> element) => LibraryElement.fromMap(element)).firstOrNull;
+  }
+
+  Future<List<Book>> getLibraryBooks(int libraryId) async {
     final List<Map<String, dynamic>> rawData = await _db.rawQuery(books);
     return rawData.map((Map<String, dynamic> element) => Book.fromMap(map: element)).toList();
   }
