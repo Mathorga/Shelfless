@@ -16,7 +16,7 @@ class Book {
     this.genreIds = const [],
   });
 
-  Book.fromMap({required Map<String, dynamic> map})
+  Book.fromMap(Map<String, dynamic> map)
       : raw = RawBook.fromMap(map: map),
         authorIds = map["author_ids"],
         genreIds = map["genre_ids"];

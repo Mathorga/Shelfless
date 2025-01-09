@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/author.dart';
-import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/models/raw_genre.dart';
 
 class BookPreviewWidget extends StatelessWidget {
   final Book book;

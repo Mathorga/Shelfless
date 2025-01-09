@@ -77,9 +77,8 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                         return;
                       }
 
-                      LibraryProvider.instance.fetchLibrary(libraryId);
-
-                      final Library library = await DatabaseHelper.instance.getLibrary(libraryId);
+                      LibraryPreview library = LibrariesProvider.instance.libraries[index];
+                      LibraryProvider.instance.fetchLibraryContent(library.raw);
 
                       navigator.push(
                         MaterialPageRoute(

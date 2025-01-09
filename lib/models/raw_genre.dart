@@ -1,19 +1,25 @@
+import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/utils.dart';
 
-class Genre {
+class RawGenre {
   int? id;
 
   String name;
 
   int color;
 
-  Genre({
+  RawGenre({
     this.id,
     required this.name,
     required this.color,
   });
 
-  Genre.fromSerializableString(String source)
+  RawGenre.fromMap(Map<String, dynamic> map)
+      : id = map["${DatabaseHelper.genresTable}_id"],
+        name = map["${DatabaseHelper.genresTable}_name"],
+        color = map["${DatabaseHelper.genresTable}_color"];
+
+  RawGenre.fromSerializableString(String source)
       : name = "",
         color = 0x00000000 {
     final List<String> parts = source.split("/");
@@ -22,15 +28,15 @@ class Genre {
   }
 
   /// Creates and returns a copy of [this].
-  Genre copy() {
-    return Genre(
+  RawGenre copy() {
+    return RawGenre(
       name: name,
       color: color,
     );
   }
 
   /// Copies all attributes from [other].
-  void copyFrom(Genre other) {
+  void copyFrom(RawGenre other) {
     name = other.name;
     color = other.color;
   }
@@ -41,7 +47,7 @@ class Genre {
   }
 
   @override
-  bool operator ==(Object other) => other is Genre && other.runtimeType == runtimeType && other.name == name;
+  bool operator ==(Object other) => other is RawGenre && other.runtimeType == runtimeType && other.name == name;
   
   @override
   int get hashCode => name.hashCode;

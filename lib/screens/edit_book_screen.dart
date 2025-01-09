@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
-import 'package:shelfless/models/genre.dart';
+import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/models/store_location.dart';
@@ -73,8 +73,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-              "${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
+          title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -106,68 +105,77 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(strings.bookInfoAuthors),
-                          // DialogButtonWidget(
-                          //   label: const Icon(Icons.add_rounded),
-                          //   title: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       Text(strings.bookInfoAuthors),
-                          //       TextButton(
-                          //         onPressed: () {
-                          //           // Navigator.of(context).push(
-                          //           //   MaterialPageRoute(
-                          //           //     builder: (BuildContext context) => const EditAuthorScreen(),
-                          //           //   ),
-                          //           // );
-                          //         },
-                          //         child: Text(strings.add),
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   content: Consumer<AuthorsProvider>(
-                          //     builder: (BuildContext context, AuthorsProvider provider, Widget? child) => SearchListWidget<Author>(
-                          //       children: provider.authors,
-                          //       filter: (Author author, String? filter) => filter != null ? author.toString().toLowerCase().contains(filter) : true,
-                          //       builder: (Author author) => GestureDetector(
-                          //         onTap: () {
-                          //           // Only add the author if not already there.
-                          //           if (!_book.authors.contains(author)) {
-                          //             setState(() {
-                          //               _book.authors.add(author);
-                          //             });
-                          //           } else {
-                          //             ScaffoldMessenger.of(context).showSnackBar(
-                          //               SnackBar(
-                          //                 content: Text(strings.authorAlreadyAdded),
-                          //                 duration: const Duration(seconds: 2),
-                          //               ),
-                          //             );
-                          //           }
-                          //           Navigator.of(context).pop();
-                          //         },
-                          //         child: AuthorPreviewWidget(
-                          //           author: author,
-                          //           live: false,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+                          DialogButtonWidget(
+                            label: const Icon(Icons.add_rounded),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(strings.bookInfoAuthors),
+                                TextButton(
+                                  onPressed: () {
+                                    // Navigator.of(context).push(
+                                    //   MaterialPageRoute(
+                                    //     builder: (BuildContext context) => const EditAuthorScreen(),
+                                    //   ),
+                                    // );
+                                  },
+                                  child: Text(strings.add),
+                                ),
+                              ],
+                            ),
+                            content: SearchListWidget<int?>(
+                              children: LibraryProvider.instance.authors.keys.toList(),
+                              filter: (int? authorId, String? filter) =>
+                                  filter != null ? LibraryProvider.instance.authors[authorId].toString().toLowerCase().contains(filter) : true,
+                              builder: (int? authorId) {
+                                final Author? author = LibraryProvider.instance.authors[authorId];
+
+                                if (author == null) {
+                                  return Placeholder();
+                                }
+
+                                return GestureDetector(
+                                  onTap: () {
+                                    // Make sure the authorId is not null.
+                                    if (authorId == null) return;
+
+                                    // Make sure the book does not already includes the selected author.
+                                    if (_book.authorIds.contains(authorId)) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(strings.authorAlreadyAdded),
+                                          duration: const Duration(seconds: 2),
+                                        ),
+                                      );
+                                      return;
+                                    }
+
+                                    setState(() {
+                                      _book.authorIds.add(authorId);
+                                    });
+
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: AuthorPreviewWidget(author: author),
+                                );
+                              },
+                            ),
+                          ),
                         ],
                       ),
-                      // if (_book.authorIds.isNotEmpty)
-                      //   Column(
-                      //     children: [
-                      //       Themes.spacer,
-                      //       Padding(
-                      //         padding: const EdgeInsets.all(12.0),
-                      //         child: Column(
-                      //           crossAxisAlignment: CrossAxisAlignment.stretch,
-                      //           children: _book.authors.map((Author author) => _buildAuthorPreview(author)).toList(),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
+                      if (_book.authorIds.isNotEmpty)
+                        Column(
+                          children: [
+                            Themes.spacer,
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: _book.authorIds.map((int authorId) => _buildAuthorPreview(authorId)).toList(),
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
 
@@ -184,6 +192,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                               title: Text(strings.selectPublishYear),
                               content: SizedBox(
                                 width: dialogWidth,
+                                height: 300.0,
                                 child: YearPicker(
                                   firstDate: DateTime(0),
                                   lastDate: DateTime(currentYear),
@@ -204,10 +213,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           width: double.infinity,
                           child: Card(
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.all(Themes.spacingMedium),
-                              child: Center(
-                                  child: Text((_book.raw.publishYear).toString())),
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
+                              child: Center(child: Text((_book.raw.publishYear).toString())),
                             ),
                           ),
                         ),
@@ -436,17 +443,22 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
   }
 
-  // Widget _buildAuthorPreview(Author author) => _buildPreview(
-  //       AuthorPreviewWidget(
-  //         author: author,
-  //         live: false,
-  //       ),
-  //       onDelete: () {
-  //         setState(() {
-  //           _book.authors.remove(author);
-  //         });
-  //       },
-  //     );
+  Widget _buildAuthorPreview(int authorId) {
+    final Author? author = LibraryProvider.instance.authors[authorId];
+
+    if (author == null) return Placeholder();
+
+    return _buildPreview(
+      AuthorPreviewWidget(
+        author: author,
+      ),
+      onDelete: () {
+        setState(() {
+          _book.authorIds.remove(authorId);
+        });
+      },
+    );
+  }
 
   // Widget _buildGenrePreview(Genre genre) => _buildPreview(
   //       GenrePreviewWidget(genre: genre),

@@ -1,51 +1,41 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
-// import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
-// import 'package:shelfless/models/author.dart';
-// import 'package:shelfless/providers/libraries_provider.dart';
-// import 'package:shelfless/themes/shelfless_colors.dart';
-// import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/models/author.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/themes/themes.dart';
 
-// class AuthorPreviewWidget extends StatelessWidget {
-//   final Author author;
-//   final void Function()? onTap;
+class AuthorPreviewWidget extends StatelessWidget {
+  final Author author;
+  final void Function()? onTap;
 
-//   /// Tells whether the widget should reflect the actual state of the given author or not.
-//   final bool live;
+  const AuthorPreviewWidget({
+    Key? key,
+    required this.author,
+    this.onTap,
+  }) : super(key: key);
 
-//   const AuthorPreviewWidget({
-//     Key? key,
-//     required this.author,
-//     this.onTap,
-//     this.live = true,
-//   }) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final LibrariesProvider librariesProvider = Provider.of(context, listen: true);
-
-//     final bool inCurrentLibrary = librariesProvider.authorInCurrentLibrary(author);
-
-//     final bool displayFull = !live || inCurrentLibrary;
-
-//     return GestureDetector(
-//       onTap: displayFull ? onTap : null,
-//       child: Card(
-//         color: displayFull ? Theme.of(context).cardColor : Theme.of(context).cardColor.withAlpha(0x7F),
-//         elevation: displayFull ? Theme.of(context).cardTheme.elevation : 0.0,
-//         child: Align(
-//           alignment: Alignment.bottomLeft,
-//           child: Padding(
-//             padding: const EdgeInsets.all(Themes.spacingMedium),
-//             child: Text(
-//               "${author.firstName} ${author.lastName}",
-//               textAlign: TextAlign.center,
-//               style: TextStyle(color: displayFull ? ShelflessColors.onMainContentActive : ShelflessColors.onMainContentInactive),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        color: Theme.of(context).cardColor,
+        elevation: Theme.of(context).cardTheme.elevation,
+        child: Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(Themes.spacingMedium),
+            child: Text(
+              "${author.firstName} ${author.lastName}",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: ShelflessColors.onMainContentActive),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
