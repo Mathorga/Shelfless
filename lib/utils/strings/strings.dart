@@ -51,6 +51,8 @@ class Strings {
   String get publishers => "";
   String get locations => "";
   String get bookErrorNoTitleProvided => "";
+  String get bookErrorNoAuthorProvided => "";
+  String get bookErrorNoGenreProvided => "";
   String get genreTitle => "";
   String get genreInfoName => "";
   String get genreInfoColor => "";

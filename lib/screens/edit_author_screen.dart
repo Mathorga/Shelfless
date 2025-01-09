@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -20,7 +18,7 @@ class EditAuthorScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _EditAuthorScreenState createState() => _EditAuthorScreenState();
+  State<EditAuthorScreen> createState() => _EditAuthorScreenState();
 }
 
 class _EditAuthorScreenState extends State<EditAuthorScreen> {

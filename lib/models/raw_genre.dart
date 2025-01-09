@@ -19,6 +19,14 @@ class RawGenre {
         name = map["${DatabaseHelper.genresTable}_name"],
         color = map["${DatabaseHelper.genresTable}_color"];
 
+  Map<String, dynamic> toMap() {
+    return {
+      "${DatabaseHelper.genresTable}_id": id,
+      "${DatabaseHelper.genresTable}_name": name,
+      "${DatabaseHelper.genresTable}_color": color,
+    };
+  }
+
   RawGenre.fromSerializableString(String source)
       : name = "",
         color = 0x00000000 {

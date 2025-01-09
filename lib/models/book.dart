@@ -12,9 +12,10 @@ class Book {
 
   Book({
     required this.raw,
-    this.authorIds = const [],
-    this.genreIds = const [],
-  });
+    inAuthorIds,
+    inGenreIds,
+  })  : authorIds = inAuthorIds ?? [],
+        genreIds = inGenreIds ?? [];
 
   Book.fromMap(Map<String, dynamic> map)
       : raw = RawBook.fromMap(map: map),
@@ -25,8 +26,8 @@ class Book {
   Book copy() {
     return Book(
       raw: raw.copy(),
-      authorIds: authorIds,
-      genreIds: genreIds,
+      inAuthorIds: authorIds,
+      inGenreIds: genreIds,
     );
   }
 
@@ -47,15 +48,8 @@ class Book {
 
   @override
   bool operator ==(Object other) =>
-      other is Book &&
-      other.runtimeType == runtimeType &&
-      other.raw == raw &&
-      listEquals(other.authorIds, authorIds) &&
-      listEquals(other.genreIds, genreIds);
+      other is Book && other.runtimeType == runtimeType && other.raw == raw && listEquals(other.authorIds, authorIds) && listEquals(other.genreIds, genreIds);
 
   @override
-  int get hashCode =>
-      raw.hashCode +
-      Object.hashAll(authorIds) +
-      Object.hashAll(genreIds);
+  int get hashCode => raw.hashCode + Object.hashAll(authorIds) + Object.hashAll(genreIds);
 }

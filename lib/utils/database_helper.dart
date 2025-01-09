@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'package:collection/collection.dart';
+import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -304,18 +305,18 @@ class DatabaseHelper {
     return rawData.map((Map<String, dynamic> element) => Author.fromMap(element)).toList();
   }
 
-  Future<Author?> getAuthor(int id) async {
+  Future<RawGenre?> getAuthor(int id) async {
     final List<Map<String, dynamic>> rawData = await _db.query(
       authorsTable,
       where: "${authorsTable}_id = ?",
       whereArgs: [id],
     );
 
-    return rawData.isEmpty ? null : Author.fromMap(rawData.first);
+    return rawData.isEmpty ? null : RawGenre.fromMap(rawData.first);
   }
 
   Future<void> insertAuthor(Author author) async {
-    // Insert the new book.
+    // Insert the new author.
     author.id = await _db.insert(authorsTable, author.toMap());
   }
 
@@ -331,6 +332,26 @@ class DatabaseHelper {
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
 
+  // ###############################################################################################################################################################################
+  // Genre CRUDs.
+  // ###############################################################################################################################################################################
+
+  Future<void> insertGenre(RawGenre rawGenre) async {
+    // Insert the new author.
+    rawGenre.id = await _db.insert(genresTable, rawGenre.toMap());
+  }
+
+  Future<void> updateGenre(RawGenre rawGenre) async {
+    await _db.update(
+      genresTable,
+      rawGenre.toMap(),
+      where: "${genresTable}_id = ?",
+      whereArgs: [rawGenre.id],
+    );
+  }
+  // ###############################################################################################################################################################################
+  // ###############################################################################################################################################################################
+
   Future<void> insertBook(Book book) async {
     // Insert the new book and update its id.
     book.raw.id = await _db.insert(booksTable, book.raw.toMap());
@@ -342,6 +363,34 @@ class DatabaseHelper {
     for (Map<String, dynamic> genreRelMap in book.genresMaps()) {
       await _db.insert(bookGenreRelTable, genreRelMap);
     }
+  }
+
+  Future<void> updateBook(Book book) async {
+    // Update the book.
+    await _db.update(
+      booksTable,
+      book.raw.toMap(),
+      where: "${booksTable}_id = ?",
+      whereArgs: [book.raw.id],
+    );
+
+    // Insert new records in all relationship tables as well.
+    for (Map<String, dynamic> authorRelMap in book.authorsMaps()) {
+      await _db.insert(bookAuthorRelTable, authorRelMap);
+    }
+    for (Map<String, dynamic> genreRelMap in book.genresMaps()) {
+      await _db.insert(bookGenreRelTable, genreRelMap);
+    }
+  }
+
+  Future<void> addAuthorToBook(int bookId, int authorId) async {
+    await _db.insert(
+      bookAuthorRelTable,
+      {
+        "${bookAuthorRelTable}_book_id": bookId,
+        "${bookAuthorRelTable}_author_id": authorId,
+      },
+    );
   }
 
   // Future<Library> getLibrary(int libraryId) async {

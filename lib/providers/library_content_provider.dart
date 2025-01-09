@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
-import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/models/publisher.dart';
@@ -42,13 +41,21 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Author> getBookAuthors(Book book) {
+  List<RawGenre> getBookAuthors(Book book) {
     // TODO
     return [];
   }
 
-  void addBook(RawBook rawBook) async {
-    // TODO
+  void storeNewBook(Book book) async {
+    await DatabaseHelper.instance.insertBook(book);
+
+    notifyListeners();
+  }
+
+  void storeBookUpdate(Book book) async {
+    await DatabaseHelper.instance.updateBook(book);
+
+    notifyListeners();
   }
 
   void addAuthor(Author author) async {
@@ -64,6 +71,37 @@ class LibraryContentProvider with ChangeNotifier {
   void updateAuthor(Author author) async {
     // Update the provided author in DB.
     await DatabaseHelper.instance.updateAuthor(author);
+
+    notifyListeners();
+  }
+
+  void addGenre(RawGenre rawGenre) async {
+    // Save the provided genre to DB.
+    await DatabaseHelper.instance.insertGenre(rawGenre);
+
+    // Only save the author locally after storing it to DB.
+    genres[rawGenre.id] = rawGenre;
+
+    notifyListeners();
+  }
+
+  void updateGenre(RawGenre rawGenre) async {
+    // Update the provided genre in DB.
+    await DatabaseHelper.instance.updateGenre(rawGenre);
+
+    notifyListeners();
+  }
+
+  void addAuthorToBook(int authorId, Book book) async {
+    // Only save the relationship locally.
+    book.authorIds.add(authorId);
+
+    notifyListeners();
+  }
+
+  void addGenresToBook(Set<int> genreIds, Book book) async {
+    // Only save the relationship locally.
+    book.genreIds.addAll(genreIds);
 
     notifyListeners();
   }

@@ -51,6 +51,8 @@ class ItStrings implements Strings {
   @override String get publishers => "Editori";
   @override String get locations => "Posizioni";
   @override String get bookErrorNoTitleProvided => "Inserire un titolo";
+  @override String get bookErrorNoAuthorProvided => "Inserire almeno un autore";
+  @override String get bookErrorNoGenreProvided => "Inserire almeno un genere";
   @override String get genreTitle=> "Genere";
   @override String get genreInfoName=> "Nome";
   @override String get genreInfoColor => "Colore";

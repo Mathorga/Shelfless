@@ -49,6 +49,8 @@ class EnStrings implements Strings {
   @override String get publishers => "Publishers";
   @override String get locations => "Locations";
   @override String get bookErrorNoTitleProvided => "No title provided";
+  @override String get bookErrorNoAuthorProvided => "No author provided";
+  @override String get bookErrorNoGenreProvided => "No genre provided";
   @override String get genreTitle=> "Genre";
   @override String get genreInfoName=> "Name";
   @override String get genreInfoColor => "Color";

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/models/store_location.dart';
-import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
@@ -50,6 +47,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
   @override
   void initState() {
     super.initState();
+
+    LibraryContentProvider.instance.addListener(() => setState(() {}));
 
     _inserting = widget.book == null;
 
@@ -155,9 +154,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                           return;
                                         }
 
-                                        setState(() {
-                                          _book.authorIds.add(authorId);
-                                        });
+                                        LibraryContentProvider.instance.addAuthorToBook(authorId, _book);
 
                                         Navigator.of(context).pop();
                                       },
@@ -244,77 +241,82 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                 Text(strings.bookInfoGenres),
                                 TextButton(
                                   onPressed: () {
-                                    // Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) => EditGenreScreen(),
+                                    ));
                                   },
                                   child: Text(strings.add),
                                 ),
                               ],
                             ),
-                            content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
-                              // Make sure updates are reacted to.
-                              LibraryContentProvider.instance.addListener(() => setState(() {}));
+                            content: StatefulBuilder(
+                              builder: (BuildContext context, void Function(void Function()) setState) {
+                                // Make sure updates are reacted to.
+                                LibraryContentProvider.instance.addListener(() => setState(() {}));
 
-                              return SearchListWidget<int?>(
-                                children: LibraryContentProvider.instance.genres.keys.toList(),
-                                multiple: true,
-                                filter: (int? genreId, String? filter) =>
-                                    filter != null ? LibraryContentProvider.instance.genres[genreId].toString().toLowerCase().contains(filter) : true,
-                                builder: (int? genreId) {
-                                  final RawGenre? rawGenre = LibraryContentProvider.instance.genres[genreId];
+                                return SearchListWidget<int?>(
+                                  children: LibraryContentProvider.instance.genres.keys.toList(),
+                                  multiple: true,
+                                  filter: (int? genreId, String? filter) =>
+                                      filter != null ? LibraryContentProvider.instance.genres[genreId].toString().toLowerCase().contains(filter) : true,
+                                  builder: (int? genreId) {
+                                    final RawGenre? rawGenre = LibraryContentProvider.instance.genres[genreId];
 
-                                  if (rawGenre == null) {
-                                    return Placeholder();
-                                  }
-
-                                  return GenrePreviewWidget(genre: rawGenre);
-                                },
-                                onElementsSelected: (Set<int?> selectedGenreIds) {
-                                  // Prefetch handlers.
-                                  final NavigatorState navigator = Navigator.of(context);
-
-                                  bool duplicates = false;
-                                  for (int? genreId in selectedGenreIds) {
-                                    // Make sure the genreId is not null.
-                                    if (genreId == null) continue;
-
-                                    if (!_book.genreIds.contains(genreId)) {
-                                      _book.genreIds.add(genreId);
-                                    } else {
-                                      duplicates = true;
+                                    if (rawGenre == null) {
+                                      return Placeholder();
                                     }
-                                  }
 
-                                  if (duplicates) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(strings.authorAlreadyAdded),
-                                        duration: const Duration(milliseconds: 1000),
-                                      ),
-                                    );
-                                  }
+                                    return GenrePreviewWidget(genre: rawGenre);
+                                  },
+                                  onElementsSelected: (Set<int?> selectedGenreIds) {
+                                    // Prefetch handlers.
+                                    final NavigatorState navigator = Navigator.of(context);
 
-                                  setState(() {});
+                                    bool duplicates = false;
+                                    Set<int> genreIds = {};
+                                    for (int? genreId in selectedGenreIds) {
+                                      // Make sure the genreId is not null.
+                                      if (genreId == null) continue;
 
-                                  navigator.pop();
-                                },
-                              );
-                            }),
+                                      if (!_book.genreIds.contains(genreId)) {
+                                        genreIds.add(genreId);
+                                      } else {
+                                        duplicates = true;
+                                      }
+                                    }
+
+                                    if (duplicates) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(strings.authorAlreadyAdded),
+                                          duration: const Duration(milliseconds: 1000),
+                                        ),
+                                      );
+                                    }
+
+                                    LibraryContentProvider.instance.addGenresToBook(genreIds, _book);
+
+                                    navigator.pop();
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
-                      // if (_book.genreIds.isNotEmpty)
-                      //   Column(
-                      //     children: [
-                      //       Themes.spacer,
-                      //       Padding(
-                      //         padding: const EdgeInsets.all(12.0),
-                      //         child: Column(
-                      //           crossAxisAlignment: CrossAxisAlignment.stretch,
-                      //           children: _book.genres.map((Genre genre) => _buildGenrePreview(genre)).toList(),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
+                      if (_book.genreIds.isNotEmpty)
+                        Column(
+                          children: [
+                            Themes.spacer,
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: _book.genreIds.map((int genreId) => _buildGenrePreview(genreId)).toList(),
+                              ),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
 
@@ -434,24 +436,50 @@ class _EditBookScreenState extends State<EditBookScreen> {
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            // if (_book.title != "" && _book.authors.isNotEmpty && _book.genres.isNotEmpty) {
-            //   // Actually save the book.
-            //   if (_inserting) {
-            //     _booksProvider.addBook(_book);
-            //     _librariesProvider.addBookToCurrentLibrary(_book);
-            //   } else {
-            //     _booksProvider.updateBook(widget.book!..copyFrom(_book));
-            //   }
+            // Prefetch handlers before async gaps.
+            final NavigatorState navigator = Navigator.of(context);
 
-            //   Navigator.of(context).pop();
-            // } else {
-            //   ScaffoldMessenger.of(context).showSnackBar(
-            //     SnackBar(
-            //       content: Text(strings.bookErrorNoTitleProvided),
-            //       duration: const Duration(seconds: 2),
-            //     ),
-            //   );
-            // }
+            if (_book.raw.title == "") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(strings.bookErrorNoTitleProvided),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+
+              return;
+            }
+
+            if (_book.authorIds.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(strings.bookErrorNoAuthorProvided),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+
+              return;
+            }
+
+            if (_book.genreIds.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(strings.bookErrorNoGenreProvided),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+
+              return;
+            }
+
+            // Actually save the book.
+            if (_inserting) {
+              LibraryContentProvider.instance.storeNewBook(_book);
+            } else {
+              LibraryContentProvider.instance.storeBookUpdate(_book);
+            }
+
+            navigator.pop();
           },
           label: Row(
             children: [
@@ -471,9 +499,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     if (author == null) return Placeholder();
 
     return _buildPreview(
-      AuthorPreviewWidget(
-        author: author,
-      ),
+      AuthorPreviewWidget(author: author),
       onDelete: () {
         setState(() {
           _book.authorIds.remove(authorId);
@@ -482,14 +508,20 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
   }
 
-  // Widget _buildGenrePreview(Genre genre) => _buildPreview(
-  //       GenrePreviewWidget(genre: genre),
-  //       onDelete: () {
-  //         setState(() {
-  //           _book.genres.remove(genre);
-  //         });
-  //       },
-  //     );
+  Widget _buildGenrePreview(int genreId) {
+    final RawGenre? rawGenre = LibraryContentProvider.instance.genres[genreId];
+
+    if (rawGenre == null) return Placeholder();
+
+    return _buildPreview(
+      GenrePreviewWidget(genre: rawGenre),
+      onDelete: () {
+        setState(() {
+          _book.genreIds.remove(genreId);
+        });
+      },
+    );
+  }
 
   // Widget _buildPublisherPreview(Publisher publisher) => _buildPreview(
   //       PublisherPreviewWidget(publisher: publisher),
