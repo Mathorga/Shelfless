@@ -22,6 +22,9 @@ class Themes {
   /// Default max width, used for displaying columns and vertical lists on large screens.
   static const double maxContentWidth = 500.0;
 
+  /// Default max dialog height, used for limiting a dialog's height on tall screens.
+  static const double maxDialogHeight = 400.0;
+
   /// Default scroll physics, used to animated scrollables (columns, rows, lists, etc).
   static const ScrollPhysics scrollPhysics = BouncingScrollPhysics();
 

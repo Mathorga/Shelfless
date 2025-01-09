@@ -9,7 +9,7 @@ import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
-import 'package:shelfless/providers/library_provider.dart';
+import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/screens/edit_location_screen.dart';
@@ -57,7 +57,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
         ? widget.book!.copy()
         : Book(
             raw: RawBook(
-              libraryId: LibraryProvider.instance.library?.id,
+              libraryId: LibraryContentProvider.instance.library?.id,
               publishYear: DateTime.now().year,
             ),
           );
@@ -113,50 +113,57 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                 Text(strings.bookInfoAuthors),
                                 TextButton(
                                   onPressed: () {
-                                    // Navigator.of(context).push(
-                                    //   MaterialPageRoute(
-                                    //     builder: (BuildContext context) => const EditAuthorScreen(),
-                                    //   ),
-                                    // );
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) => const EditAuthorScreen(),
+                                      ),
+                                    );
                                   },
                                   child: Text(strings.add),
                                 ),
                               ],
                             ),
-                            content: SearchListWidget<int?>(
-                              children: LibraryProvider.instance.authors.keys.toList(),
-                              filter: (int? authorId, String? filter) =>
-                                  filter != null ? LibraryProvider.instance.authors[authorId].toString().toLowerCase().contains(filter) : true,
-                              builder: (int? authorId) {
-                                final Author? author = LibraryProvider.instance.authors[authorId];
+                            content: StatefulBuilder(
+                              builder: (BuildContext context, void Function(void Function()) setState) {
+                                // Make sure updates are reacted to.
+                                LibraryContentProvider.instance.addListener(() => setState(() {}));
 
-                                if (author == null) {
-                                  return Placeholder();
-                                }
+                                return SearchListWidget<int?>(
+                                  children: LibraryContentProvider.instance.authors.keys.toList(),
+                                  filter: (int? authorId, String? filter) =>
+                                      filter != null ? LibraryContentProvider.instance.authors[authorId].toString().toLowerCase().contains(filter) : true,
+                                  builder: (int? authorId) {
+                                    final Author? author = LibraryContentProvider.instance.authors[authorId];
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    // Make sure the authorId is not null.
-                                    if (authorId == null) return;
-
-                                    // Make sure the book does not already includes the selected author.
-                                    if (_book.authorIds.contains(authorId)) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(strings.authorAlreadyAdded),
-                                          duration: const Duration(seconds: 2),
-                                        ),
-                                      );
-                                      return;
+                                    if (author == null) {
+                                      return Placeholder();
                                     }
 
-                                    setState(() {
-                                      _book.authorIds.add(authorId);
-                                    });
+                                    return GestureDetector(
+                                      onTap: () {
+                                        // Make sure the authorId is not null.
+                                        if (authorId == null) return;
 
-                                    Navigator.of(context).pop();
+                                        // Make sure the book does not already includes the selected author.
+                                        if (_book.authorIds.contains(authorId)) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text(strings.authorAlreadyAdded),
+                                              duration: const Duration(seconds: 2),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        setState(() {
+                                          _book.authorIds.add(authorId);
+                                        });
+
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: AuthorPreviewWidget(author: author),
+                                    );
                                   },
-                                  child: AuthorPreviewWidget(author: author),
                                 );
                               },
                             ),
@@ -192,7 +199,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                               title: Text(strings.selectPublishYear),
                               content: SizedBox(
                                 width: dialogWidth,
-                                height: 300.0,
+                                height: Themes.maxDialogHeight,
                                 child: YearPicker(
                                   firstDate: DateTime(0),
                                   lastDate: DateTime(currentYear),
@@ -229,55 +236,70 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(strings.bookInfoGenres),
-                          // DialogButtonWidget(
-                          //   label: const Icon(Icons.add_rounded),
-                          //   title: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       Text(strings.bookInfoGenres),
-                          //       TextButton(
-                          //         onPressed: () {
-                          //           // Navigator.of(context).pushNamed(EditGenreScreen.routeName);
-                          //         },
-                          //         child: Text(strings.add),
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   content: Consumer<GenresProvider>(
-                          //     builder: (BuildContext context, GenresProvider provider, Widget? child) => SearchListWidget<Genre>(
-                          //       children: provider.genres,
-                          //       multiple: true,
-                          //       filter: (Genre genre, String? filter) => filter != null ? genre.toString().toLowerCase().contains(filter) : true,
-                          //       builder: (Genre genre) => GenrePreviewWidget(genre: genre),
-                          //       onElementsSelected: (Set<Genre> selectedGenres) {
-                          //         // Prefetch handlers.
-                          //         final NavigatorState navigator = Navigator.of(context);
+                          DialogButtonWidget(
+                            label: const Icon(Icons.add_rounded),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(strings.bookInfoGenres),
+                                TextButton(
+                                  onPressed: () {
+                                    // Navigator.of(context).pushNamed(EditGenreScreen.routeName);
+                                  },
+                                  child: Text(strings.add),
+                                ),
+                              ],
+                            ),
+                            content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
+                              // Make sure updates are reacted to.
+                              LibraryContentProvider.instance.addListener(() => setState(() {}));
 
-                          //         bool duplicates = false;
-                          //         for (Genre genre in selectedGenres) {
-                          //           if (!_book.genres.contains(genre)) {
-                          //             _book.genres.add(genre);
-                          //           } else {
-                          //             duplicates = true;
-                          //           }
-                          //         }
+                              return SearchListWidget<int?>(
+                                children: LibraryContentProvider.instance.genres.keys.toList(),
+                                multiple: true,
+                                filter: (int? genreId, String? filter) =>
+                                    filter != null ? LibraryContentProvider.instance.genres[genreId].toString().toLowerCase().contains(filter) : true,
+                                builder: (int? genreId) {
+                                  final RawGenre? rawGenre = LibraryContentProvider.instance.genres[genreId];
 
-                          //         if (duplicates) {
-                          //           ScaffoldMessenger.of(context).showSnackBar(
-                          //             SnackBar(
-                          //               content: Text(strings.authorAlreadyAdded),
-                          //               duration: const Duration(milliseconds: 1000),
-                          //             ),
-                          //           );
-                          //         }
+                                  if (rawGenre == null) {
+                                    return Placeholder();
+                                  }
 
-                          //         setState(() {});
+                                  return GenrePreviewWidget(genre: rawGenre);
+                                },
+                                onElementsSelected: (Set<int?> selectedGenreIds) {
+                                  // Prefetch handlers.
+                                  final NavigatorState navigator = Navigator.of(context);
 
-                          //         navigator.pop();
-                          //       },
-                          //     ),
-                          //   ),
-                          // ),
+                                  bool duplicates = false;
+                                  for (int? genreId in selectedGenreIds) {
+                                    // Make sure the genreId is not null.
+                                    if (genreId == null) continue;
+
+                                    if (!_book.genreIds.contains(genreId)) {
+                                      _book.genreIds.add(genreId);
+                                    } else {
+                                      duplicates = true;
+                                    }
+                                  }
+
+                                  if (duplicates) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(strings.authorAlreadyAdded),
+                                        duration: const Duration(milliseconds: 1000),
+                                      ),
+                                    );
+                                  }
+
+                                  setState(() {});
+
+                                  navigator.pop();
+                                },
+                              );
+                            }),
+                          ),
                         ],
                       ),
                       // if (_book.genreIds.isNotEmpty)
@@ -444,7 +466,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
   }
 
   Widget _buildAuthorPreview(int authorId) {
-    final Author? author = LibraryProvider.instance.authors[authorId];
+    final Author? author = LibraryContentProvider.instance.authors[authorId];
 
     if (author == null) return Placeholder();
 

@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shelfless/models/library.dart';
 import 'package:shelfless/models/library_preview.dart';
-import 'package:shelfless/providers/library_provider.dart';
+import 'package:shelfless/providers/library_content_provider.dart';
 
 import 'package:shelfless/screens/books_filter_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
@@ -262,21 +262,21 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                   spacing: Themes.spacingMedium,
                                   children: [
                                     Icon(Icons.book_rounded),
-                                    Text("${LibraryProvider.instance.books.length}"),
+                                    Text("${LibraryContentProvider.instance.books.length}"),
                                   ],
                                 ),
                                 Row(
                                   spacing: Themes.spacingMedium,
                                   children: [
                                     Icon(Icons.edit_rounded),
-                                    Text("${LibraryProvider.instance.books.length}"),
+                                    Text("${LibraryContentProvider.instance.books.length}"),
                                   ],
                                 ),
                                 Row(
                                   spacing: Themes.spacingMedium,
                                   children: [
                                     Icon(Icons.color_lens_rounded),
-                                    Text("${LibraryProvider.instance.books.length}"),
+                                    Text("${LibraryContentProvider.instance.books.length}"),
                                   ],
                                 ),
                               ],

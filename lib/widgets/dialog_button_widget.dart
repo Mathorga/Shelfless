@@ -32,6 +32,7 @@ class DialogButtonWidget extends StatelessWidget {
               title: title,
               content: SizedBox(
                 width: min(mediaQuery.size.width, Themes.maxContentWidth),
+                height: Themes.maxDialogHeight,
                 child: content,
               ),
             );

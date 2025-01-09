@@ -245,6 +245,20 @@ class DatabaseHelper {
     return rawData.map((Map<String, dynamic> element) => RawLibrary.fromMap(element)).firstOrNull;
   }
 
+  /// Returns all stored libraries as previews.
+  Future<List<LibraryPreview>> getLibraries() async {
+    final List<Map<String, dynamic>> rawData = await _db.rawQuery(
+      """
+      SELECT $librariesTable.*, bcbli.books_count AS books_count
+      FROM $librariesTable LEFT JOIN ($booksCountByLibraryId) AS bcbli
+      ON ${librariesTable}_id = bcbli.library_id
+      ORDER BY ${librariesTable}_id ASC
+      """,
+    );
+
+    return rawData.map((Map<String, dynamic> element) => LibraryPreview.fromMap(element)).toList();
+  }
+
   /// Inserts the provided library in DB and sets its id with the one provided by the DB itself.
   Future<void> insertRawLibrary(RawLibrary libraryElement) async {
     int id = await _db.insert(librariesTable, libraryElement.toMap());
@@ -271,34 +285,19 @@ class DatabaseHelper {
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
 
-  /// Returns all stored libraries as previews.
-  Future<List<LibraryPreview>> getLibraries() async {
-    final List<Map<String, dynamic>> rawData = await _db.rawQuery(
-      """
-      SELECT $librariesTable.*, bcbli.books_count AS books_count
-      FROM $librariesTable LEFT JOIN ($booksCountByLibraryId) AS bcbli
-      ON ${librariesTable}_id = bcbli.library_id
-      ORDER BY ${librariesTable}_id ASC
-      """,
-    );
-
-    return rawData.map((Map<String, dynamic> element) => LibraryPreview.fromMap(element)).toList();
-  }
-
   Future<List<Book>> getLibraryBooks(int libraryId) async {
     final List<Map<String, dynamic>> rawData = await _db.rawQuery(books);
     return rawData.map((Map<String, dynamic> element) => Book.fromMap(element)).toList();
-  }
-
-  Future<List<RawGenre>> getLibraryGenres(int libraryId) async {
-    final List<Map<String, dynamic>> rawData = await _db.rawQuery(libraryGenres(libraryId));
-    return rawData.map((Map<String, dynamic> element) => RawGenre.fromMap(element)).toList();
   }
 
   Future<List<RawGenre>> getGenres() async {
     final List<Map<String, dynamic>> rawData = await _db.query(genresTable);
     return rawData.map((Map<String, dynamic> element) => RawGenre.fromMap(element)).toList();
   }
+
+  // ###############################################################################################################################################################################
+  // Author CRUDs.
+  // ###############################################################################################################################################################################
 
   Future<List<Author>> getAuthors() async {
     final List<Map<String, dynamic>> rawData = await _db.query(authorsTable);
@@ -315,9 +314,26 @@ class DatabaseHelper {
     return rawData.isEmpty ? null : Author.fromMap(rawData.first);
   }
 
-  Future<void> insertBook(Book book) async {
+  Future<void> insertAuthor(Author author) async {
     // Insert the new book.
-    await _db.insert(booksTable, book.raw.toMap());
+    author.id = await _db.insert(authorsTable, author.toMap());
+  }
+
+  Future<void> updateAuthor(Author author) async {
+    await _db.update(
+      authorsTable,
+      author.toMap(),
+      where: "${authorsTable}_id = ?",
+      whereArgs: [author.id],
+    );
+  }
+
+  // ###############################################################################################################################################################################
+  // ###############################################################################################################################################################################
+
+  Future<void> insertBook(Book book) async {
+    // Insert the new book and update its id.
+    book.raw.id = await _db.insert(booksTable, book.raw.toMap());
 
     // Insert new records in all relationship tables as well.
     for (Map<String, dynamic> authorRelMap in book.authorsMaps()) {

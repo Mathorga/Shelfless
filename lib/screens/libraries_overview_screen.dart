@@ -8,7 +8,7 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:shelfless/models/library.dart';
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
-import 'package:shelfless/providers/library_provider.dart';
+import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/screens/library_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
@@ -78,7 +78,7 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                       }
 
                       LibraryPreview library = LibrariesProvider.instance.libraries[index];
-                      LibraryProvider.instance.fetchLibraryContent(library.raw);
+                      LibraryContentProvider.instance.fetchLibraryContent(library.raw);
 
                       navigator.push(
                         MaterialPageRoute(
