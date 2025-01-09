@@ -27,7 +27,7 @@ class LibrariesOverviewScreen extends StatefulWidget {
 }
 
 class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
-  GlobalKey _fabKey = GlobalKey<ExpandableFabState>();
+  final GlobalKey _fabKey = GlobalKey<ExpandableFabState>();
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                       // Prefetch handlers before async gaps.
                       final NavigatorState navigator = Navigator.of(context);
 
-                      final int? libraryId = LibrariesProvider.instance.libraries[index].libraryElement.id;
+                      final int? libraryId = LibrariesProvider.instance.libraries[index].raw.id;
 
                       // Head out if, for any reason, the selected library has no id.
                       if (libraryId == null) {
@@ -176,6 +176,7 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
             children: [
               Text(strings.importLib),
               FloatingActionButton(
+                heroTag: "import_library",
                 child: const Icon(Icons.upload_rounded),
                 onPressed: () async {
                   // Pick a library file.
@@ -206,6 +207,7 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
             children: [
               Text(strings.newLib),
               FloatingActionButton(
+                heroTag: "create_library",
                 child: const Icon(Icons.create_new_folder_rounded),
                 onPressed: () async {
                   // Prefetch handlers before async gaps.

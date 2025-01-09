@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfless/models/library_element.dart';
+import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -33,7 +33,7 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
 
     _inserting = widget.library == null;
 
-    _library = widget.library ?? LibraryPreview(libraryElement: LibraryElement());
+    _library = widget.library ?? LibraryPreview(raw: RawLibrary());
   }
 
   @override
@@ -54,9 +54,9 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
                   Text(strings.libraryInfoName),
                   Themes.spacer,
                   TextFormField(
-                    initialValue: _library?.libraryElement.name,
+                    initialValue: _library?.raw.name,
                     textCapitalization: TextCapitalization.words,
-                    onChanged: (String value) => _library?.libraryElement.name = value,
+                    onChanged: (String value) => _library?.raw.name = value,
                   ),
                   const SizedBox(
                     height: 24.0,

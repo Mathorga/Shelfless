@@ -56,7 +56,7 @@ class BookPreviewWidget extends StatelessWidget {
               children: [
                 // Title.
                 Text(
-                  book.title,
+                  book.raw.title,
                   style: Theme.of(context).textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 ),
