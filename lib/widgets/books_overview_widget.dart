@@ -3,38 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shelfless/models/book.dart';
+import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/book_info_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
 
 class BooksOverviewWidget extends StatefulWidget {
-  final List<Book> books;
-
   const BooksOverviewWidget({
     Key? key,
-    this.books = const [],
   }) : super(key: key);
 
   @override
-  State<BooksOverviewWidget> createState() =>
-      _filteredBooksOverviewWidgetState();
+  State<BooksOverviewWidget> createState() => _BooksOverviewWidgetState();
 }
 
-class _filteredBooksOverviewWidgetState extends State<BooksOverviewWidget> {
-  List<Book> _filteredBooks = [];
-
+class _BooksOverviewWidgetState extends State<BooksOverviewWidget> {
   @override
   void initState() {
     super.initState();
 
-    _filteredBooks = [...widget.books];
+    LibraryContentProvider.instance.addListener(() => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: _filteredBooks.isEmpty
+      body: LibraryContentProvider.instance.books.isEmpty
           ? const Center(
               child: Text("No books found"),
             )
@@ -43,9 +38,9 @@ class _filteredBooksOverviewWidgetState extends State<BooksOverviewWidget> {
               padding: const EdgeInsets.all(12.0),
               children: [
                 ...List.generate(
-                  _filteredBooks.length,
+                  LibraryContentProvider.instance.books.length,
                   (int index) => BookPreviewWidget(
-                    book: _filteredBooks[index],
+                    book: LibraryContentProvider.instance.books[index],
                     // onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     //   builder: (BuildContext context) => BookInfoScreen(
                     //     book: _filteredBooks[index],

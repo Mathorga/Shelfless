@@ -9,10 +9,10 @@ class BookPreviewWidget extends StatelessWidget {
   final void Function()? onTap;
 
   const BookPreviewWidget({
-    Key? key,
+    super.key,
     required this.book,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

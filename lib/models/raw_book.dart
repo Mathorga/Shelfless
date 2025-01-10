@@ -36,7 +36,7 @@ class RawBook {
         publishYear = map["${DatabaseHelper.booksTable}_publish_year"],
         publisherId = map["${DatabaseHelper.booksTable}_publisher_id"],
         locationId = map["${DatabaseHelper.booksTable}_location_id"],
-        borrowed = map["${DatabaseHelper.booksTable}_borrowed"],
+        borrowed = map["${DatabaseHelper.booksTable}_borrowed"] == 1,
         edition = map["${DatabaseHelper.booksTable}_edition"];
 
   /// Creates and returns a copy of [this].
@@ -67,11 +67,11 @@ class RawBook {
     return {
       "${DatabaseHelper.booksTable}_id": id,
       "${DatabaseHelper.booksTable}_title": title,
-      "${DatabaseHelper.booksTable}_librry_id": libraryId,
+      "${DatabaseHelper.booksTable}_library_id": libraryId,
       "${DatabaseHelper.booksTable}_publish_year": publishYear,
       "${DatabaseHelper.booksTable}_publisher_id": publisherId,
       "${DatabaseHelper.booksTable}_location_id": locationId,
-      "${DatabaseHelper.booksTable}_borrowed": borrowed,
+      "${DatabaseHelper.booksTable}_borrowed": borrowed ? 1 : 0,
       "${DatabaseHelper.booksTable}_edition": edition,
     };
   }

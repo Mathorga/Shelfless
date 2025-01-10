@@ -498,11 +498,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
             }
 
             // Actually save the book.
-            if (_inserting) {
-              LibraryContentProvider.instance.storeNewBook(_book);
-            } else {
-              LibraryContentProvider.instance.storeBookUpdate(_book);
-            }
+            _inserting ? LibraryContentProvider.instance.storeNewBook(_book) : LibraryContentProvider.instance.storeBookUpdate(_book);
 
             navigator.pop();
           },

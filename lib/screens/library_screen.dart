@@ -43,7 +43,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
     // LibrariesProvider librariesProvider = Provider.of(context, listen: true);
-    final EdgeInsets screenPadding = MediaQuery.paddingOf(context);
     final ThemeData theme = Theme.of(context);
 
     // Define all pages.

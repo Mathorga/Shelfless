@@ -19,8 +19,8 @@ class Book {
 
   Book.fromMap(Map<String, dynamic> map)
       : raw = RawBook.fromMap(map: map),
-        authorIds = map["author_ids"],
-        genreIds = map["genre_ids"];
+        authorIds = (map["author_ids"] as String).split(",").map((String idString) => int.tryParse(idString)).nonNulls.toList(),
+        genreIds = (map["genre_ids"] as String).split(",").map((String idString) => int.tryParse(idString)).nonNulls.toList();
 
   /// Creates and returns a copy of [this].
   Book copy() {

@@ -97,7 +97,7 @@ class DatabaseHelper {
         ${booksTable}_publish_year INTEGER NOT NULL,
         ${booksTable}_publisher_id INTEGER,
         ${booksTable}_location_id INTEGER,
-        ${booksTable}_borrowed BOOL,
+        ${booksTable}_borrowed INTEGER,
         ${booksTable}_edition INTEGER DEFAULT 0
       )
       """,
