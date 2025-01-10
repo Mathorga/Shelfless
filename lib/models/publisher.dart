@@ -1,9 +1,14 @@
+import 'package:shelfless/utils/database_helper.dart';
+
 class Publisher {
+  int? id;
+
   String name;
 
   String? website;
 
   Publisher({
+    this.id,
     required this.name,
     this.website,
   });
@@ -12,6 +17,19 @@ class Publisher {
     final List<String> parts = source.split("/");
     name = parts[0].replaceAll("_", " ");
     website = parts.length > 1 ? parts[1].isNotEmpty ? parts[1] : null : null;
+  }
+
+  Publisher.fromMap(Map<String, dynamic> map)
+      : id = map["${DatabaseHelper.publishersTable}_id"],
+        name = map["${DatabaseHelper.publishersTable}_name"],
+        website = map["${DatabaseHelper.publishersTable}_website"];
+
+  Map<String, dynamic> toMap() {
+    return {
+      "${DatabaseHelper.genresTable}_id": id,
+      "${DatabaseHelper.genresTable}_name": name,
+      "${DatabaseHelper.genresTable}_website": website,
+    };
   }
 
   /// Creates and returns a copy of [this].

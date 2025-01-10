@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'package:collection/collection.dart';
+import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:sqflite/sqflite.dart';
@@ -337,7 +338,7 @@ class DatabaseHelper {
   // ###############################################################################################################################################################################
 
   Future<void> insertGenre(RawGenre rawGenre) async {
-    // Insert the new author.
+    // Insert the new genre.
     rawGenre.id = await _db.insert(genresTable, rawGenre.toMap());
   }
 
@@ -349,6 +350,28 @@ class DatabaseHelper {
       whereArgs: [rawGenre.id],
     );
   }
+
+  // ###############################################################################################################################################################################
+  // ###############################################################################################################################################################################
+
+  // ###############################################################################################################################################################################
+  // Publisher CRUDs.
+  // ###############################################################################################################################################################################
+
+  Future<void> insertPublisher(Publisher publisher) async {
+    // Insert the new publisher.
+    publisher.id = await _db.insert(publishersTable, publisher.toMap());
+  }
+
+  Future<void> updatePublisher(Publisher publisher) async {
+    await _db.update(
+      publishersTable,
+      publisher.toMap(),
+      where: "${publishersTable}_id = ?",
+      whereArgs: [publisher.id],
+    );
+  }
+
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
 

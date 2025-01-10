@@ -92,9 +92,19 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void addAuthorToBook(int authorId, Book book) async {
-    // Only save the relationship locally.
-    book.authorIds.add(authorId);
+  void addPublisher(Publisher publisher) async {
+    // Save the provided publisher to DB.
+    await DatabaseHelper.instance.insertPublisher(publisher);
+
+    // Only save the author locally after storing it to DB.
+    publishers[publisher.id] = publisher;
+
+    notifyListeners();
+  }
+
+  void updatePublisher(Publisher publisher) async {
+    // Update the provided publisher in DB.
+    await DatabaseHelper.instance.updatePublisher(publisher);
 
     notifyListeners();
   }
@@ -102,6 +112,20 @@ class LibraryContentProvider with ChangeNotifier {
   void addGenresToBook(Set<int> genreIds, Book book) async {
     // Only save the relationship locally.
     book.genreIds.addAll(genreIds);
+
+    notifyListeners();
+  }
+
+  void addAuthorsToBook(Set<int> authorIds, Book book) async {
+    // Only save the relationship locally.
+    book.authorIds.addAll(authorIds);
+
+    notifyListeners();
+  }
+
+  void addPublisherToBook(int publisherId, Book book) async {
+    // Only save the relationship locally.
+    book.raw.publisherId = publisherId;
 
     notifyListeners();
   }

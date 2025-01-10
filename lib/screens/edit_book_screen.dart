@@ -129,6 +129,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                                 return SearchListWidget<int?>(
                                   children: LibraryContentProvider.instance.authors.keys.toList(),
+                                  multiple: true,
                                   filter: (int? authorId, String? filter) =>
                                       filter != null ? LibraryContentProvider.instance.authors[authorId].toString().toLowerCase().contains(filter) : true,
                                   builder: (int? authorId) {
@@ -138,28 +139,37 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                       return Placeholder();
                                     }
 
-                                    return GestureDetector(
-                                      onTap: () {
-                                        // Make sure the authorId is not null.
-                                        if (authorId == null) return;
+                                    return AuthorPreviewWidget(author: author);
+                                  },
+                                  onElementsSelected: (Set<int?> selectedAuthorIds) {
+                                    // Prefetch handlers.
+                                    final NavigatorState navigator = Navigator.of(context);
 
-                                        // Make sure the book does not already includes the selected author.
-                                        if (_book.authorIds.contains(authorId)) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text(strings.authorAlreadyAdded),
-                                              duration: const Duration(seconds: 2),
-                                            ),
-                                          );
-                                          return;
-                                        }
+                                    bool duplicates = false;
+                                    Set<int> authorIds = {};
+                                    for (int? authorId in selectedAuthorIds) {
+                                      // Make sure the authorId is not null.
+                                      if (authorId == null) continue;
 
-                                        LibraryContentProvider.instance.addAuthorToBook(authorId, _book);
+                                      if (!_book.genreIds.contains(authorId)) {
+                                        authorIds.add(authorId);
+                                      } else {
+                                        duplicates = true;
+                                      }
+                                    }
 
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: AuthorPreviewWidget(author: author),
-                                    );
+                                    if (duplicates) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(strings.authorAlreadyAdded),
+                                          duration: const Duration(milliseconds: 1000),
+                                        ),
+                                      );
+                                    }
+
+                                    LibraryContentProvider.instance.addAuthorsToBook(authorIds, _book);
+
+                                    navigator.pop();
                                   },
                                 );
                               },
@@ -288,7 +298,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                     if (duplicates) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
-                                          content: Text(strings.authorAlreadyAdded),
+                                          content: Text(strings.genreAlreadyAdded),
                                           duration: const Duration(milliseconds: 1000),
                                         ),
                                       );
@@ -327,50 +337,55 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(strings.bookInfoPublisher),
-                          // if (_book.publisherId == null)
-                          // DialogButtonWidget(
-                          //   label: Text(strings.select),
-                          //   title: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       Text(strings.publishers),
-                          //       TextButton(
-                          //         onPressed: () {
-                          //           // Navigator.of(context).pushNamed(EditPublisherScreen.routeName);
-                          //         },
-                          //         child: Text(strings.add),
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   content: Consumer<PublishersProvider>(
-                          //     builder: (BuildContext context, PublishersProvider provider, Widget? child) => SearchListWidget<Publisher>(
-                          //       children: provider.publishers,
-                          //       filter: (Publisher publisher, String? filter) => filter != null ? publisher.toString().toLowerCase().contains(filter) : true,
-                          //       builder: (Publisher publisher) => ListTile(
-                          //         leading: Text(publisher.name),
-                          //         onTap: () {
-                          //           // Set the book location.
-                          //           setState(() {
-                          //             _book.publisher = publisher;
-                          //           });
-                          //           Navigator.of(context).pop();
-                          //         },
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+                          if (_book.raw.publisherId == null)
+                            DialogButtonWidget(
+                              label: Text(strings.select),
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(strings.publishers),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => EditPublisherScreen()));
+                                    },
+                                    child: Text(strings.add),
+                                  ),
+                                ],
+                              ),
+                              content: SearchListWidget<int?>(
+                                children: LibraryContentProvider.instance.publishers.keys.toList(),
+                                filter: (int? publisherId, String? filter) => filter != null ? publisherId.toString().toLowerCase().contains(filter) : true,
+                                builder: (int? publisherId) {
+                                  final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
+
+                                  if (publisher == null) return Placeholder();
+
+                                  return ListTile(
+                                    leading: Text(publisher.name),
+                                    onTap: () {
+                                      // Make sure the publisherId is not null.
+                                      if (publisherId == null) return;
+
+                                      // Set the book location.
+                                      LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
                         ],
                       ),
-                      // if (_book.publisher != null)
-                      //   Column(
-                      //     children: [
-                      //       Themes.spacer,
-                      //       Padding(
-                      //         padding: const EdgeInsets.all(12.0),
-                      //         child: _buildPublisherPreview(_book.publisher!),
-                      //       ),
-                      //     ],
-                      //   ),
+                      if (_book.raw.publisherId != null)
+                        Column(
+                          children: [
+                            Themes.spacer,
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: _buildPublisherPreview(_book.raw.publisherId!),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
 
@@ -501,6 +516,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
     return _buildPreview(
       AuthorPreviewWidget(author: author),
       onDelete: () {
+        // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
+        // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
         setState(() {
           _book.authorIds.remove(authorId);
         });
@@ -516,6 +533,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
     return _buildPreview(
       GenrePreviewWidget(genre: rawGenre),
       onDelete: () {
+        // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
+        // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
         setState(() {
           _book.genreIds.remove(genreId);
         });
@@ -523,14 +542,22 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
   }
 
-  // Widget _buildPublisherPreview(Publisher publisher) => _buildPreview(
-  //       PublisherPreviewWidget(publisher: publisher),
-  //       onDelete: () {
-  //         setState(() {
-  //           _book.publisher = null;
-  //         });
-  //       },
-  //     );
+  Widget _buildPublisherPreview(int publisherId) {
+    final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
+
+    if (publisher == null) return Placeholder();
+
+    return _buildPreview(
+      PublisherPreviewWidget(publisher: publisher),
+      onDelete: () {
+        // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
+        // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
+        setState(() {
+          _book.raw.publisherId = null;
+        });
+      },
+    );
+  }
 
   // Widget _buildLocationPreview(StoreLocation location) => _buildPreview(
   //       LocationPreviewWidget(location: location),

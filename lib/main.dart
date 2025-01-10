@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/screens/libraries_overview_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -61,11 +60,9 @@ class Shelfish extends StatelessWidget {
       home: const LibrariesOverviewScreen(),
       routes: {
         LibrariesOverviewScreen.routeName: (BuildContext context) => const LibrariesOverviewScreen(),
-        EditLibraryScreen.routeName: (BuildContext context) => const EditLibraryScreen(),
         // PublisherInfoScreen.routeName: (BuildContext context) => const PublisherInfoScreen(),
         // ImportLibraryScreen.routeName: (BuildContext context) => const ImportLibraryScreen(),
         // BooksFilterScreen.routeName: (BuildContext context) => const BooksFilterScreen(),
-        // EditGenreScreen.routeName: (BuildContext context) => const EditGenreScreen(),
       },
     );
   }
