@@ -125,7 +125,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             content: StatefulBuilder(
                               builder: (BuildContext context, void Function(void Function()) setState) {
                                 // Make sure updates are reacted to.
-                                LibraryContentProvider.instance.addListener(() => setState(() {}));
+                                LibraryContentProvider.instance.addListener(() {
+                                  if (context.mounted) setState(() {});
+                                });
 
                                 return SearchListWidget<int?>(
                                   children: LibraryContentProvider.instance.authors.keys.toList(),
@@ -262,7 +264,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             content: StatefulBuilder(
                               builder: (BuildContext context, void Function(void Function()) setState) {
                                 // Make sure updates are reacted to.
-                                LibraryContentProvider.instance.addListener(() => setState(() {}));
+                                LibraryContentProvider.instance.addListener(() {
+                                  if (context.mounted) setState(() {});
+                                });
 
                                 return SearchListWidget<int?>(
                                   children: LibraryContentProvider.instance.genres.keys.toList(),
@@ -352,27 +356,33 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   ),
                                 ],
                               ),
-                              content: SearchListWidget<int?>(
-                                children: LibraryContentProvider.instance.publishers.keys.toList(),
-                                filter: (int? publisherId, String? filter) => filter != null ? publisherId.toString().toLowerCase().contains(filter) : true,
-                                builder: (int? publisherId) {
-                                  final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
+                              content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
+                                LibraryContentProvider.instance.addListener(() {
+                                  if (context.mounted) setState(() {});
+                                });
 
-                                  if (publisher == null) return Placeholder();
+                                return SearchListWidget<int?>(
+                                  children: LibraryContentProvider.instance.publishers.keys.toList(),
+                                  filter: (int? publisherId, String? filter) => filter != null ? publisherId.toString().toLowerCase().contains(filter) : true,
+                                  builder: (int? publisherId) {
+                                    final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
 
-                                  return ListTile(
-                                    leading: Text(publisher.name),
-                                    onTap: () {
-                                      // Make sure the publisherId is not null.
-                                      if (publisherId == null) return;
+                                    if (publisher == null) return Placeholder();
 
-                                      // Set the book location.
-                                      LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
-                                      Navigator.of(context).pop();
-                                    },
-                                  );
-                                },
-                              ),
+                                    return PublisherPreviewWidget(
+                                      publisher: publisher,
+                                      onTap: () {
+                                        // Make sure the publisherId is not null.
+                                        if (publisherId == null) return;
+
+                                        // Set the book location.
+                                        LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                );
+                              }),
                             ),
                         ],
                       ),

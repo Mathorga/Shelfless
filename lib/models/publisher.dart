@@ -26,9 +26,9 @@ class Publisher {
 
   Map<String, dynamic> toMap() {
     return {
-      "${DatabaseHelper.genresTable}_id": id,
-      "${DatabaseHelper.genresTable}_name": name,
-      "${DatabaseHelper.genresTable}_website": website,
+      "${DatabaseHelper.publishersTable}_id": id,
+      "${DatabaseHelper.publishersTable}_name": name,
+      "${DatabaseHelper.publishersTable}_website": website,
     };
   }
 
