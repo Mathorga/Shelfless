@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:shelfless/screens/libraries_overview_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
@@ -7,11 +8,17 @@ import 'package:shelfless/utils/database_helper.dart';
 
 void main() async {
   await DatabaseHelper.instance.openDB();
-  runApp(const Shelfish());
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.manual,
+    overlays: [
+      SystemUiOverlay.top,
+    ],
+  );
+  runApp(const Shelfless());
 }
 
-class Shelfish extends StatelessWidget {
-  const Shelfish({Key? key}) : super(key: key);
+class Shelfless extends StatelessWidget {
+  const Shelfless({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +32,9 @@ class Shelfish extends StatelessWidget {
           surface: ShelflessColors.mainBackground,
         ),
         appBarTheme: const AppBarTheme(
-          color: Colors.transparent,
+          color: ShelflessColors.mainBackground,
           elevation: 0.0,
+          scrolledUnderElevation: 0.0,
           centerTitle: true,
         ),
         cardTheme: CardTheme(

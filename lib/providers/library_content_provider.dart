@@ -49,6 +49,8 @@ class LibraryContentProvider with ChangeNotifier {
   void storeNewBook(Book book) async {
     await DatabaseHelper.instance.insertBook(book);
 
+    books.add(book);
+
     notifyListeners();
   }
 

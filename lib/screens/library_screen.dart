@@ -16,9 +16,9 @@ import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
-import 'package:shelfless/widgets/authors_overview_widget.dart';
+import 'package:shelfless/screens/authors_overview_screen.dart';
+import 'package:shelfless/widgets/book_preview_widget.dart';
 import 'package:shelfless/widgets/genres_overview_widget.dart';
-import 'package:shelfless/widgets/books_overview_widget.dart';
 import 'package:shelfless/widgets/locations_overview_widget.dart';
 import 'package:shelfless/widgets/publishers_overview_widget.dart';
 import 'package:shelfless/widgets/separator_widget.dart';
@@ -28,9 +28,9 @@ class LibraryScreen extends StatefulWidget {
   final LibraryPreview library;
 
   const LibraryScreen({
-    Key? key,
+    super.key,
     required this.library,
-  }) : super(key: key);
+  });
 
   @override
   State<LibraryScreen> createState() => _LibraryScreenState();
@@ -41,264 +41,52 @@ class _LibraryScreenState extends State<LibraryScreen> {
   String _searchValue = "";
 
   @override
+  void initState() {
+    super.initState();
+
+    // Start listening to changes in library content.
+    LibraryContentProvider.instance.addListener(() => setState(() {}));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // LibrariesProvider librariesProvider = Provider.of(context, listen: true);
     final ThemeData theme = Theme.of(context);
 
-    // Define all pages.
-    List<Widget> pages = [
-      BooksOverviewWidget(),
-      // GenresOverviewWidget(searchValue: _searchValue),
-      // AuthorsOverviewWidget(searchValue: _searchValue),
-      // PublishersOverviewWidget(searchValue: _searchValue),
-      // LocationsOverviewWidget(searchValue: _searchValue),
-    ];
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.library.raw.name,
-          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: false,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.help_outline_rounded),
-            onPressed: () {},
-          )
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        elevation: 0.0,
-        onTap: (int selectedIndex) => setState(() => _currentIndex = selectedIndex),
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        unselectedItemColor: theme.colorScheme.onBackground,
-        selectedIconTheme: IconTheme.of(context).copyWith(
-          color: theme.colorScheme.primary,
-          size: 28.0,
-        ),
-        unselectedIconTheme: IconTheme.of(context).copyWith(
-          size: 22.0,
-        ),
-        backgroundColor: Colors.transparent,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.auto_stories_rounded),
-            label: strings.booksSectionTitle,
+      body: CustomScrollView(
+        physics: Themes.scrollPhysics,
+        slivers: [
+          SliverAppBar(
+            pinned: false,
+            snap: false,
+            floating: true,
+            shadowColor: Colors.transparent,
+            title: Text(
+              widget.library.raw.name,
+              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                icon: Icon(Icons.filter_alt_outlined),
+                onPressed: () {},
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.category_rounded),
-            label: strings.genresSectionTitle,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.person_rounded),
-            label: strings.authorsSectionTitle,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.location_city_rounded),
-            label: strings.publishersSectionTitle,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.auto_awesome_mosaic_rounded),
-            label: strings.locationsSectionTitle,
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) => BookPreviewWidget(
+                book: LibraryContentProvider.instance.books[index],
+                // onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                //   builder: (BuildContext context) => BookInfoScreen(
+                //     book: _filteredBooks[index],
+                //   ),
+                // )),
+              ),
+              childCount: LibraryContentProvider.instance.books.length,
+            ),
           ),
         ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(Themes.spacingMedium),
-        child: Column(
-          children: [
-            Card(
-              clipBehavior: Clip.antiAlias,
-              elevation: 0.0,
-              margin: const EdgeInsets.all(0.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      ShelflessColors.glyderDark,
-                      ShelflessColors.glyderLight,
-                    ],
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(Themes.spacingLarge),
-                  child: Column(
-                    spacing: Themes.spacingMedium,
-                    children: [
-                      SingleChildScrollView(
-                        physics: Themes.scrollPhysics,
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          spacing: Themes.spacingXLarge,
-                          children: [
-                            Card(
-                              color: ShelflessColors.secondary,
-                              child: Padding(
-                                padding: const EdgeInsets.all(Themes.spacingSmall),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.favorite_rounded,
-                                      size: Themes.iconSizeLarge,
-                                    ),
-                                    Text(
-                                      "Favorites",
-                                      style: theme.textTheme.labelSmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Card(
-                              color: ShelflessColors.primary,
-                              child: Padding(
-                                padding: const EdgeInsets.all(Themes.spacingSmall),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.star_rounded,
-                                      size: Themes.iconSizeLarge,
-                                    ),
-                                    Text(
-                                      "Highlights",
-                                      style: theme.textTheme.labelSmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Card(
-                              color: ShelflessColors.secondary,
-                              child: Padding(
-                                padding: const EdgeInsets.all(Themes.spacingSmall),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.favorite_rounded,
-                                      size: Themes.iconSizeLarge,
-                                    ),
-                                    Text(
-                                      "Favorites",
-                                      style: theme.textTheme.labelSmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Card(
-                              color: ShelflessColors.primary,
-                              child: Padding(
-                                padding: const EdgeInsets.all(Themes.spacingSmall),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.star_rounded,
-                                      size: Themes.iconSizeLarge,
-                                    ),
-                                    Text(
-                                      "Highlights",
-                                      style: theme.textTheme.labelSmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Card(
-                              color: ShelflessColors.secondary,
-                              child: Padding(
-                                padding: const EdgeInsets.all(Themes.spacingSmall),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.favorite_rounded,
-                                      size: Themes.iconSizeLarge,
-                                    ),
-                                    Text(
-                                      "Favorites",
-                                      style: theme.textTheme.labelSmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Card(
-                              color: ShelflessColors.primary,
-                              child: Padding(
-                                padding: const EdgeInsets.all(Themes.spacingSmall),
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.star_rounded,
-                                      size: Themes.iconSizeLarge,
-                                    ),
-                                    Text(
-                                      "Highlights",
-                                      style: theme.textTheme.labelSmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        color: ShelflessColors.onMainBackgroundInactive,
-                        thickness: 2.0,
-                        height: Themes.spacingSmall,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              spacing: Themes.spacingMedium,
-                              children: [
-                                Row(
-                                  spacing: Themes.spacingMedium,
-                                  children: [
-                                    Icon(Icons.book_rounded),
-                                    Text("${LibraryContentProvider.instance.books.length}"),
-                                  ],
-                                ),
-                                Row(
-                                  spacing: Themes.spacingMedium,
-                                  children: [
-                                    Icon(Icons.edit_rounded),
-                                    Text("${LibraryContentProvider.instance.books.length}"),
-                                  ],
-                                ),
-                                Row(
-                                  spacing: Themes.spacingMedium,
-                                  children: [
-                                    Icon(Icons.color_lens_rounded),
-                                    Text("${LibraryContentProvider.instance.books.length}"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Icon(Icons.search_rounded),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Center(
-                child: pages[_currentIndex],
-              ),
-            ),
-          ],
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -308,6 +96,172 @@ class _LibraryScreenState extends State<LibraryScreen> {
           navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
         },
         child: Icon(Icons.add_rounded),
+      ),
+    );
+  }
+
+  Widget _buildActionBar() {
+    return Padding(
+      padding: const EdgeInsets.all(Themes.spacingLarge),
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              spacing: Themes.spacingXLarge,
+              children: [
+                // Authors.
+                InkWell(
+                  onTap: () {
+                    final NavigatorState navigator = Navigator.of(context);
+
+                    navigator.push(MaterialPageRoute(
+                      builder: (BuildContext context) => AuthorsOverviewScreen(),
+                    ));
+                  },
+                  child: Icon(Icons.person_pin_rounded),
+                ),
+
+                // Genres.
+                InkWell(
+                  onTap: () {},
+                  child: Icon(Icons.color_lens_rounded),
+                ),
+
+                // Publishers.
+                InkWell(
+                  child: Icon(Icons.work_rounded),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {},
+            child: Icon(Icons.search_rounded),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCollectionPreviews() {
+    final ThemeData theme = Theme.of(context);
+
+    return SingleChildScrollView(
+      physics: Themes.scrollPhysics,
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        spacing: Themes.spacingXLarge,
+        children: [
+          Card(
+            color: ShelflessColors.secondary,
+            child: Padding(
+              padding: const EdgeInsets.all(Themes.spacingSmall),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.favorite_rounded,
+                    size: Themes.iconSizeLarge,
+                  ),
+                  Text(
+                    "Favorites",
+                    style: theme.textTheme.labelSmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            color: ShelflessColors.primary,
+            child: Padding(
+              padding: const EdgeInsets.all(Themes.spacingSmall),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.star_rounded,
+                    size: Themes.iconSizeLarge,
+                  ),
+                  Text(
+                    "Highlights",
+                    style: theme.textTheme.labelSmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            color: ShelflessColors.secondary,
+            child: Padding(
+              padding: const EdgeInsets.all(Themes.spacingSmall),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.favorite_rounded,
+                    size: Themes.iconSizeLarge,
+                  ),
+                  Text(
+                    "Favorites",
+                    style: theme.textTheme.labelSmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            color: ShelflessColors.primary,
+            child: Padding(
+              padding: const EdgeInsets.all(Themes.spacingSmall),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.star_rounded,
+                    size: Themes.iconSizeLarge,
+                  ),
+                  Text(
+                    "Highlights",
+                    style: theme.textTheme.labelSmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            color: ShelflessColors.secondary,
+            child: Padding(
+              padding: const EdgeInsets.all(Themes.spacingSmall),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.favorite_rounded,
+                    size: Themes.iconSizeLarge,
+                  ),
+                  Text(
+                    "Favorites",
+                    style: theme.textTheme.labelSmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            color: ShelflessColors.primary,
+            child: Padding(
+              padding: const EdgeInsets.all(Themes.spacingSmall),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.star_rounded,
+                    size: Themes.iconSizeLarge,
+                  ),
+                  Text(
+                    "Highlights",
+                    style: theme.textTheme.labelSmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -6,9 +6,9 @@ class LibraryPreviewWidget extends StatelessWidget {
   final LibraryPreview library;
 
   const LibraryPreviewWidget({
-    Key? key,
+    super.key,
     required this.library,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

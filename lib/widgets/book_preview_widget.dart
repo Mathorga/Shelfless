@@ -1,8 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/raw_genre.dart';
+import 'package:shelfless/providers/library_content_provider.dart';
 
 class BookPreviewWidget extends StatelessWidget {
   final Book book;
@@ -20,11 +22,17 @@ class BookPreviewWidget extends StatelessWidget {
     double borderRadius = 15.0;
 
     // Prepare colors with custom alpha value.
-    // List<Color> genreColors = book.genres.map((Genre genre) => Color(genre.color)).toList();
-    List<Color> genreColors = [
-      Colors.red,
-      Colors.amber,
-    ];
+    final List<Color> genreColors = book.genreIds.map((int genreId) {
+      final RawGenre? genre = LibraryContentProvider.instance.genres[genreId];
+      return genre != null ? Color(genre.color) : Colors.transparent;
+    }).toList();
+
+    final List<Author> authors = book.authorIds
+        .map((int authorId) {
+          return LibraryContentProvider.instance.authors[authorId];
+        })
+        .nonNulls
+        .toList();
 
     return GestureDetector(
       onTap: onTap,
@@ -64,13 +72,10 @@ class BookPreviewWidget extends StatelessWidget {
                 const SizedBox(height: 12.0),
 
                 // Authors.
-                // if (book.authors.isNotEmpty)
-                //   book.authors.length <= 2
-                //       ? Text(book.authors
-                //           .map((Author author) => author.toString())
-                //           .reduce((String value, String element) =>
-                //               "$value, $element"))
-                //       : Text("${book.authors.first}, others"),
+                if (authors.isNotEmpty)
+                  authors.length <= 2
+                      ? Text(authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element"))
+                      : Text("${authors.first}, others"),
               ],
             ),
           ),
