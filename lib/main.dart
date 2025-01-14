@@ -8,12 +8,9 @@ import 'package:shelfless/utils/database_helper.dart';
 
 void main() async {
   await DatabaseHelper.instance.openDB();
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.manual,
-    overlays: [
-      SystemUiOverlay.top,
-    ],
-  );
+  // SystemChrome.setEnabledSystemUIMode(
+  //   SystemUiMode.immersiveSticky,
+  // );
   runApp(const Shelfless());
 }
 
@@ -36,6 +33,9 @@ class Shelfless extends StatelessWidget {
           elevation: 0.0,
           scrolledUnderElevation: 0.0,
           centerTitle: true,
+        ),
+        searchBarTheme: SearchBarThemeData(
+          backgroundColor: WidgetStatePropertyAll(ShelflessColors.lightBackground),
         ),
         cardTheme: CardTheme(
           shape: RoundedRectangleBorder(

@@ -12,8 +12,8 @@ class Book {
 
   Book({
     required this.raw,
-    inAuthorIds,
-    inGenreIds,
+    List<int>? inAuthorIds,
+    List<int>? inGenreIds,
   })  : authorIds = inAuthorIds ?? [],
         genreIds = inGenreIds ?? [];
 

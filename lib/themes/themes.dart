@@ -8,6 +8,7 @@ class Themes {
   static const double spacingXLarge = 24.0;
   static const double spacingXXLarge = 32.0;
   static const double spacingXXXLarge = 48.0;
+  static const double spacingFAB = 56.0;
 
   /// Default radiuses, used for borders.
   static const double radiusSmall = 8.0;

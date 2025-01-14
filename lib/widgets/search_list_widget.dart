@@ -13,14 +13,14 @@ class SearchListWidget<T> extends StatefulWidget {
   final List<T> children;
 
   const SearchListWidget({
-    Key? key,
+    super.key,
     required this.filter,
     required this.builder,
     this.onElementsSelected,
     this.onCancel,
     this.multiple = false,
     this.children = const [],
-  }) : super(key: key);
+  });
 
   @override
   State<SearchListWidget> createState() => _SearchListWidgetState<T>();
@@ -29,13 +29,6 @@ class SearchListWidget<T> extends StatefulWidget {
 class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   String? _filter;
   final Set<T> _selection = {};
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   _selection.addAll();
-  // }
 
   @override
   Widget build(BuildContext context) {
