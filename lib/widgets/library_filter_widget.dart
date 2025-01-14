@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
