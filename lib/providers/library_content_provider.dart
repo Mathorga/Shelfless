@@ -153,4 +153,10 @@ class LibraryContentProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  void applyFilters() {
+    assert(library != null, "Cannot apply filters, no open library!");
+
+    fetchLibraryContent(library!);
+  }
 }

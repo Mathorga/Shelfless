@@ -174,41 +174,83 @@ class DatabaseHelper {
   // Helper queries.
   // ###############################################################################################################################################################################
 
-  String get booksWithAuthorId => """
+  String booksWithAuthorId({
+    int? libraryId,
+    String? titleFilter,
+    Set<int?>? authorsFilter,
+  }) =>
+      """
   SELECT $booksTable.*, ${bookAuthorRelTable}_author_id
   FROM $booksTable JOIN $bookAuthorRelTable
   ON ${booksTable}_id = ${bookAuthorRelTable}_book_id
+  WHERE 1 = 1
+  ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
+  ${titleFilter != null ? "AND ${booksTable}_title LIKE '$titleFilter'" : ""}
+  ${authorsFilter != null ? "AND ${bookAuthorRelTable}_author_id IN (${authorsFilter.join(",")})" : ""}
   ORDER BY ${booksTable}_id ASC
   """;
 
-  String get booksWithGenreId => """
+  String booksWithGenreId({
+    int? libraryId,
+    String? titleFilter,
+    Set<int?>? genresFilter,
+  }) =>
+      """
   SELECT $booksTable.*, ${bookGenreRelTable}_genre_id
   FROM $booksTable JOIN $bookGenreRelTable
   ON ${booksTable}_id = ${bookGenreRelTable}_book_id
+  WHERE 1 = 1
+  ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
+  ${titleFilter != null ? "AND ${booksTable}_title LIKE $titleFilter" : ""}
+  ${genresFilter != null ? "AND ${bookGenreRelTable}_genre_id IN (${genresFilter.join(",")})" : ""}
   ORDER BY ${booksTable}_id ASC
   """;
 
-  String get booksWithAggregateAuthorIds => """
+  String booksWithAggregateAuthorIds({
+    int? libraryId,
+    String? titleFilter,
+    Set<int?>? authorsFilter,
+  }) =>
+      """
   SELECT *, GROUP_CONCAT(${bookAuthorRelTable}_author_id) AS author_ids
-  FROM ($booksWithAuthorId)
+  FROM (${booksWithAuthorId(
+        libraryId: libraryId,
+        titleFilter: titleFilter,
+        authorsFilter: authorsFilter,
+      )})
   GROUP BY ${booksTable}_id
   """;
 
-  String get booksWithAggregateGenreIds => """
+  String booksWithAggregateGenreIds({
+    int? libraryId,
+    String? titleFilter,
+    Set<int?>? genresFilter,
+  }) =>
+      """
   SELECT *, GROUP_CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
-  FROM ($booksWithGenreId)
+  FROM ($booksWithGenreId())
   GROUP BY ${booksTable}_id
   """;
 
-  String get books => """
+  String books({
+    int? libraryId,
+    String? titleFilter,
+    Set<int?>? authorsFilter,
+    Set<int?>? genresFilter,
+  }) =>
+      """
   SELECT books_with_authors.*, books_with_genres.genre_ids
-  FROM ($booksWithAggregateAuthorIds) AS books_with_authors
-  JOIN ($booksWithAggregateGenreIds) AS books_with_genres
+  FROM (${booksWithAggregateAuthorIds(
+        libraryId: libraryId,
+        titleFilter: titleFilter,
+        authorsFilter: authorsFilter,
+      )}) AS books_with_authors
+  JOIN (${booksWithAggregateGenreIds()}) AS books_with_genres
   ON books_with_authors.${booksTable}_id = books_with_genres.${booksTable}_id
   ORDER BY books_with_authors.${booksTable}_id ASC
   """;
 
-  String get booksCountByLibraryId => """
+  String booksCountByLibraryId() => """
   SELECT ${booksTable}_library_id AS library_id, COUNT(${booksTable}_id) AS books_count
   FROM $booksTable
   GROUP BY ${booksTable}_library_id
@@ -252,7 +294,7 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> rawData = await _db.rawQuery(
       """
       SELECT $librariesTable.*, bcbli.books_count AS books_count
-      FROM $librariesTable LEFT JOIN ($booksCountByLibraryId) AS bcbli
+      FROM $librariesTable LEFT JOIN (${booksCountByLibraryId()}) AS bcbli
       ON ${librariesTable}_id = bcbli.library_id
       ORDER BY ${librariesTable}_id ASC
       """,
@@ -287,8 +329,17 @@ class DatabaseHelper {
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
 
-  Future<List<Book>> getLibraryBooks(int libraryId) async {
-    final List<Map<String, dynamic>> rawData = await _db.rawQuery(books);
+  Future<List<Book>> getLibraryBooks(
+    int libraryId, {
+    String? titleFilter,
+    Set<int?>? authorsFilter,
+    Set<int?>? genresFilter,
+  }) async {
+    final List<Map<String, dynamic>> rawData = await _db.rawQuery(books(
+      titleFilter: titleFilter,
+      authorsFilter: authorsFilter,
+      genresFilter: genresFilter,
+    ));
     return rawData.map((Map<String, dynamic> element) => Book.fromMap(element)).toList();
   }
 
