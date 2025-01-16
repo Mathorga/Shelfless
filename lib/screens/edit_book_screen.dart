@@ -103,14 +103,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   AuthorsSelectionWidget(
                     inAuthorIds: _book.authorIds,
                     insertNew: true,
-                    onAuthorsAdded: (Set<int?> selectedAuthorIds) {
+                    onAuthorsSelected: (Set<int?> selectedAuthorIds) {
                       bool duplicates = false;
                       Set<int> authorIds = {};
                       for (int? authorId in selectedAuthorIds) {
                         // Make sure the authorId is not null.
                         if (authorId == null) continue;
 
-                        if (!_book.genreIds.contains(authorId)) {
+                        if (!_book.authorIds.contains(authorId)) {
                           authorIds.add(authorId);
                         } else {
                           duplicates = true;
@@ -128,7 +128,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                       LibraryContentProvider.instance.addAuthorsToBook(authorIds, _book);
                     },
-                    onAuthorRemoved: (int authorId) {
+                    onAuthorUnselected: (int authorId) {
                       // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
                       // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
                       setState(() {

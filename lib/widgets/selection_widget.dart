@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
@@ -8,29 +7,42 @@ import 'package:shelfless/widgets/dialog_button_widget.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
 
+class SelectionController extends ChangeNotifier {
+  List<int?> sourceIds;
+
+  SelectionController({
+    this.sourceIds = const [],
+  });
+
+  void setIds(List<int?> ids) {
+    sourceIds = ids;
+    notifyListeners();
+  }
+}
+
 class SelectionWidget extends StatelessWidget {
-  final Widget? previewTitle;
-  final Widget? dialogTitle;
+  final String? title;
+  final SelectionController controller;
   final void Function()? onInsertNewRequested;
   final bool Function(int? id, String? filter) listItemsFilter;
   final Widget Function(int? id) listItemBuilder;
+  // final List<int?> Function() getSourceIds;
   final List<int?> selecteIds;
-  final void Function(Set<int?> ids)? onItemsAdded;
-  final void Function(int id)? onItemRemoved;
-  final bool insertNew;
+  final void Function(Set<int?> ids)? onItemsSelected;
+  final void Function(int id)? onItemUnselected;
 
   SelectionWidget({
     super.key,
-    this.previewTitle,
-    this.dialogTitle,
+    this.title,
+    required this.controller,
     this.onInsertNewRequested,
     required this.listItemsFilter,
     required this.listItemBuilder,
-    List<int?>? inAuthorIds,
-    this.onItemsAdded,
-    this.onItemRemoved,
-    this.insertNew = false,
-  }) : selecteIds = inAuthorIds ?? [];
+    // required this.getSourceIds,
+    List<int?>? inSelectedIds,
+    this.onItemsSelected,
+    this.onItemUnselected,
+  }) : selecteIds = inSelectedIds ?? [];
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +51,13 @@ class SelectionWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (previewTitle != null) previewTitle!,
+            if (title != null) Text(title!),
             DialogButtonWidget(
               label: const Icon(Icons.add_rounded),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (dialogTitle != null) dialogTitle!,
+                  if (title != null) Text(title!),
                   if (onInsertNewRequested != null)
                     TextButton(
                       onPressed: onInsertNewRequested,
@@ -56,20 +68,20 @@ class SelectionWidget extends StatelessWidget {
               content: StatefulBuilder(
                 builder: (BuildContext context, void Function(void Function()) setState) {
                   // Make sure updates are reacted to.
-                  LibraryContentProvider.instance.addListener(() {
+                  controller.addListener(() {
                     if (context.mounted) setState(() {});
                   });
 
                   return SearchListWidget<int?>(
-                    children: LibraryContentProvider.instance.authors.keys.toList(),
+                    children: controller.sourceIds,
                     multiple: true,
                     filter: listItemsFilter,
                     builder: listItemBuilder,
-                    onElementsSelected: (Set<int?> selectedAuthorIds) {
+                    onElementsSelected: (Set<int?> selectedIds) {
                       // Prefetch handlers.
                       final NavigatorState navigator = Navigator.of(context);
 
-                      onItemsAdded?.call(selectedAuthorIds);
+                      onItemsSelected?.call(selectedIds);
 
                       navigator.pop();
                     },
@@ -104,7 +116,7 @@ class SelectionWidget extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            onItemRemoved?.call(id);
+            onItemUnselected?.call(id);
           },
           child: Icon(
             Icons.close_rounded,

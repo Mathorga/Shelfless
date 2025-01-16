@@ -37,7 +37,7 @@ class LibraryFilterWidget extends StatelessWidget {
     
                 // Authors selection.
                 AuthorsSelectionWidget(
-                  inAuthorIds: LibraryContentProvider.instance.authors.keys.toList(),
+                  // inAuthorIds: LibraryContentProvider.instance.authors.keys.toList(),
                 ),
     
                 // Genres selection.
