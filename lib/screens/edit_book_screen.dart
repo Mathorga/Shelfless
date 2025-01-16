@@ -86,7 +86,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Title
+                  // Title.
                   EditSectionWidget(
                     children: [
                       Text(strings.bookInfoTitle),

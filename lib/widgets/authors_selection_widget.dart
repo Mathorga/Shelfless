@@ -12,7 +12,7 @@ import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
 
 class AuthorsSelectionWidget extends StatelessWidget {
-  final List<int?> authorIds;
+  final List<int?> selectedAuthorIds;
   final void Function(Set<int?> authorIds)? onAuthorsAdded;
   final void Function(int authorId)? onAuthorRemoved;
   final bool insertNew;
@@ -23,7 +23,7 @@ class AuthorsSelectionWidget extends StatelessWidget {
     this.onAuthorsAdded,
     this.onAuthorRemoved,
     this.insertNew = false,
-  }) : authorIds = inAuthorIds ?? [];
+  }) : selectedAuthorIds = inAuthorIds ?? [];
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class AuthorsSelectionWidget extends StatelessWidget {
             ),
           ],
         ),
-        if (authorIds.isNotEmpty)
+        if (selectedAuthorIds.isNotEmpty)
           Column(
             children: [
               Themes.spacer,
@@ -94,7 +94,7 @@ class AuthorsSelectionWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: authorIds.map((int? authorId) => _buildAuthorPreview(authorId)).toList(),
+                  children: selectedAuthorIds.map((int? authorId) => _buildAuthorPreview(authorId)).toList(),
                 ),
               ),
             ],
