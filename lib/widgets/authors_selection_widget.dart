@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/author.dart';
@@ -16,12 +15,14 @@ class AuthorsSelectionWidget extends StatelessWidget {
   final List<int?> authorIds;
   final void Function(Set<int?> authorIds)? onAuthorsAdded;
   final void Function(int authorId)? onAuthorRemoved;
+  final bool insertNew;
 
   AuthorsSelectionWidget({
     super.key,
     List<int?>? inAuthorIds,
     this.onAuthorsAdded,
     this.onAuthorRemoved,
+    this.insertNew = false,
   }) : authorIds = inAuthorIds ?? [];
 
   @override
@@ -38,16 +39,17 @@ class AuthorsSelectionWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(strings.bookInfoAuthors),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => const EditAuthorScreen(),
-                        ),
-                      );
-                    },
-                    child: Text(strings.add),
-                  ),
+                  if (insertNew)
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => const EditAuthorScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(strings.add),
+                    ),
                 ],
               ),
               content: StatefulBuilder(

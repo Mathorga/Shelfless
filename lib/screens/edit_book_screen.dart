@@ -102,6 +102,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   // Authors.
                   AuthorsSelectionWidget(
                     inAuthorIds: _book.authorIds,
+                    insertNew: true,
                     onAuthorsAdded: (Set<int?> selectedAuthorIds) {
                       bool duplicates = false;
                       Set<int> authorIds = {};
