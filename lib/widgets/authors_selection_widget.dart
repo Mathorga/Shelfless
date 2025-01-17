@@ -22,11 +22,11 @@ class AuthorsSelectionWidget extends StatefulWidget {
 
   AuthorsSelectionWidget({
     super.key,
-    List<int?>? inAuthorIds,
+    List<int?>? inSelectedIds,
     this.insertNew = false,
     this.onAuthorsSelected,
     this.onAuthorUnselected,
-  }) : selectedAuthorIds = inAuthorIds ?? [];
+  }) : selectedAuthorIds = inSelectedIds ?? [];
 
   @override
   State<AuthorsSelectionWidget> createState() => _AuthorsSelectionWidgetState();

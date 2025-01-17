@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
-import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/raw_book.dart';
-import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/screens/edit_author_screen.dart';
-import 'package:shelfless/screens/edit_genre_screen.dart';
-import 'package:shelfless/screens/edit_location_screen.dart';
 import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
-import 'package:shelfless/widgets/author_preview_widget.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
-import 'package:shelfless/widgets/genre_preview_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
-import 'package:shelfless/widgets/location_preview_widget.dart';
 import 'package:shelfless/widgets/publisher_preview_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
@@ -32,9 +23,9 @@ class EditBookScreen extends StatefulWidget {
   final Book? book;
 
   const EditBookScreen({
-    Key? key,
+    super.key,
     this.book,
-  }) : super(key: key);
+  });
 
   @override
   State<EditBookScreen> createState() => _EditBookScreenState();
@@ -101,7 +92,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                   // Authors.
                   AuthorsSelectionWidget(
-                    inAuthorIds: _book.authorIds,
+                    inSelectedIds: _book.authorIds,
                     insertNew: true,
                     onAuthorsSelected: (Set<int?> selectedAuthorIds) {
                       bool duplicates = false;
@@ -182,11 +173,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                   // Genres.
                   GenresSelectionWidget(
-                    inGenreIds: _book.genreIds,
-                    onGenresAdded: (Set<int?> selectedGenreIds) {
-                      // Prefetch handlers.
-                      final NavigatorState navigator = Navigator.of(context);
-
+                    inSelectedIds: _book.genreIds,
+                    insertNew: true,
+                    onGenresSelected: (Set<int?> selectedGenreIds) {
                       bool duplicates = false;
                       Set<int> genreIds = {};
                       for (int? genreId in selectedGenreIds) {
@@ -211,7 +200,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                       LibraryContentProvider.instance.addGenresToBook(genreIds, _book);
                     },
-                    onGenreRemoved: (int genreId) {
+                    onGenreUnselected: (int genreId) {
                       // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
                       // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
                       setState(() {
@@ -242,33 +231,35 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   ),
                                 ],
                               ),
-                              content: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
-                                LibraryContentProvider.instance.addListener(() {
-                                  if (context.mounted) setState(() {});
-                                });
+                              content: StatefulBuilder(
+                                builder: (BuildContext context, void Function(void Function()) setState) {
+                                  LibraryContentProvider.instance.addListener(() {
+                                    if (context.mounted) setState(() {});
+                                  });
 
-                                return SearchListWidget<int?>(
-                                  children: LibraryContentProvider.instance.publishers.keys.toList(),
-                                  filter: (int? publisherId, String? filter) => filter != null ? publisherId.toString().toLowerCase().contains(filter) : true,
-                                  builder: (int? publisherId) {
-                                    final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
+                                  return SearchListWidget<int?>(
+                                    children: LibraryContentProvider.instance.publishers.keys.toList(),
+                                    filter: (int? publisherId, String? filter) => filter != null ? publisherId.toString().toLowerCase().contains(filter) : true,
+                                    builder: (int? publisherId) {
+                                      final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
 
-                                    if (publisher == null) return Placeholder();
+                                      if (publisher == null) return Placeholder();
 
-                                    return PublisherPreviewWidget(
-                                      publisher: publisher,
-                                      onTap: () {
-                                        // Make sure the publisherId is not null.
-                                        if (publisherId == null) return;
+                                      return PublisherPreviewWidget(
+                                        publisher: publisher,
+                                        onTap: () {
+                                          // Make sure the publisherId is not null.
+                                          if (publisherId == null) return;
 
-                                        // Set the book location.
-                                        LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
-                                        Navigator.of(context).pop();
-                                      },
-                                    );
-                                  },
-                                );
-                              }),
+                                          // Set the book location.
+                                          LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
+                                          Navigator.of(context).pop();
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                             ),
                         ],
                       ),

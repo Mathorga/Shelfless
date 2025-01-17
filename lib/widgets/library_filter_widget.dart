@@ -27,29 +27,35 @@ class LibraryFilterWidget extends StatelessWidget {
                   "Filters",
                   style: theme.textTheme.headlineSmall,
                 ),
-    
+
                 SearchBar(
                   leading: const Icon(Icons.search_rounded),
                   onChanged: (String value) {
                     // TODO Save the query string for filtering.
                   },
                 ),
-    
+
                 // Authors selection.
-                AuthorsSelectionWidget(
-                  // inAuthorIds: LibraryContentProvider.instance.authors.keys.toList(),
-                ),
-    
+                StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
+                  LibraryContentProvider.instance.addListener(() => setState(() {}));
+
+                  return AuthorsSelectionWidget(
+                    inSelectedIds: LibraryContentProvider.instance.authorsFilter.toList(),
+                    onAuthorsSelected: LibraryContentProvider.instance.addAuthorsFilter,
+                    onAuthorUnselected: LibraryContentProvider.instance.removeAuthorsFilter,
+                  );
+                }),
+
                 // Genres selection.
                 GenresSelectionWidget(
-                  inGenreIds: LibraryContentProvider.instance.genres.keys.toList(),
+                  inSelectedIds: LibraryContentProvider.instance.genresFilter.toList(),
                 ),
-    
+
                 // Publishers selection.
                 PublishersSelectionWidget(
-                  inPublisherIds: LibraryContentProvider.instance.publishers.keys.toList(),
+                  inSelectedIds: LibraryContentProvider.instance.publishersFilter.toList(),
                 ),
-    
+
                 // FAB spacing.
                 SizedBox(
                   height: Themes.spacingFAB,
@@ -57,14 +63,14 @@ class LibraryFilterWidget extends StatelessWidget {
               ],
             ),
           ),
-    
+
           // Apply button.
           Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton.extended(
               onPressed: () {
                 final NavigatorState navigator = Navigator.of(context);
-    
+
                 navigator.pop();
               },
               label: Text("Apply"),
