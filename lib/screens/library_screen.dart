@@ -76,7 +76,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     enableDrag: true,
                     expand: false,
                     backgroundColor: theme.colorScheme.surface,
-                    builder: (BuildContext context) => LibraryFilterWidget(),
+                    builder: (BuildContext context) => PopScope(
+                      onPopInvokedWithResult: (bool didPop, Object? result) {
+                        LibraryContentProvider.instance.applyFilters();
+                      },
+                      child: LibraryFilterWidget(),
+                    ),
                   );
                 },
               ),
