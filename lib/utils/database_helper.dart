@@ -228,7 +228,11 @@ class DatabaseHelper {
   }) =>
       """
   SELECT *, GROUP_CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
-  FROM ($booksWithGenreId())
+  FROM (${booksWithGenreId(
+        libraryId: libraryId,
+        titleFilter: titleFilter,
+        genresFilter: genresFilter,
+      )})
   GROUP BY ${booksTable}_id
   """;
 
@@ -245,7 +249,11 @@ class DatabaseHelper {
         titleFilter: titleFilter,
         authorsFilter: authorsFilter,
       )}) AS books_with_authors
-  JOIN (${booksWithAggregateGenreIds()}) AS books_with_genres
+  JOIN (${booksWithAggregateGenreIds(
+        libraryId: libraryId,
+        titleFilter: titleFilter,
+        genresFilter: genresFilter,
+      )}) AS books_with_genres
   ON books_with_authors.${booksTable}_id = books_with_genres.${booksTable}_id
   ORDER BY books_with_authors.${booksTable}_id ASC
   """;
@@ -336,6 +344,7 @@ class DatabaseHelper {
     Set<int?>? genresFilter,
   }) async {
     final List<Map<String, dynamic>> rawData = await _db.rawQuery(books(
+      libraryId: libraryId,
       titleFilter: titleFilter,
       authorsFilter: authorsFilter,
       genresFilter: genresFilter,
