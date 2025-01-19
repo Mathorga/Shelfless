@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
 import 'package:shelfless/widgets/publishers_selection_widget.dart';
 
 class LibraryFilterWidget extends StatelessWidget {
-  const LibraryFilterWidget({super.key});
+  final LibraryFiltersProvider _libraryFiltersProvider = LibraryFiltersProvider(
+    inFilters: LibraryContentProvider.instance.getFilters(),
+  );
+
+  LibraryFilterWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,30 +36,43 @@ class LibraryFilterWidget extends StatelessWidget {
                 SearchBar(
                   leading: const Icon(Icons.search_rounded),
                   onChanged: (String value) {
-                    // TODO Save the query string for filtering.
+                    // Save the query string for filtering.
+                    _libraryFiltersProvider.addTitleFilter(value);
                   },
                 ),
 
                 // Authors selection.
                 StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
-                  LibraryContentProvider.instance.addListener(() => setState(() {}));
+                  _libraryFiltersProvider.addListener(() => setState(() {}));
 
                   return AuthorsSelectionWidget(
-                    inSelectedIds: LibraryContentProvider.instance.authorsFilter.toList(),
-                    onAuthorsSelected: LibraryContentProvider.instance.addAuthorsFilter,
-                    onAuthorUnselected: LibraryContentProvider.instance.removeAuthorsFilter,
+                    inSelectedIds: _libraryFiltersProvider.filters.authorsFilter.toList(),
+                    onAuthorsSelected: _libraryFiltersProvider.addAuthorsFilter,
+                    onAuthorUnselected: _libraryFiltersProvider.removeAuthorsFilter,
                   );
                 }),
 
                 // Genres selection.
-                GenresSelectionWidget(
-                  inSelectedIds: LibraryContentProvider.instance.genresFilter.toList(),
-                ),
+                StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
+                  _libraryFiltersProvider.addListener(() => setState(() {}));
+
+                  return GenresSelectionWidget(
+                    inSelectedIds: _libraryFiltersProvider.filters.genresFilter.toList(),
+                    onGenresSelected: _libraryFiltersProvider.addGenresFilter,
+                    onGenreUnselected: _libraryFiltersProvider.removeGenresFilter,
+                  );
+                }),
 
                 // Publishers selection.
-                PublishersSelectionWidget(
-                  inSelectedIds: LibraryContentProvider.instance.publishersFilter.toList(),
-                ),
+                StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
+                  _libraryFiltersProvider.addListener(() => setState(() {}));
+
+                  return PublishersSelectionWidget(
+                    inSelectedIds: _libraryFiltersProvider.filters.publishersFilter.toList(),
+                    onPublishersSelected: _libraryFiltersProvider.addPublishersFilter,
+                    onPublisherUnselected: _libraryFiltersProvider.removePublishersFilter,
+                  );
+                }),
 
                 // FAB spacing.
                 SizedBox(
@@ -70,6 +88,9 @@ class LibraryFilterWidget extends StatelessWidget {
             child: FloatingActionButton.extended(
               onPressed: () {
                 final NavigatorState navigator = Navigator.of(context);
+
+                // Apply user-selected filters.
+                LibraryContentProvider.instance.applyFilters(_libraryFiltersProvider.filters);
 
                 navigator.pop();
               },

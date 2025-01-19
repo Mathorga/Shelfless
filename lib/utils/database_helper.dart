@@ -186,7 +186,7 @@ class DatabaseHelper {
   WHERE 1 = 1
   ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
   ${titleFilter != null ? "AND ${booksTable}_title LIKE '$titleFilter'" : ""}
-  ${authorsFilter != null ? "AND ${bookAuthorRelTable}_author_id IN (${authorsFilter.join(",")})" : ""}
+  ${authorsFilter != null && authorsFilter.isNotEmpty ? "AND ${bookAuthorRelTable}_author_id IN (${authorsFilter.join(",")})" : ""}
   ORDER BY ${booksTable}_id ASC
   """;
 
@@ -202,7 +202,7 @@ class DatabaseHelper {
   WHERE 1 = 1
   ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
   ${titleFilter != null ? "AND ${booksTable}_title LIKE $titleFilter" : ""}
-  ${genresFilter != null ? "AND ${bookGenreRelTable}_genre_id IN (${genresFilter.join(",")})" : ""}
+  ${genresFilter != null && genresFilter.isNotEmpty ? "AND ${bookGenreRelTable}_genre_id IN (${genresFilter.join(",")})" : ""}
   ORDER BY ${booksTable}_id ASC
   """;
 

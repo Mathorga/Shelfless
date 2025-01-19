@@ -6,6 +6,7 @@ import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/utils/database_helper.dart';
 
 class LibraryContentProvider with ChangeNotifier {
@@ -23,11 +24,11 @@ class LibraryContentProvider with ChangeNotifier {
   // ###############################################################################################################################################################################
 
   RawLibrary? library;
-  List<Book> books = [];
-  Map<int?, RawGenre> genres = {};
-  Map<int?, Author> authors = {};
-  Map<int?, Publisher> publishers = {};
-  Map<int?, StoreLocation> locations = {};
+  final List<Book> books = [];
+  final Map<int?, RawGenre> genres = {};
+  final Map<int?, Author> authors = {};
+  final Map<int?, Publisher> publishers = {};
+  final Map<int?, StoreLocation> locations = {};
 
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
@@ -36,29 +37,32 @@ class LibraryContentProvider with ChangeNotifier {
   // Filters.
   // ###############################################################################################################################################################################
 
-  String? titleFilter;
-  Set<int?> genresFilter = {};
-  Set<int?> authorsFilter = {};
-  Set<int?> publishersFilter = {};
-  Set<int?> locationsFilter = {};
-  int? startYearFilter;
-  int? endYearFilter;
+  LibraryFilters _filters = LibraryFilters();
 
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
 
-  /// Asks the DB for the library with the prodided [libraryId].
+  // ###############################################################################################################################################################################
+  // Content methods.
+  // ###############################################################################################################################################################################
+
+  /// Asks the DB for the library with the prodided [rawLibrary].
   void fetchLibraryContent(RawLibrary rawLibrary) async {
     library = rawLibrary;
 
     if (rawLibrary.id == null) return;
 
     // Fetch all books for the provided library.
-    books = await DatabaseHelper.instance.getLibraryBooks(rawLibrary.id!);
+    books.addAll(await DatabaseHelper.instance.getLibraryBooks(
+      rawLibrary.id!,
+      titleFilter: _filters.titleFilter,
+      authorsFilter: _filters.authorsFilter,
+      genresFilter: _filters.genresFilter,
+    ));
 
     // Fetch ALL other data.
-    genres = Map.fromEntries((await DatabaseHelper.instance.getGenres()).map((RawGenre rawGenre) => MapEntry(rawGenre.id, rawGenre)));
-    authors = Map.fromEntries((await DatabaseHelper.instance.getAuthors()).map((Author rawAuthor) => MapEntry(rawAuthor.id, rawAuthor)));
+    genres.addAll(Map.fromEntries((await DatabaseHelper.instance.getGenres()).map((RawGenre rawGenre) => MapEntry(rawGenre.id, rawGenre))));
+    authors.addAll(Map.fromEntries((await DatabaseHelper.instance.getAuthors()).map((Author rawAuthor) => MapEntry(rawAuthor.id, rawAuthor))));
 
     notifyListeners();
   }
@@ -154,28 +158,48 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void clearContent() {
+    books.clear();
+    genres.clear();
+    authors.clear();
+    publishers.clear();
+    locations.clear();
+  }
+
+  // ###############################################################################################################################################################################
+  // ###############################################################################################################################################################################
+
   // ###############################################################################################################################################################################
   // Filter methods.
   // ###############################################################################################################################################################################
 
-  void addAuthorsFilter(Set<int?> authorIds) {
-    authorsFilter.addAll(authorIds);
+  void applyFilters(LibraryFilters filters) {
+    // Save filters for later use.
+    _filters = filters;
 
-    notifyListeners();
-  }
+    // Clear preexisting content.
+    clearContent();
 
-  void removeAuthorsFilter(int? authorId) {
-    authorsFilter.remove(authorId);
-
-    notifyListeners();
-  }
-
-  void applyFilters() {
-    assert(library != null, "Cannot apply filters, no open library!");
-
+    // Reread content with the provided filters applied.
     fetchLibraryContent(library!);
   }
 
+  LibraryFilters getFilters() => _filters;
+
+  void clearFilters() {
+    _filters = LibraryFilters();
+
+    notifyListeners();
+  }
+
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
+
+  void clear() {
+    library = null;
+
+    clearContent();
+
+    clearFilters();
+  }
 }
