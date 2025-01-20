@@ -13,6 +13,8 @@ class EnStrings implements Strings {
   @override String get yes => "Yes";
   @override String get no => "No";
   @override String get ok => "OK";
+  @override String get confirm => "Confirm";
+  @override String get cancel => "Cancel";
   @override String get authorInfo => "Author Info";
   @override String get genreInfo => "Genre Info";
   @override String get publisherInfo => "Publisher Info";
@@ -66,13 +68,13 @@ class EnStrings implements Strings {
   @override String get authorsSectionTitle => "Authors";
   @override String get publishersSectionTitle => "Publishers";
   @override String get locationsSectionTitle => "Locaitons";
-  @override String get filterLibrary => "Filter";
   @override String get shareLibrary => "Share";
   @override String get exportLibrary => "Export";
   @override String get updateLibrary => "Update";
-  @override String get filterTitle => "Filter";
-  @override String get filterApply => "Apply";
-  @override String get filterCancel => "Cancel";
+  @override String get filtersTitle => "Filters";
+  @override String get filtersApply => "Apply";
+  @override String get filtersCancel => "Cancel";
+  @override String get filtersClear => "Clear";
   @override String get filteredBooksTitle => "Filtered books";
   @override String get noLibrariesFound => "No libraries found";
   @override String get noAuthorsFound => "No authors found";

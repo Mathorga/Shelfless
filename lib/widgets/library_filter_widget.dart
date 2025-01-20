@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
 import 'package:shelfless/widgets/publishers_selection_widget.dart';
@@ -29,7 +30,7 @@ class LibraryFilterWidget extends StatelessWidget {
               children: [
                 // Title.
                 Text(
-                  "Filters",
+                  strings.filtersTitle,
                   style: theme.textTheme.headlineSmall,
                 ),
 
@@ -42,37 +43,43 @@ class LibraryFilterWidget extends StatelessWidget {
                 ),
 
                 // Authors selection.
-                StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
-                  _libraryFiltersProvider.addListener(() => setState(() {}));
+                StatefulBuilder(
+                  builder: (BuildContext context, void Function(void Function()) setState) {
+                    _libraryFiltersProvider.addListener(() => setState(() {}));
 
-                  return AuthorsSelectionWidget(
-                    inSelectedIds: _libraryFiltersProvider.filters.authorsFilter.toList(),
-                    onAuthorsSelected: _libraryFiltersProvider.addAuthorsFilter,
-                    onAuthorUnselected: _libraryFiltersProvider.removeAuthorsFilter,
-                  );
-                }),
+                    return AuthorsSelectionWidget(
+                      inSelectedIds: _libraryFiltersProvider.filters.authorsFilter.toList(),
+                      onAuthorsSelected: _libraryFiltersProvider.addAuthorsFilter,
+                      onAuthorUnselected: _libraryFiltersProvider.removeAuthorsFilter,
+                    );
+                  },
+                ),
 
                 // Genres selection.
-                StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
-                  _libraryFiltersProvider.addListener(() => setState(() {}));
+                StatefulBuilder(
+                  builder: (BuildContext context, void Function(void Function()) setState) {
+                    _libraryFiltersProvider.addListener(() => setState(() {}));
 
-                  return GenresSelectionWidget(
-                    inSelectedIds: _libraryFiltersProvider.filters.genresFilter.toList(),
-                    onGenresSelected: _libraryFiltersProvider.addGenresFilter,
-                    onGenreUnselected: _libraryFiltersProvider.removeGenresFilter,
-                  );
-                }),
+                    return GenresSelectionWidget(
+                      inSelectedIds: _libraryFiltersProvider.filters.genresFilter.toList(),
+                      onGenresSelected: _libraryFiltersProvider.addGenresFilter,
+                      onGenreUnselected: _libraryFiltersProvider.removeGenresFilter,
+                    );
+                  },
+                ),
 
                 // Publishers selection.
-                StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
-                  _libraryFiltersProvider.addListener(() => setState(() {}));
+                StatefulBuilder(
+                  builder: (BuildContext context, void Function(void Function()) setState) {
+                    _libraryFiltersProvider.addListener(() => setState(() {}));
 
-                  return PublishersSelectionWidget(
-                    inSelectedIds: _libraryFiltersProvider.filters.publishersFilter.toList(),
-                    onPublishersSelected: _libraryFiltersProvider.addPublishersFilter,
-                    onPublisherUnselected: _libraryFiltersProvider.removePublishersFilter,
-                  );
-                }),
+                    return PublishersSelectionWidget(
+                      inSelectedIds: _libraryFiltersProvider.filters.publishersFilter.toList(),
+                      onPublishersSelected: _libraryFiltersProvider.addPublishersFilter,
+                      onPublisherUnselected: _libraryFiltersProvider.removePublishersFilter,
+                    );
+                  },
+                ),
 
                 // FAB spacing.
                 SizedBox(
@@ -85,17 +92,36 @@ class LibraryFilterWidget extends StatelessWidget {
           // Apply button.
           Align(
             alignment: Alignment.bottomRight,
-            child: FloatingActionButton.extended(
-              onPressed: () {
-                final NavigatorState navigator = Navigator.of(context);
+            child: StatefulBuilder(
+              builder: (BuildContext context, void Function(void Function()) setState) {
+                _libraryFiltersProvider.addListener(() => setState(() {}));
 
-                // Apply user-selected filters.
-                LibraryContentProvider.instance.applyFilters(_libraryFiltersProvider.filters);
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  spacing: Themes.spacingLarge,
+                  children: [
+                    if (_libraryFiltersProvider.filters.isActive)
+                      TextButton(
+                        onPressed: () {
+                          _libraryFiltersProvider.clear();
+                        },
+                        child: Text(strings.filtersClear),
+                      ),
+                    FloatingActionButton.extended(
+                      onPressed: () {
+                        final NavigatorState navigator = Navigator.of(context);
 
-                navigator.pop();
+                        // Apply user-selected filters.
+                        LibraryContentProvider.instance.applyFilters(_libraryFiltersProvider.filters);
+
+                        navigator.pop();
+                      },
+                      label: Text(strings.filtersApply),
+                      icon: Icon(Icons.check_rounded),
+                    ),
+                  ],
+                );
               },
-              label: Text("Apply"),
-              icon: Icon(Icons.check_rounded),
             ),
           ),
         ],

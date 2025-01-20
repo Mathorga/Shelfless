@@ -90,13 +90,19 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: () => widget.onCancel,
-                    child: Text(strings.no),
+                    onPressed: () {
+                      final NavigatorState navigator = Navigator.of(context);
+
+                      widget.onCancel?.call();
+
+                      navigator.pop();
+                    },
+                    child: Text(strings.cancel),
                   ),
                   Themes.spacer,
                   ElevatedButton(
                     onPressed: () => widget.onElementsSelected?.call(_selection),
-                    child: Text(strings.yes),
+                    child: Text(strings.confirm),
                   ),
                 ],
               ),

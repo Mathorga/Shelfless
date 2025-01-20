@@ -11,20 +11,20 @@ import 'package:shelfless/screens/authors_overview_screen.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
 
-class LibraryScreen extends StatefulWidget {
+class LibraryContentScreen extends StatefulWidget {
   static const String routeName = "/library";
   final LibraryPreview library;
 
-  const LibraryScreen({
+  const LibraryContentScreen({
     super.key,
     required this.library,
   });
 
   @override
-  State<LibraryScreen> createState() => _LibraryScreenState();
+  State<LibraryContentScreen> createState() => _LibraryContentScreenState();
 }
 
-class _LibraryScreenState extends State<LibraryScreen> {
+class _LibraryContentScreenState extends State<LibraryContentScreen> {
   @override
   void initState() {
     super.initState();
@@ -36,6 +36,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final bool filtersActive = LibraryContentProvider.instance.getFilters().isActive;
 
     return PopScope(
       onPopInvokedWithResult: (bool didPop, Object? result) {
@@ -57,7 +58,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
               centerTitle: true,
               actions: [
                 IconButton(
-                  icon: Icon(LibraryContentProvider.instance.getFilters().isActive ? Icons.filter_alt : Icons.filter_alt_outlined),
+                  icon: Icon(
+                    filtersActive ? Icons.filter_alt : Icons.filter_alt_outlined,
+                    color: filtersActive ? theme.colorScheme.primary : theme.colorScheme.onSurface,
+                  ),
                   onPressed: () {
                     showBarModalBottomSheet(
                       context: context,
@@ -85,7 +89,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             ),
           ],
         ),
-        floatingActionButton: LibraryContentProvider.instance.getFilters().isActive
+        floatingActionButton: filtersActive
             ? null
             : FloatingActionButton(
                 onPressed: () {

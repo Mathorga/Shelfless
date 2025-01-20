@@ -25,6 +25,16 @@ class LibraryFilters {
       locationsFilter.isNotEmpty ||
       startYearFilter != null ||
       endYearFilter != null;
+
+  void clear() {
+    titleFilter = null;
+    genresFilter.clear();
+    authorsFilter.clear();
+    publishersFilter.clear();
+    locationsFilter.clear();
+    startYearFilter = null;
+    endYearFilter = null;
+  }
 }
 
 class LibraryFiltersProvider with ChangeNotifier {
@@ -76,6 +86,12 @@ class LibraryFiltersProvider with ChangeNotifier {
 
   void removePublishersFilter(int? genreIds) {
     filters.genresFilter.remove(genreIds);
+
+    notifyListeners();
+  }
+
+  void clear() {
+    filters.clear();
 
     notifyListeners();
   }

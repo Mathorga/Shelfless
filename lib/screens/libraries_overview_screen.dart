@@ -10,7 +10,7 @@ import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
-import 'package:shelfless/screens/library_screen.dart';
+import 'package:shelfless/screens/library_content_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/database_helper.dart';
@@ -82,7 +82,7 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
 
                       navigator.push(
                         MaterialPageRoute(
-                          builder: (BuildContext context) => LibraryScreen(
+                          builder: (BuildContext context) => LibraryContentScreen(
                             library: library,
                           ),
                         ),

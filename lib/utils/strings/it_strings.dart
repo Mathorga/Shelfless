@@ -15,6 +15,8 @@ class ItStrings implements Strings {
   @override String get yes => "Sì";
   @override String get no => "No";
   @override String get ok => "OK";
+  @override String get confirm => "Conferma";
+  @override String get cancel => "Annulla";
   @override String get authorInfo => "Scheda Autore";
   @override String get genreInfo => "Scheda Genere";
   @override String get publisherInfo => "Scheda Editore";
@@ -68,13 +70,13 @@ class ItStrings implements Strings {
   @override String get authorsSectionTitle => "Autori";
   @override String get publishersSectionTitle => "Editori";
   @override String get locationsSectionTitle => "Posizioni";
-  @override String get filterLibrary => "Filtra";
   @override String get shareLibrary => "Condividi";
   @override String get exportLibrary => "Esporta";
   @override String get updateLibrary => "Aggiorna";
-  @override String get filterTitle => "Filtro";
-  @override String get filterApply => "Applica";
-  @override String get filterCancel => "Annulla";
+  @override String get filtersTitle => "Filtri";
+  @override String get filtersApply => "Applica";
+  @override String get filtersCancel => "Annulla";
+  @override String get filtersClear => "Cancella";
   @override String get filteredBooksTitle => "Libri filtrati";
   @override String get noLibrariesFound => "Nessuna biblioteca";
   @override String get noAuthorsFound => "Nessun autore trovato";

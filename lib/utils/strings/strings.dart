@@ -15,6 +15,8 @@ class Strings {
   String get yes => "";
   String get no => "";
   String get ok => "";
+  String get confirm => "";
+  String get cancel => "";
   String get authorInfo => "";
   String get genreInfo => "";
   String get publisherInfo => "";
@@ -68,13 +70,13 @@ class Strings {
   String get authorsSectionTitle => "";
   String get publishersSectionTitle => "";
   String get locationsSectionTitle => "";
-  String get filterLibrary => "";
   String get shareLibrary => "";
   String get exportLibrary => "";
   String get updateLibrary => "";
-  String get filterTitle => "";
-  String get filterApply => "";
-  String get filterCancel => "";
+  String get filtersTitle => "";
+  String get filtersApply => "";
+  String get filtersCancel => "";
+  String get filtersClear => "";
   String get filteredBooksTitle => "";
   String get noLibrariesFound => "";
   String get noAuthorsFound => "";
