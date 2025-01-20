@@ -38,9 +38,6 @@ class LibraryScreen extends StatefulWidget {
 }
 
 class _LibraryScreenState extends State<LibraryScreen> {
-  int _currentIndex = 0;
-  String _searchValue = "";
-
   @override
   void initState() {
     super.initState();
@@ -53,63 +50,63 @@ class _LibraryScreenState extends State<LibraryScreen> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    return Scaffold(
-      body: CustomScrollView(
-        physics: Themes.scrollPhysics,
-        slivers: [
-          SliverAppBar(
-            pinned: false,
-            snap: false,
-            floating: true,
-            shadowColor: Colors.transparent,
-            title: Text(
-              widget.library.raw.name,
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                icon: Icon(Icons.filter_alt_outlined),
-                onPressed: () {
-                  showBarModalBottomSheet(
-                    context: context,
-                    enableDrag: true,
-                    expand: false,
-                    backgroundColor: theme.colorScheme.surface,
-                    builder: (BuildContext context) => PopScope(
-                      onPopInvokedWithResult: (bool didPop, Object? result) {
-                        LibraryContentProvider.instance.applyFilters();
-                      },
-                      child: LibraryFilterWidget(),
-                    ),
-                  );
-                },
+    return PopScope(
+      onPopInvokedWithResult: (bool didPop, Object? result) {
+        LibraryContentProvider.instance.clear();
+      },
+      child: Scaffold(
+        body: CustomScrollView(
+          physics: Themes.scrollPhysics,
+          slivers: [
+            SliverAppBar(
+              pinned: false,
+              snap: false,
+              floating: true,
+              shadowColor: Colors.transparent,
+              title: Text(
+                widget.library.raw.name,
+                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-            ],
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) => BookPreviewWidget(
-                book: LibraryContentProvider.instance.books[index],
-                // onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                //   builder: (BuildContext context) => BookInfoScreen(
-                //     book: _filteredBooks[index],
-                //   ),
-                // )),
-              ),
-              childCount: LibraryContentProvider.instance.books.length,
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.filter_alt_outlined),
+                  onPressed: () {
+                    showBarModalBottomSheet(
+                      context: context,
+                      enableDrag: true,
+                      expand: false,
+                      backgroundColor: theme.colorScheme.surface,
+                      builder: (BuildContext context) => LibraryFilterWidget(),
+                    );
+                  },
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final NavigatorState navigator = Navigator.of(context);
-
-          // TODO Navigate to EditBookScreen
-          navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
-        },
-        child: Icon(Icons.add_rounded),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) => BookPreviewWidget(
+                  book: LibraryContentProvider.instance.books[index],
+                  // onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  //   builder: (BuildContext context) => BookInfoScreen(
+                  //     book: _filteredBooks[index],
+                  //   ),
+                  // )),
+                ),
+                childCount: LibraryContentProvider.instance.books.length,
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            final NavigatorState navigator = Navigator.of(context);
+      
+            // TODO Navigate to EditBookScreen
+            navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
+          },
+          child: Icon(Icons.add_rounded),
+        ),
       ),
     );
   }
