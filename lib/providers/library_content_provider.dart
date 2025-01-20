@@ -53,12 +53,13 @@ class LibraryContentProvider with ChangeNotifier {
     if (rawLibrary.id == null) return;
 
     // Fetch all books for the provided library.
-    books.addAll(await DatabaseHelper.instance.getLibraryBooks(
+    final List<Book> tmpBooks = await DatabaseHelper.instance.getLibraryBooks(
       rawLibrary.id!,
       titleFilter: _filters.titleFilter,
       authorsFilter: _filters.authorsFilter,
       genresFilter: _filters.genresFilter,
-    ));
+    );
+    books.addAll(tmpBooks);
 
     // Fetch ALL other data.
     genres.addAll(Map.fromEntries((await DatabaseHelper.instance.getGenres()).map((RawGenre rawGenre) => MapEntry(rawGenre.id, rawGenre))));

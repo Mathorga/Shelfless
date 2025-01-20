@@ -5,6 +5,7 @@ import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditLibraryScreen extends StatefulWidget {
@@ -13,9 +14,9 @@ class EditLibraryScreen extends StatefulWidget {
   final LibraryPreview? library;
 
   const EditLibraryScreen({
-    Key? key,
+    super.key,
     this.library,
-  }) : super(key: key);
+  });
 
   @override
   State<EditLibraryScreen> createState() => _EditLibraryScreenState();
@@ -48,8 +49,7 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
             ),
             body: Padding(
               padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: EditSectionWidget(
                 children: [
                   Text(strings.libraryInfoName),
                   Themes.spacer,
@@ -57,10 +57,6 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
                     initialValue: _library?.raw.name,
                     textCapitalization: TextCapitalization.words,
                     onChanged: (String value) => _library?.raw.name = value,
-                  ),
-                  const SizedBox(
-                    height: 24.0,
-                    child: Divider(height: 2.0),
                   ),
                 ],
               ),

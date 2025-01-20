@@ -177,7 +177,6 @@ class DatabaseHelper {
   String booksWithAuthorId({
     int? libraryId,
     String? titleFilter,
-    Set<int?>? authorsFilter,
   }) =>
       """
   SELECT $booksTable.*, ${bookAuthorRelTable}_author_id
@@ -186,14 +185,26 @@ class DatabaseHelper {
   WHERE 1 = 1
   ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
   ${titleFilter != null ? "AND ${booksTable}_title LIKE '$titleFilter'" : ""}
-  ${authorsFilter != null && authorsFilter.isNotEmpty ? "AND ${bookAuthorRelTable}_author_id IN (${authorsFilter.join(",")})" : ""}
   ORDER BY ${booksTable}_id ASC
+  """;
+
+  /// Returns a raw query for selecting all ids of books with the provided filters.
+  String filteredBookIds({
+    Set<int?>? authorsFilter,
+    Set<int?>? genresFilter,
+  }) =>
+      """
+  SELECT DISTINCT ${bookGenreRelTable}_book_id AS ${booksTable}_id
+  FROM $bookGenreRelTable JOIN $bookAuthorRelTable
+  ON ${bookGenreRelTable}_book_id = ${bookAuthorRelTable}_book_id
+  WHERE 1 = 1
+  ${authorsFilter != null && authorsFilter.isNotEmpty ? "AND ${bookAuthorRelTable}_author_id IN (${authorsFilter.join(",")})" : ""}
+  ${genresFilter != null && genresFilter.isNotEmpty ? "AND ${bookGenreRelTable}_genre_id IN (${genresFilter.join(",")})" : ""}
   """;
 
   String booksWithGenreId({
     int? libraryId,
     String? titleFilter,
-    Set<int?>? genresFilter,
   }) =>
       """
   SELECT $booksTable.*, ${bookGenreRelTable}_genre_id
@@ -202,36 +213,34 @@ class DatabaseHelper {
   WHERE 1 = 1
   ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
   ${titleFilter != null ? "AND ${booksTable}_title LIKE $titleFilter" : ""}
-  ${genresFilter != null && genresFilter.isNotEmpty ? "AND ${bookGenreRelTable}_genre_id IN (${genresFilter.join(",")})" : ""}
   ORDER BY ${booksTable}_id ASC
   """;
 
   String booksWithAggregateAuthorIds({
     int? libraryId,
     String? titleFilter,
-    Set<int?>? authorsFilter,
   }) =>
       """
   SELECT *, GROUP_CONCAT(${bookAuthorRelTable}_author_id) AS author_ids
   FROM (${booksWithAuthorId(
         libraryId: libraryId,
         titleFilter: titleFilter,
-        authorsFilter: authorsFilter,
       )})
+  WHERE 1 = 1
   GROUP BY ${booksTable}_id
   """;
+
+  // ${authorsFilter != null && authorsFilter.isNotEmpty ? "AND author_ids "}
 
   String booksWithAggregateGenreIds({
     int? libraryId,
     String? titleFilter,
-    Set<int?>? genresFilter,
   }) =>
       """
   SELECT *, GROUP_CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
   FROM (${booksWithGenreId(
         libraryId: libraryId,
         titleFilter: titleFilter,
-        genresFilter: genresFilter,
       )})
   GROUP BY ${booksTable}_id
   """;
@@ -239,20 +248,16 @@ class DatabaseHelper {
   String books({
     int? libraryId,
     String? titleFilter,
-    Set<int?>? authorsFilter,
-    Set<int?>? genresFilter,
   }) =>
       """
   SELECT books_with_authors.*, books_with_genres.genre_ids
   FROM (${booksWithAggregateAuthorIds(
         libraryId: libraryId,
         titleFilter: titleFilter,
-        authorsFilter: authorsFilter,
       )}) AS books_with_authors
   JOIN (${booksWithAggregateGenreIds(
         libraryId: libraryId,
         titleFilter: titleFilter,
-        genresFilter: genresFilter,
       )}) AS books_with_genres
   ON books_with_authors.${booksTable}_id = books_with_genres.${booksTable}_id
   ORDER BY books_with_authors.${booksTable}_id ASC
@@ -343,12 +348,19 @@ class DatabaseHelper {
     Set<int?>? authorsFilter,
     Set<int?>? genresFilter,
   }) async {
-    final List<Map<String, dynamic>> rawData = await _db.rawQuery(books(
+    final List<Map<String, dynamic>> rawData = await _db.rawQuery("""
+    SELECT all_books.*
+    FROM (${books(
       libraryId: libraryId,
       titleFilter: titleFilter,
+    )}) AS all_books
+    JOIN (${filteredBookIds(
       authorsFilter: authorsFilter,
       genresFilter: genresFilter,
-    ));
+    )}) AS filtered_books
+    ON all_books.${booksTable}_id = filtered_books.${booksTable}_id
+    ORDER BY all_books.${booksTable}_id ASC
+    """);
     return rawData.map((Map<String, dynamic> element) => Book.fromMap(element)).toList();
   }
 

@@ -24,6 +24,7 @@ class EditSectionWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(Themes.spacingMedium),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: children,
           ),

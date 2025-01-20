@@ -15,6 +15,16 @@ class LibraryFilters {
 
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
+
+  /// Tells whether any filter is currently active or not.
+  bool get isActive =>
+      titleFilter != null ||
+      genresFilter.isNotEmpty ||
+      authorsFilter.isNotEmpty ||
+      publishersFilter.isNotEmpty ||
+      locationsFilter.isNotEmpty ||
+      startYearFilter != null ||
+      endYearFilter != null;
 }
 
 class LibraryFiltersProvider with ChangeNotifier {

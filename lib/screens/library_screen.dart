@@ -1,28 +1,15 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:permission_handler/permission_handler.dart';
 
-import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:shelfless/models/library.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
-
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
-import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/screens/authors_overview_screen.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
-import 'package:shelfless/widgets/genres_overview_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
-import 'package:shelfless/widgets/locations_overview_widget.dart';
-import 'package:shelfless/widgets/publishers_overview_widget.dart';
-import 'package:shelfless/widgets/separator_widget.dart';
 
 class LibraryScreen extends StatefulWidget {
   static const String routeName = "/library";
@@ -70,7 +57,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
               centerTitle: true,
               actions: [
                 IconButton(
-                  icon: Icon(Icons.filter_alt_outlined),
+                  icon: Icon(LibraryContentProvider.instance.getFilters().isActive ? Icons.filter_alt : Icons.filter_alt_outlined),
                   onPressed: () {
                     showBarModalBottomSheet(
                       context: context,
@@ -98,15 +85,17 @@ class _LibraryScreenState extends State<LibraryScreen> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            final NavigatorState navigator = Navigator.of(context);
-      
-            // TODO Navigate to EditBookScreen
-            navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
-          },
-          child: Icon(Icons.add_rounded),
-        ),
+        floatingActionButton: LibraryContentProvider.instance.getFilters().isActive
+            ? null
+            : FloatingActionButton(
+                onPressed: () {
+                  final NavigatorState navigator = Navigator.of(context);
+
+                  // TODO Navigate to EditBookScreen
+                  navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
+                },
+                child: Icon(Icons.add_rounded),
+              ),
       ),
     );
   }
