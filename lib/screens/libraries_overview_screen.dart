@@ -95,6 +95,8 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                               LibraryPreviewWidget(
                                 library: LibrariesProvider.instance.libraries[index],
                               ),
+
+                              // Edit button.
                               Align(
                                 alignment: Alignment.topRight,
                                 child: IconButton(
@@ -119,6 +121,8 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                                   ),
                                 ),
                               ),
+
+                              // Delete button.
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: IconButton(
@@ -179,18 +183,20 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                 child: const Icon(Icons.upload_rounded),
                 onPressed: () async {
                   // Pick a library file.
-                  FilePickerResult? result = await FilePicker.platform.pickFiles();
+                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: ["slz"],
+                  );
 
                   if (result != null) {
-                    // TODO
-                    // // Retrieve the file name.
-                    // String fileName = result.files.single.name.split(".").first;
+                    // Retrieve the file name.
+                    String fileName = result.files.single.name.split(".").first;
 
-                    // // Read the file.
-                    // File file = File(result.files.single.path!);
-                    // String fileContent = await file.readAsString();
+                    // Read the file.
+                    File file = File(result.files.single.path!);
+                    String fileContent = await file.readAsString();
 
-                    // // Create and add the library to DB.
+                    // TODO Create and add the library to DB.
                     // librariesProvider.addLibrary(Library.fromSerializableString(name: fileName, csvString: fileContent));
                   } else {
                     // User canceled the picker

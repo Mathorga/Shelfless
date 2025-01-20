@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/library_preview.dart';
+import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/utils/database_helper.dart';
 
 class LibraryPreviewWidget extends StatelessWidget {
   final LibraryPreview library;
@@ -29,15 +31,31 @@ class LibraryPreviewWidget extends StatelessWidget {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                library.toString(),
-                textAlign: TextAlign.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    library.toString(),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
-            ),
+              IconButton(
+                onPressed: () async {
+                  if (library.raw.id == null) return;
+
+                  // Extract the library.
+                  final List<String> libraryStrings = await DatabaseHelper.instance.extractLibrary(library.raw.id!);
+
+                  // Share the library to other apps.
+                },
+                icon: Icon(Icons.share_rounded),
+              ),
+            ],
           ),
         ],
       ),
