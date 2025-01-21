@@ -78,11 +78,17 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) => BookPreviewWidget(
                   book: LibraryContentProvider.instance.books[index],
-                  // onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                  //   builder: (BuildContext context) => BookInfoScreen(
-                  //     book: _filteredBooks[index],
-                  //   ),
-                  // )),
+                  onTap: () {
+                    // Prefetch handlers before async gaps.
+                    final NavigatorState navigator = Navigator.of(context);
+
+                    // Navigate to book edit screen.
+                    navigator.push(MaterialPageRoute(
+                      builder: (BuildContext context) => EditBookScreen(
+                        book: LibraryContentProvider.instance.books[index],
+                      ),
+                    ));
+                  },
                 ),
                 childCount: LibraryContentProvider.instance.books.length,
               ),
