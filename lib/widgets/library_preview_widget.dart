@@ -49,7 +49,7 @@ class LibraryPreviewWidget extends StatelessWidget {
                   if (library.raw.id == null) return;
 
                   // Extract the library.
-                  final List<String> libraryStrings = await DatabaseHelper.instance.extractLibrary(library.raw.id!);
+                  final Map<String, String> libraryStrings = await DatabaseHelper.instance.extractLibrary(library.raw.id!);
 
                   // Share the library to other apps.
                 },

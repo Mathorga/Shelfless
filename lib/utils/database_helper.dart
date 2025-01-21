@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 
 import 'package:collection/collection.dart';
@@ -97,7 +99,7 @@ class DatabaseHelper {
         ${booksTable}_publish_year INTEGER NOT NULL,
         ${booksTable}_publisher_id INTEGER,
         ${booksTable}_location_id INTEGER,
-        ${booksTable}_borrowed INTEGER,
+        ${booksTable}_borrowed INTEGER DEFAULT 0,
         ${booksTable}_edition INTEGER DEFAULT 0
       )
       """,
@@ -339,10 +341,55 @@ class DatabaseHelper {
     );
   }
 
-  Future<List<String>> extractLibrary(int libraryId) async {
+  /// Extracts all data regarding the library with the provided id
+  Future<Map<String, String>> extractLibrary(int libraryId) async {
+    final Map<String, String> result = {};
+
+    // Fetch database info.
+    result["db_info"] = jsonEncode({
+      "version": await _db.getVersion(),
+    });
+
+    // Fetch library info.
+    final List<Map<String, dynamic>> rawLibraries = await _db.query(
+      librariesTable,
+      where: "${librariesTable}_id = ?",
+      whereArgs: [libraryId],
+      limit: 1,
+    );
+    result[librariesTable] = jsonEncode(rawLibraries);
+
+    // Fetch books info.
     final List<Map<String, dynamic>> rawBooks = await _db.query(booksTable);
-    // TODO.
-    return [""];
+    result[booksTable] = jsonEncode(rawBooks);
+
+    // Fetch book/genre relationships info.
+    final List<Map<String, dynamic>> rawBookGenreRels = await _db.rawQuery("""
+      SELECT $bookGenreRelTable.*
+      FROM $bookGenreRelTable JOIN $booksTable
+      ON ${bookGenreRelTable}_book_id = ${booksTable}_id
+      WHERE ${booksTable}_library_id = $libraryId
+    """);
+    result[bookGenreRelTable] = jsonEncode(rawBookGenreRels);
+
+    // Fetch book/author relationships info.
+    final List<Map<String, dynamic>> rawBookAuthorRels = await _db.rawQuery("""
+      SELECT $bookAuthorRelTable.*
+      FROM $bookAuthorRelTable JOIN $booksTable
+      ON ${bookAuthorRelTable}_book_id = ${booksTable}_id
+      WHERE ${booksTable}_library_id = $libraryId
+    """);
+    result[bookAuthorRelTable] = jsonEncode(rawBookAuthorRels);
+
+    // TODO Fetch genres data.
+
+    // TODO Fetch authors data.
+
+    // TODO Fetch publishers data.
+
+    // TODO Fetch locations data.
+
+    return result;
   }
 
   // ###############################################################################################################################################################################
