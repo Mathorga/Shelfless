@@ -364,26 +364,40 @@ class DatabaseHelper {
     result[booksTable] = jsonEncode(rawBooks);
 
     // Fetch book/genre relationships info.
-    final List<Map<String, dynamic>> rawBookGenreRels = await _db.rawQuery("""
+    final String bookGenresRelQuery = """
       SELECT $bookGenreRelTable.*
       FROM $bookGenreRelTable JOIN $booksTable
       ON ${bookGenreRelTable}_book_id = ${booksTable}_id
       WHERE ${booksTable}_library_id = $libraryId
-    """);
+    """;
+    final List<Map<String, dynamic>> rawBookGenreRels = await _db.rawQuery(bookGenresRelQuery);
     result[bookGenreRelTable] = jsonEncode(rawBookGenreRels);
 
     // Fetch book/author relationships info.
-    final List<Map<String, dynamic>> rawBookAuthorRels = await _db.rawQuery("""
+    final String bookAuthorsRelQuery = """
       SELECT $bookAuthorRelTable.*
       FROM $bookAuthorRelTable JOIN $booksTable
       ON ${bookAuthorRelTable}_book_id = ${booksTable}_id
       WHERE ${booksTable}_library_id = $libraryId
-    """);
+    """;
+    final List<Map<String, dynamic>> rawBookAuthorRels = await _db.rawQuery(bookAuthorsRelQuery);
     result[bookAuthorRelTable] = jsonEncode(rawBookAuthorRels);
 
-    // TODO Fetch genres data.
+    // Fetch genres data.
+    final List<Map<String, dynamic>> rawGenres = await _db.rawQuery("""
+      SELECT $genresTable.*
+      FROM $genresTable JOIN ($bookGenresRelQuery)
+      ON ${genresTable}_id = ${bookGenreRelTable}_genre_id
+    """);
+    result[genresTable] = jsonEncode(rawGenres);
 
-    // TODO Fetch authors data.
+    // Fetch authors data.
+    final List<Map<String, dynamic>> rawAuthors = await _db.rawQuery("""
+      SELECT $authorsTable.*
+      FROM $authorsTable JOIN ($bookAuthorsRelQuery)
+      ON ${authorsTable}_id = ${bookAuthorRelTable}_genre_id
+    """);
+    result[authorsTable] = jsonEncode(rawAuthors);
 
     // TODO Fetch publishers data.
 
