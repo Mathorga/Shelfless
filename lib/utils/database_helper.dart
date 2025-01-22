@@ -341,7 +341,7 @@ class DatabaseHelper {
     );
   }
 
-  /// Extracts all data regarding the library with the provided id
+  /// Extracts all data regarding the library with the provided id.
   Future<Map<String, String>> extractLibrary(int libraryId) async {
     final Map<String, String> result = {};
 
@@ -351,6 +351,7 @@ class DatabaseHelper {
     });
 
     // Fetch library info.
+    // Only one library is exported, since only one is asked for.
     final List<Map<String, dynamic>> rawLibraries = await _db.query(
       librariesTable,
       where: "${librariesTable}_id = ?",
@@ -360,7 +361,13 @@ class DatabaseHelper {
     result[librariesTable] = jsonEncode(rawLibraries);
 
     // Fetch books info.
-    final List<Map<String, dynamic>> rawBooks = await _db.query(booksTable);
+    // All books in the provided library are exported. All subsequent data depends on the library books.
+    final String booksQuery = """
+      SELECT *
+      FROM $booksTable
+      WHERE ${booksTable}_library_id = $libraryId
+    """;
+    final List<Map<String, dynamic>> rawBooks = await _db.rawQuery(booksQuery);
     result[booksTable] = jsonEncode(rawBooks);
 
     // Fetch book/genre relationships info.
@@ -399,9 +406,21 @@ class DatabaseHelper {
     """);
     result[authorsTable] = jsonEncode(rawAuthors);
 
-    // TODO Fetch publishers data.
+    // Fetch publishers data.
+    final List<Map<String, dynamic>> rawPublishers = await _db.rawQuery("""
+      SELECT $publishersTable.*
+      FROM $publishersTable JOIN ($booksQuery)
+      ON ${publishersTable}_id = ${booksTable}_publisher_id
+    """);
+    result[publishersTable] = jsonEncode(rawPublishers);
 
-    // TODO Fetch locations data.
+    // Fetch locations data.
+    final List<Map<String, dynamic>> rawLocations = await _db.rawQuery("""
+      SELECT $locationsTable.*
+      FROM $locationsTable JOIN ($booksQuery)
+      ON ${locationsTable}_id = ${booksTable}_location_id
+    """);
+    result[locationsTable] = jsonEncode(rawLocations);
 
     return result;
   }

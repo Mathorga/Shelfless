@@ -1,4 +1,6 @@
+import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
@@ -51,7 +53,14 @@ class LibraryPreviewWidget extends StatelessWidget {
                   // Extract the library.
                   final Map<String, String> libraryStrings = await DatabaseHelper.instance.extractLibrary(library.raw.id!);
 
-                  // Share the library to other apps.
+                  // Compress the library files to a single .slz file.
+                  final Archive archive = Archive();
+                  // ArchiveFile();
+                  // ZipDecoder().decodeBytes(bytes);
+                  // ZipEncoder().encodeBytes(archive)
+
+                  // TODO Share the library to other apps.
+                  // Share.shareXFiles(text)
                 },
                 icon: Icon(Icons.share_rounded),
               ),
