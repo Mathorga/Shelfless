@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -55,7 +57,13 @@ class LibraryPreviewWidget extends StatelessWidget {
 
                   // Compress the library files to a single .slz file.
                   final Archive archive = Archive();
-                  // ArchiveFile();
+                  libraryStrings.entries
+                      .map((MapEntry<String, String> element) => ArchiveFile(
+                            element.key,
+                            element.value.length,
+                            element.value.codeUnits,
+                          ))
+                      .forEach((ArchiveFile file) => archive.addFile(file));
                   // ZipDecoder().decodeBytes(bytes);
                   // ZipEncoder().encodeBytes(archive)
 
