@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
-import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
+
+import 'package:archive/archive.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:shelfless/models/library_preview.dart';
-import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/utils/database_helper.dart';
 
 class LibraryPreviewWidget extends StatelessWidget {
@@ -59,16 +59,28 @@ class LibraryPreviewWidget extends StatelessWidget {
                   final Archive archive = Archive();
                   libraryStrings.entries
                       .map((MapEntry<String, String> element) => ArchiveFile(
-                            element.key,
+                            "${element.key}.json",
                             element.value.length,
                             element.value.codeUnits,
                           ))
                       .forEach((ArchiveFile file) => archive.addFile(file));
-                  // ZipDecoder().decodeBytes(bytes);
-                  // ZipEncoder().encodeBytes(archive)
+                  final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
 
-                  // TODO Share the library to other apps.
-                  // Share.shareXFiles(text)
+                  // Share the library to other apps.
+                  Share.shareXFiles(
+                    [
+                      XFile.fromData(
+                        encodedArchive,
+                        length: encodedArchive.length,
+                        mimeType: "application/x-zip",
+                      ),
+                    ],
+                    // The name parameter in the XFile.fromData method is ignored in most platforms,
+                    // so fileNameOverrides is used instead.
+                    fileNameOverrides: [
+                      "${library.raw.name}.slz",
+                    ],
+                  );
                 },
                 icon: Icon(Icons.share_rounded),
               ),

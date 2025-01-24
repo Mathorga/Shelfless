@@ -371,29 +371,32 @@ class DatabaseHelper {
     result[booksTable] = jsonEncode(rawBooks);
 
     // Fetch book/genre relationships info.
-    final String bookGenresRelQuery = """
+    final List<Map<String, dynamic>> rawBookGenreRels = await _db.rawQuery("""
       SELECT $bookGenreRelTable.*
       FROM $bookGenreRelTable JOIN $booksTable
       ON ${bookGenreRelTable}_book_id = ${booksTable}_id
       WHERE ${booksTable}_library_id = $libraryId
-    """;
-    final List<Map<String, dynamic>> rawBookGenreRels = await _db.rawQuery(bookGenresRelQuery);
+    """);
     result[bookGenreRelTable] = jsonEncode(rawBookGenreRels);
 
     // Fetch book/author relationships info.
-    final String bookAuthorsRelQuery = """
+    final List<Map<String, dynamic>> rawBookAuthorRels = await _db.rawQuery("""
       SELECT $bookAuthorRelTable.*
       FROM $bookAuthorRelTable JOIN $booksTable
       ON ${bookAuthorRelTable}_book_id = ${booksTable}_id
       WHERE ${booksTable}_library_id = $libraryId
-    """;
-    final List<Map<String, dynamic>> rawBookAuthorRels = await _db.rawQuery(bookAuthorsRelQuery);
+    """);
     result[bookAuthorRelTable] = jsonEncode(rawBookAuthorRels);
 
     // Fetch genres data.
     final List<Map<String, dynamic>> rawGenres = await _db.rawQuery("""
       SELECT $genresTable.*
-      FROM $genresTable JOIN ($bookGenresRelQuery)
+      FROM $genresTable JOIN (
+        SELECT DISTINCT ${bookGenreRelTable}_genre_id
+        FROM $bookGenreRelTable JOIN $booksTable
+        ON ${bookGenreRelTable}_book_id = ${booksTable}_id
+        WHERE ${booksTable}_library_id = $libraryId
+      )
       ON ${genresTable}_id = ${bookGenreRelTable}_genre_id
     """);
     result[genresTable] = jsonEncode(rawGenres);
@@ -401,8 +404,13 @@ class DatabaseHelper {
     // Fetch authors data.
     final List<Map<String, dynamic>> rawAuthors = await _db.rawQuery("""
       SELECT $authorsTable.*
-      FROM $authorsTable JOIN ($bookAuthorsRelQuery)
-      ON ${authorsTable}_id = ${bookAuthorRelTable}_genre_id
+      FROM $authorsTable JOIN (
+        SELECT DISTINCT ${bookAuthorRelTable}_author_id
+        FROM $bookAuthorRelTable JOIN $booksTable
+        ON ${bookAuthorRelTable}_book_id = ${booksTable}_id
+        WHERE ${booksTable}_library_id = $libraryId
+      )
+      ON ${authorsTable}_id = ${bookAuthorRelTable}_author_id
     """);
     result[authorsTable] = jsonEncode(rawAuthors);
 
