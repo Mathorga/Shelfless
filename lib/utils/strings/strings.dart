@@ -30,6 +30,8 @@ class Strings {
   String get deleteBookTitle => "";
   String get deleteBookContent => "";
   String get bookInfoTitle => "";
+  String get bookInfoThumbnail => "";
+  String get bookInfoNoImageSelected => "";
   String get bookInfoLibrary => "";
   String get bookInfoAuthors => "";
   String get bookInfoPublishDate => "";

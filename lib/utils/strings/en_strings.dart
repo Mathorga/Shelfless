@@ -28,6 +28,8 @@ class EnStrings implements Strings {
   @override String get deleteBookTitle => "Delete";
   @override String get deleteBookContent => "Are you sure you want to delete this book?";
   @override String get bookInfoTitle => "Title";
+  @override String get bookInfoThumbnail => "Thumbnail";
+  @override String get bookInfoNoImageSelected => "[no image selected]";
   @override String get bookInfoLibrary => "Library";
   @override String get bookInfoAuthors => "Authors";
   @override String get bookInfoPublishDate => "Publish date";

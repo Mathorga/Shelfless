@@ -1,4 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/publisher.dart';
@@ -36,6 +41,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
   // Insert flag: tells whether the widget is used for adding or editing a book.
   bool _inserting = true;
+
+  img.Image? _image;
 
   @override
   void initState() {
@@ -86,6 +93,42 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         initialValue: _book.raw.title,
                         textCapitalization: TextCapitalization.words,
                         onChanged: (String value) => _book.raw.title = value,
+                      ),
+                    ],
+                  ),
+
+                  // Cover.
+                  EditSectionWidget(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Text(strings.bookInfoThumbnail),
+                      Center(
+                        child: SizedBox(
+                          width: Themes.thumbnailSizeMedium,
+                          height: Themes.thumbnailSizeMedium,
+                          child: GestureDetector(
+                            onTap: _pickImage,
+                            child: _image != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(Themes.radiusMedium),
+                                    child: Image.memory(
+                                      img.encodeJpg(
+                                        img.copyResize(
+                                          _image!,
+                                          width: 500,
+                                          height: 500,
+                                          interpolation: img.Interpolation.nearest,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Card(
+                                    child: Center(
+                                      child: Text(strings.bookInfoNoImageSelected),
+                                    ),
+                                  ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -225,7 +268,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   Text(strings.publishers),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => EditPublisherScreen()));
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (BuildContext context) => EditPublisherScreen(),
+                                      ));
                                     },
                                     child: Text(strings.add),
                                   ),
@@ -435,5 +480,29 @@ class _EditBookScreenState extends State<EditBookScreen> {
         ),
       ],
     );
+  }
+
+  void _pickImage() async {
+    // Pick file and make sure one is actually picked.
+    // TODO Before actually returning the image, allow the user to correctly frame the image.
+    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
+
+    // Decode the file as image and make sure it is a known image format.
+    final Uint8List fileData = await pickedFile.readAsBytes();
+    final img.Image? image = img.decodeImage(fileData);
+    if (image == null) return;
+
+    // Resize the image to thumbnail size.
+    final img.Image resizedImage = img.copyResizeCropSquare(
+      image,
+      size: 8,
+      interpolation: img.Interpolation.nearest,
+      antialias: false,
+    );
+
+    setState(() {
+      _image = resizedImage;
+    });
   }
 }

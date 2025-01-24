@@ -26,6 +26,8 @@ class Themes {
   /// Default max dialog height, used for limiting a dialog's height on tall screens.
   static const double maxDialogHeight = 400.0;
 
+  static const double thumbnailSizeMedium = 200.0;
+
   /// Default scroll physics, used to animated scrollables (columns, rows, lists, etc).
   static const ScrollPhysics scrollPhysics = BouncingScrollPhysics();
 

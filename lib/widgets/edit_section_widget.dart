@@ -7,11 +7,14 @@ import 'package:shelfless/themes/themes.dart';
 
 /// Default wrapper for edit sections.
 class EditSectionWidget extends StatelessWidget {
+  final double spacing;
   final List<Widget> children;
+
   const EditSectionWidget({
-    Key? key,
+    super.key,
+    this.spacing = 0.0,
     this.children = const [],
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +27,7 @@ class EditSectionWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(Themes.spacingMedium),
           child: Column(
+            spacing: spacing,
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: children,

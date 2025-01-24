@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:shelfless/screens/libraries_overview_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
@@ -8,9 +7,6 @@ import 'package:shelfless/utils/database_helper.dart';
 
 void main() async {
   await DatabaseHelper.instance.openDB();
-  // SystemChrome.setEnabledSystemUIMode(
-  //   SystemUiMode.immersiveSticky,
-  // );
   runApp(const Shelfless());
 }
 

@@ -30,6 +30,8 @@ class ItStrings implements Strings {
   @override String get deleteBookTitle => "Elimina";
   @override String get deleteBookContent => "Vuoi davvero eliminare questo libro?";
   @override String get bookInfoTitle => "Titolo";
+  @override String get bookInfoThumbnail => "Copertina";
+  @override String get bookInfoNoImageSelected => "[nessuna immagine selezionata]";
   @override String get bookInfoLibrary => "Biblioteca";
   @override String get bookInfoAuthors => "Autori";
   @override String get bookInfoPublishDate => "Anno di pubblicazione";
