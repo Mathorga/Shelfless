@@ -82,7 +82,15 @@ class LibraryContentProvider with ChangeNotifier {
   }
 
   void storeBookUpdate(Book book) async {
+    // Make sure the provided book is actually stored.
+    final int index = books.indexWhere((Book bookCandidate) => bookCandidate.raw.id == book.raw.id);
+    if (index == -1) return;
+
+    // Update the book in DB.
     await DatabaseHelper.instance.updateBook(book);
+
+    // Save the updated book version.
+    books[index] = book;
 
     notifyListeners();
   }

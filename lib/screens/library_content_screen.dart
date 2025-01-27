@@ -8,6 +8,7 @@ import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/screens/authors_overview_screen.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
 
@@ -37,6 +38,10 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final bool filtersActive = LibraryContentProvider.instance.getFilters().isActive;
+    final Size screenSize = MediaQuery.sizeOf(context);
+    final double crossAxisSpacing = Themes.spacingSmall;
+    final double itemHeight = 300.0;
+    final double leftRightPadding = 0.0;
 
     return PopScope(
       onPopInvokedWithResult: (bool didPop, Object? result) {
@@ -74,23 +79,35 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                 ),
               ],
             ),
-            SliverList(
+            SliverGrid(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: crossAxisSpacing,
+                childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / 2) / itemHeight,
+              ),
               delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) => BookPreviewWidget(
-                  book: LibraryContentProvider.instance.books[index],
-                  onTap: () {
-                    // Prefetch handlers before async gaps.
-                    final NavigatorState navigator = Navigator.of(context);
+                (BuildContext context, int index) {
+                  // Since the first entry is used for the action bar, the actual book index is 1 less than the provided one.
+                  final int bookIndex = index - 1;
 
-                    // Navigate to book edit screen.
-                    navigator.push(MaterialPageRoute(
-                      builder: (BuildContext context) => EditBookScreen(
-                        book: LibraryContentProvider.instance.books[index],
-                      ),
-                    ));
-                  },
-                ),
-                childCount: LibraryContentProvider.instance.books.length,
+                  return index == 0
+                      ? _buildActionBar()
+                      : BookPreviewWidget(
+                          book: LibraryContentProvider.instance.books[bookIndex],
+                          onTap: () {
+                            // Prefetch handlers before async gaps.
+                            final NavigatorState navigator = Navigator.of(context);
+
+                            // Navigate to book edit screen.
+                            navigator.push(MaterialPageRoute(
+                              builder: (BuildContext context) => EditBookScreen(
+                                book: LibraryContentProvider.instance.books[bookIndex],
+                              ),
+                            ));
+                          },
+                        );
+                },
+                childCount: LibraryContentProvider.instance.books.length + 1,
               ),
             ),
           ],
@@ -113,42 +130,72 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
   Widget _buildActionBar() {
     return Padding(
       padding: const EdgeInsets.all(Themes.spacingLarge),
-      child: Row(
-        children: [
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              spacing: Themes.spacingXLarge,
-              children: [
-                // Authors.
-                InkWell(
-                  onTap: () {
-                    final NavigatorState navigator = Navigator.of(context);
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          spacing: Themes.spacingXLarge,
+          children: [
+            // Authors.
+            _buildAction(
+              label: strings.authorsSectionTitle,
+              onPressed: () {
+                final NavigatorState navigator = Navigator.of(context);
 
-                    navigator.push(MaterialPageRoute(
-                      builder: (BuildContext context) => AuthorsOverviewScreen(),
-                    ));
-                  },
-                  child: Icon(Icons.person_pin_rounded),
-                ),
-
-                // Genres.
-                InkWell(
-                  onTap: () {},
-                  child: Icon(Icons.color_lens_rounded),
-                ),
-
-                // Publishers.
-                InkWell(
-                  child: Icon(Icons.work_rounded),
-                ),
-              ],
+                navigator.push(MaterialPageRoute(
+                  builder: (BuildContext context) => AuthorsOverviewScreen(),
+                ));
+              },
+              child: Icon(
+                Icons.person_pin_rounded,
+                size: Themes.iconSizeMedium,
+              ),
             ),
+
+            // Genres.
+            _buildAction(
+              label: strings.genresSectionTitle,
+              onPressed: () {},
+              child: Icon(
+                Icons.color_lens_rounded,
+                size: Themes.iconSizeMedium,
+              ),
+            ),
+
+            // Publishers.
+            _buildAction(
+              label: strings.publishersSectionTitle,
+              onPressed: () {},
+              child: Icon(
+                Icons.work_rounded,
+                size: Themes.iconSizeMedium,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAction({
+    required String label,
+    required Widget child,
+    void Function()? onPressed,
+  }) {
+    return SizedBox(
+      width: Themes.actionSize,
+      child: Column(
+        spacing: Themes.spacingSmall,
+        children: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ShelflessColors.secondary,
+              iconColor: ShelflessColors.onMainBackgroundInactive,
+            ),
+            onPressed: onPressed,
+            child: child,
           ),
-          GestureDetector(
-            onTap: () {},
-            child: Icon(Icons.search_rounded),
-          ),
+          Text(label),
         ],
       ),
     );

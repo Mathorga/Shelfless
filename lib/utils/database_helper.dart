@@ -95,6 +95,7 @@ class DatabaseHelper {
       CREATE TABLE $booksTable(
         ${booksTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
         ${booksTable}_title TEXT NOT NULL,
+        --${booksTable}_cover BLOB,
         ${booksTable}_library_id INTEGER,
         ${booksTable}_publish_year INTEGER NOT NULL,
         ${booksTable}_publisher_id INTEGER,
@@ -181,13 +182,13 @@ class DatabaseHelper {
     String? titleFilter,
   }) =>
       """
-  SELECT $booksTable.*, ${bookAuthorRelTable}_author_id
-  FROM $booksTable JOIN $bookAuthorRelTable
-  ON ${booksTable}_id = ${bookAuthorRelTable}_book_id
-  WHERE 1 = 1
-  ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
-  ${titleFilter != null ? "AND ${booksTable}_title LIKE '$titleFilter'" : ""}
-  ORDER BY ${booksTable}_id ASC
+    SELECT $booksTable.*, ${bookAuthorRelTable}_author_id
+    FROM $booksTable JOIN $bookAuthorRelTable
+    ON ${booksTable}_id = ${bookAuthorRelTable}_book_id
+    WHERE 1 = 1
+    ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
+    ${titleFilter != null ? "AND ${booksTable}_title LIKE '$titleFilter'" : ""}
+    ORDER BY ${booksTable}_id ASC
   """;
 
   /// Returns a raw query for selecting all ids of books with the provided filters.
@@ -196,12 +197,12 @@ class DatabaseHelper {
     Set<int?>? genresFilter,
   }) =>
       """
-  SELECT DISTINCT ${bookGenreRelTable}_book_id AS ${booksTable}_id
-  FROM $bookGenreRelTable JOIN $bookAuthorRelTable
-  ON ${bookGenreRelTable}_book_id = ${bookAuthorRelTable}_book_id
-  WHERE 1 = 1
-  ${authorsFilter != null && authorsFilter.isNotEmpty ? "AND ${bookAuthorRelTable}_author_id IN (${authorsFilter.join(",")})" : ""}
-  ${genresFilter != null && genresFilter.isNotEmpty ? "AND ${bookGenreRelTable}_genre_id IN (${genresFilter.join(",")})" : ""}
+    SELECT DISTINCT ${bookGenreRelTable}_book_id AS ${booksTable}_id
+    FROM $bookGenreRelTable JOIN $bookAuthorRelTable
+    ON ${bookGenreRelTable}_book_id = ${bookAuthorRelTable}_book_id
+    WHERE 1 = 1
+    ${authorsFilter != null && authorsFilter.isNotEmpty ? "AND ${bookAuthorRelTable}_author_id IN (${authorsFilter.join(",")})" : ""}
+    ${genresFilter != null && genresFilter.isNotEmpty ? "AND ${bookGenreRelTable}_genre_id IN (${genresFilter.join(",")})" : ""}
   """;
 
   String booksWithGenreId({
@@ -209,13 +210,13 @@ class DatabaseHelper {
     String? titleFilter,
   }) =>
       """
-  SELECT $booksTable.*, ${bookGenreRelTable}_genre_id
-  FROM $booksTable JOIN $bookGenreRelTable
-  ON ${booksTable}_id = ${bookGenreRelTable}_book_id
-  WHERE 1 = 1
-  ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
-  ${titleFilter != null ? "AND ${booksTable}_title LIKE $titleFilter" : ""}
-  ORDER BY ${booksTable}_id ASC
+    SELECT $booksTable.*, ${bookGenreRelTable}_genre_id
+    FROM $booksTable JOIN $bookGenreRelTable
+    ON ${booksTable}_id = ${bookGenreRelTable}_book_id
+    WHERE 1 = 1
+    ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
+    ${titleFilter != null ? "AND ${booksTable}_title LIKE $titleFilter" : ""}
+    ORDER BY ${booksTable}_id ASC
   """;
 
   String booksWithAggregateAuthorIds({
@@ -223,13 +224,13 @@ class DatabaseHelper {
     String? titleFilter,
   }) =>
       """
-  SELECT *, GROUP_CONCAT(${bookAuthorRelTable}_author_id) AS author_ids
-  FROM (${booksWithAuthorId(
+    SELECT *, GROUP_CONCAT(${bookAuthorRelTable}_author_id) AS author_ids
+    FROM (${booksWithAuthorId(
         libraryId: libraryId,
         titleFilter: titleFilter,
       )})
-  WHERE 1 = 1
-  GROUP BY ${booksTable}_id
+    WHERE 1 = 1
+    GROUP BY ${booksTable}_id
   """;
 
   // ${authorsFilter != null && authorsFilter.isNotEmpty ? "AND author_ids "}
@@ -239,12 +240,12 @@ class DatabaseHelper {
     String? titleFilter,
   }) =>
       """
-  SELECT *, GROUP_CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
-  FROM (${booksWithGenreId(
+    SELECT *, GROUP_CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
+    FROM (${booksWithGenreId(
         libraryId: libraryId,
         titleFilter: titleFilter,
       )})
-  GROUP BY ${booksTable}_id
+    GROUP BY ${booksTable}_id
   """;
 
   String books({
@@ -252,38 +253,38 @@ class DatabaseHelper {
     String? titleFilter,
   }) =>
       """
-  SELECT books_with_authors.*, books_with_genres.genre_ids
-  FROM (${booksWithAggregateAuthorIds(
+    SELECT books_with_authors.*, books_with_genres.genre_ids
+    FROM (${booksWithAggregateAuthorIds(
         libraryId: libraryId,
         titleFilter: titleFilter,
       )}) AS books_with_authors
-  JOIN (${booksWithAggregateGenreIds(
+    JOIN (${booksWithAggregateGenreIds(
         libraryId: libraryId,
         titleFilter: titleFilter,
       )}) AS books_with_genres
-  ON books_with_authors.${booksTable}_id = books_with_genres.${booksTable}_id
-  ORDER BY books_with_authors.${booksTable}_id ASC
+    ON books_with_authors.${booksTable}_id = books_with_genres.${booksTable}_id
+    ORDER BY books_with_authors.${booksTable}_id ASC
   """;
 
   String booksCountByLibraryId() => """
-  SELECT ${booksTable}_library_id AS library_id, COUNT(${booksTable}_id) AS books_count
-  FROM $booksTable
-  GROUP BY ${booksTable}_library_id
+    SELECT ${booksTable}_library_id AS library_id, COUNT(${booksTable}_id) AS books_count
+    FROM $booksTable
+    GROUP BY ${booksTable}_library_id
   """;
 
   String libraryGenreIds(int libraryId) => """
-  SELECT DISTINCT ${bookGenreRelTable}_genre_id AS genre_id
-  FROM $booksTable JOIN $bookGenreRelTable
-  ON ${booksTable}_id = ${bookGenreRelTable}_book_id
-  WHERE ${booksTable}_library_id = $libraryId
-  ORDER BY ${bookGenreRelTable}_genre_id ASC
+    SELECT DISTINCT ${bookGenreRelTable}_genre_id AS genre_id
+    FROM $booksTable JOIN $bookGenreRelTable
+    ON ${booksTable}_id = ${bookGenreRelTable}_book_id
+    WHERE ${booksTable}_library_id = $libraryId
+    ORDER BY ${bookGenreRelTable}_genre_id ASC
   """;
 
   String libraryGenres(int libraryId) => """
-  SELECT $genresTable.*
-  FROM ${libraryGenreIds(libraryId)} AS genre_ids JOIN $genresTable
-  ON genre_ids.genre_id = ${genresTable}_id
-  ORDER BY ${genresTable}_id ASC
+    SELECT $genresTable.*
+    FROM ${libraryGenreIds(libraryId)} AS genre_ids JOIN $genresTable
+    ON genre_ids.genre_id = ${genresTable}_id
+    ORDER BY ${genresTable}_id ASC
   """;
 
   // ###############################################################################################################################################################################
@@ -581,31 +582,4 @@ class DatabaseHelper {
       },
     );
   }
-
-  // Future<Library> getLibrary(int libraryId) async {
-  //   final List<Book> books = await getLibraryBooks(libraryId);
-
-  //   final List<Map<String, dynamic>> rawData = await _db.rawQuery("""
-  //     SELECT *
-  //     FROM $librariesTable
-  //     WHERE ${librariesTable}_id = $libraryId
-  //     ORDER BY ${librariesTable}_id
-  //     LIMIT 1
-  //     """);
-
-  //   return Library(
-  //     id: libraryId,
-  //     name: rawData.firstOrNull?["${librariesTable}_name"],
-  //     books: books,
-  //   );
-  // }
-
-  // Future<void> insertLibrary(Library library) async {
-  //   int id = await _db.insert(librariesTable, library.toMap());
-  //   library.id = id;
-  // }
-
-  // Future<void> updateLibrary(Library library) async {
-  //   await _db.update(librariesTable, library.toMap());
-  // }
 }

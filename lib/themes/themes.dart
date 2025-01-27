@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Themes {
   /// Default spacings, used for edge insets and spacers.
+  static const double spacingXSmall = 4.0;
   static const double spacingSmall = 8.0;
   static const double spacingMedium = 12.0;
   static const double spacingLarge = 16.0;
@@ -27,6 +28,8 @@ class Themes {
   static const double maxDialogHeight = 400.0;
 
   static const double thumbnailSizeMedium = 200.0;
+
+  static const double actionSize = spacingFAB + spacingLarge;
 
   /// Default scroll physics, used to animated scrollables (columns, rows, lists, etc).
   static const ScrollPhysics scrollPhysics = BouncingScrollPhysics();

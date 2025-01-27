@@ -42,6 +42,7 @@ class RawBook {
   /// Creates and returns a copy of [this].
   RawBook copy() {
     return RawBook(
+      id: id,
       title: title,
       libraryId: libraryId,
       publishYear: publishYear,
@@ -54,6 +55,7 @@ class RawBook {
 
   /// Copies all attributes from [other].
   void copyFrom(RawBook other) {
+    id = other.id;
     title = other.title;
     libraryId = other.libraryId;
     publishYear = other.publishYear;
