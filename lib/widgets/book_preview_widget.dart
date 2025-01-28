@@ -19,7 +19,9 @@ class BookPreviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Prepare border radius.
-    double borderRadius = 15.0;
+    const double outerRadius = Themes.radiusLarge;
+    const double coverPadding = Themes.spacingSmall;
+    const double innerRadius = outerRadius - coverPadding;
 
     // Prepare colors with custom alpha value.
     final List<Color> genreColors = book.genreIds.map((int genreId) {
@@ -38,48 +40,82 @@ class BookPreviewWidget extends StatelessWidget {
       onTap: onTap,
       child: Column(
         spacing: Themes.spacingMedium,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            width: 200,
-            height: 200,
+            width: 200.0,
+            height: 200.0,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(borderRadius),
-              gradient: genreColors.isEmpty
-                  ? const LinearGradient(
-                      colors: [
+              borderRadius: BorderRadius.circular(outerRadius),
+              gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+                colors: genreColors.isNotEmpty
+                    ? genreColors.length >= 2
+                        ? genreColors
+                        : [
+                            genreColors.first,
+                            genreColors.first,
+                          ]
+                    : [
                         Colors.transparent,
                         Colors.transparent,
                       ],
-                    )
-                  : genreColors.length >= 2
-                      ? LinearGradient(colors: genreColors)
-                      : LinearGradient(
-                          colors: [
-                            genreColors.first,
-                            genreColors.first,
-                          ],
-                        ),
-            ),
-          ),
-          Column(
-            spacing: Themes.spacingXSmall,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Title.
-              Text(
-                book.raw.title,
-                style: Theme.of(context).textTheme.titleMedium,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                textAlign: TextAlign.center,
               ),
+            ),
+            child: book.raw.cover != null
+                ? Padding(
+                    padding: const EdgeInsets.all(coverPadding),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(innerRadius),
+                      child: Image.memory(
+                        book.raw.cover!,
+                        fit: BoxFit.cover,
+                        isAntiAlias: false,
+                        filterQuality: FilterQuality.none,
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Themes.spacingSmall),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    spacing: Themes.spacingXSmall,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // Title.
+                      Text(
+                        book.raw.title,
+                        style: Theme.of(context).textTheme.titleSmall,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        textAlign: TextAlign.start,
+                      ),
 
-              // Authors.
-              if (authors.isNotEmpty)
-                authors.length <= 2
-                    ? Text(authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element"))
-                    : Text("${authors.first}, others"),
-            ],
+                      // Authors.
+                      if (authors.isNotEmpty)
+                        Text(
+                          authors.length <= 2
+                              ? authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element")
+                              : "${authors.first}, others",
+                          style: Theme.of(context).textTheme.labelMedium,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.more_vert_rounded),
+                ),
+              ],
+            ),
           ),
         ],
       ),

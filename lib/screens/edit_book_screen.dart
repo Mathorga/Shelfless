@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -41,8 +42,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
   // Insert flag: tells whether the widget is used for adding or editing a book.
   bool _inserting = true;
-
-  img.Image? _image;
 
   @override
   void initState() {
@@ -108,18 +107,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           height: Themes.thumbnailSizeMedium,
                           child: GestureDetector(
                             onTap: _pickImage,
-                            child: _image != null
+                            child: _book.raw.cover != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(Themes.radiusMedium),
                                     child: Image.memory(
-                                      img.encodeJpg(
-                                        img.copyResize(
-                                          _image!,
-                                          width: 500,
-                                          height: 500,
-                                          interpolation: img.Interpolation.nearest,
-                                        ),
-                                      ),
+                                      _book.raw.cover!,
+                                      fit: BoxFit.cover,
+                                      isAntiAlias: false,
+                                      filterQuality: FilterQuality.none,
                                     ),
                                   )
                                 : Card(
@@ -502,7 +497,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
 
     setState(() {
-      _image = resizedImage;
+      _book.raw.cover = img.encodeJpg(resizedImage);
     });
   }
 }

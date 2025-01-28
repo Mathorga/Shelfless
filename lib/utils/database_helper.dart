@@ -95,7 +95,7 @@ class DatabaseHelper {
       CREATE TABLE $booksTable(
         ${booksTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
         ${booksTable}_title TEXT NOT NULL,
-        --${booksTable}_cover BLOB,
+        ${booksTable}_cover BLOB,
         ${booksTable}_library_id INTEGER,
         ${booksTable}_publish_year INTEGER NOT NULL,
         ${booksTable}_publisher_id INTEGER,

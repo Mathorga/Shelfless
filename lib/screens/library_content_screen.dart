@@ -39,8 +39,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final ThemeData theme = Theme.of(context);
     final bool filtersActive = LibraryContentProvider.instance.getFilters().isActive;
     final Size screenSize = MediaQuery.sizeOf(context);
-    final double crossAxisSpacing = Themes.spacingSmall;
-    final double itemHeight = 300.0;
+    final double crossAxisSpacing = 0.0;
+    final double itemHeight = 280.0;
     final double leftRightPadding = 0.0;
 
     return PopScope(
@@ -62,6 +62,10 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               ),
               centerTitle: true,
               actions: [
+                IconButton(
+                  icon: Icon(false ? Icons.list_rounded : Icons.grid_view_rounded),
+                  onPressed: () {},
+                ),
                 IconButton(
                   icon: Icon(
                     filtersActive ? Icons.filter_alt : Icons.filter_alt_outlined,
