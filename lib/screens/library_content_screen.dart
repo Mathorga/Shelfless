@@ -12,6 +12,7 @@ import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/screens/authors_overview_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
+import 'package:shelfless/screens/genres_overview_screen.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
 
 class LibraryContentScreen extends StatefulWidget {
@@ -171,7 +172,13 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
             // Genres.
             _buildAction(
               label: strings.genresSectionTitle,
-              onPressed: () {},
+              onPressed: () {
+                final NavigatorState navigator = Navigator.of(context);
+
+                navigator.push(MaterialPageRoute(
+                  builder: (BuildContext context) => GenresOverviewScreen(),
+                ));
+              },
               child: Icon(
                 Icons.color_lens_rounded,
                 size: Themes.iconSizeMedium,

@@ -41,43 +41,51 @@ class AuthorsOverviewScreen extends StatelessWidget {
                 children: [
                   ...List.generate(
                     LibraryContentProvider.instance.authors.length,
-                    (int index) => Stack(
-                      children: [
-                        SizedBox(
-                          height: double.infinity,
-                          child: AuthorPreviewWidget(
-                            author: LibraryContentProvider.instance.authors.values.toList()[index],
-                            onTap: () {
-                              // if (!librariesProvider.currentLibrary!.books.any((Book book) => book.authors.contains(authors[index]))) {
-                              //   return;
-                              // }
+                    (int index) {
+                      // Make sure the received index is somewhat valid.
+                      if (index > LibraryContentProvider.instance.authors.values.length) return const Placeholder();
 
-                              // Navigator.of(context).push(
-                              //   MaterialPageRoute(
-                              //     builder: (BuildContext context) => BooksScreen(
-                              //       authors: {authors[index]},
-                              //     ),
-                              //   ),
-                              // );
-                            },
+                      // Prefetch the genre for later use.
+                      Author? author = LibraryContentProvider.instance.authors.values.toList()[index];
+
+                      return Stack(
+                        children: [
+                          SizedBox(
+                            height: double.infinity,
+                            child: AuthorPreviewWidget(
+                              author: author,
+                              onTap: () {
+                                // if (!librariesProvider.currentLibrary!.books.any((Book book) => book.authors.contains(authors[index]))) {
+                                //   return;
+                                // }
+
+                                // Navigator.of(context).push(
+                                //   MaterialPageRoute(
+                                //     builder: (BuildContext context) => BooksScreen(
+                                //       authors: {authors[index]},
+                                //     ),
+                                //   ),
+                                // );
+                              },
+                            ),
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            onPressed: () {
-                              // Edit the selected author.
-                              // Navigator.of(context).push(
-                              //   MaterialPageRoute(
-                              //     builder: (BuildContext context) => AuthorInfoScreen(author: authors[index]),
-                              //   ),
-                              // );
-                            },
-                            icon: const Icon(Icons.settings_rounded),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              onPressed: () {
+                                // Edit the selected author.
+                                // Navigator.of(context).push(
+                                //   MaterialPageRoute(
+                                //     builder: (BuildContext context) => AuthorInfoScreen(author: authors[index]),
+                                //   ),
+                                // );
+                              },
+                              icon: const Icon(Icons.settings_rounded),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: fabAccessHeight),
                 ],
