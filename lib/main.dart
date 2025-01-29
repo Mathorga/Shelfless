@@ -34,6 +34,8 @@ class Shelfless extends StatelessWidget {
           backgroundColor: WidgetStatePropertyAll(ShelflessColors.lightBackground),
         ),
         cardTheme: CardTheme(
+          color: ShelflessColors.lightBackground,
+          surfaceTintColor: ShelflessColors.lightBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/author.dart';
-import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 
 enum BookAction {
   edit,
@@ -27,17 +27,6 @@ class BookPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Prepare border radius.
-    const double outerRadius = Themes.radiusLarge;
-    const double coverPadding = Themes.spacingSmall;
-    const double innerRadius = outerRadius - coverPadding;
-
-    // Prepare colors with custom alpha value.
-    final List<Color> genreColors = book.genreIds.map((int genreId) {
-      final RawGenre? genre = LibraryContentProvider.instance.genres[genreId];
-      return genre != null ? Color(genre.color) : Colors.transparent;
-    }).toList();
-
     final List<Author> authors = book.authorIds
         .map((int authorId) {
           return LibraryContentProvider.instance.authors[authorId];
@@ -51,42 +40,7 @@ class BookPreviewWidget extends StatelessWidget {
         spacing: Themes.spacingMedium,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
-            width: 200.0,
-            height: 200.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(outerRadius),
-              gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: genreColors.isNotEmpty
-                    ? genreColors.length >= 2
-                        ? genreColors
-                        : [
-                            genreColors.first,
-                            genreColors.first,
-                          ]
-                    : [
-                        Colors.transparent,
-                        Colors.transparent,
-                      ],
-              ),
-            ),
-            child: book.raw.cover != null
-                ? Padding(
-                    padding: const EdgeInsets.all(coverPadding),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(innerRadius),
-                      child: Image.memory(
-                        book.raw.cover!,
-                        fit: BoxFit.cover,
-                        isAntiAlias: false,
-                        filterQuality: FilterQuality.none,
-                      ),
-                    ),
-                  )
-                : null,
-          ),
+          BookThumbnailWidget(book: book),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Themes.spacingSmall),
             child: Row(
@@ -100,7 +54,9 @@ class BookPreviewWidget extends StatelessWidget {
                       // Title.
                       Text(
                         book.raw.title,
-                        style: Theme.of(context).textTheme.titleSmall,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w900,
+                            ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         textAlign: TextAlign.start,
@@ -112,7 +68,9 @@ class BookPreviewWidget extends StatelessWidget {
                           authors.length <= 2
                               ? authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element")
                               : "${authors.first}, others",
-                          style: Theme.of(context).textTheme.labelMedium,
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                fontWeight: FontWeight.w300,
+                              ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
@@ -238,6 +196,13 @@ class BookPreviewWidget extends StatelessWidget {
                         break;
                     }
                   },
+                  borderRadius: BorderRadius.circular(Themes.radiusSmall),
+                  child: Padding(
+                    padding: const EdgeInsets.all(Themes.spacingSmall),
+                    child: Icon(
+                      Icons.more_vert_rounded,
+                    ),
+                  ),
                 ),
               ],
             ),

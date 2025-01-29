@@ -17,9 +17,9 @@ class AuthorsOverviewScreen extends StatelessWidget {
   final String searchValue;
 
   const AuthorsOverviewScreen({
-    Key? key,
+    super.key,
     this.searchValue = "",
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class AuthorsOverviewScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(strings.authorsSectionTitle),
         ),
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.transparent,
         body: LibraryContentProvider.instance.authors.isEmpty
             ? Center(
                 child: Text(strings.noAuthorsFound),

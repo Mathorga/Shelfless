@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:shelfless/models/book.dart';
 
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/screens/book_detail_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -63,8 +65,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               centerTitle: true,
               actions: [
                 IconButton(
-                  icon: Icon(false ? Icons.list_rounded : Icons.grid_view_rounded),
-                  onPressed: () {},
+                  icon: Icon(false ? Icons.view_list_rounded : Icons.grid_view_rounded),
+                  onPressed: null,
                 ),
                 IconButton(
                   icon: Icon(
@@ -94,16 +96,17 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
+                  final Book book = LibraryContentProvider.instance.books[index];
                   return BookPreviewWidget(
-                    book: LibraryContentProvider.instance.books[index],
+                    book: book,
                     onTap: () {
                       // Prefetch handlers before async gaps.
                       final NavigatorState navigator = Navigator.of(context);
 
                       // Navigate to book edit screen.
                       navigator.push(MaterialPageRoute(
-                        builder: (BuildContext context) => EditBookScreen(
-                          book: LibraryContentProvider.instance.books[index],
+                        builder: (BuildContext context) => BookDetailScreen(
+                          book: book,
                         ),
                       ));
                     },

@@ -24,6 +24,7 @@ class ItStrings implements Strings {
   @override String get bookInfo => "Scheda Libro";
   @override String get firstName => "Nome";
   @override String get lastName => "Cognome";
+  @override String get borrowedLabel => "PRESTATO";
   @override String get bookEdit => "Modifica";
   @override String get bookMoveTo => "Sposta in";
   @override String get bookDeleteAction => "Elimina";

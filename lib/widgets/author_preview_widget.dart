@@ -9,18 +9,16 @@ class AuthorPreviewWidget extends StatelessWidget {
   final void Function()? onTap;
 
   const AuthorPreviewWidget({
-    Key? key,
+    super.key,
     required this.author,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: Theme.of(context).cardColor,
-        elevation: Theme.of(context).cardTheme.elevation,
         child: Align(
           alignment: Alignment.bottomLeft,
           child: Padding(

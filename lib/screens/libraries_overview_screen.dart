@@ -167,7 +167,10 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
       floatingActionButton: ExpandableFab(
         key: _fabKey,
         type: ExpandableFabType.up,
-        overlayStyle: ExpandableFabOverlayStyle(blur: 5.0, color: ShelflessColors.mainBackground.withAlpha(0x7F)),
+        overlayStyle: ExpandableFabOverlayStyle(
+          blur: 20.0,
+          color: ShelflessColors.mainBackground.withAlpha(0xAA),
+        ),
         openButtonBuilder: RotateFloatingActionButtonBuilder(
           child: Icon(Icons.add_rounded),
         ),
