@@ -24,9 +24,10 @@ class EnStrings implements Strings {
   @override String get lastName => "Last Name";
   @override String get bookEdit => "Edit";
   @override String get bookMoveTo => "Move to";
-  @override String get bookDelete => "Delete";
-  @override String get deleteBookTitle => "Delete";
-  @override String get deleteBookContent => "Are you sure you want to delete this book?";
+  @override String get bookDeleteAction => "Delete";
+  @override String get bookDeleted => "Book deleted";
+  @override String get deleteBookTitle => "Deleting book";
+  @override String get deleteBookContent => "Are you sure you want to delete this book?\nThe operation will be irreversible.";
   @override String get bookInfoTitle => "Title";
   @override String get bookInfoThumbnail => "Thumbnail";
   @override String get bookInfoNoImageSelected => "[no image selected]";
@@ -87,4 +88,5 @@ class EnStrings implements Strings {
   @override String get search => "Search";
   @override String get warning => "Warning";
   @override String get genericError => "An error occurred";
+  @override String get unreleasedFeatureAlert => "This feature will be released in a future update.";
 }

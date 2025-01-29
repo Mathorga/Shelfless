@@ -47,7 +47,7 @@ class LibraryContentProvider with ChangeNotifier {
   // ###############################################################################################################################################################################
 
   /// Asks the DB for the library with the prodided [rawLibrary].
-  void fetchLibraryContent(RawLibrary rawLibrary) async {
+  Future<void> fetchLibraryContent(RawLibrary rawLibrary) async {
     library = rawLibrary;
 
     if (rawLibrary.id == null) return;
@@ -73,7 +73,7 @@ class LibraryContentProvider with ChangeNotifier {
     return [];
   }
 
-  void storeNewBook(Book book) async {
+  Future<void> storeNewBook(Book book) async {
     await DatabaseHelper.instance.insertBook(book);
 
     books.add(book);
@@ -81,7 +81,7 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void storeBookUpdate(Book book) async {
+  Future<void> storeBookUpdate(Book book) async {
     // Make sure the provided book is actually stored.
     final int index = books.indexWhere((Book bookCandidate) => bookCandidate.raw.id == book.raw.id);
     if (index == -1) return;
@@ -95,7 +95,21 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void addAuthor(Author author) async {
+  Future<void> deleteBook(Book book) async {
+    // Make sure the provided book is actually stored.
+    final int index = books.indexOf(book);
+    if (index == -1) return;
+
+    // Delete the book in DB.
+    await DatabaseHelper.instance.deleteBook(book);
+
+    // Remove the book from local storage.
+    books.removeAt(index);
+
+    notifyListeners();
+  }
+
+  Future<void> addAuthor(Author author) async {
     // Save the provided author to DB.
     await DatabaseHelper.instance.insertAuthor(author);
 
@@ -105,14 +119,14 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateAuthor(Author author) async {
+  Future<void> updateAuthor(Author author) async {
     // Update the provided author in DB.
     await DatabaseHelper.instance.updateAuthor(author);
 
     notifyListeners();
   }
 
-  void addGenre(RawGenre rawGenre) async {
+  Future<void> addGenre(RawGenre rawGenre) async {
     // Save the provided genre to DB.
     await DatabaseHelper.instance.insertGenre(rawGenre);
 
@@ -122,14 +136,14 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateGenre(RawGenre rawGenre) async {
+  Future<void> updateGenre(RawGenre rawGenre) async {
     // Update the provided genre in DB.
     await DatabaseHelper.instance.updateGenre(rawGenre);
 
     notifyListeners();
   }
 
-  void addPublisher(Publisher publisher) async {
+  Future<void> addPublisher(Publisher publisher) async {
     // Save the provided publisher to DB.
     await DatabaseHelper.instance.insertPublisher(publisher);
 
@@ -139,28 +153,28 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updatePublisher(Publisher publisher) async {
+  Future<void> updatePublisher(Publisher publisher) async {
     // Update the provided publisher in DB.
     await DatabaseHelper.instance.updatePublisher(publisher);
 
     notifyListeners();
   }
 
-  void addGenresToBook(Set<int> genreIds, Book book) async {
+  Future<void> addGenresToBook(Set<int> genreIds, Book book) async {
     // Only save the relationship locally.
     book.genreIds.addAll(genreIds);
 
     notifyListeners();
   }
 
-  void addAuthorsToBook(Set<int> authorIds, Book book) async {
+  Future<void> addAuthorsToBook(Set<int> authorIds, Book book) async {
     // Only save the relationship locally.
     book.authorIds.addAll(authorIds);
 
     notifyListeners();
   }
 
-  void addPublisherToBook(int publisherId, Book book) async {
+  Future<void> addPublisherToBook(int publisherId, Book book) async {
     // Only save the relationship locally.
     book.raw.publisherId = publisherId;
 
