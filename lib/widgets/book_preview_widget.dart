@@ -4,7 +4,16 @@ import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/screens/edit_book_screen.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/strings/strings.dart';
+
+enum BookAction {
+  edit,
+  moveTo,
+  delete,
+}
 
 class BookPreviewWidget extends StatelessWidget {
   final Book book;
@@ -110,9 +119,125 @@ class BookPreviewWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.more_vert_rounded),
+                PopupMenuButton<BookAction>(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(Themes.radiusSmall),
+                  ),
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(
+                        value: BookAction.edit,
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.edit_rounded),
+                            Text(strings.bookEdit),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: BookAction.moveTo,
+                        enabled: false,
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.move_up_rounded),
+                            Text(strings.bookMoveTo),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: BookAction.delete,
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.delete_rounded),
+                            Text(strings.bookDeleteAction),
+                          ],
+                        ),
+                      ),
+                    ];
+                  },
+                  onSelected: (BookAction value) {
+                    switch (value) {
+                      case BookAction.edit:
+                        // Open EditBookScreen.
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => EditBookScreen(
+                            book: book,
+                          ),
+                        ));
+                        break;
+                      case BookAction.moveTo:
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: Text(strings.warning),
+                            content: Text(strings.unreleasedFeatureAlert),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(strings.ok),
+                              ),
+                            ],
+                          ),
+                        );
+                        break;
+                      case BookAction.delete:
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: Text(strings.deleteBookTitle),
+                            content: Text(strings.deleteBookContent),
+                            actions: [
+                              // Cancel button.
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: ShelflessColors.onMainContentActive,
+                                ),
+                                child: Text(strings.cancel),
+                              ),
+
+                              // Confirm button.
+                              ElevatedButton(
+                                onPressed: () async {
+                                  // Prefetch handlers before async gaps.
+                                  final NavigatorState navigator = Navigator.of(context);
+                                  final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
+                                  // Delete the book.
+                                  await LibraryContentProvider.instance.deleteBook(book);
+
+                                  messenger.showSnackBar(
+                                    SnackBar(
+                                      // margin: const EdgeInsets.all(Themes.spacingMedium),
+                                      duration: Themes.durationShort,
+                                      behavior: SnackBarBehavior.floating,
+                                      width: Themes.snackBarSizeSmall,
+                                      content: Text(
+                                        strings.bookDeleted,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  );
+
+                                  // Pop back.
+                                  navigator.pop();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: ShelflessColors.error,
+                                  iconColor: ShelflessColors.onMainContentActive,
+                                  foregroundColor: ShelflessColors.onMainContentActive,
+                                ),
+                                child: Text(strings.ok),
+                              ),
+                            ],
+                          ),
+                        );
+                        break;
+                    }
+                  },
                 ),
               ],
             ),

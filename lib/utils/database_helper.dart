@@ -573,6 +573,28 @@ class DatabaseHelper {
     }
   }
 
+  Future<void> deleteBook(Book book) async {
+    // Delete the book.
+    await _db.delete(
+      booksTable,
+      where: "${booksTable}_id = ?",
+      whereArgs: [book.raw.id],
+    );
+
+    // Delete all related data.
+    await _db.delete(
+      bookAuthorRelTable,
+      where: "${bookAuthorRelTable}_book_id = ?",
+      whereArgs: [book.raw.id],
+    );
+
+    await _db.delete(
+      bookGenreRelTable,
+      where: "${bookGenreRelTable}_book_id = ?",
+      whereArgs: [book.raw.id],
+    );
+  }
+
   Future<void> addAuthorToBook(int bookId, int authorId) async {
     await _db.insert(
       bookAuthorRelTable,

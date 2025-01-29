@@ -26,7 +26,8 @@ class Strings {
   String get lastName => "";
   String get bookEdit => "";
   String get bookMoveTo => "";
-  String get bookDelete => "";
+  String get bookDeleteAction => "";
+  String get bookDeleted => "";
   String get deleteBookTitle => "";
   String get deleteBookContent => "";
   String get bookInfoTitle => "";
@@ -89,6 +90,7 @@ class Strings {
   String get search => "";
   String get warning => "";
   String get genericError => "";
+  String get unreleasedFeatureAlert => "";
 }
 
 Strings get strings {

@@ -83,6 +83,9 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                 ),
               ],
             ),
+            SliverToBoxAdapter(
+              child: _buildActionBar(),
+            ),
             SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -91,27 +94,32 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
-                  // Since the first entry is used for the action bar, the actual book index is 1 less than the provided one.
-                  final int bookIndex = index - 1;
+                  return BookPreviewWidget(
+                    book: LibraryContentProvider.instance.books[index],
+                    onTap: () {
+                      // Prefetch handlers before async gaps.
+                      final NavigatorState navigator = Navigator.of(context);
 
-                  return index == 0
-                      ? _buildActionBar()
-                      : BookPreviewWidget(
-                          book: LibraryContentProvider.instance.books[bookIndex],
-                          onTap: () {
-                            // Prefetch handlers before async gaps.
-                            final NavigatorState navigator = Navigator.of(context);
-
-                            // Navigate to book edit screen.
-                            navigator.push(MaterialPageRoute(
-                              builder: (BuildContext context) => EditBookScreen(
-                                book: LibraryContentProvider.instance.books[bookIndex],
-                              ),
-                            ));
-                          },
-                        );
+                      // Navigate to book edit screen.
+                      navigator.push(MaterialPageRoute(
+                        builder: (BuildContext context) => EditBookScreen(
+                          book: LibraryContentProvider.instance.books[index],
+                        ),
+                      ));
+                    },
+                  );
                 },
-                childCount: LibraryContentProvider.instance.books.length + 1,
+                childCount: LibraryContentProvider.instance.books.length,
+              ),
+            ),
+
+            // Space left for the FAB.
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(Themes.spacingMedium),
+                child: SizedBox(
+                  height: Themes.spacingFAB,
+                ),
               ),
             ),
           ],
@@ -122,7 +130,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                 onPressed: () {
                   final NavigatorState navigator = Navigator.of(context);
 
-                  // TODO Navigate to EditBookScreen
+                  // Navigate to EditBookScreen
                   navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
                 },
                 child: Icon(Icons.add_rounded),
@@ -136,6 +144,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
       padding: const EdgeInsets.all(Themes.spacingLarge),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
+        physics: Themes.scrollPhysics,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           spacing: Themes.spacingXLarge,
@@ -175,6 +184,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                 size: Themes.iconSizeMedium,
               ),
             ),
+
+            // TODO Add all user-defined collections if present.
           ],
         ),
       ),
@@ -197,7 +208,10 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               iconColor: ShelflessColors.onMainBackgroundInactive,
             ),
             onPressed: onPressed,
-            child: child,
+            child: SizedBox(
+              height: Themes.spacingFAB,
+              child: child,
+            ),
           ),
           Text(label),
         ],

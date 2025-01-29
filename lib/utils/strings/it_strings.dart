@@ -26,9 +26,10 @@ class ItStrings implements Strings {
   @override String get lastName => "Cognome";
   @override String get bookEdit => "Modifica";
   @override String get bookMoveTo => "Sposta in";
-  @override String get bookDelete => "Elimina";
-  @override String get deleteBookTitle => "Elimina";
-  @override String get deleteBookContent => "Vuoi davvero eliminare questo libro?";
+  @override String get bookDeleteAction => "Elimina";
+  @override String get bookDeleted => "Libro cancellato";
+  @override String get deleteBookTitle => "Eliminazione";
+  @override String get deleteBookContent => "Vuoi davvero eliminare questo libro?\nL'operazione sarà irreversibile.";
   @override String get bookInfoTitle => "Titolo";
   @override String get bookInfoThumbnail => "Copertina";
   @override String get bookInfoNoImageSelected => "[nessuna immagine selezionata]";
@@ -89,4 +90,5 @@ class ItStrings implements Strings {
   @override String get search => "Cerca";
   @override String get warning => "Attenzione";
   @override String get genericError => "Si è verificato un errore";
+  @override String get unreleasedFeatureAlert => "Questa funzionalità sarà introdotta con un futuro aggiornamento.";
 }
