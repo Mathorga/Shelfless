@@ -24,7 +24,7 @@ class Strings {
   String get bookInfo => "";
   String get firstName => "";
   String get lastName => "";
-  String get borrowedLabel => "";
+  String get outLabel => "";
   String get bookEdit => "";
   String get bookMoveTo => "";
   String get bookDeleteAction => "";

@@ -8,10 +8,12 @@ import 'package:shelfless/utils/strings/strings.dart';
 
 class BookThumbnailWidget extends StatelessWidget {
   final Book book;
+  final bool showOutBanner;
 
   const BookThumbnailWidget({
     super.key,
     required this.book,
+    this.showOutBanner = false,
   });
 
   @override
@@ -53,9 +55,9 @@ class BookThumbnailWidget extends StatelessWidget {
               padding: const EdgeInsets.all(coverPadding),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(innerRadius),
-                child: book.raw.borrowed
+                child: book.raw.borrowed && showOutBanner
                     ? Banner(
-                        message: strings.borrowedLabel,
+                        message: strings.outLabel,
                         location: BannerLocation.topEnd,
                         color: Theme.of(context).colorScheme.error,
                         child: _buildThumbImage(),

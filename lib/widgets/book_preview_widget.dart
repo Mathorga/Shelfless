@@ -40,7 +40,10 @@ class BookPreviewWidget extends StatelessWidget {
         spacing: Themes.spacingMedium,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          BookThumbnailWidget(book: book),
+          Opacity(
+            opacity: book.raw.borrowed ? 0.3 : 1.0,
+            child: BookThumbnailWidget(book: book),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Themes.spacingSmall),
             child: Row(

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/screens/edit_library_screen.dart';
 
-import 'package:shelfless/screens/libraries_overview_screen.dart';
+import 'package:shelfless/screens/library_content_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/database_helper.dart';
 
 void main() async {
   await DatabaseHelper.instance.openDB();
+  await LibrariesProvider.instance.fetchLibraries();
   runApp(const Shelfless());
 }
 
@@ -80,13 +83,12 @@ class Shelfless extends StatelessWidget {
           backgroundColor: ShelflessColors.lightBackground,
         ),
       ),
-      home: const LibrariesOverviewScreen(),
-      routes: {
-        LibrariesOverviewScreen.routeName: (BuildContext context) => const LibrariesOverviewScreen(),
-        // PublisherInfoScreen.routeName: (BuildContext context) => const PublisherInfoScreen(),
-        // ImportLibraryScreen.routeName: (BuildContext context) => const ImportLibraryScreen(),
-        // BooksFilterScreen.routeName: (BuildContext context) => const BooksFilterScreen(),
-      },
+      home: LibrariesProvider.instance.libraries.isEmpty
+          ? EditLibraryScreen()
+          : LibraryContentScreen(
+              library: LibrariesProvider.instance.libraries.first,
+            ),
+      routes: {},
     );
   }
 }

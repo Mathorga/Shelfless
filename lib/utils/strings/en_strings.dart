@@ -22,7 +22,7 @@ class EnStrings implements Strings {
   @override String get bookInfo => "Book Info";
   @override String get firstName => "First Name";
   @override String get lastName => "Last Name";
-  @override String get borrowedLabel => "BORROWED";
+  @override String get outLabel => "OUT";
   @override String get bookEdit => "Edit";
   @override String get bookMoveTo => "Move to";
   @override String get bookDeleteAction => "Delete";

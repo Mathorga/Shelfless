@@ -62,7 +62,7 @@ class BookDetailScreen extends StatelessWidget {
           // I personally don't like this widget very much, so TODO find a replacement.
           ShadowOverlay(
             shadowWidth: MediaQuery.sizeOf(context).width,
-            shadowHeight: 150,
+            shadowHeight: 150.0,
             shadowColor: theme.colorScheme.surface,
             child: Blur(
               blur: 20.0,
@@ -92,19 +92,36 @@ class BookDetailScreen extends StatelessWidget {
                       height: mediaQueryPadding.top,
                     ),
                     Center(
-                      child: BookThumbnailWidget(book: book),
+                      child: BookThumbnailWidget(
+                        book: book,
+                        showOutBanner: true,
+                      ),
                     ),
                   ],
                 ),
 
-                // Title.
-                Center(
-                  child: Text(
-                    book.raw.title,
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+                // Title, edition and publication year.
+                Column(
+                  children: [
+                    // TItle.
+                    Center(
+                      child: Text(
+                        book.raw.title,
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
+
+                    // TODO Edition.
+
+                    // Publication year.
+                    Center(
+                      child: Text(
+                        "${book.raw.publishYear}",
+                      ),
+                    ),
+                  ],
                 ),
 
                 Row(
@@ -127,18 +144,19 @@ class BookDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // Authors.
+
+                    // Genres.
                     Padding(
                       padding: const EdgeInsets.all(Themes.spacingLarge),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(strings.authorsSectionTitle),
+                          Text(strings.genresSectionTitle),
                           Padding(
                             padding: const EdgeInsets.all(Themes.spacingMedium),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: book.authorIds.map((int authorId) => Text(LibraryContentProvider.instance.authors[authorId].toString())).toList(),
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: book.genreIds.map((int genreId) => Text(LibraryContentProvider.instance.genres[genreId].toString())).toList(),
                             ),
                           ),
                         ],

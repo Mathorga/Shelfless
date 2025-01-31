@@ -1,19 +1,32 @@
+import 'dart:typed_data';
+
+import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
 
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shelfless/models/book.dart';
 
 import 'package:shelfless/models/library_preview.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/book_detail_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
-import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/screens/authors_overview_screen.dart';
+import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
 import 'package:shelfless/screens/genres_overview_screen.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
+import 'package:shelfless/widgets/library_preview_widget.dart';
+
+enum LibraryAction {
+  edit,
+  displayMode,
+  share,
+}
 
 class LibraryContentScreen extends StatefulWidget {
   static const String routeName = "/library";
@@ -35,6 +48,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
 
     // Start listening to changes in library content.
     LibraryContentProvider.instance.addListener(() => setState(() {}));
+    LibraryContentProvider.instance.fetchLibraryContent(widget.library.raw);
   }
 
   @override
@@ -42,6 +56,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final ThemeData theme = Theme.of(context);
     final bool filtersActive = LibraryContentProvider.instance.getFilters().isActive;
     final Size screenSize = MediaQuery.sizeOf(context);
+    final EdgeInsets screenPadding = MediaQuery.paddingOf(context);
     final double crossAxisSpacing = 0.0;
     final double itemHeight = 280.0;
     final double leftRightPadding = 0.0;
@@ -51,6 +66,79 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
         LibraryContentProvider.instance.clear();
       },
       child: Scaffold(
+        drawer: Drawer(
+          child: Column(
+            spacing: Themes.spacingSmall,
+            children: [
+              // Top padding.
+              SizedBox(
+                height: screenPadding.top,
+              ),
+
+              // App name.
+              Text(
+                "Shelfless",
+                style: theme.textTheme.headlineMedium,
+              ),
+
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // Libraries list.
+                    ...LibrariesProvider.instance.libraries.map(
+                      (LibraryPreview libraryPreview) => LibraryPreviewWidget(
+                        library: libraryPreview,
+                      ),
+                    ),
+
+                    // Authors.
+                    _buildAction(
+                      label: strings.authorsSectionTitle,
+                      onPressed: () {
+                        final NavigatorState navigator = Navigator.of(context);
+
+                        navigator.push(MaterialPageRoute(
+                          builder: (BuildContext context) => AuthorsOverviewScreen(),
+                        ));
+                      },
+                      child: Icon(
+                        Icons.person_pin_rounded,
+                        size: Themes.iconSizeLarge,
+                      ),
+                    ),
+
+                    // Genres.
+                    _buildAction(
+                      label: strings.genresSectionTitle,
+                      onPressed: () {
+                        final NavigatorState navigator = Navigator.of(context);
+
+                        navigator.push(MaterialPageRoute(
+                          builder: (BuildContext context) => GenresOverviewScreen(),
+                        ));
+                      },
+                      child: Icon(
+                        Icons.color_lens_rounded,
+                        size: Themes.iconSizeLarge,
+                      ),
+                    ),
+
+                    // Publishers.
+                    _buildAction(
+                      label: strings.publishersSectionTitle,
+                      child: Icon(
+                        Icons.work_rounded,
+                        size: Themes.iconSizeLarge,
+                      ),
+                    ),
+
+                    // TODO Add all user-defined collections if present.
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
         body: CustomScrollView(
           physics: Themes.scrollPhysics,
           slivers: [
@@ -66,10 +154,6 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               centerTitle: true,
               actions: [
                 IconButton(
-                  icon: Icon(false ? Icons.view_list_rounded : Icons.grid_view_rounded),
-                  onPressed: null,
-                ),
-                IconButton(
                   icon: Icon(
                     filtersActive ? Icons.filter_alt : Icons.filter_alt_outlined,
                     color: filtersActive ? theme.colorScheme.primary : theme.colorScheme.onSurface,
@@ -84,10 +168,92 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                     );
                   },
                 ),
+                PopupMenuButton<LibraryAction>(
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(
+                        value: LibraryAction.edit,
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.edit_rounded),
+                            Text(strings.editTitle),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: LibraryAction.displayMode,
+                        enabled: false,
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.view_list_rounded),
+                            Text("Show list"),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: LibraryAction.share,
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.share_rounded),
+                            Text(strings.shareLibrary),
+                          ],
+                        ),
+                      ),
+                    ];
+                  },
+                  onSelected: (LibraryAction value) async {
+                    final NavigatorState navigator = Navigator.of(context);
+
+                    switch (value) {
+                      case LibraryAction.edit:
+                        navigator.push(MaterialPageRoute(builder: (BuildContext context) {
+                          return EditLibraryScreen(
+                            library: widget.library,
+                          );
+                        }));
+                        break;
+                      case LibraryAction.displayMode:
+                        break;
+                      case LibraryAction.share:
+                        if (widget.library.raw.id == null) return;
+
+                        // Extract the library.
+                        final Map<String, String> libraryStrings = await DatabaseHelper.instance.extractLibrary(widget.library.raw.id!);
+
+                        // Compress the library files to a single .slz file.
+                        final Archive archive = Archive();
+                        libraryStrings.entries
+                            .map((MapEntry<String, String> element) => ArchiveFile(
+                                  "${element.key}.json",
+                                  element.value.length,
+                                  element.value.codeUnits,
+                                ))
+                            .forEach((ArchiveFile file) => archive.addFile(file));
+                        final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
+
+                        // Share the library to other apps.
+                        Share.shareXFiles(
+                          [
+                            XFile.fromData(
+                              encodedArchive,
+                              length: encodedArchive.length,
+                              mimeType: "application/x-zip",
+                            ),
+                          ],
+                          // The name parameter in the XFile.fromData method is ignored in most platforms,
+                          // so fileNameOverrides is used instead.
+                          fileNameOverrides: [
+                            "${widget.library.raw.name}.slz",
+                          ],
+                        );
+                        break;
+                    }
+                  },
+                ),
               ],
-            ),
-            SliverToBoxAdapter(
-              child: _buildActionBar(),
             ),
             SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -165,7 +331,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               },
               child: Icon(
                 Icons.person_pin_rounded,
-                size: Themes.iconSizeMedium,
+                size: Themes.iconSizeLarge,
               ),
             ),
 
@@ -181,17 +347,16 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               },
               child: Icon(
                 Icons.color_lens_rounded,
-                size: Themes.iconSizeMedium,
+                size: Themes.iconSizeLarge,
               ),
             ),
 
             // Publishers.
             _buildAction(
               label: strings.publishersSectionTitle,
-              onPressed: () {},
               child: Icon(
                 Icons.work_rounded,
-                size: Themes.iconSizeMedium,
+                size: Themes.iconSizeLarge,
               ),
             ),
 
@@ -209,144 +374,15 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
   }) {
     return SizedBox(
       width: Themes.actionSize,
-      child: Column(
-        spacing: Themes.spacingSmall,
-        children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ShelflessColors.secondary,
-              iconColor: ShelflessColors.onMainBackgroundInactive,
-            ),
-            onPressed: onPressed,
-            child: SizedBox(
-              height: Themes.spacingFAB,
-              child: child,
-            ),
-          ),
-          Text(label),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCollectionPreviews() {
-    final ThemeData theme = Theme.of(context);
-
-    return SingleChildScrollView(
-      physics: Themes.scrollPhysics,
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        spacing: Themes.spacingXLarge,
-        children: [
-          Card(
-            color: ShelflessColors.secondary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.favorite_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Favorites",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.primary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.star_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Highlights",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.secondary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.favorite_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Favorites",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.primary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.star_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Highlights",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.secondary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.favorite_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Favorites",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.primary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.star_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Highlights",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+      child: TextButton(
+        onPressed: onPressed,
+        child: Column(
+          spacing: Themes.spacingSmall,
+          children: [
+            child,
+            Text(label),
+          ],
+        ),
       ),
     );
   }
