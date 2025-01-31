@@ -73,6 +73,10 @@ dependencies:
   # flutter_archive: 6.0.3
   archive: 4.0.2
 
+  # Self-explanatory.
+  blur: 4.0.0
+  shadow_overlay: 1.0.5
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8

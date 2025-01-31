@@ -78,9 +78,6 @@ class BookPreviewWidget extends StatelessWidget {
                   ),
                 ),
                 PopupMenuButton<BookAction>(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(Themes.radiusSmall),
-                  ),
                   itemBuilder: (BuildContext context) {
                     return [
                       PopupMenuItem(

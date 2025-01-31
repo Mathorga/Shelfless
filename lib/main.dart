@@ -43,6 +43,9 @@ class Shelfless extends StatelessWidget {
         ),
         popupMenuTheme: PopupMenuThemeData(
           color: ShelflessColors.mainContentInactive,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Themes.radiusSmall),
+          ),
         ),
         snackBarTheme: SnackBarThemeData(
           backgroundColor: ShelflessColors.mainContentInactive,
