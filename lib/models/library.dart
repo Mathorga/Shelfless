@@ -36,7 +36,7 @@ class Library {
   //     // Populate book fields.
   //     book.title = fields[0];
   //     book.publishDate = int.parse(fields[2]);
-  //     book.borrowed = fields.length > 7 ? fields[6] == "true" : false;
+  //     book.out = fields.length > 7 ? fields[6] == "true" : false;
   //     book.edition = fields.length > 8 ? int.parse(fields[7]) : 1;
 
   //     // Split authors string into its composing authors.
@@ -125,7 +125,7 @@ class Library {
   // }
 
   // String toSerializableString() {
-  //   const String header = "title;authors;publishDate;genres;publisher;location;borrowed;edition";
+  //   const String header = "title;authors;publishDate;genres;publisher;location;out;edition";
 
   //   return bookMaps.map<String>((Map<String, String> bookMap) {
   //     return bookMap.values.reduce((String value, String element) {

@@ -5,6 +5,7 @@ import 'package:shadow_overlay/shadow_overlay.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
@@ -53,6 +54,78 @@ class BookDetailScreen extends StatelessWidget {
                 ),
               ];
             },
+            onSelected: (BookAction value) async {
+              switch (value) {
+                case BookAction.edit:
+                  // Open EditBookScreen.
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => EditBookScreen(
+                      book: book,
+                    ),
+                  ));
+                  break;
+                case BookAction.moveTo:
+                  break;
+                case BookAction.delete:
+                  final NavigatorState navigator = Navigator.of(context);
+
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: Text(strings.deleteBookTitle),
+                      content: Text(strings.deleteBookContent),
+                      actions: [
+                        // Cancel button.
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          style: TextButton.styleFrom(
+                            foregroundColor: ShelflessColors.onMainContentActive,
+                          ),
+                          child: Text(strings.cancel),
+                        ),
+
+                        // Confirm button.
+                        ElevatedButton(
+                          onPressed: () async {
+                            // Prefetch handlers before async gaps.
+                            final NavigatorState navigator = Navigator.of(context);
+                            final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
+                            // Delete the book.
+                            await LibraryContentProvider.instance.deleteBook(book);
+
+                            messenger.showSnackBar(
+                              SnackBar(
+                                // margin: const EdgeInsets.all(Themes.spacingMedium),
+                                duration: Themes.durationShort,
+                                behavior: SnackBarBehavior.floating,
+                                width: Themes.snackBarSizeSmall,
+                                content: Text(
+                                  strings.bookDeleted,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+
+                            // Pop dialog.
+                            navigator.pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ShelflessColors.error,
+                            iconColor: ShelflessColors.onMainContentActive,
+                            foregroundColor: ShelflessColors.onMainContentActive,
+                          ),
+                          child: Text(strings.ok),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  // Pop back.
+                  navigator.pop();
+                  break;
+              }
+            },
           ),
         ],
       ),
@@ -60,6 +133,7 @@ class BookDetailScreen extends StatelessWidget {
       body: Stack(
         children: [
           // I personally don't like this widget very much, so TODO find a replacement.
+          // Maybe using a ShaderMask widget would be a better solution.
           ShadowOverlay(
             shadowWidth: MediaQuery.sizeOf(context).width,
             shadowHeight: 150.0,
@@ -177,7 +251,7 @@ class BookDetailScreen extends StatelessWidget {
                         child: _buildAction(
                           context,
                           onPressed: () {},
-                          label: "Borrow",
+                          label: book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction,
                         ),
                       ),
                       Expanded(

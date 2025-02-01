@@ -27,6 +27,8 @@ class Strings {
   String get outLabel => "";
   String get bookEdit => "";
   String get bookMoveTo => "";
+  String get bookMarkOutAction => "";
+  String get bookMarkInAction => "";
   String get bookDeleteAction => "";
   String get bookDeleted => "";
   String get deleteBookTitle => "";

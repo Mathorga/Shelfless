@@ -75,6 +75,8 @@ dependencies:
 
   # Self-explanatory.
   blur: 4.0.0
+
+  # Delete me in the future.
   shadow_overlay: 1.0.5
 
   # The following adds the Cupertino Icons font to your application.

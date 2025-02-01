@@ -41,7 +41,7 @@ class BookPreviewWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Opacity(
-            opacity: book.raw.borrowed ? 0.3 : 1.0,
+            opacity: book.raw.out ? Themes.unavailableFeatureOpacity : 1.0,
             child: BookThumbnailWidget(book: book),
           ),
           Padding(
@@ -196,7 +196,6 @@ class BookPreviewWidget extends StatelessWidget {
                         break;
                     }
                   },
-                  borderRadius: BorderRadius.circular(Themes.radiusSmall),
                   child: Padding(
                     padding: const EdgeInsets.all(Themes.spacingSmall),
                     child: Icon(

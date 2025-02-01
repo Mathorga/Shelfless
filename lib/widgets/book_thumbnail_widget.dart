@@ -55,7 +55,7 @@ class BookThumbnailWidget extends StatelessWidget {
               padding: const EdgeInsets.all(coverPadding),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(innerRadius),
-                child: book.raw.borrowed && showOutBanner
+                child: book.raw.out && showOutBanner
                     ? Banner(
                         message: strings.outLabel,
                         location: BannerLocation.topEnd,

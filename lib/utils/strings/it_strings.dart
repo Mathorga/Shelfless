@@ -27,6 +27,8 @@ class ItStrings implements Strings {
   @override String get outLabel => "PRESTATO";
   @override String get bookEdit => "Modifica";
   @override String get bookMoveTo => "Sposta in";
+  @override String get bookMarkOutAction => "Imposta come assente";
+  @override String get bookMarkInAction => "Imposta come rientrato";
   @override String get bookDeleteAction => "Elimina";
   @override String get bookDeleted => "Libro cancellato";
   @override String get deleteBookTitle => "Eliminazione";

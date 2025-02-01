@@ -18,7 +18,7 @@ class RawBook {
 
   int? locationId;
 
-  bool borrowed;
+  bool out;
 
   int edition;
 
@@ -30,7 +30,7 @@ class RawBook {
     this.publishYear = 0,
     this.publisherId,
     this.locationId,
-    this.borrowed = false,
+    this.out = false,
     this.edition = 1,
   });
 
@@ -42,7 +42,7 @@ class RawBook {
         publishYear = map["${DatabaseHelper.booksTable}_publish_year"],
         publisherId = map["${DatabaseHelper.booksTable}_publisher_id"],
         locationId = map["${DatabaseHelper.booksTable}_location_id"],
-        borrowed = map["${DatabaseHelper.booksTable}_borrowed"] == 1,
+        out = map["${DatabaseHelper.booksTable}_out"] == 1,
         edition = map["${DatabaseHelper.booksTable}_edition"];
 
   /// Creates and returns a copy of [this].
@@ -55,7 +55,7 @@ class RawBook {
       publishYear: publishYear,
       publisherId: publisherId,
       locationId: locationId,
-      borrowed: borrowed,
+      out: out,
       edition: edition,
     );
   }
@@ -69,7 +69,7 @@ class RawBook {
     publishYear = other.publishYear;
     publisherId = other.publisherId;
     locationId = other.locationId;
-    borrowed = other.borrowed;
+    out = other.out;
     edition = other.edition;
   }
 
@@ -82,7 +82,7 @@ class RawBook {
       "${DatabaseHelper.booksTable}_publish_year": publishYear,
       "${DatabaseHelper.booksTable}_publisher_id": publisherId,
       "${DatabaseHelper.booksTable}_location_id": locationId,
-      "${DatabaseHelper.booksTable}_borrowed": borrowed ? 1 : 0,
+      "${DatabaseHelper.booksTable}_out": out ? 1 : 0,
       "${DatabaseHelper.booksTable}_edition": edition,
     };
   }
@@ -95,7 +95,7 @@ class RawBook {
       other.publishYear == publishYear &&
       other.publisherId == publisherId &&
       other.locationId == locationId &&
-      other.borrowed == borrowed &&
+      other.out == out &&
       other.edition == edition;
 
   @override
@@ -104,6 +104,6 @@ class RawBook {
       publishYear.hashCode +
       publisherId.hashCode +
       locationId.hashCode +
-      borrowed.hashCode +
+      out.hashCode +
       edition.hashCode;
 }

@@ -19,6 +19,6 @@ class LibraryPreview {
 
   @override
   String toString() {
-    return "${raw.name} $booksCount ${booksCount == 1 ? strings.book : strings.books}";
+    return "${raw.name} ($booksCount ${booksCount == 1 ? strings.book : strings.books})";
   }
 }

@@ -19,7 +19,7 @@ class Shelfless extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Shelfless",
+      title: Themes.appName,
       theme: ThemeData(
         scaffoldBackgroundColor: ShelflessColors.mainBackground,
         colorScheme: ColorScheme.dark(
@@ -33,14 +33,21 @@ class Shelfless extends StatelessWidget {
           scrolledUnderElevation: 0.0,
           centerTitle: true,
         ),
+        dividerTheme: DividerThemeData(
+          color: ShelflessColors.onMainBackgroundInactive,
+          indent: Themes.spacingLarge,
+          endIndent: Themes.spacingLarge,
+          thickness: Themes.spacingXXSmall,
+        ),
         searchBarTheme: SearchBarThemeData(
           backgroundColor: WidgetStatePropertyAll(ShelflessColors.lightBackground),
         ),
         cardTheme: CardTheme(
           color: ShelflessColors.lightBackground,
+          clipBehavior: Clip.antiAlias,
           surfaceTintColor: ShelflessColors.lightBackground,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(Themes.radiusMedium),
           ),
           elevation: 6.0,
         ),
@@ -83,11 +90,17 @@ class Shelfless extends StatelessWidget {
           backgroundColor: ShelflessColors.lightBackground,
         ),
       ),
-      home: LibrariesProvider.instance.libraries.isEmpty
-          ? EditLibraryScreen()
-          : LibraryContentScreen(
-              library: LibrariesProvider.instance.libraries.first,
-            ),
+      home: StatefulBuilder(
+        builder: (BuildContext context, void Function(void Function()) setState) {
+          LibrariesProvider.instance.addListener(() => setState(() {}));
+
+          return LibrariesProvider.instance.libraries.isEmpty
+              ? EditLibraryScreen()
+              : LibraryContentScreen(
+                  library: LibrariesProvider.instance.libraries.first,
+                );
+        }
+      ),
       routes: {},
     );
   }

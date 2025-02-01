@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Themes {
+  static const String appName = "Shelfless";
+
   /// Default spacings, used for edge insets and spacers.
+  static const double spacingXXSmall = 2.0;
   static const double spacingXSmall = 4.0;
   static const double spacingSmall = 8.0;
   static const double spacingMedium = 12.0;
@@ -22,6 +25,9 @@ class Themes {
   static const double iconSizeLarge = 32.0;
   static const double iconSizeXLarge = 48.0;
 
+  // Default opacity for displaying unavailable features.
+  static const double unavailableFeatureOpacity = 0.3;
+
   // Default durations.
   static const Duration durationXShort = Duration(milliseconds: 500);
   static const Duration durationShort = Duration(seconds: 1);
@@ -35,7 +41,8 @@ class Themes {
   static const double maxDialogHeight = 400.0;
 
   /// Thumbnail sizes.
-  static const double thumbnailSizeSmall = 50.0;
+  static const double thumbnailSizeXSmall = 50.0;
+  static const double thumbnailSizeSmall = 100.0;
   static const double thumbnailSizeMedium = 200.0;
 
   /// Snackbar sizes.
