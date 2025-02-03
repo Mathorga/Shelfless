@@ -4,6 +4,7 @@ import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/unreleased_feature_dialog.dart';
@@ -25,6 +26,8 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -40,7 +43,7 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Add a library"),
+                        title: Text(strings.addLibraryTitle),
                         content: Row(
                           spacing: Themes.spacingMedium,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -97,7 +100,7 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("New"),
+                  Text(strings.newLib),
                   Icon(Icons.add_rounded),
                 ],
               ),
@@ -120,8 +123,10 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
             );
           }
 
-          // Simple library.
           final LibraryPreview library = LibrariesProvider.instance.libraries[index];
+          final bool selectedLibrary = library.raw == LibraryContentProvider.instance.library;
+
+          // Simple library.
           return _buildLibraryEntry(
             onPressed: () {
               final NavigatorState navigator = Navigator.of(context);
@@ -132,7 +137,36 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
 
               navigator.pop();
             },
-            child: Text(library.toString()),
+            child: Row(
+              spacing: Themes.spacingSmall,
+              children: [
+                if (selectedLibrary)
+                  Icon(
+                    Icons.double_arrow_rounded,
+                    size: Themes.iconSizeSmall,
+                    color: theme.colorScheme.primary,
+                  ),
+                Expanded(
+                  child: Text(
+                    library.toString(),
+                    style: TextStyle(
+                      // fontSize: selectedLibrary ? 20.0 : null,
+                      color: selectedLibrary ? theme.colorScheme.primary : null,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (selectedLibrary)
+                  Transform.flip(
+                    flipX: true,
+                    child: Icon(
+                      Icons.double_arrow_rounded,
+                      size: Themes.iconSizeSmall,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+              ],
+            ),
           );
         }),
       ],

@@ -4,12 +4,14 @@ import 'package:shelfless/utils/strings/en_strings.dart';
 import 'package:shelfless/utils/strings/it_strings.dart';
 
 class Strings {
+  String get settings => "";
   String get librariesTitle => "";
   String get all => "";
   String get book => "";
   String get books => "";
   String get importLib => "";
   String get newLib => "";
+  String get addLibraryTitle => "";
   String get deleteLibraryTitle => "";
   String get deleteLibraryContent => "";
   String get yes => "";

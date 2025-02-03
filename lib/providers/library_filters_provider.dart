@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:shelfless/screens/authors_overview_screen.dart';
 
 class LibraryFilters {
   // ###############################################################################################################################################################################
@@ -15,6 +16,19 @@ class LibraryFilters {
 
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
+
+  LibraryFilters({
+    this.titleFilter,
+    Set<int?>? inGenresFilter,
+    Set<int?>? inAuthorsFilter,
+    Set<int?>? inPublishersFilter,
+    Set<int?>? inLocationsFilter,
+    this.startYearFilter,
+    this.endYearFilter,
+  })  : genresFilter = inGenresFilter ?? {},
+        authorsFilter = inAuthorsFilter ?? {},
+        publishersFilter = inPublishersFilter ?? {},
+        locationsFilter = inLocationsFilter ?? {};
 
   /// Tells whether any filter is currently active or not.
   bool get isActive =>
@@ -35,67 +49,91 @@ class LibraryFilters {
     startYearFilter = null;
     endYearFilter = null;
   }
+
+  /// Creates and returns a copy of [this].
+  LibraryFilters copy() {
+    return LibraryFilters(
+      titleFilter: titleFilter,
+      inGenresFilter: {...genresFilter},
+      inAuthorsFilter: {...authorsFilter},
+      inPublishersFilter: {...publishersFilter},
+      inLocationsFilter: {...locationsFilter},
+      startYearFilter: startYearFilter,
+      endYearFilter: endYearFilter,
+    );
+  }
+
+  /// Copies all attributes from [other].
+  void copyFrom(LibraryFilters other) {
+    titleFilter = other.titleFilter;
+    genresFilter = {...other.genresFilter};
+    authorsFilter = {...other.authorsFilter};
+    publishersFilter = {...other.publishersFilter};
+    locationsFilter = {...other.locationsFilter};
+    startYearFilter = other.startYearFilter;
+    endYearFilter = other.endYearFilter;
+  }
 }
 
-class LibraryFiltersProvider with ChangeNotifier {
-  final LibraryFilters filters;
+// class LibraryFiltersProvider with ChangeNotifier {
+//   final LibraryFilters filters;
 
-  LibraryFiltersProvider({
-    LibraryFilters? inFilters,
-  }) : filters = inFilters ?? LibraryFilters();
+//   LibraryFiltersProvider({
+//     LibraryFilters? inFilters,
+//   }) : filters = inFilters ?? LibraryFilters();
 
-  // ###############################################################################################################################################################################
-  // Filter methods.
-  // ###############################################################################################################################################################################
+//   // ###############################################################################################################################################################################
+//   // Filter methods.
+//   // ###############################################################################################################################################################################
 
-  void addTitleFilter(String title) {
-    filters.titleFilter = title.isEmpty ? null : title;
+//   void addTitleFilter(String title) {
+//     filters.titleFilter = title.isEmpty ? null : title;
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  void addAuthorsFilter(Set<int?> authorIds) {
-    filters.authorsFilter.addAll(authorIds);
+//   void addAuthorsFilter(Set<int?> authorIds) {
+//     filters.authorsFilter.addAll(authorIds);
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  void addGenresFilter(Set<int?> genreIds) {
-    filters.genresFilter.addAll(genreIds);
+//   void addGenresFilter(Set<int?> genreIds) {
+//     filters.genresFilter.addAll(genreIds);
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  void addPublishersFilter(Set<int?> publisherIds) {
-    filters.publishersFilter.addAll(publisherIds);
+//   void addPublishersFilter(Set<int?> publisherIds) {
+//     filters.publishersFilter.addAll(publisherIds);
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  void removeAuthorsFilter(int? authorId) {
-    filters.authorsFilter.remove(authorId);
+//   void removeAuthorsFilter(int? authorId) {
+//     filters.authorsFilter.remove(authorId);
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  void removeGenresFilter(int? genreIds) {
-    filters.genresFilter.remove(genreIds);
+//   void removeGenresFilter(int? genreIds) {
+//     filters.genresFilter.remove(genreIds);
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  void removePublishersFilter(int? genreIds) {
-    filters.genresFilter.remove(genreIds);
+//   void removePublishersFilter(int? genreIds) {
+//     filters.genresFilter.remove(genreIds);
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  void clear() {
-    filters.clear();
+//   void clear() {
+//     filters.clear();
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  // ###############################################################################################################################################################################
-  // ###############################################################################################################################################################################
-}
+//   // ###############################################################################################################################################################################
+//   // ###############################################################################################################################################################################
+// }

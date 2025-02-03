@@ -2,12 +2,14 @@ import 'package:shelfless/utils/strings/strings.dart';
 
 /// English strings.
 class EnStrings implements Strings {
+  @override String get settings => "Settings";
   @override String get librariesTitle => "Libraries";
   @override String get all => "All";
   @override String get book => "book";
   @override String get books => "books";
   @override String get importLib => "Import";
   @override String get newLib => "New";
+  @override String get addLibraryTitle => "Add a library";
   @override String get deleteLibraryTitle => "Delete Library";
   @override String get deleteLibraryContent => "Are you sure you want to delete";
   @override String get yes => "Yes";
