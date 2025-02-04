@@ -306,6 +306,22 @@ class DatabaseHelper {
   }
 
   /// Returns all stored libraries as previews.
+  Future<LibraryPreview> getLibrary(int? libraryId) async {
+    final List<Map<String, dynamic>> rawData = await _db.rawQuery(
+      """
+      SELECT $librariesTable.*, bcbli.books_count AS books_count
+      FROM $librariesTable LEFT JOIN (${booksCountByLibraryId()}) AS bcbli
+      ON ${librariesTable}_id = bcbli.library_id
+      WHERE ${librariesTable}_id = $libraryId
+      ORDER BY ${librariesTable}_id ASC
+      LIMIT 1
+      """,
+    );
+
+    return rawData.map((Map<String, dynamic> element) => LibraryPreview.fromMap(element)).toList().first;
+  }
+
+  /// Returns all stored libraries as previews.
   Future<List<LibraryPreview>> getLibraries() async {
     final List<Map<String, dynamic>> rawData = await _db.rawQuery(
       """

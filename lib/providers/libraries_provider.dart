@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/library_preview.dart';
+import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/utils/database_helper.dart';
 
 /// Holds all library previews and offers methods for CRUDing libraries.
@@ -21,6 +22,19 @@ class LibrariesProvider with ChangeNotifier {
   /// Asks the DB for all libraries and stores them for later use.
   Future<void> fetchLibraries() async {
     libraries.addAll(await DatabaseHelper.instance.getLibraries());
+
+    notifyListeners();
+  }
+
+  /// Refetches a single library in order to update listeners.
+  Future<void> refetchLibrary(RawLibrary library) async {
+    final int libraryIndex = libraries.indexWhere((LibraryPreview libPreview) => libPreview.raw == library);
+
+    if (libraryIndex <= -1) return;
+
+    final LibraryPreview refetchedLib = await DatabaseHelper.instance.getLibrary(library.id);
+
+    libraries[libraryIndex] = refetchedLib;
 
     notifyListeners();
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/screens/authors_overview_screen.dart';
 import 'package:shelfless/screens/genres_overview_screen.dart';
+import 'package:shelfless/screens/settings_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/libraries_list_widget.dart';
@@ -145,11 +146,15 @@ class DrawerContentWidget extends StatelessWidget {
           padding: const EdgeInsets.all(Themes.spacingSmall),
           child: GestureDetector(
             onTap: () {
-              // TODO Navigate to settings screen.
+              final NavigatorState navigator = Navigator.of(context);
+
+              // Navigate to settings screen.
+              navigator.push(MaterialPageRoute(builder: (BuildContext context) => SettingsScreen()));
             },
             child: Padding(
               padding: const EdgeInsets.all(Themes.spacingMedium),
               child: Row(
+                mainAxisSize: MainAxisSize.max,
                 spacing: Themes.spacingLarge,
                 children: [
                   Icon(Icons.settings_rounded),

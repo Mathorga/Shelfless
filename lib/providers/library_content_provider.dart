@@ -6,6 +6,7 @@ import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/utils/database_helper.dart';
 
@@ -78,6 +79,10 @@ class LibraryContentProvider with ChangeNotifier {
 
     books.add(book);
 
+    // Update libraries provider.
+    // The library being null here is an error and should be thrown.
+    LibrariesProvider.instance.refetchLibrary(library!);
+
     notifyListeners();
   }
 
@@ -105,6 +110,10 @@ class LibraryContentProvider with ChangeNotifier {
 
     // Remove the book from local storage.
     books.removeAt(index);
+
+    // Update libraries provider.
+    // The library being null here is an error and should be thrown.
+    LibrariesProvider.instance.refetchLibrary(library!);
 
     notifyListeners();
   }
