@@ -3,7 +3,10 @@ import 'package:shelfless/utils/strings/strings.dart';
 /// English strings.
 class EnStrings implements Strings {
   @override String get settings => "Settings";
+  @override String get licensesLabel => "Licenses";
+  @override String get supportLabel => "Contact support";
   @override String get librariesTitle => "Libraries";
+  @override String get othersTitle => "Other";
   @override String get all => "All";
   @override String get book => "book";
   @override String get books => "books";
@@ -35,7 +38,7 @@ class EnStrings implements Strings {
   @override String get deleteBookContent => "Are you sure you want to delete this book?\nThe operation will be irreversible.";
   @override String get bookInfoTitle => "Title";
   @override String get bookInfoThumbnail => "Thumbnail";
-  @override String get bookInfoNoImageSelected => "[no image selected]";
+  @override String get bookInfoNoImageSelected => "no image selected";
   @override String get bookInfoLibrary => "Library";
   @override String get bookInfoAuthors => "Authors";
   @override String get bookInfoPublishDate => "Publish date";
@@ -91,7 +94,8 @@ class EnStrings implements Strings {
   @override String get noPublishersFound => "No publishers found";
   @override String get noBooksFound => "No books found";
   @override String get search => "Search";
-  @override String get warning => "Warning";
+  @override String get genericInfo => "Info";
+  @override String get genericWarning => "Warning";
   @override String get genericError => "An error occurred";
   @override String get unreleasedFeatureAlert => "This feature will be released in a future update.";
 }

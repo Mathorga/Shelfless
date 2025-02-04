@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:shelfless/utils/strings/strings.dart';
 
 class UnreleasedFeatureDialog extends StatelessWidget {
@@ -7,7 +8,7 @@ class UnreleasedFeatureDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(strings.warning),
+      title: Text(strings.genericInfo),
       content: Text(strings.unreleasedFeatureAlert),
     );
   }

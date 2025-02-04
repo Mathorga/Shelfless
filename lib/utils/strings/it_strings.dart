@@ -5,7 +5,10 @@ import 'package:shelfless/utils/strings/strings.dart';
 /// Italian strings.
 class ItStrings implements Strings {
   @override String get settings => "Impostazioni";
+  @override String get licensesLabel => "Licenze";
+  @override String get supportLabel => "Contatta il supporto";
   @override String get librariesTitle => "Biblioteche";
+  @override String get othersTitle => "Altro";
   @override String get all => "Tutti";
   @override String get book => "libro";
   @override String get books => "libri";
@@ -37,7 +40,7 @@ class ItStrings implements Strings {
   @override String get deleteBookContent => "Vuoi davvero eliminare questo libro?\nL'operazione sarà irreversibile.";
   @override String get bookInfoTitle => "Titolo";
   @override String get bookInfoThumbnail => "Copertina";
-  @override String get bookInfoNoImageSelected => "[nessuna immagine selezionata]";
+  @override String get bookInfoNoImageSelected => "nessuna immagine selezionata";
   @override String get bookInfoLibrary => "Biblioteca";
   @override String get bookInfoAuthors => "Autori";
   @override String get bookInfoPublishDate => "Anno di pubblicazione";
@@ -93,7 +96,8 @@ class ItStrings implements Strings {
   @override String get noPublishersFound => "Nessun editore trovato";
   @override String get noBooksFound => "Nessun libro trovato";
   @override String get search => "Cerca";
-  @override String get warning => "Attenzione";
+  @override String get genericInfo => "Info";
+  @override String get genericWarning => "Attenzione";
   @override String get genericError => "Si è verificato un errore";
   @override String get unreleasedFeatureAlert => "Questa funzionalità sarà introdotta con un futuro aggiornamento.";
 }

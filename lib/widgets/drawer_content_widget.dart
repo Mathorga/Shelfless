@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:shelfless/screens/authors_overview_screen.dart';
 import 'package:shelfless/screens/genres_overview_screen.dart';
 import 'package:shelfless/screens/settings_screen.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/libraries_list_widget.dart';
+import 'package:shelfless/widgets/unavailable_content_widget.dart';
 import 'package:shelfless/widgets/unreleased_feature_dialog.dart';
 
 class DrawerContentWidget extends StatelessWidget {
@@ -25,9 +27,17 @@ class DrawerContentWidget extends StatelessWidget {
         ),
 
         // App name.
-        Text(
-          Themes.appName,
-          style: theme.textTheme.headlineMedium,
+        ShaderMask(
+          shaderCallback: (Rect rect) => LinearGradient(
+            colors: [
+              ShelflessColors.secondary,
+              ShelflessColors.primary,
+            ],
+          ).createShader(rect),
+          child: Text(
+            Themes.appName,
+            style: theme.textTheme.headlineMedium,
+          ),
         ),
 
         Expanded(
@@ -35,11 +45,20 @@ class DrawerContentWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(Themes.spacingSmall),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Libraries list.
+                  Padding(
+                    padding: const EdgeInsets.all(Themes.spacingSmall),
+                    child: Text(strings.librariesTitle),
+                  ),
                   LibrariesListWidget(),
 
                   Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(Themes.spacingSmall),
+                    child: Text(strings.othersTitle),
+                  ),
 
                   // Authors.
                   _buildLibraryEntry(
@@ -85,8 +104,7 @@ class DrawerContentWidget extends StatelessWidget {
                   ),
 
                   // Publishers.
-                  Opacity(
-                    opacity: Themes.unavailableFeatureOpacity,
+                  UnavailableContentWidget(
                     child: _buildLibraryEntry(
                       onPressed: () {
                         showDialog(
@@ -108,8 +126,7 @@ class DrawerContentWidget extends StatelessWidget {
                   ),
 
                   // Locations.
-                  Opacity(
-                    opacity: Themes.unavailableFeatureOpacity,
+                  UnavailableContentWidget(
                     child: _buildLibraryEntry(
                       onPressed: () {
                         showDialog(
@@ -144,12 +161,19 @@ class DrawerContentWidget extends StatelessWidget {
         // Settings section.
         Padding(
           padding: const EdgeInsets.all(Themes.spacingSmall),
-          child: GestureDetector(
-            onTap: () {
+          child: TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: ShelflessColors.onMainContentActive,
+              iconColor: ShelflessColors.onMainContentActive,
+              enableFeedback: false,
+            ),
+            onPressed: () {
               final NavigatorState navigator = Navigator.of(context);
 
               // Navigate to settings screen.
-              navigator.push(MaterialPageRoute(builder: (BuildContext context) => SettingsScreen()));
+              navigator.push(MaterialPageRoute(
+                builder: (BuildContext context) => SettingsScreen(),
+              ));
             },
             child: Padding(
               padding: const EdgeInsets.all(Themes.spacingMedium),
@@ -157,7 +181,10 @@ class DrawerContentWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 spacing: Themes.spacingLarge,
                 children: [
-                  Icon(Icons.settings_rounded),
+                  Icon(
+                    Icons.settings_rounded,
+                    size: Themes.iconSizeMedium,
+                  ),
                   Text(strings.settings),
                 ],
               ),

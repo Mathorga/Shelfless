@@ -5,7 +5,10 @@ import 'package:shelfless/utils/strings/it_strings.dart';
 
 class Strings {
   String get settings => "";
+  String get licensesLabel => "";
+  String get supportLabel => "";
   String get librariesTitle => "";
+  String get othersTitle => "";
   String get all => "";
   String get book => "";
   String get books => "";
@@ -93,7 +96,8 @@ class Strings {
   String get noPublishersFound => "";
   String get noBooksFound => "";
   String get search => "";
-  String get warning => "";
+  String get genericInfo => "";
+  String get genericWarning => "";
   String get genericError => "";
   String get unreleasedFeatureAlert => "";
 }

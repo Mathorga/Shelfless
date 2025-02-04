@@ -22,7 +22,9 @@ class _GenresOverviewScreenState extends State<GenresOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: Text(strings.genresSectionTitle),
+        ),
         body: LibraryContentProvider.instance.genres.isEmpty
             ? Center(
                 child: Text(strings.noGenresFound),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 
 class Themes {
@@ -63,7 +64,7 @@ class Themes {
     height: spacingMedium,
   );
 
-  static ThemeData shelflessTheme = ThemeData(
+  static final ThemeData _baseTheme = ThemeData(
     scaffoldBackgroundColor: ShelflessColors.mainBackground,
     colorScheme: ColorScheme.dark(
       primary: ShelflessColors.primary,
@@ -132,5 +133,9 @@ class Themes {
       ),
       backgroundColor: ShelflessColors.lightBackground,
     ),
+  );
+
+  static ThemeData shelflessTheme = _baseTheme.copyWith(
+    textTheme: GoogleFonts.lexendExaTextTheme(_baseTheme.textTheme),
   );
 }

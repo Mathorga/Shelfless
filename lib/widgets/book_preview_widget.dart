@@ -130,7 +130,7 @@ class BookPreviewWidget extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            title: Text(strings.warning),
+                            title: Text(strings.genericWarning),
                             content: Text(strings.unreleasedFeatureAlert),
                             actions: [
                               TextButton(

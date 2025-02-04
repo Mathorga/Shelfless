@@ -7,6 +7,7 @@ import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/unavailable_content_widget.dart';
 import 'package:shelfless/widgets/unreleased_feature_dialog.dart';
 
 class LibrariesListWidget extends StatefulWidget {
@@ -32,7 +33,6 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Libraries list.
-        Text(strings.librariesTitle),
         ...List.generate(LibrariesProvider.instance.libraries.length + 2, (int index) {
           // Add library.
           if (index > LibrariesProvider.instance.libraries.length) {
@@ -109,8 +109,7 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
 
           // All libraries.
           if (index == LibrariesProvider.instance.libraries.length) {
-            return Opacity(
-              opacity: Themes.unavailableFeatureOpacity,
+            return UnavailableContentWidget(
               child: _buildLibraryEntry(
                 onPressed: () {
                   showDialog(
@@ -137,6 +136,7 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
 
               navigator.pop();
             },
+            highlighted: selectedLibrary,
             child: Row(
               spacing: Themes.spacingSmall,
               children: [
@@ -144,15 +144,10 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                   Icon(
                     Icons.double_arrow_rounded,
                     size: Themes.iconSizeSmall,
-                    color: theme.colorScheme.primary,
                   ),
                 Expanded(
                   child: Text(
                     library.toString(),
-                    style: TextStyle(
-                      // fontSize: selectedLibrary ? 20.0 : null,
-                      color: selectedLibrary ? theme.colorScheme.primary : null,
-                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -162,7 +157,6 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                     child: Icon(
                       Icons.double_arrow_rounded,
                       size: Themes.iconSizeSmall,
-                      color: theme.colorScheme.primary,
                     ),
                   ),
               ],
@@ -176,8 +170,10 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
   Widget _buildLibraryEntry({
     required Widget child,
     void Function()? onPressed,
+    bool highlighted = false,
   }) {
     return Card(
+      color: highlighted ? ShelflessColors.secondary : null,
       child: InkWell(
         onTap: onPressed,
         child: Align(

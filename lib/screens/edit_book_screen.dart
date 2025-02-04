@@ -118,8 +118,16 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                     ),
                                   )
                                 : Card(
+                                    color: ShelflessColors.mainContentActive,
                                     child: Center(
-                                      child: Text(strings.bookInfoNoImageSelected),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        spacing: Themes.spacingSmall,
+                                        children: [
+                                          Icon(Icons.image_rounded),
+                                          Text(strings.bookInfoNoImageSelected),
+                                        ],
+                                      ),
                                     ),
                                   ),
                           ),
@@ -199,6 +207,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         child: SizedBox(
                           width: double.infinity,
                           child: Card(
+                            color: ShelflessColors.mainContentActive,
                             child: Padding(
                               padding: const EdgeInsets.all(Themes.spacingMedium),
                               child: Center(child: Text((_book.raw.publishYear).toString())),
