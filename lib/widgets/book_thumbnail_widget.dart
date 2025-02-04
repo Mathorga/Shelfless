@@ -6,6 +6,7 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 
+/// Displays a book thumbnail image.
 class BookThumbnailWidget extends StatelessWidget {
   final Book book;
   final bool showOutBanner;

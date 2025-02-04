@@ -28,6 +28,7 @@ class Themes {
 
   // Default opacity for displaying unavailable features.
   static const double unavailableFeatureOpacity = 0.3;
+  static const double blurOpacity = 0.1;
 
   // Default durations.
   static const Duration durationXShort = Duration(milliseconds: 500);

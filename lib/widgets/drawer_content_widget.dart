@@ -143,15 +143,21 @@ class DrawerContentWidget extends StatelessWidget {
         // Settings section.
         Padding(
           padding: const EdgeInsets.all(Themes.spacingSmall),
-          child: _buildLibraryEntry(
-            onPressed: () {},
-            child: Row(
-                  spacing: Themes.spacingLarge,
-                  children: [
-                    Icon(Icons.settings_rounded),
-                    Text(strings.settings),
-                  ],
-                ),),
+          child: GestureDetector(
+            onTap: () {
+              // TODO Navigate to settings screen.
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(Themes.spacingMedium),
+              child: Row(
+                spacing: Themes.spacingLarge,
+                children: [
+                  Icon(Icons.settings_rounded),
+                  Text(strings.settings),
+                ],
+              ),
+            ),
+          ),
         ),
       ],
     );

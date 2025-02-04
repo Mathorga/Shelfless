@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:blur/blur.dart';
-import 'package:shadow_overlay/shadow_overlay.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
@@ -132,14 +131,25 @@ class BookDetailScreen extends StatelessWidget {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // I personally don't like this widget very much, so TODO find a replacement.
-          // Maybe using a ShaderMask widget would be a better solution.
-          ShadowOverlay(
-            shadowWidth: MediaQuery.sizeOf(context).width,
-            shadowHeight: 150.0,
-            shadowColor: theme.colorScheme.surface,
+          ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                colors: [
+                  Colors.transparent,
+                  Colors.white,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [
+                  0.5,
+                  1.0,
+                ],
+              ).createShader(bounds);
+            },
+            blendMode: BlendMode.dstOut,
             child: Blur(
               blur: 20.0,
+              colorOpacity: Themes.blurOpacity,
               blurColor: Colors.transparent,
               child: SizedBox(
                 width: double.infinity,
