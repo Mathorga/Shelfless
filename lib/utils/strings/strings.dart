@@ -4,12 +4,14 @@ import 'package:shelfless/utils/strings/en_strings.dart';
 import 'package:shelfless/utils/strings/it_strings.dart';
 
 class Strings {
+  String get settings => "";
   String get librariesTitle => "";
   String get all => "";
   String get book => "";
   String get books => "";
   String get importLib => "";
   String get newLib => "";
+  String get addLibraryTitle => "";
   String get deleteLibraryTitle => "";
   String get deleteLibraryContent => "";
   String get yes => "";
@@ -24,8 +26,11 @@ class Strings {
   String get bookInfo => "";
   String get firstName => "";
   String get lastName => "";
+  String get outLabel => "";
   String get bookEdit => "";
   String get bookMoveTo => "";
+  String get bookMarkOutAction => "";
+  String get bookMarkInAction => "";
   String get bookDeleteAction => "";
   String get bookDeleted => "";
   String get deleteBookTitle => "";

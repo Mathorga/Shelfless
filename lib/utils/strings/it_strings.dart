@@ -4,12 +4,14 @@ import 'package:shelfless/utils/strings/strings.dart';
 
 /// Italian strings.
 class ItStrings implements Strings {
+  @override String get settings => "Impostazioni";
   @override String get librariesTitle => "Biblioteche";
   @override String get all => "Tutti";
   @override String get book => "libro";
   @override String get books => "libri";
   @override String get importLib => "Importa";
   @override String get newLib => "Nuova";
+  @override String get addLibraryTitle => "Nuova biblioteca";
   @override String get deleteLibraryTitle => "Elimina Biblioteca";
   @override String get deleteLibraryContent => "Vuoi davvero eliminare";
   @override String get yes => "Sì";
@@ -24,8 +26,11 @@ class ItStrings implements Strings {
   @override String get bookInfo => "Scheda Libro";
   @override String get firstName => "Nome";
   @override String get lastName => "Cognome";
+  @override String get outLabel => "PRESTATO";
   @override String get bookEdit => "Modifica";
   @override String get bookMoveTo => "Sposta in";
+  @override String get bookMarkOutAction => "Imposta come assente";
+  @override String get bookMarkInAction => "Imposta come rientrato";
   @override String get bookDeleteAction => "Elimina";
   @override String get bookDeleted => "Libro cancellato";
   @override String get deleteBookTitle => "Eliminazione";

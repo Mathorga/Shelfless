@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfless/screens/libraries_overview_screen.dart';
-import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
+import 'package:shelfless/screens/edit_library_screen.dart';
+import 'package:shelfless/screens/library_content_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/database_helper.dart';
 
 void main() async {
   await DatabaseHelper.instance.openDB();
+  await LibrariesProvider.instance.fetchLibraries();
   runApp(const Shelfless());
 }
 
@@ -16,72 +18,19 @@ class Shelfless extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Shelfless",
-      theme: ThemeData(
-        scaffoldBackgroundColor: ShelflessColors.mainBackground,
-        colorScheme: ColorScheme.dark(
-          primary: ShelflessColors.primary,
-          secondary: ShelflessColors.secondary,
-          surface: ShelflessColors.mainBackground,
-        ),
-        appBarTheme: const AppBarTheme(
-          color: ShelflessColors.mainBackground,
-          elevation: 0.0,
-          scrolledUnderElevation: 0.0,
-          centerTitle: true,
-        ),
-        searchBarTheme: SearchBarThemeData(
-          backgroundColor: WidgetStatePropertyAll(ShelflessColors.lightBackground),
-        ),
-        cardTheme: CardTheme(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          elevation: 6.0,
-        ),
-        popupMenuTheme: PopupMenuThemeData(
-          color: ShelflessColors.mainContentInactive,
-        ),
-        snackBarTheme: SnackBarThemeData(
-          backgroundColor: ShelflessColors.mainContentInactive,
-          contentTextStyle: TextStyle(color: ShelflessColors.onMainContentActive),
-          closeIconColor: ShelflessColors.onMainContentActive,
-          actionBackgroundColor: ShelflessColors.onMainContentInactive,
-          dismissDirection: DismissDirection.horizontal,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Themes.radiusSmall),
-          ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(Themes.radiusMedium),
-            ),
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderSide: const BorderSide(
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(Themes.radiusMedium),
-          ),
-        ),
-        dialogTheme: DialogTheme(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Themes.radiusMedium),
-          ),
-          backgroundColor: ShelflessColors.lightBackground,
-        ),
-      ),
-      home: const LibrariesOverviewScreen(),
-      routes: {
-        LibrariesOverviewScreen.routeName: (BuildContext context) => const LibrariesOverviewScreen(),
-        // PublisherInfoScreen.routeName: (BuildContext context) => const PublisherInfoScreen(),
-        // ImportLibraryScreen.routeName: (BuildContext context) => const ImportLibraryScreen(),
-        // BooksFilterScreen.routeName: (BuildContext context) => const BooksFilterScreen(),
-      },
+      title: Themes.appName,
+      theme: Themes.shelflessTheme,
+      home: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
+        LibrariesProvider.instance.addListener(() => setState(() {}));
+
+        return LibrariesProvider.instance.libraries.isEmpty
+            // TODO Show an introductory library creation wizard instead of a bare EditLibraryScreen.
+            ? EditLibraryScreen()
+            : LibraryContentScreen(
+                library: LibrariesProvider.instance.libraries.first,
+              );
+      }),
+      routes: {},
     );
   }
 }

@@ -8,12 +8,16 @@ import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
 import 'package:shelfless/widgets/publishers_selection_widget.dart';
 
-class LibraryFilterWidget extends StatelessWidget {
-  final LibraryFiltersProvider _libraryFiltersProvider = LibraryFiltersProvider(
-    inFilters: LibraryContentProvider.instance.getFilters(),
-  );
+class LibraryFilterWidget extends StatefulWidget {
+  const LibraryFilterWidget({super.key});
 
-  LibraryFilterWidget({super.key});
+  @override
+  State<LibraryFilterWidget> createState() => _LibraryFilterWidgetState();
+}
+
+class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
+  // Start off from any already-present filter.
+  final LibraryFilters _filters = LibraryContentProvider.instance.getFilters().copy();
 
   @override
   Widget build(BuildContext context) {
@@ -38,46 +42,54 @@ class LibraryFilterWidget extends StatelessWidget {
                   leading: const Icon(Icons.search_rounded),
                   onChanged: (String value) {
                     // Save the query string for filtering.
-                    _libraryFiltersProvider.addTitleFilter(value);
+                    setState(() {
+                      _filters.titleFilter = value;
+                    });
                   },
                 ),
 
                 // Authors selection.
-                StatefulBuilder(
-                  builder: (BuildContext context, void Function(void Function()) setState) {
-                    _libraryFiltersProvider.addListener(() => setState(() {}));
-
-                    return AuthorsSelectionWidget(
-                      inSelectedIds: _libraryFiltersProvider.filters.authorsFilter.toList(),
-                      onAuthorsSelected: _libraryFiltersProvider.addAuthorsFilter,
-                      onAuthorUnselected: _libraryFiltersProvider.removeAuthorsFilter,
-                    );
+                AuthorsSelectionWidget(
+                  inSelectedIds: _filters.authorsFilter.toList(),
+                  onAuthorsSelected: (Set<int?> selectedAuthorIds) {
+                    setState(() {
+                      _filters.authorsFilter.addAll(selectedAuthorIds);
+                    });
+                  },
+                  onAuthorUnselected: (int? unselectedAuthorId) {
+                    setState(() {
+                      _filters.authorsFilter.remove(unselectedAuthorId);
+                    });
                   },
                 ),
 
                 // Genres selection.
-                StatefulBuilder(
-                  builder: (BuildContext context, void Function(void Function()) setState) {
-                    _libraryFiltersProvider.addListener(() => setState(() {}));
-
-                    return GenresSelectionWidget(
-                      inSelectedIds: _libraryFiltersProvider.filters.genresFilter.toList(),
-                      onGenresSelected: _libraryFiltersProvider.addGenresFilter,
-                      onGenreUnselected: _libraryFiltersProvider.removeGenresFilter,
-                    );
+                GenresSelectionWidget(
+                  inSelectedIds: _filters.genresFilter.toList(),
+                  onGenresSelected: (Set<int?> selectedGenreIds) {
+                    setState(() {
+                      _filters.genresFilter.addAll(selectedGenreIds);
+                    });
+                  },
+                  onGenreUnselected: (int? unselectedGenreId) {
+                    setState(() {
+                      _filters.genresFilter.remove(unselectedGenreId);
+                    });
                   },
                 ),
 
                 // Publishers selection.
-                StatefulBuilder(
-                  builder: (BuildContext context, void Function(void Function()) setState) {
-                    _libraryFiltersProvider.addListener(() => setState(() {}));
-
-                    return PublishersSelectionWidget(
-                      inSelectedIds: _libraryFiltersProvider.filters.publishersFilter.toList(),
-                      onPublishersSelected: _libraryFiltersProvider.addPublishersFilter,
-                      onPublisherUnselected: _libraryFiltersProvider.removePublishersFilter,
-                    );
+                PublishersSelectionWidget(
+                  inSelectedIds: _filters.publishersFilter.toList(),
+                  onPublishersSelected: (Set<int?> selectedPublisherIds) {
+                    setState(() {
+                      _filters.publishersFilter.addAll(selectedPublisherIds);
+                    });
+                  },
+                  onPublisherUnselected: (int? unselectedPublisherId) {
+                    setState(() {
+                      _filters.publishersFilter.remove(unselectedPublisherId);
+                    });
                   },
                 ),
 
@@ -92,36 +104,32 @@ class LibraryFilterWidget extends StatelessWidget {
           // Apply button.
           Align(
             alignment: Alignment.bottomRight,
-            child: StatefulBuilder(
-              builder: (BuildContext context, void Function(void Function()) setState) {
-                _libraryFiltersProvider.addListener(() => setState(() {}));
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              spacing: Themes.spacingLarge,
+              children: [
+                if (_filters.isActive)
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _filters.clear();
+                      });
+                    },
+                    child: Text(strings.filtersClear),
+                  ),
+                FloatingActionButton.extended(
+                  onPressed: () {
+                    final NavigatorState navigator = Navigator.of(context);
 
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  spacing: Themes.spacingLarge,
-                  children: [
-                    if (_libraryFiltersProvider.filters.isActive)
-                      TextButton(
-                        onPressed: () {
-                          _libraryFiltersProvider.clear();
-                        },
-                        child: Text(strings.filtersClear),
-                      ),
-                    FloatingActionButton.extended(
-                      onPressed: () {
-                        final NavigatorState navigator = Navigator.of(context);
+                    // Apply user-selected filters.
+                    LibraryContentProvider.instance.applyFilters(_filters);
 
-                        // Apply user-selected filters.
-                        LibraryContentProvider.instance.applyFilters(_libraryFiltersProvider.filters);
-
-                        navigator.pop();
-                      },
-                      label: Text(strings.filtersApply),
-                      icon: Icon(Icons.check_rounded),
-                    ),
-                  ],
-                );
-              },
+                    navigator.pop();
+                  },
+                  label: Text(strings.filtersApply),
+                  icon: Icon(Icons.check_rounded),
+                ),
+              ],
             ),
           ),
         ],

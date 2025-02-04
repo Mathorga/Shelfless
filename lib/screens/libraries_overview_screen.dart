@@ -101,11 +101,14 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                                 alignment: Alignment.topRight,
                                 child: IconButton(
                                   onPressed: () {
+                                    final NavigatorState navigator = Navigator.of(context);
+
                                     // Go to library info.
-                                    Navigator.of(context).push(
+                                    navigator.push(
                                       MaterialPageRoute(
                                         builder: (BuildContext context) => EditLibraryScreen(
                                           library: LibrariesProvider.instance.libraries[index],
+                                          onDone: () => navigator.pop(),
                                         ),
                                       ),
                                     );
@@ -167,7 +170,10 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
       floatingActionButton: ExpandableFab(
         key: _fabKey,
         type: ExpandableFabType.up,
-        overlayStyle: ExpandableFabOverlayStyle(blur: 5.0, color: ShelflessColors.mainBackground.withAlpha(0x7F)),
+        overlayStyle: ExpandableFabOverlayStyle(
+          blur: 20.0,
+          color: ShelflessColors.mainBackground.withAlpha(0xAA),
+        ),
         openButtonBuilder: RotateFloatingActionButtonBuilder(
           child: Icon(Icons.add_rounded),
         ),
@@ -223,7 +229,9 @@ class _LibrariesOverviewScreenState extends State<LibrariesOverviewScreen> {
                   // Navigate to library creation screen.
                   await navigator.push(
                     MaterialPageRoute(
-                      builder: (BuildContext context) => const EditLibraryScreen(),
+                      builder: (BuildContext context) => EditLibraryScreen(
+                        onDone: () => navigator.pop(),
+                      ),
                     ),
                   );
 

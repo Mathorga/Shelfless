@@ -1,19 +1,32 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
+import 'package:archive/archive.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:share_plus/share_plus.dart';
 
+import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/library_preview.dart';
+import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/screens/book_detail_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
-import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
-import 'package:shelfless/screens/authors_overview_screen.dart';
+import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
+import 'package:shelfless/widgets/drawer_content_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
 
+enum LibraryAction {
+  edit,
+  displayMode,
+  share,
+}
+
 class LibraryContentScreen extends StatefulWidget {
-  static const String routeName = "/library";
   final LibraryPreview library;
 
   const LibraryContentScreen({
@@ -26,12 +39,32 @@ class LibraryContentScreen extends StatefulWidget {
 }
 
 class _LibraryContentScreenState extends State<LibraryContentScreen> {
+  late LibraryPreview library;
+
   @override
   void initState() {
     super.initState();
 
+    library = widget.library;
+
     // Start listening to changes in library content.
-    LibraryContentProvider.instance.addListener(() => setState(() {}));
+    LibraryContentProvider.instance.addListener(
+      () {
+        // Here setState must be called regardless of the internal state, otherwise changes will be noticed only on library change.
+        setState(() {
+          final RawLibrary? providerLibrary = LibraryContentProvider.instance.library;
+
+          // Make sure the provider's library is not null and it's not the one the user's already seeing.
+          if (providerLibrary != null && library.raw != providerLibrary) {
+            library = LibraryPreview(
+              raw: providerLibrary,
+            );
+          }
+        });
+      },
+    );
+
+    LibraryContentProvider.instance.fetchLibraryContent(library.raw);
   }
 
   @override
@@ -43,49 +76,133 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final double itemHeight = 280.0;
     final double leftRightPadding = 0.0;
 
-    return PopScope(
-      onPopInvokedWithResult: (bool didPop, Object? result) {
-        LibraryContentProvider.instance.clear();
-      },
-      child: Scaffold(
-        body: CustomScrollView(
-          physics: Themes.scrollPhysics,
-          slivers: [
-            SliverAppBar(
-              pinned: false,
-              snap: false,
-              floating: true,
-              shadowColor: Colors.transparent,
-              title: Text(
-                widget.library.raw.name,
-                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    // Save books locally for easier (not faster) access.
+    final List<Book> books = LibraryContentProvider.instance.books;
+
+    return Scaffold(
+      drawer: Drawer(
+        child: DrawerContentWidget(),
+      ),
+      body: CustomScrollView(
+        // Make sure no scrolling is allowed when no books are available.
+        physics: books.isEmpty ? NeverScrollableScrollPhysics() : Themes.scrollPhysics,
+        slivers: [
+          SliverAppBar(
+            pinned: false,
+            snap: false,
+            floating: true,
+            shadowColor: Colors.transparent,
+            title: Text(
+              library.raw.name,
+              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                icon: Icon(
+                  filtersActive ? Icons.filter_alt : Icons.filter_alt_outlined,
+                  color: filtersActive ? theme.colorScheme.primary : theme.colorScheme.onSurface,
+                ),
+                onPressed: () {
+                  showBarModalBottomSheet(
+                    context: context,
+                    enableDrag: true,
+                    expand: false,
+                    backgroundColor: theme.colorScheme.surface,
+                    builder: (BuildContext context) => LibraryFilterWidget(),
+                  );
+                },
               ),
-              centerTitle: true,
-              actions: [
-                IconButton(
-                  icon: Icon(false ? Icons.list_rounded : Icons.grid_view_rounded),
-                  onPressed: () {},
-                ),
-                IconButton(
-                  icon: Icon(
-                    filtersActive ? Icons.filter_alt : Icons.filter_alt_outlined,
-                    color: filtersActive ? theme.colorScheme.primary : theme.colorScheme.onSurface,
-                  ),
-                  onPressed: () {
-                    showBarModalBottomSheet(
-                      context: context,
-                      enableDrag: true,
-                      expand: false,
-                      backgroundColor: theme.colorScheme.surface,
-                      builder: (BuildContext context) => LibraryFilterWidget(),
-                    );
-                  },
-                ),
-              ],
-            ),
-            SliverToBoxAdapter(
-              child: _buildActionBar(),
-            ),
+              PopupMenuButton<LibraryAction>(
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem(
+                      value: LibraryAction.edit,
+                      child: Row(
+                        spacing: Themes.spacingSmall,
+                        children: [
+                          const Icon(Icons.edit_rounded),
+                          Text(strings.editTitle),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: LibraryAction.displayMode,
+                      enabled: false,
+                      child: Row(
+                        spacing: Themes.spacingSmall,
+                        children: [
+                          const Icon(Icons.view_list_rounded),
+                          Text("Show list"),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: LibraryAction.share,
+                      child: Row(
+                        spacing: Themes.spacingSmall,
+                        children: [
+                          const Icon(Icons.share_rounded),
+                          Text(strings.shareLibrary),
+                        ],
+                      ),
+                    ),
+                  ];
+                },
+                onSelected: (LibraryAction value) async {
+                  final NavigatorState navigator = Navigator.of(context);
+
+                  switch (value) {
+                    case LibraryAction.edit:
+                      navigator.push(MaterialPageRoute(builder: (BuildContext context) {
+                        return EditLibraryScreen(
+                          library: library,
+                          onDone: () => navigator.pop(),
+                        );
+                      }));
+                      break;
+                    case LibraryAction.displayMode:
+                      break;
+                    case LibraryAction.share:
+                      if (library.raw.id == null) return;
+
+                      // Extract the library.
+                      final Map<String, String> libraryStrings = await DatabaseHelper.instance.extractLibrary(library.raw.id!);
+
+                      // Compress the library files to a single .slz file.
+                      final Archive archive = Archive();
+                      libraryStrings.entries
+                          .map((MapEntry<String, String> element) => ArchiveFile(
+                                "${element.key}.json",
+                                element.value.length,
+                                element.value.codeUnits,
+                              ))
+                          .forEach((ArchiveFile file) => archive.addFile(file));
+                      final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
+
+                      // Share the library to other apps.
+                      Share.shareXFiles(
+                        [
+                          XFile.fromData(
+                            encodedArchive,
+                            length: encodedArchive.length,
+                            mimeType: "application/x-zip",
+                          ),
+                        ],
+                        // The name parameter in the XFile.fromData method is ignored in most platforms,
+                        // so fileNameOverrides is used instead.
+                        fileNameOverrides: [
+                          "${library.raw.name}.slz",
+                        ],
+                      );
+                      break;
+                  }
+                },
+              ),
+            ],
+          ),
+
+          if (books.isNotEmpty)
             SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -94,250 +211,55 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               ),
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
+                  final Book book = books[index];
                   return BookPreviewWidget(
-                    book: LibraryContentProvider.instance.books[index],
+                    book: book,
                     onTap: () {
                       // Prefetch handlers before async gaps.
                       final NavigatorState navigator = Navigator.of(context);
 
                       // Navigate to book edit screen.
                       navigator.push(MaterialPageRoute(
-                        builder: (BuildContext context) => EditBookScreen(
-                          book: LibraryContentProvider.instance.books[index],
+                        builder: (BuildContext context) => BookDetailScreen(
+                          book: book,
                         ),
                       ));
                     },
                   );
                 },
-                childCount: LibraryContentProvider.instance.books.length,
+                childCount: books.length,
               ),
             ),
 
-            // Space left for the FAB.
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(Themes.spacingMedium),
-                child: SizedBox(
-                  height: Themes.spacingFAB,
-                ),
+          if (books.isEmpty)
+            SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(
+                  child: Text(strings.noBooksFound),
+                )),
+
+          // Space left for the FAB.
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(Themes.spacingMedium),
+              child: SizedBox(
+                height: Themes.spacingFAB,
               ),
             ),
-          ],
-        ),
-        floatingActionButton: filtersActive
-            ? null
-            : FloatingActionButton(
-                onPressed: () {
-                  final NavigatorState navigator = Navigator.of(context);
-
-                  // Navigate to EditBookScreen
-                  navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
-                },
-                child: Icon(Icons.add_rounded),
-              ),
+          ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildActionBar() {
-    return Padding(
-      padding: const EdgeInsets.all(Themes.spacingLarge),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        physics: Themes.scrollPhysics,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          spacing: Themes.spacingXLarge,
-          children: [
-            // Authors.
-            _buildAction(
-              label: strings.authorsSectionTitle,
+      floatingActionButton: filtersActive
+          ? null
+          : FloatingActionButton(
               onPressed: () {
                 final NavigatorState navigator = Navigator.of(context);
 
-                navigator.push(MaterialPageRoute(
-                  builder: (BuildContext context) => AuthorsOverviewScreen(),
-                ));
+                // Navigate to EditBookScreen
+                navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
               },
-              child: Icon(
-                Icons.person_pin_rounded,
-                size: Themes.iconSizeMedium,
-              ),
+              child: Icon(Icons.add_rounded),
             ),
-
-            // Genres.
-            _buildAction(
-              label: strings.genresSectionTitle,
-              onPressed: () {},
-              child: Icon(
-                Icons.color_lens_rounded,
-                size: Themes.iconSizeMedium,
-              ),
-            ),
-
-            // Publishers.
-            _buildAction(
-              label: strings.publishersSectionTitle,
-              onPressed: () {},
-              child: Icon(
-                Icons.work_rounded,
-                size: Themes.iconSizeMedium,
-              ),
-            ),
-
-            // TODO Add all user-defined collections if present.
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAction({
-    required String label,
-    required Widget child,
-    void Function()? onPressed,
-  }) {
-    return SizedBox(
-      width: Themes.actionSize,
-      child: Column(
-        spacing: Themes.spacingSmall,
-        children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ShelflessColors.secondary,
-              iconColor: ShelflessColors.onMainBackgroundInactive,
-            ),
-            onPressed: onPressed,
-            child: SizedBox(
-              height: Themes.spacingFAB,
-              child: child,
-            ),
-          ),
-          Text(label),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCollectionPreviews() {
-    final ThemeData theme = Theme.of(context);
-
-    return SingleChildScrollView(
-      physics: Themes.scrollPhysics,
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        spacing: Themes.spacingXLarge,
-        children: [
-          Card(
-            color: ShelflessColors.secondary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.favorite_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Favorites",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.primary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.star_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Highlights",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.secondary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.favorite_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Favorites",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.primary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.star_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Highlights",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.secondary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.favorite_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Favorites",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            color: ShelflessColors.primary,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingSmall),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.star_rounded,
-                    size: Themes.iconSizeLarge,
-                  ),
-                  Text(
-                    "Highlights",
-                    style: theme.textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

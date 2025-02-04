@@ -9,13 +9,13 @@ import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditLibraryScreen extends StatefulWidget {
-  static const String routeName = "/edit-library";
-
   final LibraryPreview? library;
+  final void Function()? onDone;
 
   const EditLibraryScreen({
     super.key,
     this.library,
+    this.onDone,
   });
 
   @override
@@ -48,7 +48,7 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
               title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.libraryTitle}"),
             ),
             body: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(Themes.spacingMedium),
               child: EditSectionWidget(
                 children: [
                   Text(strings.libraryInfoName),
@@ -65,7 +65,9 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
               onPressed: () {
                 // Actually save the library.
                 _inserting ? LibrariesProvider.instance.addLibrary(_library!) : LibrariesProvider.instance.updateLibrary(_library!);
-                Navigator.of(context).pop();
+
+                // Call parent back on done.
+                widget.onDone?.call();
               },
               label: Row(
                 children: [

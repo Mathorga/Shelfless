@@ -18,4 +18,10 @@ class RawLibrary {
         "${DatabaseHelper.librariesTable}_id": id,
         "${DatabaseHelper.librariesTable}_name": name,
       };
+
+  @override
+  bool operator ==(Object other) => other is RawLibrary && other.runtimeType == runtimeType && other.name == name;
+
+  @override
+  int get hashCode => name.hashCode;
 }
