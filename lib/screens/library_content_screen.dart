@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -73,8 +74,12 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final bool filtersActive = LibraryContentProvider.instance.getFilters().isActive;
     final Size screenSize = MediaQuery.sizeOf(context);
     final double crossAxisSpacing = 0.0;
+    final double itemWidth = 200.0;
     final double itemHeight = 280.0;
     final double leftRightPadding = 0.0;
+  
+    // The cross axis count should never go below 2.
+    final int crossAxisCount = max((screenSize.width / itemWidth).toInt(), 2);
 
     // Save books locally for easier (not faster) access.
     final List<Book> books = LibraryContentProvider.instance.books;
@@ -205,9 +210,9 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
           if (books.isNotEmpty)
             SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+                crossAxisCount: crossAxisCount,
                 crossAxisSpacing: crossAxisSpacing,
-                childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / 2) / itemHeight,
+                childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / crossAxisCount) / itemHeight,
               ),
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {

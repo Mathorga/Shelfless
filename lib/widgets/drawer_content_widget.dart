@@ -36,7 +36,9 @@ class DrawerContentWidget extends StatelessWidget {
           ).createShader(rect),
           child: Text(
             Themes.appName,
-            style: theme.textTheme.headlineMedium,
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
 

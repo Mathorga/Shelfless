@@ -11,15 +11,15 @@ class DialogButtonWidget extends StatelessWidget {
   final Widget content;
 
   const DialogButtonWidget({
-    Key? key,
+    super.key,
     required this.label,
     required this.title,
     required this.content,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final Size screenSize = MediaQuery.sizeOf(context);
 
     return ElevatedButton(
       child: label,
@@ -31,7 +31,7 @@ class DialogButtonWidget extends StatelessWidget {
               // insetPadding: const EdgeInsets.all(Themes.spacing),
               title: title,
               content: SizedBox(
-                width: min(mediaQuery.size.width, Themes.maxContentWidth),
+                width: min(screenSize.width, Themes.maxContentWidth),
                 height: Themes.maxDialogHeight,
                 child: content,
               ),

@@ -11,7 +11,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 
-class BookDetailScreen extends StatelessWidget {
+class BookDetailScreen extends StatefulWidget {
   final Book book;
 
   const BookDetailScreen({
@@ -19,6 +19,11 @@ class BookDetailScreen extends StatelessWidget {
     required this.book,
   });
 
+  @override
+  State<BookDetailScreen> createState() => _BookDetailScreenState();
+}
+
+class _BookDetailScreenState extends State<BookDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -59,7 +64,7 @@ class BookDetailScreen extends StatelessWidget {
                   // Open EditBookScreen.
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => EditBookScreen(
-                      book: book,
+                      book: widget.book,
                     ),
                   ));
                   break;
@@ -91,7 +96,7 @@ class BookDetailScreen extends StatelessWidget {
                             final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
 
                             // Delete the book.
-                            await LibraryContentProvider.instance.deleteBook(book);
+                            await LibraryContentProvider.instance.deleteBook(widget.book);
 
                             messenger.showSnackBar(
                               SnackBar(
@@ -141,7 +146,7 @@ class BookDetailScreen extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: [
-                  0.5,
+                  0.25,
                   1.0,
                 ],
               ).createShader(bounds);
@@ -154,7 +159,7 @@ class BookDetailScreen extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: Image.memory(
-                  book.raw.cover!,
+                  widget.book.raw.cover!,
                   fit: BoxFit.cover,
                   isAntiAlias: false,
                   filterQuality: FilterQuality.none,
@@ -177,7 +182,7 @@ class BookDetailScreen extends StatelessWidget {
                     ),
                     Center(
                       child: BookThumbnailWidget(
-                        book: book,
+                        book: widget.book,
                         showOutBanner: true,
                       ),
                     ),
@@ -190,7 +195,7 @@ class BookDetailScreen extends StatelessWidget {
                     // TItle.
                     Center(
                       child: Text(
-                        book.raw.title,
+                        widget.book.raw.title,
                         style: theme.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -202,7 +207,7 @@ class BookDetailScreen extends StatelessWidget {
                     // Publication year.
                     Center(
                       child: Text(
-                        "${book.raw.publishYear}",
+                        "${widget.book.raw.publishYear}",
                       ),
                     ),
                   ],
@@ -222,7 +227,7 @@ class BookDetailScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(Themes.spacingMedium),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: book.authorIds.map((int authorId) => Text(LibraryContentProvider.instance.authors[authorId].toString())).toList(),
+                              children: widget.book.authorIds.map((int authorId) => Text(LibraryContentProvider.instance.authors[authorId].toString())).toList(),
                             ),
                           ),
                         ],
@@ -240,7 +245,7 @@ class BookDetailScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(Themes.spacingMedium),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
-                              children: book.genreIds.map((int genreId) => Text(LibraryContentProvider.instance.genres[genreId].toString())).toList(),
+                              children: widget.book.genreIds.map((int genreId) => Text(LibraryContentProvider.instance.genres[genreId].toString())).toList(),
                             ),
                           ),
                         ],
@@ -260,8 +265,14 @@ class BookDetailScreen extends StatelessWidget {
                         flex: 1,
                         child: _buildAction(
                           context,
-                          onPressed: () {},
-                          label: book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction,
+                          onPressed: () {
+                            setState(() {
+                              // Update book and store the update in DB.
+                              widget.book.raw.out = !widget.book.raw.out;
+                            });
+                            LibraryContentProvider.instance.storeBookUpdate(widget.book);
+                          },
+                          label: widget.book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction,
                         ),
                       ),
                       Expanded(

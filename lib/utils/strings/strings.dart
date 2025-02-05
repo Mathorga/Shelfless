@@ -5,6 +5,7 @@ import 'package:shelfless/utils/strings/it_strings.dart';
 
 class Strings {
   String get settings => "";
+  String get privacyPolicyLabel => "";
   String get licensesLabel => "";
   String get supportLabel => "";
   String get librariesTitle => "";

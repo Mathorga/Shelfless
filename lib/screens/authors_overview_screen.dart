@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/author.dart';
-import 'package:shelfless/models/book.dart';
-import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/screens/author_info_screen.dart';
-import 'package:shelfless/screens/books_screen.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
@@ -21,7 +17,6 @@ class AuthorsOverviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final List<Author> authors = authorsProvider.authors.where((Author author) => author.toString().toLowerCase().contains(searchValue.toLowerCase())).toList();
 
     return Scaffold(
         appBar: AppBar(

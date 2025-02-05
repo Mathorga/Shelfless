@@ -500,7 +500,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     // Resize the image to thumbnail size.
     final img.Image resizedImage = img.copyResizeCropSquare(
       image,
-      size: 8,
+      size: 16,
       interpolation: img.Interpolation.nearest,
       antialias: false,
     );

@@ -54,9 +54,6 @@ dependencies:
   # Color picker.
   flutter_colorpicker: ^1.1.0
 
-  # Search bar.
-  material_floating_search_bar_2: ^0.5.0
-
   # Multiple choice FAB.
   flutter_expandable_fab: ^2.3.0
 
@@ -76,11 +73,11 @@ dependencies:
   # Self-explanatory.
   blur: 4.0.0
 
-  # Delete me in the future.
-  shadow_overlay: 1.0.5
-
   # Google custom fonts.
   google_fonts: 6.2.1
+
+  # Parse yaml files (as this one).
+  yaml: 3.1.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -116,6 +113,7 @@ flutter:
     - assets/images/covers/parrots.jpg
     - assets/images/covers/bookshelf.jpg
     - assets/images/covers/bookshelf.png
+    - pubspec.yaml
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

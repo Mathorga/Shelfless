@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/providers/library_content_provider.dart';
@@ -22,82 +24,90 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.sizeOf(context);
 
     return Padding(
       padding: const EdgeInsets.all(Themes.spacingLarge),
       child: Stack(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              spacing: Themes.spacingLarge,
-              children: [
-                // Title.
-                Text(
-                  strings.filtersTitle,
-                  style: theme.textTheme.headlineSmall,
-                ),
-
-                SearchBar(
-                  leading: const Icon(Icons.search_rounded),
-                  onChanged: (String value) {
-                    // Save the query string for filtering.
-                    setState(() {
-                      _filters.titleFilter = value;
-                    });
-                  },
-                ),
-
-                // Authors selection.
-                AuthorsSelectionWidget(
-                  inSelectedIds: _filters.authorsFilter.toList(),
-                  onAuthorsSelected: (Set<int?> selectedAuthorIds) {
-                    setState(() {
-                      _filters.authorsFilter.addAll(selectedAuthorIds);
-                    });
-                  },
-                  onAuthorUnselected: (int? unselectedAuthorId) {
-                    setState(() {
-                      _filters.authorsFilter.remove(unselectedAuthorId);
-                    });
-                  },
-                ),
-
-                // Genres selection.
-                GenresSelectionWidget(
-                  inSelectedIds: _filters.genresFilter.toList(),
-                  onGenresSelected: (Set<int?> selectedGenreIds) {
-                    setState(() {
-                      _filters.genresFilter.addAll(selectedGenreIds);
-                    });
-                  },
-                  onGenreUnselected: (int? unselectedGenreId) {
-                    setState(() {
-                      _filters.genresFilter.remove(unselectedGenreId);
-                    });
-                  },
-                ),
-
-                // Publishers selection.
-                PublishersSelectionWidget(
-                  inSelectedIds: _filters.publishersFilter.toList(),
-                  onPublishersSelected: (Set<int?> selectedPublisherIds) {
-                    setState(() {
-                      _filters.publishersFilter.addAll(selectedPublisherIds);
-                    });
-                  },
-                  onPublisherUnselected: (int? unselectedPublisherId) {
-                    setState(() {
-                      _filters.publishersFilter.remove(unselectedPublisherId);
-                    });
-                  },
-                ),
-
-                // FAB spacing.
-                SizedBox(
-                  height: Themes.spacingFAB,
-                )
-              ],
+          Align(
+            alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                spacing: Themes.spacingLarge,
+                children: [
+                  // Title.
+                  Text(
+                    strings.filtersTitle,
+                    style: theme.textTheme.headlineSmall,
+                  ),
+            
+                  // Search bar.
+                  SizedBox(
+                  width: min(screenSize.width, Themes.maxContentWidth),
+                    child: SearchBar(
+                      leading: const Icon(Icons.search_rounded),
+                      onChanged: (String value) {
+                        // Save the query string for filtering.
+                        setState(() {
+                          _filters.titleFilter = value;
+                        });
+                      },
+                    ),
+                  ),
+            
+                  // Authors selection.
+                  AuthorsSelectionWidget(
+                    inSelectedIds: _filters.authorsFilter.toList(),
+                    onAuthorsSelected: (Set<int?> selectedAuthorIds) {
+                      setState(() {
+                        _filters.authorsFilter.addAll(selectedAuthorIds);
+                      });
+                    },
+                    onAuthorUnselected: (int? unselectedAuthorId) {
+                      setState(() {
+                        _filters.authorsFilter.remove(unselectedAuthorId);
+                      });
+                    },
+                  ),
+            
+                  // Genres selection.
+                  GenresSelectionWidget(
+                    inSelectedIds: _filters.genresFilter.toList(),
+                    onGenresSelected: (Set<int?> selectedGenreIds) {
+                      setState(() {
+                        _filters.genresFilter.addAll(selectedGenreIds);
+                      });
+                    },
+                    onGenreUnselected: (int? unselectedGenreId) {
+                      setState(() {
+                        _filters.genresFilter.remove(unselectedGenreId);
+                      });
+                    },
+                  ),
+            
+                  // Publishers selection.
+                  PublishersSelectionWidget(
+                    inSelectedIds: _filters.publishersFilter.toList(),
+                    onPublishersSelected: (Set<int?> selectedPublisherIds) {
+                      setState(() {
+                        _filters.publishersFilter.addAll(selectedPublisherIds);
+                      });
+                    },
+                    onPublisherUnselected: (int? unselectedPublisherId) {
+                      setState(() {
+                        _filters.publishersFilter.remove(unselectedPublisherId);
+                      });
+                    },
+                  ),
+            
+                  // FAB spacing.
+                  SizedBox(
+                    height: Themes.spacingFAB,
+                  )
+                ],
+              ),
             ),
           ),
 

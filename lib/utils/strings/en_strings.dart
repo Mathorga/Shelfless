@@ -3,6 +3,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 /// English strings.
 class EnStrings implements Strings {
   @override String get settings => "Settings";
+  @override String get privacyPolicyLabel => "Privacy policy";
   @override String get licensesLabel => "Licenses";
   @override String get supportLabel => "Contact support";
   @override String get librariesTitle => "Libraries";
