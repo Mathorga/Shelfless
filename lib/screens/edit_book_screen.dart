@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,10 +25,12 @@ class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
 
   final Book? book;
+  final void Function(Book book)? onDone;
 
   const EditBookScreen({
     super.key,
     this.book,
+    this.onDone,
   });
 
   @override
@@ -51,6 +51,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
     _inserting = widget.book == null;
 
+    // The book is copied in order not to edit the original one by mistake.
     _book = widget.book != null
         ? widget.book!.copy()
         : Book(
@@ -422,6 +423,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
               return;
             }
+
+            widget.onDone?.call(_book);
 
             // Actually save the book.
             _inserting ? LibraryContentProvider.instance.storeNewBook(_book) : LibraryContentProvider.instance.storeBookUpdate(_book);

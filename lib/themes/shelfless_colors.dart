@@ -5,7 +5,7 @@ class ShelflessColors {
   static const Color glyderDark = Color(0xFF633BFF);
 
   static const Color primary = Color(0xFFFFD118);
-  static const Color secondary = Color(0xFFFFB218);
+  static const Color secondary = Color(0xFFFF9F18);
   static const Color error = Color(0xFFE57373);
 
   static const Color mainContentActive = Color(0xFF5C5C5C);

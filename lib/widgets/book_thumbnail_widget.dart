@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/unavailable_content_widget.dart';
 
 /// Displays a book thumbnail image.
 class BookThumbnailWidget extends StatelessWidget {
@@ -60,8 +62,10 @@ class BookThumbnailWidget extends StatelessWidget {
                     ? Banner(
                         message: strings.outLabel,
                         location: BannerLocation.topEnd,
-                        color: Theme.of(context).colorScheme.error,
-                        child: _buildThumbImage(),
+                        color: ShelflessColors.secondary,
+                        child: UnavailableContentWidget(
+                          child: _buildThumbImage(),
+                        ),
                       )
                     : _buildThumbImage(),
               ),

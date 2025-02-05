@@ -32,7 +32,7 @@ class EnStrings implements Strings {
   @override String get bookEdit => "Edit";
   @override String get bookMoveTo => "Move to";
   @override String get bookMarkOutAction => "Mark as out";
-  @override String get bookMarkInAction => "Mark as back in";
+  @override String get bookMarkInAction => "Mark back in";
   @override String get bookDeleteAction => "Delete";
   @override String get bookDeleted => "Book deleted";
   @override String get deleteBookTitle => "Deleting book";

@@ -7,8 +7,8 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/strings/strings.dart';
-import 'package:shelfless/widgets/book_preview_widget.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 
 class BookDetailScreen extends StatefulWidget {
@@ -24,6 +24,15 @@ class BookDetailScreen extends StatefulWidget {
 }
 
 class _BookDetailScreenState extends State<BookDetailScreen> {
+  late Book _book;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _book = widget.book;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -33,11 +42,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         actions: [
-          PopupMenuButton<BookAction>(
+          PopupMenuButton<ElementAction>(
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem(
-                  value: BookAction.edit,
+                  value: ElementAction.edit,
                   child: Row(
                     spacing: Themes.spacingSmall,
                     children: [
@@ -47,7 +56,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                   ),
                 ),
                 PopupMenuItem(
-                  value: BookAction.delete,
+                  value: ElementAction.delete,
                   child: Row(
                     spacing: Themes.spacingSmall,
                     children: [
@@ -58,19 +67,22 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 ),
               ];
             },
-            onSelected: (BookAction value) async {
+            onSelected: (ElementAction value) async {
               switch (value) {
-                case BookAction.edit:
+                case ElementAction.edit:
                   // Open EditBookScreen.
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => EditBookScreen(
-                      book: widget.book,
+                      book: _book,
+                      onDone: (Book book) => setState(() {
+                        _book = book;
+                      }),
                     ),
                   ));
                   break;
-                case BookAction.moveTo:
+                case ElementAction.moveTo:
                   break;
-                case BookAction.delete:
+                case ElementAction.delete:
                   final NavigatorState navigator = Navigator.of(context);
 
                   await showDialog(
@@ -96,7 +108,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
 
                             // Delete the book.
-                            await LibraryContentProvider.instance.deleteBook(widget.book);
+                            await LibraryContentProvider.instance.deleteBook(_book);
 
                             messenger.showSnackBar(
                               SnackBar(
@@ -159,7 +171,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: Image.memory(
-                  widget.book.raw.cover!,
+                  _book.raw.cover!,
                   fit: BoxFit.cover,
                   isAntiAlias: false,
                   filterQuality: FilterQuality.none,
@@ -182,7 +194,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                     ),
                     Center(
                       child: BookThumbnailWidget(
-                        book: widget.book,
+                        book: _book,
                         showOutBanner: true,
                       ),
                     ),
@@ -191,14 +203,16 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
 
                 // Title, edition and publication year.
                 Column(
+                  spacing: Themes.spacingSmall,
                   children: [
                     // TItle.
                     Center(
                       child: Text(
-                        widget.book.raw.title,
+                        _book.raw.title,
                         style: theme.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
 
@@ -207,7 +221,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                     // Publication year.
                     Center(
                       child: Text(
-                        "${widget.book.raw.publishYear}",
+                        "${_book.raw.publishYear}",
                       ),
                     ),
                   ],
@@ -227,7 +241,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             padding: const EdgeInsets.all(Themes.spacingMedium),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: widget.book.authorIds.map((int authorId) => Text(LibraryContentProvider.instance.authors[authorId].toString())).toList(),
+                              children: _book.authorIds.map((int authorId) => Text(LibraryContentProvider.instance.authors[authorId].toString())).toList(),
                             ),
                           ),
                         ],
@@ -245,7 +259,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             padding: const EdgeInsets.all(Themes.spacingMedium),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
-                              children: widget.book.genreIds.map((int genreId) => Text(LibraryContentProvider.instance.genres[genreId].toString())).toList(),
+                              children: _book.genreIds.map((int genreId) => Text(LibraryContentProvider.instance.genres[genreId].toString())).toList(),
                             ),
                           ),
                         ],
@@ -268,11 +282,11 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           onPressed: () {
                             setState(() {
                               // Update book and store the update in DB.
-                              widget.book.raw.out = !widget.book.raw.out;
+                              _book.raw.out = !_book.raw.out;
                             });
-                            LibraryContentProvider.instance.storeBookUpdate(widget.book);
+                            LibraryContentProvider.instance.storeBookUpdate(_book);
                           },
-                          label: widget.book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction,
+                          label: _book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction,
                         ),
                       ),
                       Expanded(

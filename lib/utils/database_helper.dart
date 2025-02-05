@@ -580,12 +580,38 @@ class DatabaseHelper {
       whereArgs: [book.raw.id],
     );
 
-    // Insert new records in all relationship tables as well.
+    // Delete all deleted relations.
+    await _db.delete(
+      bookAuthorRelTable,
+      where: "${bookAuthorRelTable}_book_id = ? AND ${bookAuthorRelTable}_author_id NOT IN (?)",
+      whereArgs: [
+        book.raw.id,
+        book.authorIds.map((int authorId) => "$authorId").reduce((String value, String element) => "$value, $element"),
+      ],
+    );
+    await _db.delete(
+      bookGenreRelTable,
+      where: "${bookGenreRelTable}_book_id = ? AND ${bookGenreRelTable}_genre_id NOT IN (?)",
+      whereArgs: [
+        book.raw.id,
+        book.genreIds.map((int genreId) => "$genreId").reduce((String value, String element) => "$value, $element"),
+      ],
+    );
+
+    // Insert new records in all relationship tables.
     for (Map<String, dynamic> authorRelMap in book.authorsMaps()) {
-      await _db.insert(bookAuthorRelTable, authorRelMap);
+      await _db.insert(
+        bookAuthorRelTable,
+        authorRelMap,
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
     }
     for (Map<String, dynamic> genreRelMap in book.genresMaps()) {
-      await _db.insert(bookGenreRelTable, genreRelMap);
+      await _db.insert(
+        bookGenreRelTable,
+        genreRelMap,
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
     }
   }
 

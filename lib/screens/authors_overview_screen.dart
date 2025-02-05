@@ -27,10 +27,9 @@ class AuthorsOverviewScreen extends StatelessWidget {
             ? Center(
                 child: Text(strings.noAuthorsFound),
               )
-            : GridView.count(
+            : ListView(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(12.0),
-                crossAxisCount: 2,
                 children: [
                   ...List.generate(
                     LibraryContentProvider.instance.authors.length,
@@ -41,42 +40,21 @@ class AuthorsOverviewScreen extends StatelessWidget {
                       // Prefetch the genre for later use.
                       Author? author = LibraryContentProvider.instance.authors.values.toList()[index];
 
-                      return Stack(
-                        children: [
-                          SizedBox(
-                            height: double.infinity,
-                            child: AuthorPreviewWidget(
-                              author: author,
-                              onTap: () {
-                                // if (!librariesProvider.currentLibrary!.books.any((Book book) => book.authors.contains(authors[index]))) {
-                                //   return;
-                                // }
-
-                                // Navigator.of(context).push(
-                                //   MaterialPageRoute(
-                                //     builder: (BuildContext context) => BooksScreen(
-                                //       authors: {authors[index]},
-                                //     ),
-                                //   ),
-                                // );
-                              },
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                              onPressed: () {
-                                // Edit the selected author.
-                                // Navigator.of(context).push(
-                                //   MaterialPageRoute(
-                                //     builder: (BuildContext context) => AuthorInfoScreen(author: authors[index]),
-                                //   ),
-                                // );
-                              },
-                              icon: const Icon(Icons.settings_rounded),
-                            ),
-                          ),
-                        ],
+                      return AuthorPreviewWidget(
+                        author: author,
+                        onTap: () {
+                          // if (!librariesProvider.currentLibrary!.books.any((Book book) => book.authors.contains(authors[index]))) {
+                          //   return;
+                          // }
+                                            
+                          // Navigator.of(context).push(
+                          //   MaterialPageRoute(
+                          //     builder: (BuildContext context) => BooksScreen(
+                          //       authors: {authors[index]},
+                          //     ),
+                          //   ),
+                          // );
+                        },
                       );
                     },
                   ),

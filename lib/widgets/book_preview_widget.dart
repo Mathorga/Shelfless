@@ -6,14 +6,9 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
-
-enum BookAction {
-  edit,
-  moveTo,
-  delete,
-}
 
 class BookPreviewWidget extends StatelessWidget {
   final Book book;
@@ -40,9 +35,9 @@ class BookPreviewWidget extends StatelessWidget {
         spacing: Themes.spacingMedium,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Opacity(
-            opacity: book.raw.out ? Themes.unavailableFeatureOpacity : 1.0,
-            child: BookThumbnailWidget(book: book),
+          BookThumbnailWidget(
+            book: book,
+            showOutBanner: true,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Themes.spacingSmall),
@@ -80,11 +75,11 @@ class BookPreviewWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                PopupMenuButton<BookAction>(
+                PopupMenuButton<ElementAction>(
                   itemBuilder: (BuildContext context) {
                     return [
                       PopupMenuItem(
-                        value: BookAction.edit,
+                        value: ElementAction.edit,
                         child: Row(
                           spacing: Themes.spacingSmall,
                           children: [
@@ -94,7 +89,7 @@ class BookPreviewWidget extends StatelessWidget {
                         ),
                       ),
                       PopupMenuItem(
-                        value: BookAction.moveTo,
+                        value: ElementAction.moveTo,
                         enabled: false,
                         child: Row(
                           spacing: Themes.spacingSmall,
@@ -105,7 +100,7 @@ class BookPreviewWidget extends StatelessWidget {
                         ),
                       ),
                       PopupMenuItem(
-                        value: BookAction.delete,
+                        value: ElementAction.delete,
                         child: Row(
                           spacing: Themes.spacingSmall,
                           children: [
@@ -116,9 +111,9 @@ class BookPreviewWidget extends StatelessWidget {
                       ),
                     ];
                   },
-                  onSelected: (BookAction value) {
+                  onSelected: (ElementAction value) {
                     switch (value) {
-                      case BookAction.edit:
+                      case ElementAction.edit:
                         // Open EditBookScreen.
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) => EditBookScreen(
@@ -126,7 +121,7 @@ class BookPreviewWidget extends StatelessWidget {
                           ),
                         ));
                         break;
-                      case BookAction.moveTo:
+                      case ElementAction.moveTo:
                         showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
@@ -141,7 +136,7 @@ class BookPreviewWidget extends StatelessWidget {
                           ),
                         );
                         break;
-                      case BookAction.delete:
+                      case ElementAction.delete:
                         showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
