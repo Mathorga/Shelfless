@@ -7,7 +7,7 @@ import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/author_preview_widget.dart';
 
-class AuthorsOverviewScreen extends StatelessWidget {
+class AuthorsOverviewScreen extends StatefulWidget {
   final String searchValue;
 
   const AuthorsOverviewScreen({
@@ -16,8 +16,19 @@ class AuthorsOverviewScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  State<AuthorsOverviewScreen> createState() => _AuthorsOverviewScreenState();
+}
 
+class _AuthorsOverviewScreenState extends State<AuthorsOverviewScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    LibraryContentProvider.instance.addListener(() => setState(() {}));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text(strings.authorsSectionTitle),
@@ -46,7 +57,7 @@ class AuthorsOverviewScreen extends StatelessWidget {
                           // if (!librariesProvider.currentLibrary!.books.any((Book book) => book.authors.contains(authors[index]))) {
                           //   return;
                           // }
-                                            
+
                           // Navigator.of(context).push(
                           //   MaterialPageRoute(
                           //     builder: (BuildContext context) => BooksScreen(

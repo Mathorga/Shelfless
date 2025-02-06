@@ -23,6 +23,11 @@ class Strings {
   String get ok => "";
   String get confirm => "";
   String get cancel => "";
+  String get genericCannotDelete => "";
+  String get cannotDeleteAuthorContent => "";
+  String get authorDeleted => "";
+  String get deleteAuthorTitle => "";
+  String get deleteAuthorContent => "";
   String get authorInfo => "";
   String get genreInfo => "";
   String get publisherInfo => "";

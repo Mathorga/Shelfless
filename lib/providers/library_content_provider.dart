@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/author.dart';
@@ -118,6 +119,11 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns true if [author] is not referenced in any book.
+  Future<bool> isAuthorRogue(Author author) async {
+    return await DatabaseHelper.instance.isAuthorRogue(author);
+  }
+
   Future<void> addAuthor(Author author) async {
     // Save the provided author to DB.
     await DatabaseHelper.instance.insertAuthor(author);
@@ -131,6 +137,15 @@ class LibraryContentProvider with ChangeNotifier {
   Future<void> updateAuthor(Author author) async {
     // Update the provided author in DB.
     await DatabaseHelper.instance.updateAuthor(author);
+
+    notifyListeners();
+  }
+
+  /// Delete the provided author from DB.
+  Future<void> deleteAuthor(Author author) async {
+    await DatabaseHelper.instance.deleteAuthor(author);
+
+    authors.remove(author.id);
 
     notifyListeners();
   }

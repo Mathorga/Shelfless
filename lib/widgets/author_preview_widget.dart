@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/author.dart';
+import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -71,7 +72,7 @@ class AuthorPreviewWidget extends StatelessWidget {
                       ),
                     ];
                   },
-                  onSelected: (ElementAction value) {
+                  onSelected: (ElementAction value) async {
                     switch (value) {
                       case ElementAction.edit:
                         // Open EditAuthorScreen.
@@ -82,57 +83,71 @@ class AuthorPreviewWidget extends StatelessWidget {
                         ));
                         break;
                       case ElementAction.delete:
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: Text(strings.deleteBookTitle),
-                            content: Text(strings.deleteBookContent),
-                            actions: [
-                              // Cancel button.
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: ShelflessColors.onMainContentActive,
-                                ),
-                                child: Text(strings.cancel),
+                        final bool authorIsRogue = await LibraryContentProvider.instance.isAuthorRogue(author);
+
+                        if (context.mounted) {
+                          if (!authorIsRogue) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: Text(strings.genericCannotDelete),
+                                content: Text(strings.cannotDeleteAuthorContent),
                               ),
+                            );
+                            return;
+                          }
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text(strings.deleteBookTitle),
+                              content: Text(strings.deleteBookContent),
+                              actions: [
+                                // Cancel button.
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: ShelflessColors.onMainContentActive,
+                                  ),
+                                  child: Text(strings.cancel),
+                                ),
 
-                              // Confirm button.
-                              ElevatedButton(
-                                onPressed: () async {
-                                  // Prefetch handlers before async gaps.
-                                  final NavigatorState navigator = Navigator.of(context);
-                                  final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+                                // Confirm button.
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    // Prefetch handlers before async gaps.
+                                    final NavigatorState navigator = Navigator.of(context);
+                                    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
 
-                                  // Delete the book.
-                                  // await LibraryContentProvider.instance.deleteBook(book);
+                                    // Delete the author.
+                                    await LibraryContentProvider.instance.deleteAuthor(author);
 
-                                  messenger.showSnackBar(
-                                    SnackBar(
-                                      // margin: const EdgeInsets.all(Themes.spacingMedium),
-                                      duration: Themes.durationShort,
-                                      behavior: SnackBarBehavior.floating,
-                                      width: Themes.snackBarSizeSmall,
-                                      content: Text(
-                                        strings.bookDeleted,
-                                        textAlign: TextAlign.center,
+                                    messenger.showSnackBar(
+                                      SnackBar(
+                                        // margin: const EdgeInsets.all(Themes.spacingMedium),
+                                        duration: Themes.durationShort,
+                                        behavior: SnackBarBehavior.floating,
+                                        width: Themes.snackBarSizeSmall,
+                                        content: Text(
+                                          strings.authorDeleted,
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
 
-                                  // Pop back.
-                                  navigator.pop();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: ShelflessColors.error,
-                                  iconColor: ShelflessColors.onMainContentActive,
-                                  foregroundColor: ShelflessColors.onMainContentActive,
+                                    // Pop back.
+                                    navigator.pop();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: ShelflessColors.error,
+                                    iconColor: ShelflessColors.onMainContentActive,
+                                    foregroundColor: ShelflessColors.onMainContentActive,
+                                  ),
+                                  child: Text(strings.ok),
                                 ),
-                                child: Text(strings.ok),
-                              ),
-                            ],
-                          ),
-                        );
+                              ],
+                            ),
+                          );
+                        }
                         break;
                       default:
                         break;

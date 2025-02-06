@@ -484,6 +484,18 @@ class DatabaseHelper {
   // Author CRUDs.
   // ###############################################################################################################################################################################
 
+  /// Returns true if [author] is not referenced in any book.
+  Future<bool> isAuthorRogue(Author author) async {
+    final List<Map<String, dynamic>> rawData = await _db.query(
+      bookAuthorRelTable,
+      where: "${bookAuthorRelTable}_author_id = ?",
+      whereArgs: [author.id],
+      limit: 1,
+    );
+
+    return rawData.isEmpty;
+  }
+
   Future<List<Author>> getAuthors() async {
     final List<Map<String, dynamic>> rawData = await _db.query(authorsTable);
     return rawData.map((Map<String, dynamic> element) => Author.fromMap(element)).toList();
@@ -508,6 +520,14 @@ class DatabaseHelper {
     await _db.update(
       authorsTable,
       author.toMap(),
+      where: "${authorsTable}_id = ?",
+      whereArgs: [author.id],
+    );
+  }
+
+  Future<void> deleteAuthor(Author author) async {
+    await _db.delete(
+      authorsTable,
       where: "${authorsTable}_id = ?",
       whereArgs: [author.id],
     );

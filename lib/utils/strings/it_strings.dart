@@ -23,6 +23,11 @@ class ItStrings implements Strings {
   @override String get ok => "OK";
   @override String get confirm => "Conferma";
   @override String get cancel => "Annulla";
+  @override String get genericCannotDelete => "Impossibile cancellare";
+  @override String get cannotDeleteAuthorContent => "Questo autore compare ancora in alcuni libri.\nCancellali o modificali e poi riprova";
+  @override String get authorDeleted => "Autore eliminato";
+  @override String get deleteAuthorTitle => "Elimina";
+  @override String get deleteAuthorContent => "Vuoi davvero eliminare questo autore?\nL'operazione è irreversibile.";
   @override String get authorInfo => "Scheda Autore";
   @override String get genreInfo => "Scheda Genere";
   @override String get publisherInfo => "Scheda Editore";
@@ -38,7 +43,7 @@ class ItStrings implements Strings {
   @override String get bookDeleteAction => "Elimina";
   @override String get bookDeleted => "Libro cancellato";
   @override String get deleteBookTitle => "Eliminazione";
-  @override String get deleteBookContent => "Vuoi davvero eliminare questo libro?\nL'operazione sarà irreversibile.";
+  @override String get deleteBookContent => "Vuoi davvero eliminare questo libro?\nL'operazione è irreversibile.";
   @override String get bookInfoTitle => "Titolo";
   @override String get bookInfoThumbnail => "Copertina";
   @override String get bookInfoNoImageSelected => "nessuna immagine selezionata";
