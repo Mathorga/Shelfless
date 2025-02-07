@@ -10,7 +10,10 @@ class SearchListWidget<T> extends StatefulWidget {
   final void Function(Set<T>)? onElementsSelected;
   final void Function()? onCancel;
   final bool multiple;
-  final List<T> children;
+  final List<T> values;
+
+  /// List of all preselected values.
+  final List<T> selectedValues;
 
   const SearchListWidget({
     super.key,
@@ -19,7 +22,8 @@ class SearchListWidget<T> extends StatefulWidget {
     this.onElementsSelected,
     this.onCancel,
     this.multiple = false,
-    this.children = const [],
+    this.values = const [],
+    this.selectedValues = const [],
   });
 
   @override
@@ -31,12 +35,19 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   final Set<T> _selection = {};
 
   @override
+  void initState() {
+    super.initState();
+
+    _selection.addAll(widget.selectedValues);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         TextFormField(
-          decoration: const InputDecoration(labelText: "Search"),
+          decoration: InputDecoration(labelText: strings.search),
           onChanged: (String? value) {
             setState(() {
               _filter = value?.toLowerCase();
@@ -49,7 +60,7 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
             physics: Themes.scrollPhysics,
             child: Column(
               children: [
-                ...widget.children
+                ...widget.values
                     .where(
                       (T element) => widget.filter(element, _filter),
                     )
@@ -71,7 +82,9 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
                             ),
                           Expanded(
                             child: GestureDetector(
-                              onTap: !widget.multiple && widget.onElementsSelected != null ? () => widget.onElementsSelected!({element}) : null,
+                              onTap: widget.multiple
+                                  ? () => setState(() => _selection.contains(element) ? _selection.remove(element) : _selection.add(element))
+                                  : () => widget.onElementsSelected?.call({element}),
                               child: widget.builder(element),
                             ),
                           ),

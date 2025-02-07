@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
@@ -7,6 +8,7 @@ import 'package:image/image.dart' as img;
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/raw_book.dart';
+import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
@@ -16,6 +18,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
+import 'package:shelfless/widgets/location_preview_widget.dart';
 import 'package:shelfless/widgets/publisher_preview_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
@@ -103,35 +106,55 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     children: [
                       Text(strings.bookInfoThumbnail),
                       Center(
-                        child: SizedBox(
-                          width: Themes.thumbnailSizeMedium,
-                          height: Themes.thumbnailSizeMedium,
-                          child: GestureDetector(
-                            onTap: _pickImage,
-                            child: _book.raw.cover != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(Themes.radiusMedium),
-                                    child: Image.memory(
-                                      _book.raw.cover!,
-                                      fit: BoxFit.cover,
-                                      isAntiAlias: false,
-                                      filterQuality: FilterQuality.none,
-                                    ),
-                                  )
-                                : Card(
-                                    color: ShelflessColors.mainContentActive,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        spacing: Themes.spacingSmall,
-                                        children: [
-                                          Icon(Icons.image_rounded),
-                                          Text(strings.bookInfoNoImageSelected),
-                                        ],
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                              width: Themes.thumbnailSizeMedium,
+                              height: Themes.thumbnailSizeMedium,
+                              child: GestureDetector(
+                                onTap: _pickImage,
+                                child: _book.raw.cover != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(Themes.radiusMedium),
+                                        child: Image.memory(
+                                          _book.raw.cover!,
+                                          fit: BoxFit.cover,
+                                          isAntiAlias: false,
+                                          filterQuality: FilterQuality.none,
+                                        ),
+                                      )
+                                    : Card(
+                                        color: ShelflessColors.mainContentActive,
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            spacing: Themes.spacingSmall,
+                                            children: [
+                                              Icon(Icons.image_rounded),
+                                              Text(strings.bookInfoNoImageSelected),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                          ),
+                              ),
+                            ),
+
+                            // Only show the remove cover button if a cover is actually selected.
+                            if (_book.raw.cover != null)
+                              Positioned(
+                                top: Themes.spacingSmall,
+                                right: Themes.spacingSmall,
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _book.raw.cover = null;
+                                    });
+                                  },
+                                  style: IconButton.styleFrom(backgroundColor: ShelflessColors.error),
+                                  icon: Icon(Icons.close_rounded),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     ],
@@ -142,33 +165,11 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     inSelectedIds: _book.authorIds,
                     insertNew: true,
                     onAuthorsSelected: (Set<int?> selectedAuthorIds) {
-                      bool duplicates = false;
-                      Set<int> authorIds = {};
-                      for (int? authorId in selectedAuthorIds) {
-                        // Make sure the authorId is not null.
-                        if (authorId == null) continue;
-
-                        if (!_book.authorIds.contains(authorId)) {
-                          authorIds.add(authorId);
-                        } else {
-                          duplicates = true;
-                        }
-                      }
-
-                      if (duplicates) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(strings.authorAlreadyAdded),
-                            duration: const Duration(milliseconds: 1000),
-                          ),
-                        );
-                      }
-
-                      LibraryContentProvider.instance.addAuthorsToBook(authorIds, _book);
+                      setState(() {
+                        _book.authorIds = selectedAuthorIds.nonNulls.toList();
+                      });
                     },
                     onAuthorUnselected: (int authorId) {
-                      // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
-                      // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
                       setState(() {
                         _book.authorIds.remove(authorId);
                       });
@@ -288,7 +289,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   });
 
                                   return SearchListWidget<int?>(
-                                    children: LibraryContentProvider.instance.publishers.keys.toList(),
+                                    values: LibraryContentProvider.instance.publishers.keys.toList(),
                                     filter: (int? publisherId, String? filter) => filter != null ? publisherId.toString().toLowerCase().contains(filter) : true,
                                     builder: (int? publisherId) {
                                       final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
@@ -333,50 +334,65 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(strings.bookInfoLocation),
-                          // if (_book.locationId == null)
-                          // DialogButtonWidget(
-                          //   label: Text(strings.select),
-                          //   title: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       Text(strings.locations),
-                          //       TextButton(
-                          //         onPressed: () {
-                          //           // Navigator.of(context).pushNamed(EditLocationScreen.routeName);
-                          //         },
-                          //         child: Text(strings.add),
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   content: Consumer<StoreLocationsProvider>(
-                          //     builder: (BuildContext context, StoreLocationsProvider provider, Widget? child) => SearchListWidget<StoreLocation>(
-                          //       children: provider.locations,
-                          //       filter: (StoreLocation location, String? filter) => filter != null ? location.toString().toLowerCase().contains(filter) : true,
-                          //       builder: (StoreLocation location) => ListTile(
-                          //         leading: Text(location.name),
-                          //         onTap: () {
-                          //           // Set the book location.
-                          //           setState(() {
-                          //             _book.location = location;
-                          //           });
-                          //           Navigator.of(context).pop();
-                          //         },
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
+                          if (_book.raw.locationId == null)
+                            DialogButtonWidget(
+                              label: Text(strings.select),
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(strings.locations),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (BuildContext context) => EditPublisherScreen(),
+                                      ));
+                                    },
+                                    child: Text(strings.add),
+                                  ),
+                                ],
+                              ),
+                              content: StatefulBuilder(
+                                builder: (BuildContext context, void Function(void Function()) setState) {
+                                  LibraryContentProvider.instance.addListener(() {
+                                    if (context.mounted) setState(() {});
+                                  });
+
+                                  return SearchListWidget<int?>(
+                                    values: LibraryContentProvider.instance.locations.keys.toList(),
+                                    filter: (int? locationId, String? filter) => filter != null ? locationId.toString().toLowerCase().contains(filter) : true,
+                                    builder: (int? locationId) {
+                                      final StoreLocation? location = LibraryContentProvider.instance.locations[locationId];
+
+                                      if (location == null) return Placeholder();
+
+                                      return LocationPreviewWidget(
+                                        location: location,
+                                        // onTap: () {
+                                        //   // Make sure the publisherId is not null.
+                                        //   if (locationId == null) return;
+
+                                        //   // Set the book location.
+                                        //   LibraryContentProvider.instance.addPublisherToBook(locationId, _book);
+                                        //   Navigator.of(context).pop();
+                                        // },
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
                         ],
                       ),
-                      // if (_book.location != null)
-                      //   Column(
-                      //     children: [
-                      //       Themes.spacer,
-                      //       Padding(
-                      //         padding: const EdgeInsets.all(12.0),
-                      //         child: _buildLocationPreview(_book.location!),
-                      //       ),
-                      //     ],
-                      //   ),
+                      if (_book.raw.locationId != null)
+                        Column(
+                          children: [
+                            Themes.spacer,
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: _buildPublisherPreview(_book.raw.locationId!),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
 
@@ -426,7 +442,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
             widget.onDone?.call(_book);
 
-            // Actually save the book.
+            // Actually save the book by upsert.
             _inserting ? LibraryContentProvider.instance.storeNewBook(_book) : LibraryContentProvider.instance.storeBookUpdate(_book);
 
             navigator.pop();
@@ -460,14 +476,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
   }
 
-  // Widget _buildLocationPreview(StoreLocation location) => _buildPreview(
-  //       LocationPreviewWidget(location: location),
-  //       onDelete: () {
-  //         setState(() {
-  //           _book.location = null;
-  //         });
-  //       },
-  //     );
+  Widget _buildLocationPreview(StoreLocation location) => _buildPreview(
+        LocationPreviewWidget(location: location),
+        onDelete: () {
+          setState(() {
+            _book.raw.locationId = null;
+          });
+        },
+      );
 
   Widget _buildPreview(Widget child, {void Function()? onDelete}) {
     return Row(

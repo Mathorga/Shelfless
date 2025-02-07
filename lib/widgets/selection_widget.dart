@@ -26,7 +26,6 @@ class SelectionWidget extends StatelessWidget {
   final void Function()? onInsertNewRequested;
   final bool Function(int? id, String? filter) listItemsFilter;
   final Widget Function(int? id) listItemBuilder;
-  // final List<int?> Function() getSourceIds;
   final List<int?> selecteIds;
   final void Function(Set<int?> ids)? onItemsSelected;
   final void Function(int id)? onItemUnselected;
@@ -38,7 +37,6 @@ class SelectionWidget extends StatelessWidget {
     this.onInsertNewRequested,
     required this.listItemsFilter,
     required this.listItemBuilder,
-    // required this.getSourceIds,
     List<int?>? inSelectedIds,
     this.onItemsSelected,
     this.onItemUnselected,
@@ -73,7 +71,8 @@ class SelectionWidget extends StatelessWidget {
                   });
 
                   return SearchListWidget<int?>(
-                    children: controller.sourceIds,
+                    values: controller.sourceIds,
+                    selectedValues: selecteIds,
                     multiple: true,
                     filter: listItemsFilter,
                     builder: listItemBuilder,

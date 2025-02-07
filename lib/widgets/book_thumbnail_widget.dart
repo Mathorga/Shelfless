@@ -53,33 +53,43 @@ class BookThumbnailWidget extends StatelessWidget {
                 ],
         ),
       ),
-      child: book.raw.cover != null
-          ? Padding(
-              padding: const EdgeInsets.all(coverPadding),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(innerRadius),
-                child: book.raw.out && showOutBanner
-                    ? Banner(
-                        message: strings.outLabel,
-                        location: BannerLocation.topEnd,
-                        color: ShelflessColors.secondary,
-                        child: UnavailableContentWidget(
-                          child: _buildThumbImage(),
-                        ),
-                      )
-                    : _buildThumbImage(),
-              ),
-            )
-          : null,
+      child: Padding(
+        padding: const EdgeInsets.all(coverPadding),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(innerRadius),
+          child: book.raw.out && showOutBanner
+              ? Banner(
+                  message: strings.outLabel,
+                  location: BannerLocation.topEnd,
+                  color: ShelflessColors.secondary,
+                  child: UnavailableContentWidget(
+                    child: _buildThumbImage(),
+                  ),
+                )
+              : _buildThumbImage(),
+        ),
+      ),
     );
   }
 
   Widget _buildThumbImage() {
-    return Image.memory(
-      book.raw.cover!,
-      fit: BoxFit.cover,
-      isAntiAlias: false,
-      filterQuality: FilterQuality.none,
-    );
+    return book.raw.cover != null
+        ? Image.memory(
+            book.raw.cover!,
+            fit: BoxFit.cover,
+            isAntiAlias: false,
+            filterQuality: FilterQuality.none,
+          )
+        : Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: ShelflessColors.error,
+            child: Center(
+              child: Text(
+                "TODO PLACE STOCK IMAGE HERE",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
   }
 }
