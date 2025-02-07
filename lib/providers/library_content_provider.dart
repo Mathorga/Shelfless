@@ -59,19 +59,17 @@ class LibraryContentProvider with ChangeNotifier {
       titleFilter: _filters.titleFilter,
       authorsFilter: _filters.authorsFilter,
       genresFilter: _filters.genresFilter,
+      publishersFilter: _filters.publishersFilter,
     );
     books.addAll(tmpBooks);
 
     // Fetch ALL other data.
     genres.addAll(Map.fromEntries((await DatabaseHelper.instance.getGenres()).map((RawGenre rawGenre) => MapEntry(rawGenre.id, rawGenre))));
     authors.addAll(Map.fromEntries((await DatabaseHelper.instance.getAuthors()).map((Author rawAuthor) => MapEntry(rawAuthor.id, rawAuthor))));
+    publishers.addAll(Map.fromEntries((await DatabaseHelper.instance.getPublishers()).map((Publisher publisher) => MapEntry(publisher.id, publisher))));
+    // TODO Fetch locations.
 
     notifyListeners();
-  }
-
-  List<RawGenre> getBookAuthors(Book book) {
-    // TODO
-    return [];
   }
 
   Future<void> storeNewBook(Book book) async {

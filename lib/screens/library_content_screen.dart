@@ -51,17 +51,19 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     // Start listening to changes in library content.
     LibraryContentProvider.instance.addListener(
       () {
-        // Here setState must be called regardless of the internal state, otherwise changes will be noticed only on library change.
-        setState(() {
-          final RawLibrary? providerLibrary = LibraryContentProvider.instance.library;
+        if (context.mounted) {
+          // Here setState must be called regardless of the internal state, otherwise changes will be noticed only on library change.
+          setState(() {
+            final RawLibrary? providerLibrary = LibraryContentProvider.instance.library;
 
-          // Make sure the provider's library is not null and it's not the one the user's already seeing.
-          if (providerLibrary != null && library.raw != providerLibrary) {
-            library = LibraryPreview(
-              raw: providerLibrary,
-            );
-          }
-        });
+            // Make sure the provider's library is not null and it's not the one the user's already seeing.
+            if (providerLibrary != null && library.raw != providerLibrary) {
+              library = LibraryPreview(
+                raw: providerLibrary,
+              );
+            }
+          });
+        }
       },
     );
 
@@ -77,7 +79,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final double itemWidth = 200.0;
     final double itemHeight = 280.0;
     final double leftRightPadding = 0.0;
-  
+
     // The cross axis count should never go below 2.
     final int crossAxisCount = max((screenSize.width / itemWidth).toInt(), 2);
 

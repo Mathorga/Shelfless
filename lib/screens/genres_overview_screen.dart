@@ -23,7 +23,9 @@ class _GenresOverviewScreenState extends State<GenresOverviewScreen> {
   void initState() {
     super.initState();
 
-    LibraryContentProvider.instance.addListener(() => setState(() {}));
+    LibraryContentProvider.instance.addListener(() {
+      if (context.mounted) setState(() {});
+    });
   }
 
   @override

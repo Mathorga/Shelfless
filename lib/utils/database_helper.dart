@@ -176,20 +176,6 @@ class DatabaseHelper {
   // Helper queries.
   // ###############################################################################################################################################################################
 
-  String booksWithAuthorId({
-    int? libraryId,
-    String? titleFilter,
-  }) =>
-      """
-    SELECT $booksTable.*, ${bookAuthorRelTable}_author_id
-    FROM $booksTable JOIN $bookAuthorRelTable
-    ON ${booksTable}_id = ${bookAuthorRelTable}_book_id
-    WHERE 1 = 1
-    ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
-    ${titleFilter != null ? "AND ${booksTable}_title LIKE '%$titleFilter%'" : ""}
-    ORDER BY ${booksTable}_id ASC
-  """;
-
   /// Returns a raw query for selecting all ids of books with the provided filters.
   String filteredBookIds({
     Set<int?>? authorsFilter,
@@ -204,9 +190,26 @@ class DatabaseHelper {
     ${genresFilter != null && genresFilter.isNotEmpty ? "AND ${bookGenreRelTable}_genre_id IN (${genresFilter.join(",")})" : ""}
   """;
 
+  String booksWithAuthorId({
+    int? libraryId,
+    String? titleFilter,
+    Set<int?>? publishersFilter,
+  }) =>
+      """
+    SELECT $booksTable.*, ${bookAuthorRelTable}_author_id
+    FROM $booksTable JOIN $bookAuthorRelTable
+    ON ${booksTable}_id = ${bookAuthorRelTable}_book_id
+    WHERE 1 = 1
+    ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
+    ${titleFilter != null ? "AND ${booksTable}_title LIKE '%$titleFilter%'" : ""}
+    ${publishersFilter != null && publishersFilter.isNotEmpty ? "AND ${booksTable}_publisher_id IN (${publishersFilter.join(",")})" : ""}
+    ORDER BY ${booksTable}_id ASC
+  """;
+
   String booksWithGenreId({
     int? libraryId,
     String? titleFilter,
+    Set<int?>? publishersFilter,
   }) =>
       """
     SELECT $booksTable.*, ${bookGenreRelTable}_genre_id
@@ -215,12 +218,14 @@ class DatabaseHelper {
     WHERE 1 = 1
     ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
     ${titleFilter != null ? "AND ${booksTable}_title LIKE '%$titleFilter%'" : ""}
+    ${publishersFilter != null && publishersFilter.isNotEmpty ? "AND ${booksTable}_publisher_id IN (${publishersFilter.join(",")})" : ""}
     ORDER BY ${booksTable}_id ASC
   """;
 
   String booksWithAggregateAuthorIds({
     int? libraryId,
     String? titleFilter,
+    Set<int?>? publishersFilter,
   }) =>
       """
     SELECT *, GROUP_CONCAT(${bookAuthorRelTable}_author_id) AS author_ids
@@ -237,6 +242,7 @@ class DatabaseHelper {
   String booksWithAggregateGenreIds({
     int? libraryId,
     String? titleFilter,
+    Set<int?>? publishersFilter,
   }) =>
       """
     SELECT *, GROUP_CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
@@ -250,6 +256,7 @@ class DatabaseHelper {
   String books({
     int? libraryId,
     String? titleFilter,
+    Set<int?>? publishersFilter,
   }) =>
       """
     SELECT books_with_authors.*, books_with_genres.genre_ids
@@ -457,12 +464,14 @@ class DatabaseHelper {
     String? titleFilter,
     Set<int?>? authorsFilter,
     Set<int?>? genresFilter,
+    Set<int?>? publishersFilter,
   }) async {
     final List<Map<String, dynamic>> rawData = await _db.rawQuery("""
     SELECT all_books.*
     FROM (${books(
       libraryId: libraryId,
       titleFilter: titleFilter,
+      publishersFilter: publishersFilter,
     )}) AS all_books
     JOIN (${filteredBookIds(
       authorsFilter: authorsFilter,
@@ -583,13 +592,18 @@ class DatabaseHelper {
   /// Returns true if [publisher] is not referenced in any book.
   Future<bool> isPublisherRogue(Publisher publisher) async {
     final List<Map<String, dynamic>> rawData = await _db.query(
-      bookAuthorRelTable,
+      booksTable,
       where: "${booksTable}_publisher_id = ?",
       whereArgs: [publisher.id],
       limit: 1,
     );
 
     return rawData.isEmpty;
+  }
+
+  Future<List<Publisher>> getPublishers() async {
+    final List<Map<String, dynamic>> rawData = await _db.query(publishersTable);
+    return rawData.map((Map<String, dynamic> element) => Publisher.fromMap(element)).toList();
   }
 
   Future<void> insertPublisher(Publisher publisher) async {

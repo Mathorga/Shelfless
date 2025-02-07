@@ -28,6 +28,7 @@ class PublisherPreviewWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(Themes.spacingMedium),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

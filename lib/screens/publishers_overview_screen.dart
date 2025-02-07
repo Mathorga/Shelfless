@@ -5,7 +5,6 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
-import 'package:shelfless/widgets/author_preview_widget.dart';
 import 'package:shelfless/widgets/publisher_preview_widget.dart';
 
 class PublishersOverviewScreen extends StatefulWidget {
@@ -25,7 +24,9 @@ class _PublishersOverviewScreenState extends State<PublishersOverviewScreen> {
   void initState() {
     super.initState();
 
-    LibraryContentProvider.instance.addListener(() => setState(() {}));
+    LibraryContentProvider.instance.addListener(() {
+      if (context.mounted) setState(() {});
+    });
   }
 
   @override

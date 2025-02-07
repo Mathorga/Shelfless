@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -15,9 +13,9 @@ class EditPublisherScreen extends StatefulWidget {
   final Publisher? publisher;
 
   const EditPublisherScreen({
-    Key? key,
+    super.key,
     this.publisher,
-  }) : super(key: key);
+  });
 
   @override
   State<EditPublisherScreen> createState() => _EditPublisherScreenState();

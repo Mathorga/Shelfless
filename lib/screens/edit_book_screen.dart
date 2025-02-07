@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
@@ -19,7 +18,7 @@ import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
 import 'package:shelfless/widgets/location_preview_widget.dart';
-import 'package:shelfless/widgets/publisher_preview_widget.dart';
+import 'package:shelfless/widgets/publisher_label_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
@@ -50,7 +49,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
   void initState() {
     super.initState();
 
-    LibraryContentProvider.instance.addListener(() => setState(() {}));
+    LibraryContentProvider.instance.addListener(() {
+      if (context.mounted) setState(() {});
+    });
 
     _inserting = widget.book == null;
 
@@ -296,16 +297,16 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                                       if (publisher == null) return Placeholder();
 
-                                      return PublisherPreviewWidget(
+                                      return PublisherLabelWidget(
                                         publisher: publisher,
-                                        onTap: () {
-                                          // Make sure the publisherId is not null.
-                                          if (publisherId == null) return;
+                                        // onTap: () {
+                                        //   // Make sure the publisherId is not null.
+                                        //   if (publisherId == null) return;
 
-                                          // Set the book location.
-                                          LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
-                                          Navigator.of(context).pop();
-                                        },
+                                        //   // Set the book publisher.
+                                        //   LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
+                                        //   Navigator.of(context).pop();
+                                        // },
                                       );
                                     },
                                   );
@@ -465,7 +466,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     if (publisher == null) return Placeholder();
 
     return _buildPreview(
-      PublisherPreviewWidget(publisher: publisher),
+      PublisherLabelWidget(publisher: publisher),
       onDelete: () {
         // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
         // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.

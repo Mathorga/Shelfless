@@ -24,7 +24,9 @@ class _AuthorsOverviewScreenState extends State<AuthorsOverviewScreen> {
   void initState() {
     super.initState();
 
-    LibraryContentProvider.instance.addListener(() => setState(() {}));
+    LibraryContentProvider.instance.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override

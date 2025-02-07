@@ -4,7 +4,7 @@ import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
-import 'package:shelfless/widgets/publisher_preview_widget.dart';
+import 'package:shelfless/widgets/publisher_label_widget.dart';
 import 'package:shelfless/widgets/selection_widget.dart';
 
 class PublishersSelectionWidget extends StatefulWidget {
@@ -70,7 +70,7 @@ class _PublishersSelectionWidgetState extends State<PublishersSelectionWidget> {
 
         if (publisher == null) return Placeholder();
 
-        return PublisherPreviewWidget(publisher: publisher);
+        return PublisherLabelWidget(publisher: publisher);
       },
     );
   }

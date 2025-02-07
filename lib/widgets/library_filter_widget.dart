@@ -28,11 +28,14 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
 
     return Padding(
       padding: const EdgeInsets.all(Themes.spacingLarge),
-      child: Stack(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: Themes.spacingMedium,
         children: [
           Align(
             alignment: Alignment.topCenter,
             child: SingleChildScrollView(
+              physics: Themes.scrollPhysics,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 spacing: Themes.spacingLarge,
@@ -102,46 +105,38 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
                       });
                     },
                   ),
-
-                  // FAB spacing.
-                  SizedBox(
-                    height: Themes.spacingFAB,
-                  )
                 ],
               ),
             ),
           ),
 
           // Apply button.
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              spacing: Themes.spacingLarge,
-              children: [
-                if (_filters.isActive)
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _filters.clear();
-                      });
-                    },
-                    child: Text(strings.filtersClear),
-                  ),
-                FloatingActionButton.extended(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: Themes.spacingLarge,
+            children: [
+              if (_filters.isActive)
+                TextButton(
                   onPressed: () {
-                    final NavigatorState navigator = Navigator.of(context);
-
-                    // Apply user-selected filters.
-                    LibraryContentProvider.instance.applyFilters(_filters);
-
-                    navigator.pop();
+                    setState(() {
+                      _filters.clear();
+                    });
                   },
-                  label: Text(strings.filtersApply),
-                  icon: Icon(Icons.check_rounded),
+                  child: Text(strings.filtersClear),
                 ),
-              ],
-            ),
+              FloatingActionButton.extended(
+                onPressed: () {
+                  final NavigatorState navigator = Navigator.of(context);
+          
+                  // Apply user-selected filters.
+                  LibraryContentProvider.instance.applyFilters(_filters);
+          
+                  navigator.pop();
+                },
+                label: Text(strings.filtersApply),
+                icon: Icon(Icons.check_rounded),
+              ),
+            ],
           ),
         ],
       ),

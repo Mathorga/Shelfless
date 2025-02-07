@@ -85,7 +85,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 case ElementAction.delete:
                   final NavigatorState navigator = Navigator.of(context);
 
-                  await showDialog(
+                  final bool? deleted = await showDialog<bool>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
                       title: Text(strings.deleteBookTitle),
@@ -93,7 +93,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       actions: [
                         // Cancel button.
                         TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () => Navigator.of(context).pop(false),
                           style: TextButton.styleFrom(
                             foregroundColor: ShelflessColors.onMainContentActive,
                           ),
@@ -112,7 +112,6 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
 
                             messenger.showSnackBar(
                               SnackBar(
-                                // margin: const EdgeInsets.all(Themes.spacingMedium),
                                 duration: Themes.durationShort,
                                 behavior: SnackBarBehavior.floating,
                                 width: Themes.snackBarSizeSmall,
@@ -124,7 +123,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             );
 
                             // Pop dialog.
-                            navigator.pop();
+                            navigator.pop(true);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: ShelflessColors.error,
@@ -137,8 +136,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                     ),
                   );
 
-                  // Pop back.
-                  navigator.pop();
+                  // Pop back if the book was deleted.
+                  if (deleted == true) navigator.pop();
+
                   break;
               }
             },
@@ -202,7 +202,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                   ],
                 ),
 
-                // Title, edition and publication year.
+                // Title, edition, publisher and publication year.
                 Column(
                   spacing: Themes.spacingSmall,
                   children: [
@@ -218,6 +218,12 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                     ),
 
                     // TODO Edition.
+
+                    // Publisher.
+                    if (LibraryContentProvider.instance.publishers[_book.raw.publisherId] != null)
+                      Center(
+                        child: Text("${LibraryContentProvider.instance.publishers[_book.raw.publisherId]!}"),
+                      ),
 
                     // Publication year.
                     Center(
