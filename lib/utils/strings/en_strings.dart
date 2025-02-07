@@ -25,7 +25,11 @@ class EnStrings implements Strings {
   @override String get cannotDeleteAuthorContent => "Some books still refer to this author.\nDelete or edit them first then try again";
   @override String get authorDeleted => "Author deleted";
   @override String get deleteAuthorTitle => "Deleting author";
-  @override String get deleteAuthorContent => "Are you sure you want to delete this book?\nThis is irreversible.";
+  @override String get deleteAuthorContent => "Are you sure you want to delete this author?\nThis is irreversible.";
+  @override String get cannotDeleteGenreContent => "Some books still refer to this genre.\nDelete or edit them first then try again";
+  @override String get genreDeleted => "Genre deleted";
+  @override String get deleteGenreTitle => "Deleting genre";
+  @override String get deleteGenreContent => "Are you sure you want to delete this author?\nThis is irreversible.";
   @override String get authorInfo => "Author Info";
   @override String get genreInfo => "Genre Info";
   @override String get publisherInfo => "Publisher Info";

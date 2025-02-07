@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'package:shelfless/models/raw_genre.dart';
@@ -17,9 +16,9 @@ class EditGenreScreen extends StatefulWidget {
   final RawGenre? genre;
 
   const EditGenreScreen({
-    Key? key,
+    super.key,
     this.genre,
-  }) : super(key: key);
+  });
 
   @override
   State<EditGenreScreen> createState() => _EditGenreScreenState();

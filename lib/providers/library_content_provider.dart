@@ -150,6 +150,11 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns true if [genre] is not referenced in any book.
+  Future<bool> isGenreRogue(RawGenre genre) async {
+    return await DatabaseHelper.instance.isGenreRogue(genre);
+  }
+
   Future<void> addGenre(RawGenre rawGenre) async {
     // Save the provided genre to DB.
     await DatabaseHelper.instance.insertGenre(rawGenre);
@@ -163,6 +168,15 @@ class LibraryContentProvider with ChangeNotifier {
   Future<void> updateGenre(RawGenre rawGenre) async {
     // Update the provided genre in DB.
     await DatabaseHelper.instance.updateGenre(rawGenre);
+
+    notifyListeners();
+  }
+
+  /// Delete the provided genre from DB.
+  Future<void> deleteGenre(RawGenre genre) async {
+    await DatabaseHelper.instance.deleteGenre(genre);
+
+    authors.remove(genre.id);
 
     notifyListeners();
   }

@@ -30,57 +30,57 @@ class _AuthorsOverviewScreenState extends State<AuthorsOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(strings.authorsSectionTitle),
-        ),
-        // backgroundColor: Colors.transparent,
-        body: LibraryContentProvider.instance.authors.isEmpty
-            ? Center(
-                child: Text(strings.noAuthorsFound),
-              )
-            : ListView(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.all(12.0),
-                children: [
-                  ...List.generate(
-                    LibraryContentProvider.instance.authors.length,
-                    (int index) {
-                      // Make sure the received index is somewhat valid.
-                      if (index > LibraryContentProvider.instance.authors.values.length) return const Placeholder();
+      appBar: AppBar(
+        title: Text(strings.authorsSectionTitle),
+      ),
+      body: LibraryContentProvider.instance.authors.isEmpty
+          ? Center(
+              child: Text(strings.noAuthorsFound),
+            )
+          : ListView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(12.0),
+              children: [
+                ...List.generate(
+                  LibraryContentProvider.instance.authors.length,
+                  (int index) {
+                    // Make sure the received index is somewhat valid.
+                    if (index > LibraryContentProvider.instance.authors.values.length) return const Placeholder();
 
-                      // Prefetch the genre for later use.
-                      Author? author = LibraryContentProvider.instance.authors.values.toList()[index];
+                    // Prefetch the genre for later use.
+                    Author? author = LibraryContentProvider.instance.authors.values.toList()[index];
 
-                      return AuthorPreviewWidget(
-                        author: author,
-                        onTap: () {
-                          // if (!librariesProvider.currentLibrary!.books.any((Book book) => book.authors.contains(authors[index]))) {
-                          //   return;
-                          // }
+                    return AuthorPreviewWidget(
+                      author: author,
+                      onTap: () {
+                        // if (!librariesProvider.currentLibrary!.books.any((Book book) => book.authors.contains(authors[index]))) {
+                        //   return;
+                        // }
 
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (BuildContext context) => BooksScreen(
-                          //       authors: {authors[index]},
-                          //     ),
-                          //   ),
-                          // );
-                        },
-                      );
-                    },
-                  ),
-                  const SizedBox(height: fabAccessHeight),
-                ],
-              ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (BuildContext context) => const EditAuthorScreen(),
-              ),
-            );
-          },
-          child: const Icon(Icons.add_rounded),
-        ));
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (BuildContext context) => BooksScreen(
+                        //       authors: {authors[index]},
+                        //     ),
+                        //   ),
+                        // );
+                      },
+                    );
+                  },
+                ),
+                const SizedBox(height: fabAccessHeight),
+              ],
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) => const EditAuthorScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add_rounded),
+      ),
+    );
   }
 }

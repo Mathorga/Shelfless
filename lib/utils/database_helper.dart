@@ -540,6 +540,18 @@ class DatabaseHelper {
   // Genre CRUDs.
   // ###############################################################################################################################################################################
 
+  /// Returns true if [genre] is not referenced in any book.
+  Future<bool> isGenreRogue(RawGenre genre) async {
+    final List<Map<String, dynamic>> rawData = await _db.query(
+      bookGenreRelTable,
+      where: "${bookGenreRelTable}_genre_id = ?",
+      whereArgs: [genre.id],
+      limit: 1,
+    );
+
+    return rawData.isEmpty;
+  }
+
   Future<void> insertGenre(RawGenre rawGenre) async {
     // Insert the new genre.
     rawGenre.id = await _db.insert(genresTable, rawGenre.toMap());
@@ -551,6 +563,14 @@ class DatabaseHelper {
       rawGenre.toMap(),
       where: "${genresTable}_id = ?",
       whereArgs: [rawGenre.id],
+    );
+  }
+
+  Future<void> deleteGenre(RawGenre genre) async {
+    await _db.delete(
+      genresTable,
+      where: "${genresTable}_id = ?",
+      whereArgs: [genre.id],
     );
   }
 
