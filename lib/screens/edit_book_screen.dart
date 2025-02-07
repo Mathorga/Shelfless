@@ -21,7 +21,10 @@ import 'package:shelfless/widgets/location_preview_widget.dart';
 import 'package:shelfless/widgets/publisher_label_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
+import 'package:shelfless/widgets/unavailable_content_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
+import 'package:shelfless/widgets/unreleased_feature_dialog.dart';
+import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
@@ -105,7 +108,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   EditSectionWidget(
                     spacing: Themes.spacingMedium,
                     children: [
-                      Text(strings.bookInfoThumbnail),
+                      Text(strings.bookInfoCover),
                       Center(
                         child: Stack(
                           children: [
@@ -158,6 +161,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           ],
                         ),
                       ),
+                      Text(
+                          strings.coverDescription),
                     ],
                   ),
 
@@ -329,72 +334,74 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
 
                   // Location.
-                  EditSectionWidget(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(strings.bookInfoLocation),
-                          if (_book.raw.locationId == null)
-                            DialogButtonWidget(
-                              label: Text(strings.select),
-                              title: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(strings.locations),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (BuildContext context) => EditPublisherScreen(),
-                                      ));
-                                    },
-                                    child: Text(strings.add),
-                                  ),
-                                ],
-                              ),
-                              content: StatefulBuilder(
-                                builder: (BuildContext context, void Function(void Function()) setState) {
-                                  LibraryContentProvider.instance.addListener(() {
-                                    if (context.mounted) setState(() {});
-                                  });
-
-                                  return SearchListWidget<int?>(
-                                    values: LibraryContentProvider.instance.locations.keys.toList(),
-                                    filter: (int? locationId, String? filter) => filter != null ? locationId.toString().toLowerCase().contains(filter) : true,
-                                    builder: (int? locationId) {
-                                      final StoreLocation? location = LibraryContentProvider.instance.locations[locationId];
-
-                                      if (location == null) return Placeholder();
-
-                                      return LocationPreviewWidget(
-                                        location: location,
-                                        // onTap: () {
-                                        //   // Make sure the publisherId is not null.
-                                        //   if (locationId == null) return;
-
-                                        //   // Set the book location.
-                                        //   LibraryContentProvider.instance.addPublisherToBook(locationId, _book);
-                                        //   Navigator.of(context).pop();
-                                        // },
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                        ],
-                      ),
-                      if (_book.raw.locationId != null)
-                        Column(
+                  UnreleasedFeatureWidget(
+                    child: EditSectionWidget(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Themes.spacer,
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: _buildPublisherPreview(_book.raw.locationId!),
-                            ),
+                            Text(strings.bookInfoLocation),
+                            if (_book.raw.locationId == null)
+                              DialogButtonWidget(
+                                label: Text(strings.select),
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(strings.locations),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (BuildContext context) => EditPublisherScreen(),
+                                        ));
+                                      },
+                                      child: Text(strings.add),
+                                    ),
+                                  ],
+                                ),
+                                content: StatefulBuilder(
+                                  builder: (BuildContext context, void Function(void Function()) setState) {
+                                    LibraryContentProvider.instance.addListener(() {
+                                      if (context.mounted) setState(() {});
+                                    });
+
+                                    return SearchListWidget<int?>(
+                                      values: LibraryContentProvider.instance.locations.keys.toList(),
+                                      filter: (int? locationId, String? filter) => filter != null ? locationId.toString().toLowerCase().contains(filter) : true,
+                                      builder: (int? locationId) {
+                                        final StoreLocation? location = LibraryContentProvider.instance.locations[locationId];
+
+                                        if (location == null) return Placeholder();
+
+                                        return LocationPreviewWidget(
+                                          location: location,
+                                          // onTap: () {
+                                          //   // Make sure the publisherId is not null.
+                                          //   if (locationId == null) return;
+
+                                          //   // Set the book location.
+                                          //   LibraryContentProvider.instance.addPublisherToBook(locationId, _book);
+                                          //   Navigator.of(context).pop();
+                                          // },
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
                           ],
                         ),
-                    ],
+                        if (_book.raw.locationId != null)
+                          Column(
+                            children: [
+                              Themes.spacer,
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: _buildPublisherPreview(_book.raw.locationId!),
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
                   ),
 
                   const SizedBox(height: fabAccessHeight),

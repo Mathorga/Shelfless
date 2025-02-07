@@ -53,7 +53,7 @@ class Strings {
   String get deleteBookTitle => "";
   String get deleteBookContent => "";
   String get bookInfoTitle => "";
-  String get bookInfoThumbnail => "";
+  String get bookInfoCover => "";
   String get bookInfoNoImageSelected => "";
   String get bookInfoLibrary => "";
   String get bookInfoAuthors => "";
@@ -114,6 +114,7 @@ class Strings {
   String get genericWarning => "";
   String get genericError => "";
   String get unreleasedFeatureAlert => "";
+  String get coverDescription => "";
 }
 
 Strings get strings {

@@ -1,22 +1,29 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import 'package:shelfless/themes/themes.dart';
 
-/// Wrapper for displaying unavailable content.
-// TODO Add onTap callback function?
+/// Wrapper for displaying unavailable content: darkens its child and captures any interaction with it.
 class UnavailableContentWidget extends StatelessWidget {
   final Widget child;
+  final void Function()? onTap;
 
   const UnavailableContentWidget({
     super.key,
     required this.child,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: Themes.unavailableFeatureOpacity,
-      child: child,
+    return GestureDetector(
+      onTap: onTap,
+      child: Opacity(
+        opacity: Themes.unavailableFeatureOpacity,
+        // Using an absorb pointer widget ensures no tap event is registered by the child.
+        child: AbsorbPointer(
+          child: child,
+        ),
+      ),
     );
   }
 }

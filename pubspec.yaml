@@ -109,6 +109,14 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  shaders:
+    - shaders/ripple.frag.glsl
+    - shaders/blur.frag.glsl
+    - shaders/curl.frag.glsl
+    # - shaders/xbr.glsl
+  #   - shaders/xbr_scaling.vert.glsl
+  #   - shaders/xbr_scaling.frag.glsl
+
   assets:
     - assets/images/covers/parrots.jpg
     - assets/images/covers/bookshelf.jpg

@@ -10,6 +10,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/libraries_list_widget.dart';
 import 'package:shelfless/widgets/unavailable_content_widget.dart';
 import 'package:shelfless/widgets/unreleased_feature_dialog.dart';
+import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class DrawerContentWidget extends StatelessWidget {
   const DrawerContentWidget({super.key});
@@ -128,14 +129,8 @@ class DrawerContentWidget extends StatelessWidget {
                   ),
 
                   // Locations.
-                  UnavailableContentWidget(
+                  UnreleasedFeatureWidget(
                     child: _buildLibraryEntry(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => UnreleasedFeatureDialog(),
-                        );
-                      },
                       child: Row(
                         spacing: Themes.spacingMedium,
                         children: [

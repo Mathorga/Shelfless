@@ -5,6 +5,7 @@ import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/unavailable_content_widget.dart';
+import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 import 'package:yaml/yaml.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -23,7 +24,7 @@ class SettingsScreen extends StatelessWidget {
           ListView(
             children: [
               // Privacy policy.
-              UnavailableContentWidget(
+              UnreleasedFeatureWidget(
                 child: ListTile(
                   title: Row(
                     spacing: Themes.spacingMedium,
@@ -48,7 +49,7 @@ class SettingsScreen extends StatelessWidget {
               ),
 
               // Contact support.
-              UnavailableContentWidget(
+              UnreleasedFeatureWidget(
                 child: ListTile(
                   title: Row(
                     spacing: Themes.spacingMedium,

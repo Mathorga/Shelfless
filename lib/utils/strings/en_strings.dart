@@ -51,7 +51,7 @@ class EnStrings implements Strings {
   @override String get deleteBookTitle => "Deleting book";
   @override String get deleteBookContent => "Are you sure you want to delete this book?\nThis is irreversible.";
   @override String get bookInfoTitle => "Title";
-  @override String get bookInfoThumbnail => "Thumbnail";
+  @override String get bookInfoCover => "Cover";
   @override String get bookInfoNoImageSelected => "no image selected";
   @override String get bookInfoLibrary => "Library";
   @override String get bookInfoAuthors => "Authors";
@@ -112,4 +112,5 @@ class EnStrings implements Strings {
   @override String get genericWarning => "Warning";
   @override String get genericError => "An error occurred";
   @override String get unreleasedFeatureAlert => "This feature will be released in a future update.";
+  @override String get coverDescription => "Think of this as just a hint to the real book cover, don't think about it too much and pick whatever you like or reminds you of this book. The image will be highly compressed anyway.";
 }
