@@ -21,6 +21,8 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
   // Start off from any already-present filter.
   final LibraryFilters _filters = LibraryContentProvider.instance.getFilters().copy();
 
+  final TextEditingController _titleFilterController = TextEditingController(text: LibraryContentProvider.instance.getFilters().titleFilter);
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -51,7 +53,7 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
                     width: min(screenSize.width, Themes.maxContentWidth),
                     child: SearchBar(
                       leading: const Icon(Icons.search_rounded),
-                      controller: TextEditingController(text: _filters.titleFilter),
+                      controller: _titleFilterController,
                       onChanged: (String value) {
                         // Save the query string for filtering.
                         setState(() {
@@ -127,10 +129,10 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
               FloatingActionButton.extended(
                 onPressed: () {
                   final NavigatorState navigator = Navigator.of(context);
-          
+
                   // Apply user-selected filters.
                   LibraryContentProvider.instance.applyFilters(_filters);
-          
+
                   navigator.pop();
                 },
                 label: Text(strings.filtersApply),
