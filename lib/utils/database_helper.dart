@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 
 import 'package:collection/collection.dart';
 import 'package:shelfless/models/publisher.dart';
-import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -581,6 +580,18 @@ class DatabaseHelper {
   // Publisher CRUDs.
   // ###############################################################################################################################################################################
 
+  /// Returns true if [publisher] is not referenced in any book.
+  Future<bool> isPublisherRogue(Publisher publisher) async {
+    final List<Map<String, dynamic>> rawData = await _db.query(
+      bookAuthorRelTable,
+      where: "${booksTable}_publisher_id = ?",
+      whereArgs: [publisher.id],
+      limit: 1,
+    );
+
+    return rawData.isEmpty;
+  }
+
   Future<void> insertPublisher(Publisher publisher) async {
     // Insert the new publisher.
     publisher.id = await _db.insert(publishersTable, publisher.toMap());
@@ -590,6 +601,14 @@ class DatabaseHelper {
     await _db.update(
       publishersTable,
       publisher.toMap(),
+      where: "${publishersTable}_id = ?",
+      whereArgs: [publisher.id],
+    );
+  }
+
+  Future<void> deletePublisher(Publisher publisher) async {
+    await _db.delete(
+      publishersTable,
       where: "${publishersTable}_id = ?",
       whereArgs: [publisher.id],
     );

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/author.dart';
@@ -181,6 +180,11 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns true if [publisher] is not referenced in any book.
+  Future<bool> isPublisherRogue(Publisher publisher) async {
+    return await DatabaseHelper.instance.isPublisherRogue(publisher);
+  }
+
   Future<void> addPublisher(Publisher publisher) async {
     // Save the provided publisher to DB.
     await DatabaseHelper.instance.insertPublisher(publisher);
@@ -194,6 +198,15 @@ class LibraryContentProvider with ChangeNotifier {
   Future<void> updatePublisher(Publisher publisher) async {
     // Update the provided publisher in DB.
     await DatabaseHelper.instance.updatePublisher(publisher);
+
+    notifyListeners();
+  }
+
+  /// Delete the provided publisher from DB.
+  Future<void> deletePublisher(Publisher publisher) async {
+    await DatabaseHelper.instance.deletePublisher(publisher);
+
+    publishers.remove(publisher.id);
 
     notifyListeners();
   }

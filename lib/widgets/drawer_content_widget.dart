@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/screens/authors_overview_screen.dart';
 import 'package:shelfless/screens/genres_overview_screen.dart';
+import 'package:shelfless/screens/publishers_overview_screen.dart';
 import 'package:shelfless/screens/settings_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -106,24 +107,23 @@ class DrawerContentWidget extends StatelessWidget {
                   ),
 
                   // Publishers.
-                  UnavailableContentWidget(
-                    child: _buildLibraryEntry(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => UnreleasedFeatureDialog(),
-                        );
-                      },
-                      child: Row(
-                        spacing: Themes.spacingMedium,
-                        children: [
-                          Icon(
-                            Icons.work_rounded,
-                            size: Themes.iconSizeLarge,
-                          ),
-                          Text(strings.publishersSectionTitle),
-                        ],
-                      ),
+                  _buildLibraryEntry(
+                    onPressed: () {
+                      final NavigatorState navigator = Navigator.of(context);
+
+                      navigator.push(MaterialPageRoute(
+                        builder: (BuildContext context) => PublishersOverviewScreen(),
+                      ));
+                    },
+                    child: Row(
+                      spacing: Themes.spacingMedium,
+                      children: [
+                        Icon(
+                          Icons.work_rounded,
+                          size: Themes.iconSizeLarge,
+                        ),
+                        Text(strings.publishersSectionTitle),
+                      ],
                     ),
                   ),
 
