@@ -99,8 +99,8 @@ class AuthorPreviewWidget extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              title: Text(strings.deleteBookTitle),
-                              content: Text(strings.deleteBookContent),
+                              title: Text(strings.deleteAuthorTitle),
+                              content: Text(strings.deleteAuthorContent),
                               actions: [
                                 // Cancel button.
                                 TextButton(

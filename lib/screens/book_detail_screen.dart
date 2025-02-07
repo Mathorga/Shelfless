@@ -148,37 +148,38 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          ShaderMask(
-            shaderCallback: (Rect bounds) {
-              return LinearGradient(
-                colors: [
-                  Colors.transparent,
-                  Colors.white,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: [
-                  0.25,
-                  1.0,
-                ],
-              ).createShader(bounds);
-            },
-            blendMode: BlendMode.dstOut,
-            child: Blur(
-              blur: 20.0,
-              colorOpacity: Themes.blurOpacity,
-              blurColor: Colors.transparent,
-              child: SizedBox(
-                width: double.infinity,
-                child: Image.memory(
-                  _book.raw.cover!,
-                  fit: BoxFit.cover,
-                  isAntiAlias: false,
-                  filterQuality: FilterQuality.none,
+          if (_book.raw.cover != null)
+            ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    Colors.white,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [
+                    0.25,
+                    1.0,
+                  ],
+                ).createShader(bounds);
+              },
+              blendMode: BlendMode.dstOut,
+              child: Blur(
+                blur: 20.0,
+                colorOpacity: Themes.blurOpacity,
+                blurColor: Colors.transparent,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Image.memory(
+                    _book.raw.cover!,
+                    fit: BoxFit.cover,
+                    isAntiAlias: false,
+                    filterQuality: FilterQuality.none,
+                  ),
                 ),
               ),
             ),
-          ),
           SingleChildScrollView(
             physics: Themes.scrollPhysics,
             child: Column(

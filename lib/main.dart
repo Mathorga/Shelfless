@@ -8,7 +8,10 @@ import 'package:shelfless/utils/database_helper.dart';
 
 void main() async {
   await DatabaseHelper.instance.openDB();
+
+  // Fetch libraries from DB.
   await LibrariesProvider.instance.fetchLibraries();
+
   runApp(const Shelfless());
 }
 
