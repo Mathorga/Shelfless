@@ -4,7 +4,7 @@ import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
-import 'package:shelfless/widgets/genre_preview_widget.dart';
+import 'package:shelfless/widgets/genre_label_widget.dart';
 import 'package:shelfless/widgets/selection_widget.dart';
 
 class GenresSelectionWidget extends StatefulWidget {
@@ -69,7 +69,7 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
 
         if (rawGenre == null) return Placeholder();
 
-        return GenrePreviewWidget(genre: rawGenre);
+        return GenreLabelWidget(genre: rawGenre);
       },
     );
   }

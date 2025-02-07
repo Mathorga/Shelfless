@@ -42,12 +42,13 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
                     strings.filtersTitle,
                     style: theme.textTheme.headlineSmall,
                   ),
-            
+
                   // Search bar.
                   SizedBox(
-                  width: min(screenSize.width, Themes.maxContentWidth),
+                    width: min(screenSize.width, Themes.maxContentWidth),
                     child: SearchBar(
                       leading: const Icon(Icons.search_rounded),
+                      controller: TextEditingController(text: _filters.titleFilter),
                       onChanged: (String value) {
                         // Save the query string for filtering.
                         setState(() {
@@ -56,7 +57,7 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
                       },
                     ),
                   ),
-            
+
                   // Authors selection.
                   AuthorsSelectionWidget(
                     inSelectedIds: _filters.authorsFilter.toList(),
@@ -71,7 +72,7 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
                       });
                     },
                   ),
-            
+
                   // Genres selection.
                   GenresSelectionWidget(
                     inSelectedIds: _filters.genresFilter.toList(),
@@ -86,7 +87,7 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
                       });
                     },
                   ),
-            
+
                   // Publishers selection.
                   PublishersSelectionWidget(
                     inSelectedIds: _filters.publishersFilter.toList(),
@@ -101,7 +102,7 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
                       });
                     },
                   ),
-            
+
                   // FAB spacing.
                   SizedBox(
                     height: Themes.spacingFAB,

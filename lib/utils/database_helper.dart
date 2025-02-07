@@ -187,7 +187,7 @@ class DatabaseHelper {
     ON ${booksTable}_id = ${bookAuthorRelTable}_book_id
     WHERE 1 = 1
     ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
-    ${titleFilter != null ? "AND ${booksTable}_title LIKE '$titleFilter'" : ""}
+    ${titleFilter != null ? "AND ${booksTable}_title LIKE '%$titleFilter%'" : ""}
     ORDER BY ${booksTable}_id ASC
   """;
 
@@ -215,7 +215,7 @@ class DatabaseHelper {
     ON ${booksTable}_id = ${bookGenreRelTable}_book_id
     WHERE 1 = 1
     ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
-    ${titleFilter != null ? "AND ${booksTable}_title LIKE $titleFilter" : ""}
+    ${titleFilter != null ? "AND ${booksTable}_title LIKE '%$titleFilter%'" : ""}
     ORDER BY ${booksTable}_id ASC
   """;
 
