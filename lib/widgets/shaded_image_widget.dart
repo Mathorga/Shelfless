@@ -72,17 +72,20 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
         _image = image;
       });
     });
-    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/ripple.frag.glsl");
+    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/test.frag.glsl");
     _shader = program.fragmentShader();
     setState(() {
       // trigger a repaint
     });
 
-    _timer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
-      setState(() {
-        _delta += 1 / 60;
-      });
-    });
+    _timer = Timer.periodic(
+      const Duration(milliseconds: 16),
+      (Timer timer) {
+        // setState(() {
+        //   _delta += 1 / 60;
+        // });
+      },
+    );
   }
 
   @override
