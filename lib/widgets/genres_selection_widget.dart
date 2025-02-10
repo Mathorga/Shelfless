@@ -5,7 +5,8 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/genre_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget.dart';
+import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 
 class GenresSelectionWidget extends StatefulWidget {
   /// Already selected genre ids.
@@ -48,7 +49,7 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SelectionWidget(
+    return MultipleSelectionWidget(
       title: strings.bookInfoGenres,
       controller: _selectionController,
       inSelectedIds: widget.selectedGenreIds,

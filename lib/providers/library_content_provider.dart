@@ -248,6 +248,13 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> removePublisherFromBook(Book book) async {
+    // Only save the relationship locally.
+    book.raw.publisherId = null;
+
+    notifyListeners();
+  }
+
   void clearContent() {
     books.clear();
     genres.clear();

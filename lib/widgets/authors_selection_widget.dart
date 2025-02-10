@@ -5,7 +5,8 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/author_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget.dart';
+import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 
 class AuthorsSelectionWidget extends StatefulWidget {
   /// Already selected author ids.
@@ -48,7 +49,7 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SelectionWidget(
+    return MultipleSelectionWidget(
       title: strings.bookInfoAuthors,
       controller: _selectionController,
       inSelectedIds: widget.selectedAuthorIds,

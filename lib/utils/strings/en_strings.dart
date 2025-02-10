@@ -16,6 +16,9 @@ class EnStrings implements Strings {
   @override String get addLibraryTitle => "Add a library";
   @override String get deleteLibraryTitle => "Deleting Library";
   @override String get deleteLibraryContent => "Are you sure you want to delete";
+  @override String get imageSourceTitle => "Pick an image:";
+  @override String get imageSourceCamera => "Camera";
+  @override String get imageSourceGallery => "Gallery";
   @override String get yes => "Yes";
   @override String get no => "No";
   @override String get ok => "OK";

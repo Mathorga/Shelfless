@@ -6,21 +6,9 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
+import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
 
-class SelectionController extends ChangeNotifier {
-  List<int?> sourceIds;
-
-  SelectionController({
-    this.sourceIds = const [],
-  });
-
-  void setIds(List<int?> ids) {
-    sourceIds = ids;
-    notifyListeners();
-  }
-}
-
-class SelectionWidget extends StatelessWidget {
+class MultipleSelectionWidget extends StatelessWidget {
   final String? title;
   final SelectionController controller;
   final void Function()? onInsertNewRequested;
@@ -30,7 +18,7 @@ class SelectionWidget extends StatelessWidget {
   final void Function(Set<int?> ids)? onItemsSelected;
   final void Function(int id)? onItemUnselected;
 
-  SelectionWidget({
+  MultipleSelectionWidget({
     super.key,
     this.title,
     required this.controller,

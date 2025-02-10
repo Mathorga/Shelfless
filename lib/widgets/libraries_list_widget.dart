@@ -7,6 +7,7 @@ import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/double_choice_dialog.dart';
 import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class LibrariesListWidget extends StatefulWidget {
@@ -37,62 +38,49 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
               onPressed: () {
                 // Show dialog asking the user whether to create a new library or import one.
                 showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(strings.addLibraryTitle),
-                        content: Row(
-                          spacing: Themes.spacingMedium,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: _buildNewLibraryOption(
-                                onPressed: () async {
-                                  // Prefetch handlers before async gaps.
-                                  final NavigatorState navigator = Navigator.of(context);
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DoubleChoiceDialog(
+                      title: Text(strings.addLibraryTitle),
+                      onFirstOptionSelected: () async {
+                        // Prefetch handlers before async gaps.
+                        final NavigatorState navigator = Navigator.of(context);
 
-                                  // Navigate to library creation screen.
-                                  await navigator.push(
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) => EditLibraryScreen(
-                                        onDone: () => navigator.pop(),
-                                      ),
-                                    ),
-                                  );
+                        // Navigate to library creation screen.
+                        await navigator.push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => EditLibraryScreen(
+                              onDone: () => navigator.pop(),
+                            ),
+                          ),
+                        );
 
-                                  // Pop dialog.
-                                  navigator.pop();
-                                },
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.playlist_add_rounded,
-                                      size: Themes.iconSizeLarge,
-                                    ),
-                                    Text(strings.newLib),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: _buildNewLibraryOption(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.download_rounded,
-                                      size: Themes.iconSizeLarge,
-                                    ),
-                                    Text(strings.importLib),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    });
+                        // Pop dialog.
+                        navigator.pop();
+                      },
+                      firstOption: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.playlist_add_rounded,
+                            size: Themes.iconSizeLarge,
+                          ),
+                          Text(strings.newLib),
+                        ],
+                      ),
+                      secondOption: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.download_rounded,
+                            size: Themes.iconSizeLarge,
+                          ),
+                          Text(strings.importLib),
+                        ],
+                      ),
+                    );
+                  },
+                );
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -173,22 +161,6 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
             padding: const EdgeInsets.all(12.0),
             child: child,
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNewLibraryOption({
-    required Widget child,
-    void Function()? onPressed,
-  }) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: SizedBox(
-        width: Themes.thumbnailSizeSmall,
-        height: Themes.thumbnailSizeSmall,
-        child: Center(
-          child: child,
         ),
       ),
     );

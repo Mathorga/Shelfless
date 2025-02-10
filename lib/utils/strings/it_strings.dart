@@ -18,6 +18,9 @@ class ItStrings implements Strings {
   @override String get addLibraryTitle => "Nuova biblioteca";
   @override String get deleteLibraryTitle => "Elimina Biblioteca";
   @override String get deleteLibraryContent => "Vuoi davvero eliminare";
+  @override String get imageSourceTitle => "Scegli un'immagine:";
+  @override String get imageSourceCamera => "Fotocamera";
+  @override String get imageSourceGallery => "Galleria";
   @override String get yes => "Sì";
   @override String get no => "No";
   @override String get ok => "OK";
