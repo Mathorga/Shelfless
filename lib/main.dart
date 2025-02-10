@@ -24,7 +24,11 @@ class Shelfless extends StatelessWidget {
       title: Themes.appName,
       theme: Themes.shelflessTheme,
       home: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
-        LibrariesProvider.instance.addListener(() => setState(() {}));
+        LibrariesProvider.instance.addListener(() {
+          if (context.mounted) {
+            setState(() {});
+          }
+        });
 
         return LibrariesProvider.instance.libraries.isEmpty
             // TODO Show an introductory library creation wizard instead of a bare EditLibraryScreen.
