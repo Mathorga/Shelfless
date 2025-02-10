@@ -20,6 +20,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
 import 'package:shelfless/widgets/drawer_content_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
+import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 enum LibraryAction {
   edit,
@@ -135,13 +136,14 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                     ),
                     PopupMenuItem(
                       value: LibraryAction.displayMode,
-                      enabled: false,
-                      child: Row(
-                        spacing: Themes.spacingSmall,
-                        children: [
-                          const Icon(Icons.view_list_rounded),
-                          Text("Show list"),
-                        ],
+                      child: UnreleasedFeatureWidget(
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.view_list_rounded),
+                            Text("Show list"),
+                          ],
+                        ),
                       ),
                     ),
                     PopupMenuItem(

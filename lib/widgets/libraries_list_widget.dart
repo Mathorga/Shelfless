@@ -7,8 +7,7 @@ import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
-import 'package:shelfless/widgets/unavailable_content_widget.dart';
-import 'package:shelfless/widgets/unreleased_feature_dialog.dart';
+import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class LibrariesListWidget extends StatefulWidget {
   const LibrariesListWidget({super.key});
@@ -27,8 +26,6 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -109,14 +106,8 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
 
           // All libraries.
           if (index == LibrariesProvider.instance.libraries.length) {
-            return UnavailableContentWidget(
+            return UnreleasedFeatureWidget(
               child: _buildLibraryEntry(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => UnreleasedFeatureDialog(),
-                  );
-                },
                 child: Text("${strings.all} (${LibrariesProvider.instance.totalBooksCount})"),
               ),
             );

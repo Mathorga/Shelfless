@@ -29,7 +29,7 @@ vec4 diag(vec4 sum, vec2 uv, vec2 point1, vec2 point2, vec4 color1, vec4 color2,
 
 void main() {
     float LINE_THICKNESS = 0.4;
-    vec2 uv = FlutterFragCoord().xy;
+    vec2 uv = FlutterFragCoord().xy / uSize;
     vec2 ip = uv;
     // ip = uv * (1.0 / TEXTURE_PIXEL_SIZE);
 
@@ -40,37 +40,29 @@ void main() {
     */
 
     vec4 c = texture(image, ip);
-    vec4 l = texture(image, vec2(ip + (vec2(-1.0, 0.0) / uSize)));
-    vec4 d = texture(image, vec2(ip + (vec2(0.0, 1.0) / uSize)));
-    vec4 r = texture(image, vec2(ip + (vec2(1.0, 0.0) / uSize)));
-    vec4 u = texture(image, vec2(ip + (vec2(0.0, -1.0) / uSize)));
+    vec4 l = texture(image, ip + (vec2(-1.0, 0.0) / uSize));
+    vec4 d = texture(image, ip + (vec2(0.0, 1.0) / uSize));
+    vec4 r = texture(image, ip + (vec2(1.0, 0.0) / uSize));
+    vec4 u = texture(image, ip + (vec2(0.0, -1.0) / uSize));
 
-    vec4 ld = texture(image, vec2(ip + (vec2(-1.0, 1.0) / uSize)));
-    vec4 lu = texture(image, vec2(ip + (vec2(-1.0, -1.0) / uSize)));
-    vec4 rd = texture(image, vec2(ip + (vec2(1.0, 1.0) / uSize)));
-    vec4 ru = texture(image, vec2(ip + (vec2(1.0, -1.0) / uSize)));
+    vec4 ld = texture(image, ip + (vec2(-1.0, 1.0) / uSize));
+    vec4 lu = texture(image, ip + (vec2(-1.0, -1.0) / uSize));
+    vec4 rd = texture(image, ip + (vec2(1.0, 1.0) / uSize));
+    vec4 ru = texture(image, ip + (vec2(1.0, -1.0) / uSize));
 
     vec4 s = c;
 
     ivec4 mask = ivec4(1);
 
-    if (eq(ld, c))
-        mask.x = 0;
-    if (eq(lu, c))
-        mask.y = 0;
-    if (eq(rd, c))
-        mask.z = 0;
-    if (eq(ru, c))
-        mask.w = 0;
+    if (eq(ld, c)) mask.x = 0;
+    if (eq(lu, c)) mask.y = 0;
+    if (eq(rd, c)) mask.z = 0;
+    if (eq(ru, c)) mask.w = 0;
 
-    if (mask.x == 1)
-        s = diag(s, ip, vec2(-1, 0), vec2(0, 1), l, d, LINE_THICKNESS);
-    if (mask.y == 1)
-        s = diag(s, ip, vec2(0, -1), vec2(-1, 0), l, u, LINE_THICKNESS);
-    if (mask.z == 1)
-        s = diag(s, ip, vec2(0, 1), vec2(1, 0), r, d, LINE_THICKNESS);
-    if (mask.w == 1)
-        s = diag(s, ip, vec2(1, 0), vec2(0, -1), r, u, LINE_THICKNESS);
+    if (mask.x == 1) s = diag(s, ip, vec2(-1, 0), vec2(0, 1), l, d, LINE_THICKNESS);
+    if (mask.y == 1) s = diag(s, ip, vec2(0, -1), vec2(-1, 0), l, u, LINE_THICKNESS);
+    if (mask.z == 1) s = diag(s, ip, vec2(0, 1), vec2(1, 0), r, d, LINE_THICKNESS);
+    if (mask.w == 1) s = diag(s, ip, vec2(1, 0), vec2(0, -1), r, u, LINE_THICKNESS);
 
     vec4 f = c;
     f = diag(f, ip, vec2(-1, 0), vec2(0, 1), l, d, LINE_THICKNESS);

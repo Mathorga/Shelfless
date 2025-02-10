@@ -5,57 +5,45 @@ uniform vec2 uSize;
 uniform sampler2D image;
 uniform float iTime;
 
-/*
-Made with a whole lot of nightmare fuel.
-Logic's Under Pressure and Bobby Tarantino II Albums was in rotation during
-the making process.
-Hope you enjoy!
-
-You're auto-friended to me if you're a Logic fan
-RattPack all day!
-*/
-
-//upscaling multiplier amount
-const float SCALE = 10.0;
-
-//image mipmap level, for base upscaling
-const int ML = 0;
 
 //equality threshold of 2 colors before forming lines
 uniform float THRESHOLD = 0.1;
 
 //anti aliasing scaling, smaller value make lines more blurry
-uniform float AA_SCALE = 2.0;
+uniform float AA_SCALE = 1.0;
+
+const float dist = 1.0;
 
 
 //draw diagonal line connecting 2 pixels if within threshold
-vec4 diag(vec4 sum, vec2 uv, vec2 p1, vec2 p2, sampler2D iChannel0, float LINE_THICKNESS) {
-    vec4 v1 = texelFetch(iChannel0,ivec2(uv+vec2(p1.x,p1.y)),ML),
-        v2 = texelFetch(iChannel0,ivec2(uv+vec2(p2.x,p2.y)),ML);
-    if (length(v1-v2) < THRESHOLD) {
-    	vec2 dir = p2-p1,
-            lp = uv-(floor(uv+p1)+.5);
-    	dir = normalize(vec2(dir.y,-dir.x));
-        float l = clamp((LINE_THICKNESS-dot(lp,dir))*AA_SCALE,0.,1.);
-        sum = mix(sum,v1,l);
+vec4 diag(vec4 sum, vec2 uv, vec2 p1, vec2 p2, sampler2D iChannel0, float lineThickness) {
+    vec4 v1 = texture(iChannel0, uv + p1);
+    vec4 v2 = texture(iChannel0, uv + p2);
+
+    if (length(v1 - v2) < THRESHOLD) {
+    	vec2 dir = p2 - p1;
+        vec2 lp = uv - (uv + p1 + (0.5 / uSize));
+    	dir = normalize(vec2(dir.y, -dir.x));
+        float l = clamp((lineThickness - dot(lp, dir)) * AA_SCALE, 0.0, 1.0);
+        sum = mix(sum, v1, l);
     }
     return sum;
 }
 
 void main() {
-	float LINE_THICKNESS = 0.4;
+    float lineThickness = 0.4;
     vec2 uv = FlutterFragCoord().xy / uSize;
-	vec2 ip = uv;
-	// ip = uv * (1.0 / TEXTURE_PIXEL_SIZE);
-	
-    //start with nearest pixel as 'background'
-    vec4 s = texelFetch(TEXTURE,ivec2(ip),ML);
-    
-    //draw anti aliased diagonal lines of surrounding pixels as 'foreground'
-    s = diag(s,ip,vec2(-1,0),vec2(0,1), TEXTURE, LINE_THICKNESS);
-    s = diag(s,ip,vec2(0,1),vec2(1,0), TEXTURE, LINE_THICKNESS);
-    s = diag(s,ip,vec2(1,0),vec2(0,-1), TEXTURE, LINE_THICKNESS);
-    s = diag(s,ip,vec2(0,-1),vec2(-1,0), TEXTURE, LINE_THICKNESS);
+    vec2 ip = uv;
+    // ip = uv * (1.0 / TEXTURE_PIXEL_SIZE);
 
-    fragColor = s;
+    //start with nearest pixel as 'background'
+    vec4 s = texture(image, ip);
+
+    //draw anti aliased diagonal lines of surrounding pixels as 'foreground'
+    s = diag(s, ip, vec2(-dist, 0.0) / uSize, vec2(0.0, dist) / uSize, image, lineThickness);
+    s = diag(s, ip, vec2(0.0, dist) / uSize, vec2(dist, 0.0) / uSize, image, lineThickness);
+    s = diag(s, ip, vec2(dist, 0.0) / uSize, vec2(0.0, -dist) / uSize, image, lineThickness);
+    s = diag(s, ip, vec2(0.0, -dist) / uSize, vec2(-dist, 0.0) / uSize, image, lineThickness);
+
+    fragColor = s;// * vec4(0.2, 0.5, 0.8, 1.0);
 }

@@ -46,6 +46,8 @@ class Strings {
   String get outLabel => "";
   String get bookEdit => "";
   String get bookMoveTo => "";
+  String get bookMoveToNoLibrary => "";
+  String get bookMoveToDescription => "";
   String get bookMarkOutAction => "";
   String get bookMarkInAction => "";
   String get bookDeleteAction => "";

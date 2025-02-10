@@ -1,12 +1,8 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 
-import 'package:archive/archive.dart';
-import 'package:share_plus/share_plus.dart';
-
 import 'package:shelfless/models/library_preview.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/themes/themes.dart';
 
 class LibraryPreviewWidget extends StatelessWidget {
   final LibraryPreview library;
@@ -19,10 +15,11 @@ class LibraryPreviewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: ShelflessColors.mainContentInactive,
       child: Align(
         alignment: Alignment.bottomLeft,
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(Themes.spacingMedium),
           child: Text(
             library.toString(),
             textAlign: TextAlign.center,

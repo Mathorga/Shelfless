@@ -688,6 +688,10 @@ class DatabaseHelper {
     }
   }
 
+  Future<void> moveBookTo(Book book, RawLibrary library) async {
+    await _db.update(booksTable, book.raw.toMap());
+  }
+
   Future<void> deleteBook(Book book) async {
     // Delete the book.
     await _db.delete(

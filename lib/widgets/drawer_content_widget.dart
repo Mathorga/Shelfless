@@ -8,8 +8,6 @@ import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/libraries_list_widget.dart';
-import 'package:shelfless/widgets/unavailable_content_widget.dart';
-import 'package:shelfless/widgets/unreleased_feature_dialog.dart';
 import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class DrawerContentWidget extends StatelessWidget {

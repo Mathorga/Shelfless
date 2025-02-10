@@ -44,6 +44,8 @@ class EnStrings implements Strings {
   @override String get outLabel => "OUT";
   @override String get bookEdit => "Edit";
   @override String get bookMoveTo => "Move to";
+  @override String get bookMoveToNoLibrary => "There's no other library, cannot move books at the moment.";
+  @override String get bookMoveToDescription => "Pick a library to move the selected book to:";
   @override String get bookMarkOutAction => "Mark as out";
   @override String get bookMarkInAction => "Mark back in";
   @override String get bookDeleteAction => "Delete";

@@ -98,6 +98,24 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Moves the book to another library in DB and stores the update.
+  Future<void> moveBookTo(Book book, RawLibrary toLibrary) async {
+    // Update the book's library id.
+    book.raw.libraryId = toLibrary.id;
+
+    // Ask the DB to move the book.
+    await DatabaseHelper.instance.moveBookTo(book, toLibrary);
+
+    // Remove the provided book from memory if moved to another library.
+    if (toLibrary != library) books.remove(book);
+
+    // Update libraries provider.
+    LibrariesProvider.instance.refetchLibrary(library!);
+    LibrariesProvider.instance.refetchLibrary(toLibrary);
+
+    notifyListeners();
+  }
+
   Future<void> deleteBook(Book book) async {
     // Make sure the provided book is actually stored.
     final int index = books.indexOf(book);
