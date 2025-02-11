@@ -9,6 +9,7 @@ import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/element_action.dart';
+import 'package:shelfless/utils/material_utils.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 import 'package:shelfless/widgets/library_preview_widget.dart';
@@ -124,55 +125,7 @@ class BookPreviewWidget extends StatelessWidget {
                         ));
                         break;
                       case ElementAction.moveTo:
-                        // There's no other library, so let the user know the book cannot be moved anywhere.
-                        if (LibrariesProvider.instance.libraries.length <= 1) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: Text(strings.genericInfo),
-                              content: Text(strings.bookMoveToNoLibrary),
-                            ),
-                          );
-                          break;
-                        }
-
-                        // Get all libraries excluding the currently open one.
-                        final Iterable<LibraryPreview> libraries =
-                            LibrariesProvider.instance.libraries.where((LibraryPreview libraryPreview) => libraryPreview.raw != LibraryContentProvider.instance.library);
-
-                        // Let the user pick the library to move the book to.
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: Text(strings.bookMoveTo),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              spacing: Themes.spacingSmall,
-                              children: [
-                                Text(strings.bookMoveToDescription),
-                                SingleChildScrollView(
-                                  physics: Themes.scrollPhysics,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: libraries
-                                        .map((LibraryPreview libraryPreview) => GestureDetector(
-                                              onTap: () {
-                                                final NavigatorState navigator = Navigator.of(context);
-
-                                                // Move the book to the selected library.
-                                                LibraryContentProvider.instance.moveBookTo(book, libraryPreview.raw);
-
-                                                navigator.pop();
-                                              },
-                                              child: LibraryPreviewWidget(library: libraryPreview),
-                                            ))
-                                        .toList(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
+                        MaterialUtils.moveBookTo(context, book: book);
                         break;
                       case ElementAction.delete:
                         showDialog(
