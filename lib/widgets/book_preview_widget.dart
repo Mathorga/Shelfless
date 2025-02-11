@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/author.dart';
-import 'package:shelfless/models/library_preview.dart';
-import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
@@ -12,7 +10,6 @@ import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/material_utils.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
-import 'package:shelfless/widgets/library_preview_widget.dart';
 
 class BookPreviewWidget extends StatelessWidget {
   final Book book;

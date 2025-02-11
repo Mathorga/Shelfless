@@ -6,9 +6,9 @@ class LocationPreviewWidget extends StatelessWidget {
   final StoreLocation location;
 
   const LocationPreviewWidget({
-    Key? key,
+    super.key,
     required this.location,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

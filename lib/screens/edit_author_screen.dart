@@ -13,9 +13,9 @@ class EditAuthorScreen extends StatefulWidget {
   final Author? author;
 
   const EditAuthorScreen({
-    Key? key,
+    super.key,
     this.author,
-  }) : super(key: key);
+  });
 
   @override
   State<EditAuthorScreen> createState() => _EditAuthorScreenState();
