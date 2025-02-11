@@ -2,38 +2,38 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/screens/edit_genre_screen.dart';
+import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/publisher_label_widget.dart';
 import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
-import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
+import 'package:shelfless/widgets/selection_widget/single_selection_widget.dart';
 
-class PublishersSelectionWidget extends StatefulWidget {
-  /// Already selected publisher ids.
-  final List<int?> selectedPublisherIds;
+class PublisherSelectionWidget extends StatefulWidget {
+  /// Already selected publisher id.
+  final int? selectedPublisherId;
 
   /// Whether the widget should allow the user to add a new publisher if not present already.
   final bool insertNew;
 
-  /// Called when a new set of publishers is selected from the source list,
-  final void Function(Set<int?> publisherIds)? onPublishersSelected;
+  /// Called when a publisher is selected from the source list,
+  final void Function(int? publisherId)? onPublisherSelected;
 
-  /// Called when a publisher is removed from the selection list.
+  /// Called when the publisher selection is cleared.
   final void Function(int publisherId)? onPublisherUnselected;
 
-  PublishersSelectionWidget({
+  const PublisherSelectionWidget({
     super.key,
-    List<int?>? inSelectedIds,
+    this.selectedPublisherId,
     this.insertNew = false,
-    this.onPublishersSelected,
+    this.onPublisherSelected,
     this.onPublisherUnselected,
-  }) : selectedPublisherIds = inSelectedIds ?? [];
+  });
 
   @override
-  State<PublishersSelectionWidget> createState() => _PublishersSelectionWidgetState();
+  State<PublisherSelectionWidget> createState() => _PublisherSelectionWidgetState();
 }
 
-class _PublishersSelectionWidgetState extends State<PublishersSelectionWidget> {
+class _PublisherSelectionWidgetState extends State<PublisherSelectionWidget> {
   final SelectionController _selectionController = SelectionController(
     sourceIds: LibraryContentProvider.instance.publishers.keys.toList(),
   );
@@ -43,26 +43,26 @@ class _PublishersSelectionWidgetState extends State<PublishersSelectionWidget> {
     super.initState();
 
     LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.genres.keys.toList());
+      _selectionController.setIds(LibraryContentProvider.instance.publishers.keys.toList());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultipleSelectionWidget(
-      title: strings.bookInfoPublishers,
+    return SingleSelectionWidget(
+      title: strings.bookInfoPublisher,
       controller: _selectionController,
-      inSelectedIds: widget.selectedPublisherIds,
+      inSelectedIds: [widget.selectedPublisherId].nonNulls.toList(),
       onInsertNewRequested: widget.insertNew
           ? () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (BuildContext context) => const EditGenreScreen(),
+                  builder: (BuildContext context) => const EditPublisherScreen(),
                 ),
               );
             }
           : null,
-      onItemsSelected: widget.onPublishersSelected,
+      onItemSelected: widget.onPublisherSelected,
       onItemUnselected: widget.onPublisherUnselected,
       listItemsFilter: (int? publisherId, String? filter) =>
           filter != null ? LibraryContentProvider.instance.publishers[publisherId].toString().toLowerCase().contains(filter) : true,

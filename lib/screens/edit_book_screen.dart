@@ -15,10 +15,12 @@ import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
+import 'package:shelfless/widgets/double_choice_dialog.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
 import 'package:shelfless/widgets/location_preview_widget.dart';
 import 'package:shelfless/widgets/publisher_label_widget.dart';
+import 'package:shelfless/widgets/publisher_selection_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
@@ -159,8 +161,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           ],
                         ),
                       ),
-                      Text(
-                          strings.coverDescription),
+                      Text(strings.coverDescription),
                     ],
                   ),
 
@@ -263,72 +264,19 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
 
                   // Publisher.
-                  EditSectionWidget(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(strings.bookInfoPublisher),
-                          if (_book.raw.publisherId == null)
-                            DialogButtonWidget(
-                              label: Text(strings.select),
-                              title: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(strings.publishers),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (BuildContext context) => EditPublisherScreen(),
-                                      ));
-                                    },
-                                    child: Text(strings.add),
-                                  ),
-                                ],
-                              ),
-                              content: StatefulBuilder(
-                                builder: (BuildContext context, void Function(void Function()) setState) {
-                                  LibraryContentProvider.instance.addListener(() {
-                                    if (context.mounted) setState(() {});
-                                  });
+                  PublisherSelectionWidget(
+                    insertNew: true,
+                    selectedPublisherId: _book.raw.publisherId,
+                    onPublisherSelected: (int? publisherId) {
+                      // Make sure the publisherId is not null.
+                      if (publisherId == null) return;
 
-                                  return SearchListWidget<int?>(
-                                    values: LibraryContentProvider.instance.publishers.keys.toList(),
-                                    filter: (int? publisherId, String? filter) => filter != null ? publisherId.toString().toLowerCase().contains(filter) : true,
-                                    builder: (int? publisherId) {
-                                      final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
-
-                                      if (publisher == null) return Placeholder();
-
-                                      return PublisherLabelWidget(
-                                        publisher: publisher,
-                                        // onTap: () {
-                                        //   // Make sure the publisherId is not null.
-                                        //   if (publisherId == null) return;
-
-                                        //   // Set the book publisher.
-                                        //   LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
-                                        //   Navigator.of(context).pop();
-                                        // },
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                        ],
-                      ),
-                      if (_book.raw.publisherId != null)
-                        Column(
-                          children: [
-                            Themes.spacer,
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: _buildPublisherPreview(_book.raw.publisherId!),
-                            ),
-                          ],
-                        ),
-                    ],
+                      // Set the book publisher.
+                      LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
+                    },
+                    onPublisherUnselected: (int? publisherId) {
+                      LibraryContentProvider.instance.removePublisherFromBook(_book);
+                    },
                   ),
 
                   // Location.
@@ -512,15 +460,55 @@ class _EditBookScreenState extends State<EditBookScreen> {
   }
 
   void _pickImage() async {
+    if (!mounted) return;
+
+    // Let the user select the image source.
+    ImageSource? imageSource = await showDialog<ImageSource>(
+      context: context,
+      builder: (BuildContext context) => DoubleChoiceDialog(
+        title: Text(strings.imageSourceTitle),
+        onFirstOptionSelected: () {
+          Navigator.of(context).pop(ImageSource.camera);
+        },
+        onSecondOptionSelected: () {
+          Navigator.of(context).pop(ImageSource.gallery);
+        },
+        firstOption: Text(strings.imageSourceCamera),
+        secondOption: Text(strings.imageSourceGallery),
+      ),
+    );
+
+    if (imageSource == null) return;
+
     // Pick file and make sure one is actually picked.
     // TODO Before actually returning the image, allow the user to correctly frame the image.
-    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await ImagePicker().pickImage(source: imageSource);
     if (pickedFile == null) return;
 
     // Decode the file as image and make sure it is a known image format.
     final Uint8List fileData = await pickedFile.readAsBytes();
-    final img.Image? image = img.decodeImage(fileData);
-    if (image == null) return;
+
+    img.Image? image;
+
+    // Image decoding could generate errors, so catch exceptions and let the user know.
+    try {
+      image = img.decodeImage(fileData);
+    } catch (exception) {
+      image = null;
+    }
+
+    if (image == null) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text(strings.genericError),
+            content: Text("Something went wrong while reading your image, try and pick another one."),
+          ),
+        );
+      }
+      return;
+    }
 
     // Resize the image to thumbnail size.
     final img.Image resizedImage = img.copyResizeCropSquare(

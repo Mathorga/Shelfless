@@ -72,7 +72,7 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
         _image = image;
       });
     });
-    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/test_old.frag.glsl");
+    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/circles.frag.glsl");
     _shader = program.fragmentShader();
     setState(() {
       // trigger a repaint

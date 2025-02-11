@@ -18,6 +18,9 @@ class Strings {
   String get addLibraryTitle => "";
   String get deleteLibraryTitle => "";
   String get deleteLibraryContent => "";
+  String get imageSourceTitle => "";
+  String get imageSourceCamera => "";
+  String get imageSourceGallery => "";
   String get yes => "";
   String get no => "";
   String get ok => "";

@@ -118,6 +118,7 @@ flutter:
     - shaders/curl.frag.glsl
     - shaders/test.frag.glsl
     - shaders/test_old.frag.glsl
+    - shaders/circles.frag.glsl
     # - shaders/xbr.glsl
   #   - shaders/xbr_scaling.vert.glsl
   #   - shaders/xbr_scaling.frag.glsl
