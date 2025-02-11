@@ -22,6 +22,8 @@ class RawBook {
 
   int edition;
 
+  String notes;
+
   RawBook({
     this.id,
     this.title = "",
@@ -32,6 +34,7 @@ class RawBook {
     this.locationId,
     this.out = false,
     this.edition = 1,
+    this.notes = "",
   });
 
   RawBook.fromMap({required Map<String, dynamic> map})
@@ -43,7 +46,8 @@ class RawBook {
         publisherId = map["${DatabaseHelper.booksTable}_publisher_id"],
         locationId = map["${DatabaseHelper.booksTable}_location_id"],
         out = map["${DatabaseHelper.booksTable}_out"] == 1,
-        edition = map["${DatabaseHelper.booksTable}_edition"];
+        edition = map["${DatabaseHelper.booksTable}_edition"],
+        notes = map["${DatabaseHelper.booksTable}_notes"];
 
   /// Creates and returns a copy of [this].
   RawBook copy() {
@@ -84,6 +88,7 @@ class RawBook {
       "${DatabaseHelper.booksTable}_location_id": locationId,
       "${DatabaseHelper.booksTable}_out": out ? 1 : 0,
       "${DatabaseHelper.booksTable}_edition": edition,
+      "${DatabaseHelper.booksTable}_notes": notes,
     };
   }
 

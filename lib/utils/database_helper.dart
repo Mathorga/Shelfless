@@ -100,7 +100,8 @@ class DatabaseHelper {
         ${booksTable}_publisher_id INTEGER,
         ${booksTable}_location_id INTEGER,
         ${booksTable}_out INTEGER DEFAULT 0,
-        ${booksTable}_edition INTEGER DEFAULT 0
+        ${booksTable}_edition INTEGER DEFAULT 0,
+        ${booksTable}_notes TEXT
       )
       """,
     );

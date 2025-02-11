@@ -45,6 +45,9 @@ class EditBookScreen extends StatefulWidget {
 class _EditBookScreenState extends State<EditBookScreen> {
   late Book _book;
 
+  late TextEditingController _titleController;
+  late TextEditingController _notesController;
+
   // Insert flag: tells whether the widget is used for adding or editing a book.
   bool _inserting = true;
 
@@ -57,6 +60,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
     });
 
     _inserting = widget.book == null;
+    _titleController = TextEditingController(text: widget.book?.raw.title ?? "");
+    _notesController = TextEditingController(text: widget.book?.raw.notes ?? "");
 
     // The book is copied in order not to edit the original one by mistake.
     _book = widget.book != null
@@ -76,14 +81,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
     final int currentYear = DateTime.now().year;
 
-    return UnfocusWidget(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
-        ),
-        body: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
+      ),
+      body: UnfocusWidget(
+        child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Padding(
             padding: const EdgeInsets.all(Themes.spacingMedium),
             child: SizedBox(
@@ -97,13 +102,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       Text(strings.bookInfoTitle),
                       Themes.spacer,
                       TextFormField(
-                        initialValue: _book.raw.title,
+                        controller: _titleController,
                         textCapitalization: TextCapitalization.words,
                         onChanged: (String value) => _book.raw.title = value,
                       ),
                     ],
                   ),
-
+            
                   // Cover.
                   EditSectionWidget(
                     spacing: Themes.spacingMedium,
@@ -142,7 +147,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                       ),
                               ),
                             ),
-
+            
                             // Only show the remove cover button if a cover is actually selected.
                             if (_book.raw.cover != null)
                               Positioned(
@@ -164,7 +169,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       Text(strings.coverDescription),
                     ],
                   ),
-
+            
                   // Authors.
                   AuthorsSelectionWidget(
                     inSelectedIds: _book.authorIds,
@@ -180,7 +185,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       });
                     },
                   ),
-
+            
                   // Publish year.
                   EditSectionWidget(
                     children: [
@@ -224,7 +229,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       ),
                     ],
                   ),
-
+            
                   // Genres.
                   GenresSelectionWidget(
                     inSelectedIds: _book.genreIds,
@@ -235,14 +240,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       for (int? genreId in selectedGenreIds) {
                         // Make sure the genreId is not null.
                         if (genreId == null) continue;
-
+            
                         if (!_book.genreIds.contains(genreId)) {
                           genreIds.add(genreId);
                         } else {
                           duplicates = true;
                         }
                       }
-
+            
                       if (duplicates) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -251,7 +256,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           ),
                         );
                       }
-
+            
                       LibraryContentProvider.instance.addGenresToBook(genreIds, _book);
                     },
                     onGenreUnselected: (int genreId) {
@@ -262,7 +267,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       });
                     },
                   ),
-
+            
                   // Publisher.
                   PublisherSelectionWidget(
                     insertNew: true,
@@ -270,7 +275,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     onPublisherSelected: (int? publisherId) {
                       // Make sure the publisherId is not null.
                       if (publisherId == null) return;
-
+            
                       // Set the book publisher.
                       LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
                     },
@@ -278,7 +283,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       LibraryContentProvider.instance.removePublisherFromBook(_book);
                     },
                   ),
-
+            
                   // Location.
                   UnreleasedFeatureWidget(
                     child: EditSectionWidget(
@@ -309,21 +314,21 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                     LibraryContentProvider.instance.addListener(() {
                                       if (context.mounted) setState(() {});
                                     });
-
+            
                                     return SearchListWidget<int?>(
                                       values: LibraryContentProvider.instance.locations.keys.toList(),
                                       filter: (int? locationId, String? filter) => filter != null ? locationId.toString().toLowerCase().contains(filter) : true,
                                       builder: (int? locationId) {
                                         final StoreLocation? location = LibraryContentProvider.instance.locations[locationId];
-
+            
                                         if (location == null) return Placeholder();
-
+            
                                         return LocationPreviewWidget(
                                           location: location,
                                           // onTap: () {
                                           //   // Make sure the publisherId is not null.
                                           //   if (locationId == null) return;
-
+            
                                           //   // Set the book location.
                                           //   LibraryContentProvider.instance.addPublisherToBook(locationId, _book);
                                           //   Navigator.of(context).pop();
@@ -349,65 +354,80 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       ],
                     ),
                   ),
-
+            
+                  // Notes.
+                  EditSectionWidget(
+                    children: [
+                      Text("Notes"),
+                      Themes.spacer,
+                      TextFormField(
+                        controller: _notesController,
+                        maxLines: null,
+                        textCapitalization: TextCapitalization.sentences,
+                        onChanged: (String value) => _book.raw.notes = value,
+                      ),
+                    ],
+                  ),
+            
+                  // Fab spacing.
                   const SizedBox(height: fabAccessHeight),
                 ],
               ),
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            // Prefetch handlers before async gaps.
-            final NavigatorState navigator = Navigator.of(context);
-
-            if (_book.raw.title == "") {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(strings.bookErrorNoTitleProvided),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-
-              return;
-            }
-
-            if (_book.authorIds.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(strings.bookErrorNoAuthorProvided),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-
-              return;
-            }
-
-            if (_book.genreIds.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(strings.bookErrorNoGenreProvided),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-
-              return;
-            }
-
-            widget.onDone?.call(_book);
-
-            // Actually save the book by upsert.
-            _inserting ? LibraryContentProvider.instance.storeNewBook(_book) : LibraryContentProvider.instance.storeBookUpdate(_book);
-
-            navigator.pop();
-          },
-          label: Row(
-            children: [
-              Text(strings.editDone),
-              const SizedBox(width: 12.0),
-              const Icon(Icons.check),
-            ],
-          ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Prefetch handlers before async gaps.
+          final NavigatorState navigator = Navigator.of(context);
+    
+          if (_book.raw.title == "") {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(strings.bookErrorNoTitleProvided),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+    
+            return;
+          }
+    
+          if (_book.authorIds.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(strings.bookErrorNoAuthorProvided),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+    
+            return;
+          }
+    
+          if (_book.genreIds.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(strings.bookErrorNoGenreProvided),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+    
+            return;
+          }
+    
+          widget.onDone?.call(_book);
+    
+          // Actually save the book by upsert.
+          _inserting ? LibraryContentProvider.instance.storeNewBook(_book) : LibraryContentProvider.instance.storeBookUpdate(_book);
+    
+          navigator.pop();
+        },
+        label: Row(
+          children: [
+            Text(strings.editDone),
+            const SizedBox(width: 12.0),
+            const Icon(Icons.check),
+          ],
         ),
       ),
     );

@@ -4,7 +4,6 @@ import 'package:shelfless/themes/shelfless_colors.dart';
 
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
-import 'package:shelfless/widgets/unavailable_content_widget.dart';
 import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 import 'package:yaml/yaml.dart';
 
