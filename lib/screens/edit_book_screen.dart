@@ -23,9 +23,7 @@ import 'package:shelfless/widgets/publisher_label_widget.dart';
 import 'package:shelfless/widgets/publisher_selection_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
-import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
-import 'package:shelfless/widgets/unreleased_feature_dialog.dart';
 import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class EditBookScreen extends StatefulWidget {
@@ -280,73 +278,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       LibraryContentProvider.instance.removePublisherFromBook(_book);
                     },
                   ),
-                  // EditSectionWidget(
-                  //   children: [
-                  //     Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         Text(strings.bookInfoPublisher),
-                  //         if (_book.raw.publisherId == null)
-                  //           DialogButtonWidget(
-                  //             label: Text(strings.select),
-                  //             title: Row(
-                  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //               children: [
-                  //                 Text(strings.publishers),
-                  //                 TextButton(
-                  //                   onPressed: () {
-                  //                     Navigator.of(context).push(MaterialPageRoute(
-                  //                       builder: (BuildContext context) => EditPublisherScreen(),
-                  //                     ));
-                  //                   },
-                  //                   child: Text(strings.add),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //             content: StatefulBuilder(
-                  //               builder: (BuildContext context, void Function(void Function()) setState) {
-                  //                 LibraryContentProvider.instance.addListener(() {
-                  //                   if (context.mounted) setState(() {});
-                  //                 });
-
-                  //                 return SearchListWidget<int?>(
-                  //                   values: LibraryContentProvider.instance.publishers.keys.toList(),
-                  //                   filter: (int? publisherId, String? filter) => filter != null ? publisherId.toString().toLowerCase().contains(filter) : true,
-                  //                   builder: (int? publisherId) {
-                  //                     final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
-
-                  //                     if (publisher == null) return Placeholder();
-
-                  //                     return GestureDetector(
-                  //                       onTap: () {
-                  //                         // Make sure the publisherId is not null.
-                  //                         if (publisherId == null) return;
-
-                  //                         // Set the book publisher.
-                  //                         LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
-                  //                         Navigator.of(context).pop();
-                  //                       },
-                  //                       child: PublisherLabelWidget(publisher: publisher),
-                  //                     );
-                  //                   },
-                  //                 );
-                  //               },
-                  //             ),
-                  //           ),
-                  //       ],
-                  //     ),
-                  //     if (_book.raw.publisherId != null)
-                  //       Column(
-                  //         children: [
-                  //           Themes.spacer,
-                  //           Padding(
-                  //             padding: const EdgeInsets.all(12.0),
-                  //             child: _buildPublisherPreview(_book.raw.publisherId!),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //   ],
-                  // ),
 
                   // Location.
                   UnreleasedFeatureWidget(
