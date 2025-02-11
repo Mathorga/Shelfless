@@ -31,6 +31,9 @@ class Themes {
   static const double unavailableFeatureOpacity = 0.3;
   static const double blurOpacity = 0.1;
 
+  static const double blurStrengthHigh = 20.0;
+  static const double blurStrengthMedium = 20.0;
+
   // Default durations.
   static const Duration durationXShort = Duration(milliseconds: 500);
   static const Duration durationShort = Duration(seconds: 1);

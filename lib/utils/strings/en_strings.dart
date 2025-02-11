@@ -57,6 +57,7 @@ class EnStrings implements Strings {
   @override String get deleteBookContent => "Are you sure you want to delete this book?\nThis is irreversible.";
   @override String get bookInfoTitle => "Title";
   @override String get bookInfoCover => "Cover";
+  @override String get bookInfoNotes => "Notes";
   @override String get bookInfoNoImageSelected => "no image selected";
   @override String get bookInfoLibrary => "Library";
   @override String get bookInfoAuthors => "Authors";

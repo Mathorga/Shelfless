@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:blur/blur.dart';
@@ -11,7 +13,6 @@ import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/material_utils.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
-import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class BookDetailScreen extends StatefulWidget {
   final Book book;
@@ -38,7 +39,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final EdgeInsets mediaQueryPadding = MediaQuery.paddingOf(context);
+    final EdgeInsets devicePadding = MediaQuery.paddingOf(context);
+    final Size deviceSize = MediaQuery.sizeOf(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -168,7 +170,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               },
               blendMode: BlendMode.dstOut,
               child: Blur(
-                blur: 20.0,
+                blur: Themes.blurStrengthHigh,
                 colorOpacity: Themes.blurOpacity,
                 blurColor: Colors.transparent,
                 child: SizedBox(
@@ -182,171 +184,178 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                 ),
               ),
             ),
-          SingleChildScrollView(
-            physics: Themes.scrollPhysics,
-            child: Column(
-              spacing: Themes.spacingLarge,
-              children: [
-                // Cover.
-                Column(
-                  spacing: Themes.spacingXLarge,
+          Align(
+            alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              physics: Themes.scrollPhysics,
+              child: SizedBox(
+                width: min(deviceSize.width, Themes.maxContentWidth),
+                child: Column(
+                  spacing: Themes.spacingLarge,
                   children: [
-                    // Top padding.
-                    SizedBox(
-                      height: mediaQueryPadding.top,
-                    ),
-                    Center(
-                      child: BookThumbnailWidget(
-                        book: _book,
-                        showOutBanner: true,
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Title, edition, publisher and publication year.
-                Column(
-                  spacing: Themes.spacingSmall,
-                  children: [
-                    // TItle.
-                    Center(
-                      child: Text(
-                        _book.raw.title,
-                        style: theme.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-
-                    // TODO Edition.
-
-                    // Publisher.
-                    if (LibraryContentProvider.instance.publishers[_book.raw.publisherId] != null)
-                      Center(
-                        child: Text("${LibraryContentProvider.instance.publishers[_book.raw.publisherId]!}"),
-                      ),
-
-                    // Publication year.
-                    Center(
-                      child: Text(
-                        "${_book.raw.publishYear}",
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Authors and genres.
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Authors.
-                    Padding(
-                      padding: const EdgeInsets.all(Themes.spacingLarge),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            strings.authorsSectionTitle,
-                            style: TextStyle(
-                              color: ShelflessColors.onMainContentInactive,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(Themes.spacingMedium),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: _book.authorIds.map((int authorId) => Text(LibraryContentProvider.instance.authors[authorId].toString())).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Genres.
-                    Padding(
-                      padding: const EdgeInsets.all(Themes.spacingLarge),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            strings.genresSectionTitle,
-                            style: TextStyle(
-                              color: ShelflessColors.onMainContentInactive,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(Themes.spacingMedium),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: _book.genreIds.map((int genreId) => Text(LibraryContentProvider.instance.genres[genreId].toString())).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Actions.
-                Padding(
-                  padding: const EdgeInsets.all(Themes.spacingMedium),
-                  child: Row(
-                    spacing: Themes.spacingSmall,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: _buildAction(
-                          context,
-                          onPressed: () {
-                            setState(() {
-                              // Update book and store the update in DB.
-                              _book.raw.out = !_book.raw.out;
-                            });
-                            LibraryContentProvider.instance.storeBookUpdate(_book);
-                          },
-                          label: _book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: _buildAction(
-                          context,
-                          onPressed: () {
-                            MaterialUtils.moveBookTo(context, book: _book);
-                          },
-                          label: strings.bookMoveTo,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Notes.
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(Themes.spacingMedium),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: Themes.spacingSmall,
+                    // Cover.
+                    Column(
+                      spacing: Themes.spacingXLarge,
                       children: [
-                        Text(
-                          "Notes",
-                          style: TextStyle(
-                            color: ShelflessColors.onMainContentInactive,
-                          ),
+                        // Top padding.
+                        SizedBox(
+                          height: devicePadding.top,
                         ),
-                        Text(
-                          _book.raw.notes,
-                          maxLines: null,
-                          textAlign: TextAlign.justify,
+                        Center(
+                          child: BookThumbnailWidget(
+                            book: _book,
+                            showOutBanner: true,
+                          ),
                         ),
                       ],
                     ),
-                  ),
+            
+                    // Title, edition, publisher and publication year.
+                    Column(
+                      spacing: Themes.spacingSmall,
+                      children: [
+                        // TItle.
+                        Center(
+                          child: Text(
+                            _book.raw.title,
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+            
+                        // TODO Edition.
+            
+                        // Publisher.
+                        if (LibraryContentProvider.instance.publishers[_book.raw.publisherId] != null)
+                          Center(
+                            child: Text("${LibraryContentProvider.instance.publishers[_book.raw.publisherId]!}"),
+                          ),
+            
+                        // Publication year.
+                        Center(
+                          child: Text(
+                            "${_book.raw.publishYear}",
+                          ),
+                        ),
+                      ],
+                    ),
+            
+                    // Authors and genres.
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Authors.
+                        Padding(
+                          padding: const EdgeInsets.all(Themes.spacingLarge),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                strings.authorsSectionTitle,
+                                style: TextStyle(
+                                  color: ShelflessColors.onMainContentInactive,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(Themes.spacingMedium),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: _book.authorIds.map((int authorId) => Text(LibraryContentProvider.instance.authors[authorId].toString())).toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+            
+                        // Genres.
+                        Padding(
+                          padding: const EdgeInsets.all(Themes.spacingLarge),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                strings.genresSectionTitle,
+                                style: TextStyle(
+                                  color: ShelflessColors.onMainContentInactive,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(Themes.spacingMedium),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: _book.genreIds.map((int genreId) => Text(LibraryContentProvider.instance.genres[genreId].toString())).toList(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+            
+                    // Actions.
+                    Padding(
+                      padding: const EdgeInsets.all(Themes.spacingMedium),
+                      child: Row(
+                        spacing: Themes.spacingSmall,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: _buildAction(
+                              context,
+                              onPressed: () {
+                                setState(() {
+                                  // Update book and store the update in DB.
+                                  _book.raw.out = !_book.raw.out;
+                                });
+                                LibraryContentProvider.instance.storeBookUpdate(_book);
+                              },
+                              label: _book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: _buildAction(
+                              context,
+                              onPressed: () {
+                                MaterialUtils.moveBookTo(context, book: _book);
+                              },
+                              label: strings.bookMoveTo,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            
+                    // Notes.
+                    SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.all(Themes.spacingMedium),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            Text(
+                              strings.bookInfoNotes,
+                              style: TextStyle(
+                                color: ShelflessColors.onMainContentInactive,
+                              ),
+                            ),
+                            Text(
+                              _book.raw.notes,
+                              maxLines: null,
+                              textAlign: TextAlign.justify,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ],

@@ -67,7 +67,7 @@ class LibraryContentProvider with ChangeNotifier {
     genres.addAll(Map.fromEntries((await DatabaseHelper.instance.getGenres()).map((RawGenre rawGenre) => MapEntry(rawGenre.id, rawGenre))));
     authors.addAll(Map.fromEntries((await DatabaseHelper.instance.getAuthors()).map((Author rawAuthor) => MapEntry(rawAuthor.id, rawAuthor))));
     publishers.addAll(Map.fromEntries((await DatabaseHelper.instance.getPublishers()).map((Publisher publisher) => MapEntry(publisher.id, publisher))));
-    // TODO Fetch locations.
+    locations.addAll(Map.fromEntries((await DatabaseHelper.instance.getLocations()).map((StoreLocation location) => MapEntry(location.id, location))));
 
     notifyListeners();
   }
@@ -227,6 +227,23 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> addLocation(StoreLocation location) async {
+    // Save the provided location to DB.
+    await DatabaseHelper.instance.insertLocation(location);
+
+    // Only save the author locally after storing it to DB.
+    locations[location.id] = location;
+
+    notifyListeners();
+  }
+
+  Future<void> updateLocation(StoreLocation location) async {
+    // Update the provided location in DB.
+    await DatabaseHelper.instance.updateLocation(location);
+
+    notifyListeners();
+  }
+
   Future<void> addGenresToBook(Set<int> genreIds, Book book) async {
     // Only save the relationship locally.
     book.genreIds.addAll(genreIds);
@@ -251,6 +268,20 @@ class LibraryContentProvider with ChangeNotifier {
   Future<void> removePublisherFromBook(Book book) async {
     // Only save the relationship locally.
     book.raw.publisherId = null;
+
+    notifyListeners();
+  }
+
+  Future<void> addLocationToBook(int locationId, Book book) async {
+    // Only save the relationship locally.
+    book.raw.locationId = locationId;
+
+    notifyListeners();
+  }
+
+  Future<void> removeLocationFromBook(Book book) async {
+    // Only save the relationship locally.
+    book.raw.locationId = null;
 
     notifyListeners();
   }

@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:collection/collection.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/raw_genre.dart';
+import 'package:shelfless/models/store_location.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:shelfless/models/author.dart';
@@ -626,6 +627,52 @@ class DatabaseHelper {
       publishersTable,
       where: "${publishersTable}_id = ?",
       whereArgs: [publisher.id],
+    );
+  }
+
+  // ###############################################################################################################################################################################
+  // ###############################################################################################################################################################################
+
+  // ###############################################################################################################################################################################
+  // Location CRUDs.
+  // ###############################################################################################################################################################################
+
+  /// Returns true if [location] is not referenced in any book.
+  Future<bool> isLocationRogue(StoreLocation location) async {
+    final List<Map<String, dynamic>> rawData = await _db.query(
+      booksTable,
+      where: "${booksTable}_location_id = ?",
+      whereArgs: [location.id],
+      limit: 1,
+    );
+
+    return rawData.isEmpty;
+  }
+
+  Future<List<StoreLocation>> getLocations() async {
+    final List<Map<String, dynamic>> rawData = await _db.query(locationsTable);
+    return rawData.map((Map<String, dynamic> element) => StoreLocation.fromMap(element)).toList();
+  }
+
+  Future<void> insertLocation(StoreLocation location) async {
+    // Insert the new location.
+    location.id = await _db.insert(locationsTable, location.toMap());
+  }
+
+  Future<void> updateLocation(StoreLocation location) async {
+    await _db.update(
+      locationsTable,
+      location.toMap(),
+      where: "${locationsTable}_id = ?",
+      whereArgs: [location.id],
+    );
+  }
+
+  Future<void> deleteLocation(StoreLocation location) async {
+    await _db.delete(
+      locationsTable,
+      where: "${locationsTable}_id = ?",
+      whereArgs: [location.id],
     );
   }
 

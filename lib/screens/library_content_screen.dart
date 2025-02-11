@@ -15,6 +15,7 @@ import 'package:shelfless/screens/book_detail_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
@@ -249,11 +250,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
 
           // Space left for the FAB.
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingMedium),
-              child: SizedBox(
-                height: Themes.spacingFAB,
-              ),
+            child: SizedBox(
+              height: fabAccessHeight,
             ),
           ),
         ],

@@ -5,11 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 
 import 'package:shelfless/models/book.dart';
-import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/raw_book.dart';
-import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/constants.dart';
@@ -18,13 +15,9 @@ import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/double_choice_dialog.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
-import 'package:shelfless/widgets/location_preview_widget.dart';
-import 'package:shelfless/widgets/publisher_label_widget.dart';
+import 'package:shelfless/widgets/location_selection_widget.dart';
 import 'package:shelfless/widgets/publisher_selection_widget.dart';
-import 'package:shelfless/widgets/search_list_widget.dart';
-import 'package:shelfless/widgets/dialog_button_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
-import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
@@ -108,7 +101,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       ),
                     ],
                   ),
-            
+
                   // Cover.
                   EditSectionWidget(
                     spacing: Themes.spacingMedium,
@@ -147,7 +140,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                       ),
                               ),
                             ),
-            
+
                             // Only show the remove cover button if a cover is actually selected.
                             if (_book.raw.cover != null)
                               Positioned(
@@ -169,7 +162,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       Text(strings.coverDescription),
                     ],
                   ),
-            
+
                   // Authors.
                   AuthorsSelectionWidget(
                     inSelectedIds: _book.authorIds,
@@ -185,7 +178,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       });
                     },
                   ),
-            
+
                   // Publish year.
                   EditSectionWidget(
                     children: [
@@ -229,7 +222,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       ),
                     ],
                   ),
-            
+
                   // Genres.
                   GenresSelectionWidget(
                     inSelectedIds: _book.genreIds,
@@ -240,14 +233,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       for (int? genreId in selectedGenreIds) {
                         // Make sure the genreId is not null.
                         if (genreId == null) continue;
-            
+
                         if (!_book.genreIds.contains(genreId)) {
                           genreIds.add(genreId);
                         } else {
                           duplicates = true;
                         }
                       }
-            
+
                       if (duplicates) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -256,7 +249,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           ),
                         );
                       }
-            
+
                       LibraryContentProvider.instance.addGenresToBook(genreIds, _book);
                     },
                     onGenreUnselected: (int genreId) {
@@ -267,7 +260,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       });
                     },
                   ),
-            
+
                   // Publisher.
                   PublisherSelectionWidget(
                     insertNew: true,
@@ -275,7 +268,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     onPublisherSelected: (int? publisherId) {
                       // Make sure the publisherId is not null.
                       if (publisherId == null) return;
-            
+
                       // Set the book publisher.
                       LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
                     },
@@ -283,82 +276,27 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       LibraryContentProvider.instance.removePublisherFromBook(_book);
                     },
                   ),
-            
+
                   // Location.
-                  UnreleasedFeatureWidget(
-                    child: EditSectionWidget(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(strings.bookInfoLocation),
-                            if (_book.raw.locationId == null)
-                              DialogButtonWidget(
-                                label: Text(strings.select),
-                                title: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(strings.locations),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (BuildContext context) => EditPublisherScreen(),
-                                        ));
-                                      },
-                                      child: Text(strings.add),
-                                    ),
-                                  ],
-                                ),
-                                content: StatefulBuilder(
-                                  builder: (BuildContext context, void Function(void Function()) setState) {
-                                    LibraryContentProvider.instance.addListener(() {
-                                      if (context.mounted) setState(() {});
-                                    });
-            
-                                    return SearchListWidget<int?>(
-                                      values: LibraryContentProvider.instance.locations.keys.toList(),
-                                      filter: (int? locationId, String? filter) => filter != null ? locationId.toString().toLowerCase().contains(filter) : true,
-                                      builder: (int? locationId) {
-                                        final StoreLocation? location = LibraryContentProvider.instance.locations[locationId];
-            
-                                        if (location == null) return Placeholder();
-            
-                                        return LocationPreviewWidget(
-                                          location: location,
-                                          // onTap: () {
-                                          //   // Make sure the publisherId is not null.
-                                          //   if (locationId == null) return;
-            
-                                          //   // Set the book location.
-                                          //   LibraryContentProvider.instance.addPublisherToBook(locationId, _book);
-                                          //   Navigator.of(context).pop();
-                                          // },
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-                          ],
-                        ),
-                        if (_book.raw.locationId != null)
-                          Column(
-                            children: [
-                              Themes.spacer,
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: _buildPublisherPreview(_book.raw.locationId!),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
+                  LocationSelectionWidget(
+                    insertNew: true,
+                    selectedLocationId: _book.raw.locationId,
+                    onLocationSelected: (int? locationId) {
+                      // Make sure the locationId is not null.
+                      if (locationId == null) return;
+
+                      // Set the book location.
+                      LibraryContentProvider.instance.addLocationToBook(locationId, _book);
+                    },
+                    onLocationUnselected: (int? locationId) {
+                      LibraryContentProvider.instance.removeLocationFromBook(_book);
+                    },
                   ),
-            
+
                   // Notes.
                   EditSectionWidget(
                     children: [
-                      Text("Notes"),
+                      Text(strings.bookInfoNotes),
                       Themes.spacer,
                       TextFormField(
                         controller: _notesController,
@@ -368,7 +306,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       ),
                     ],
                   ),
-            
+
                   // Fab spacing.
                   const SizedBox(height: fabAccessHeight),
                 ],
@@ -381,7 +319,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
         onPressed: () {
           // Prefetch handlers before async gaps.
           final NavigatorState navigator = Navigator.of(context);
-    
+
           if (_book.raw.title == "") {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -389,10 +327,10 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 duration: const Duration(seconds: 2),
               ),
             );
-    
+
             return;
           }
-    
+
           if (_book.authorIds.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -400,10 +338,10 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 duration: const Duration(seconds: 2),
               ),
             );
-    
+
             return;
           }
-    
+
           if (_book.genreIds.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -411,15 +349,15 @@ class _EditBookScreenState extends State<EditBookScreen> {
                 duration: const Duration(seconds: 2),
               ),
             );
-    
+
             return;
           }
-    
+
           widget.onDone?.call(_book);
-    
+
           // Actually save the book by upsert.
           _inserting ? LibraryContentProvider.instance.storeNewBook(_book) : LibraryContentProvider.instance.storeBookUpdate(_book);
-    
+
           navigator.pop();
         },
         label: Row(
@@ -430,52 +368,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildPublisherPreview(int publisherId) {
-    final Publisher? publisher = LibraryContentProvider.instance.publishers[publisherId];
-
-    if (publisher == null) return Placeholder();
-
-    return _buildPreview(
-      PublisherLabelWidget(publisher: publisher),
-      onDelete: () {
-        // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
-        // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
-        setState(() {
-          _book.raw.publisherId = null;
-        });
-      },
-    );
-  }
-
-  Widget _buildLocationPreview(StoreLocation location) => _buildPreview(
-        LocationPreviewWidget(location: location),
-        onDelete: () {
-          setState(() {
-            _book.raw.locationId = null;
-          });
-        },
-      );
-
-  Widget _buildPreview(Widget child, {void Function()? onDelete}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: child,
-        ),
-        TextButton(
-          onPressed: () {
-            onDelete?.call();
-          },
-          child: Icon(
-            Icons.close_rounded,
-            color: ShelflessColors.error,
-          ),
-        ),
-      ],
     );
   }
 
@@ -493,8 +385,26 @@ class _EditBookScreenState extends State<EditBookScreen> {
         onSecondOptionSelected: () {
           Navigator.of(context).pop(ImageSource.gallery);
         },
-        firstOption: Text(strings.imageSourceCamera),
-        secondOption: Text(strings.imageSourceGallery),
+        firstOption: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.camera_rounded,
+              size: Themes.iconSizeLarge,
+            ),
+            Text(strings.imageSourceCamera),
+          ],
+        ),
+        secondOption: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.camera_roll_rounded,
+              size: Themes.iconSizeLarge,
+            ),
+            Text(strings.imageSourceGallery),
+          ],
+        ),
       ),
     );
 

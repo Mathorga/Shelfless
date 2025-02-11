@@ -8,8 +8,6 @@ import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditPublisherScreen extends StatefulWidget {
-  static const String routeName = "/edit-publisher";
-
   final Publisher? publisher;
 
   const EditPublisherScreen({
@@ -48,7 +46,7 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
           title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.publisherTitle}"),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(Themes.spacingMedium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -73,9 +71,9 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
             Navigator.of(context).pop();
           },
           label: Row(
+            spacing: Themes.spacingMedium,
             children: [
               Text(strings.editDone),
-              const SizedBox(width: 12.0),
               const Icon(Icons.check),
             ],
           ),
