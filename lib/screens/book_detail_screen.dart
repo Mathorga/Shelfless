@@ -401,6 +401,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
         padding: const EdgeInsets.all(Themes.spacingMedium),
         child: Text(
           label,
+          maxLines: 1,
         ),
       ),
     );
