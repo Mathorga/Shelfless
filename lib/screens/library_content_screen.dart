@@ -77,7 +77,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final ThemeData theme = Theme.of(context);
     final bool filtersActive = LibraryContentProvider.instance.getFilters().isActive;
     final Size screenSize = MediaQuery.sizeOf(context);
-    final double crossAxisSpacing = 0.0;
+    final double crossAxisSpacing = Themes.spacingSmall;
     final double itemWidth = 200.0;
     final double itemHeight = 280.0;
     final double leftRightPadding = 0.0;
@@ -243,10 +243,11 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
 
           if (books.isEmpty)
             SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(
-                  child: Text(strings.noBooksFound),
-                )),
+              hasScrollBody: false,
+              child: Center(
+                child: Text(strings.noBooksFound),
+              ),
+            ),
 
           // Space left for the FAB.
           SliverToBoxAdapter(
