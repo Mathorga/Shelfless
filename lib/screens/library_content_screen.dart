@@ -77,6 +77,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final ThemeData theme = Theme.of(context);
     final bool filtersActive = LibraryContentProvider.instance.getFilters().isActive;
     final Size screenSize = MediaQuery.sizeOf(context);
+    final EdgeInsets devicePadding = MediaQuery.paddingOf(context);
     final double crossAxisSpacing = Themes.spacingSmall;
     final double itemWidth = 200.0;
     final double itemHeight = 280.0;
@@ -229,7 +230,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                       onTap: () {
                         // Prefetch handlers before async gaps.
                         final NavigatorState navigator = Navigator.of(context);
-              
+
                         // Navigate to book edit screen.
                         navigator.push(MaterialPageRoute(
                           builder: (BuildContext context) => BookDetailScreen(
@@ -254,8 +255,9 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
 
           // Space left for the FAB.
           SliverToBoxAdapter(
+            // TODO Check whether adding the device botto inset also works on Android, since it's designed for iOS.
             child: SizedBox(
-              height: fabAccessHeight,
+              height: fabAccessHeight + devicePadding.bottom,
             ),
           ),
         ],
