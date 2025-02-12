@@ -302,7 +302,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         controller: _notesController,
                         maxLines: null,
                         textCapitalization: TextCapitalization.sentences,
-                        onChanged: (String value) => _book.raw.notes = value,
+                        onChanged: (String value) {
+                          _book.raw.notes = value;
+                        },
                       ),
                     ],
                   ),

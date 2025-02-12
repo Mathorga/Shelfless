@@ -191,7 +191,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               child: SizedBox(
                 width: min(deviceSize.width, Themes.maxContentWidth),
                 child: Column(
-                  spacing: Themes.spacingLarge,
+                  spacing: Themes.spacingMedium,
                   children: [
                     // Cover.
                     Column(
@@ -209,7 +209,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                         ),
                       ],
                     ),
-            
+
                     // Title, edition, publisher and publication year.
                     Column(
                       spacing: Themes.spacingSmall,
@@ -224,15 +224,15 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             textAlign: TextAlign.center,
                           ),
                         ),
-            
+
                         // TODO Edition.
-            
+
                         // Publisher.
                         if (LibraryContentProvider.instance.publishers[_book.raw.publisherId] != null)
                           Center(
                             child: Text("${LibraryContentProvider.instance.publishers[_book.raw.publisherId]!}"),
                           ),
-            
+
                         // Publication year.
                         Center(
                           child: Text(
@@ -241,7 +241,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                         ),
                       ],
                     ),
-            
+
                     // Authors and genres.
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -268,7 +268,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             ],
                           ),
                         ),
-            
+
                         // Genres.
                         Padding(
                           padding: const EdgeInsets.all(Themes.spacingLarge),
@@ -293,7 +293,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                         ),
                       ],
                     ),
-            
+
                     // Actions.
                     Padding(
                       padding: const EdgeInsets.all(Themes.spacingMedium),
@@ -328,31 +328,54 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                         ],
                       ),
                     ),
-            
-                    // Notes.
-                    SizedBox(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.all(Themes.spacingMedium),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: Themes.spacingSmall,
-                          children: [
-                            Text(
-                              strings.bookInfoNotes,
-                              style: TextStyle(
-                                color: ShelflessColors.onMainContentInactive,
+
+                    // Location.
+                    if (_book.raw.locationId != null)
+                      SizedBox(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.all(Themes.spacingMedium),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: Themes.spacingSmall,
+                            children: [
+                              Text(
+                                strings.locationTitle,
+                                style: TextStyle(
+                                  color: ShelflessColors.onMainContentInactive,
+                                ),
                               ),
-                            ),
-                            Text(
-                              _book.raw.notes,
-                              maxLines: null,
-                              textAlign: TextAlign.justify,
-                            ),
-                          ],
+                              Text("${LibraryContentProvider.instance.locations[_book.raw.locationId]}"),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+
+                    // Notes.
+                    if (_book.raw.notes.isNotEmpty)
+                      SizedBox(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.all(Themes.spacingMedium),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: Themes.spacingSmall,
+                            children: [
+                              Text(
+                                strings.bookInfoNotes,
+                                style: TextStyle(
+                                  color: ShelflessColors.onMainContentInactive,
+                                ),
+                              ),
+                              Text(
+                                _book.raw.notes,
+                                maxLines: null,
+                                textAlign: TextAlign.justify,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

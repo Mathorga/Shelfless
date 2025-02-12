@@ -61,6 +61,7 @@ class RawBook {
       locationId: locationId,
       out: out,
       edition: edition,
+      notes: notes,
     );
   }
 
@@ -75,6 +76,7 @@ class RawBook {
     locationId = other.locationId;
     out = other.out;
     edition = other.edition;
+    notes = other.notes;
   }
 
   Map<String, dynamic> toMap() {
