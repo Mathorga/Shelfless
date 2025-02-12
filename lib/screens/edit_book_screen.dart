@@ -128,13 +128,19 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                     : Card(
                                         color: ShelflessColors.mainContentActive,
                                         child: Center(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            spacing: Themes.spacingSmall,
-                                            children: [
-                                              Icon(Icons.image_rounded),
-                                              Text(strings.bookInfoNoImageSelected),
-                                            ],
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(Themes.spacingSmall),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              spacing: Themes.spacingSmall,
+                                              children: [
+                                                Icon(Icons.image_rounded),
+                                                Text(
+                                                  strings.bookInfoNoImageSelected,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),

@@ -80,7 +80,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final double crossAxisSpacing = Themes.spacingSmall;
     final double itemWidth = 200.0;
     final double itemHeight = 280.0;
-    final double leftRightPadding = 0.0;
+    final double leftRightPadding = Themes.spacingSmall;
 
     // The cross axis count should never go below 2.
     final int crossAxisCount = max((screenSize.width / itemWidth).toInt(), 2);
@@ -213,31 +213,34 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
           ),
 
           if (books.isNotEmpty)
-            SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: crossAxisSpacing,
-                childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / crossAxisCount) / itemHeight,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  final Book book = books[index];
-                  return BookPreviewWidget(
-                    book: book,
-                    onTap: () {
-                      // Prefetch handlers before async gaps.
-                      final NavigatorState navigator = Navigator.of(context);
-
-                      // Navigate to book edit screen.
-                      navigator.push(MaterialPageRoute(
-                        builder: (BuildContext context) => BookDetailScreen(
-                          book: book,
-                        ),
-                      ));
-                    },
-                  );
-                },
-                childCount: books.length,
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: leftRightPadding),
+              sliver: SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: crossAxisSpacing,
+                  childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / crossAxisCount) / itemHeight,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    final Book book = books[index];
+                    return BookPreviewWidget(
+                      book: book,
+                      onTap: () {
+                        // Prefetch handlers before async gaps.
+                        final NavigatorState navigator = Navigator.of(context);
+              
+                        // Navigate to book edit screen.
+                        navigator.push(MaterialPageRoute(
+                          builder: (BuildContext context) => BookDetailScreen(
+                            book: book,
+                          ),
+                        ));
+                      },
+                    );
+                  },
+                  childCount: books.length,
+                ),
               ),
             ),
 
