@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/store_location.dart';
+import 'package:shelfless/themes/themes.dart';
 
 class LocationPreviewWidget extends StatelessWidget {
   final StoreLocation location;
@@ -15,7 +16,7 @@ class LocationPreviewWidget extends StatelessWidget {
     return Card(
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(Themes.spacingMedium),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

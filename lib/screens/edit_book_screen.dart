@@ -74,6 +74,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
     final int currentYear = DateTime.now().year;
 
+    final EdgeInsets devicePadding = MediaQuery.paddingOf(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
@@ -316,7 +318,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   ),
 
                   // Fab spacing.
-                  const SizedBox(height: fabAccessHeight),
+                  // TODO Check whether adding the device botto inset also works on Android, since it's designed for iOS.
+                  SizedBox(height: fabAccessHeight + devicePadding.bottom),
                 ],
               ),
             ),
