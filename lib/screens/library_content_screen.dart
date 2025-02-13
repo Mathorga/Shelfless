@@ -18,10 +18,11 @@ import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/utils/view_mode.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
+import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 import 'package:shelfless/widgets/drawer_content_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
-import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 enum LibraryAction {
   edit,
@@ -43,6 +44,8 @@ class LibraryContentScreen extends StatefulWidget {
 
 class _LibraryContentScreenState extends State<LibraryContentScreen> {
   late LibraryPreview library;
+
+  ViewMode viewMode = ViewMode.wideGrid;
 
   @override
   void initState() {
@@ -79,12 +82,31 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final Size screenSize = MediaQuery.sizeOf(context);
     final EdgeInsets devicePadding = MediaQuery.paddingOf(context);
     final double crossAxisSpacing = Themes.spacingSmall;
-    final double itemWidth = 200.0;
-    final double itemHeight = 280.0;
+    final double mainAxisSpacing = Themes.spacingSmall;
+    final double wideItemWidth = 200.0;
+    final double thinItemWidth = 100.0;
+    final double wideItemHeight = 280.0;
+    final double thinItemHeight = 180.0;
     final double leftRightPadding = Themes.spacingSmall;
 
+    final double itemWidth = switch (viewMode) {
+      ViewMode.wideGrid => wideItemWidth,
+      ViewMode.thinGrid => thinItemWidth,
+      ViewMode.list => thinItemWidth,
+    };
+
+    final double itemHeight = switch (viewMode) {
+      ViewMode.wideGrid => wideItemHeight,
+      ViewMode.thinGrid => thinItemHeight,
+      ViewMode.list => thinItemHeight,
+    };
+
     // The cross axis count should never go below 2.
-    final int crossAxisCount = max((screenSize.width / itemWidth).toInt(), 2);
+    final int gridCrossAxisCount = switch (viewMode) {
+      ViewMode.wideGrid => max((screenSize.width / itemWidth).toInt(), 2),
+      ViewMode.thinGrid => max((screenSize.width / itemWidth).toInt(), 3),
+      ViewMode.list => max((screenSize.width / itemWidth).toInt(), 2),
+    };
 
     // Save books locally for easier (not faster) access.
     final List<Book> books = LibraryContentProvider.instance.books;
@@ -123,6 +145,23 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                   );
                 },
               ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    // Rotate ViewMode values.
+                    viewMode = ViewMode.values[(viewMode.index + 1) % ViewMode.values.length];
+
+                    // TODO Store viewmode in shared preferences.
+                  });
+                },
+                icon: Icon(
+                  switch (viewMode) {
+                    ViewMode.list => Icons.table_rows_rounded,
+                    ViewMode.thinGrid => Icons.view_module_rounded,
+                    ViewMode.wideGrid => Icons.grid_view_rounded,
+                  },
+                ),
+              ),
               PopupMenuButton<LibraryAction>(
                 itemBuilder: (BuildContext context) {
                   return [
@@ -134,18 +173,6 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                           const Icon(Icons.edit_rounded),
                           Text(strings.editTitle),
                         ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: LibraryAction.displayMode,
-                      child: UnreleasedFeatureWidget(
-                        child: Row(
-                          spacing: Themes.spacingSmall,
-                          children: [
-                            const Icon(Icons.view_list_rounded),
-                            Text("Show list"),
-                          ],
-                        ),
                       ),
                     ),
                     PopupMenuItem(
@@ -216,33 +243,48 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
           if (books.isNotEmpty)
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: leftRightPadding),
-              sliver: SliverGrid(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: crossAxisSpacing,
-                  childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / crossAxisCount) / itemHeight,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    final Book book = books[index];
-                    return BookPreviewWidget(
-                      book: book,
-                      onTap: () {
-                        // Prefetch handlers before async gaps.
-                        final NavigatorState navigator = Navigator.of(context);
-
-                        // Navigate to book edit screen.
-                        navigator.push(MaterialPageRoute(
-                          builder: (BuildContext context) => BookDetailScreen(
+              sliver: viewMode == ViewMode.list
+                  ? SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          final Book book = books[index];
+                          return BookPreviewWidget(
                             book: book,
-                          ),
-                        ));
-                      },
-                    );
-                  },
-                  childCount: books.length,
-                ),
-              ),
+                            viewMode: viewMode,
+                            onTap: () => _gotoBookDetails(book),
+                          );
+                        },
+                        childCount: books.length,
+                      ),
+                    )
+                  : SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: gridCrossAxisCount,
+                        crossAxisSpacing: crossAxisSpacing,
+                        mainAxisSpacing: mainAxisSpacing,
+                        childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / gridCrossAxisCount) / itemHeight,
+                        // childAspectRatio: itemWidth / itemHeight,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          final Book book = books[index];
+                          return switch (viewMode) {
+                            ViewMode.wideGrid => BookPreviewWidget(
+                                book: book,
+                                viewMode: viewMode,
+                                onTap: () => _gotoBookDetails(book),
+                              ),
+                            ViewMode.thinGrid => BookPreviewWidget(
+                                book: book,
+                                viewMode: viewMode,
+                                onTap: () => _gotoBookDetails(book),
+                              ),
+                            ViewMode.list => Placeholder(),
+                          };
+                        },
+                        childCount: books.length,
+                      ),
+                    ),
             ),
 
           if (books.isEmpty)
@@ -274,5 +316,17 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
               child: Icon(Icons.add_rounded),
             ),
     );
+  }
+
+  void _gotoBookDetails(Book book) {
+    // Prefetch handlers before async gaps.
+    final NavigatorState navigator = Navigator.of(context);
+
+    // Navigate to book edit screen.
+    navigator.push(MaterialPageRoute(
+      builder: (BuildContext context) => BookDetailScreen(
+        book: book,
+      ),
+    ));
   }
 }

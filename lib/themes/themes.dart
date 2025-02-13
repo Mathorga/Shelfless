@@ -29,6 +29,7 @@ class Themes {
 
   // Default opacity for displaying unavailable features.
   static const double unavailableFeatureOpacity = 0.3;
+  static const double foregroundHighlightOpacity = 0.4;
   static const double blurOpacity = 0.1;
 
   static const double blurStrengthHigh = 20.0;

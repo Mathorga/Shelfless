@@ -9,15 +9,19 @@ import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/material_utils.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/utils/view_mode.dart';
+import 'package:shelfless/widgets/book_genres_box_widget.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 
 class BookPreviewWidget extends StatelessWidget {
   final Book book;
+  final ViewMode viewMode;
   final void Function()? onTap;
 
   const BookPreviewWidget({
     super.key,
     required this.book,
+    this.viewMode = ViewMode.wideGrid,
     this.onTap,
   });
 
@@ -32,164 +36,208 @@ class BookPreviewWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        spacing: Themes.spacingMedium,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          BookThumbnailWidget(
-            book: book,
-            showOutBanner: true,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Themes.spacingSmall),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    spacing: Themes.spacingXSmall,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      // Title.
-                      Text(
-                        book.raw.title,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w900,
-                            ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        textAlign: TextAlign.start,
-                      ),
-
-                      // Authors.
-                      if (authors.isNotEmpty)
-                        Text(
-                          authors.length <= 2
-                              ? authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element")
-                              : "${authors.first}, others",
-                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                                fontWeight: FontWeight.w300,
-                              ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                    ],
-                  ),
+      child: switch (viewMode) {
+        ViewMode.list => Card(
+            child: BookGenresBoxWidget(
+              book: book,
+              child: Padding(
+                padding: const EdgeInsets.all(Themes.spacingSmall),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(book.raw.title),
+                    ),
+                    _buildPopupMenuButton(context),
+                  ],
                 ),
-                PopupMenuButton<ElementAction>(
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      PopupMenuItem(
-                        value: ElementAction.edit,
-                        child: Row(
-                          spacing: Themes.spacingSmall,
-                          children: [
-                            const Icon(Icons.edit_rounded),
-                            Text(strings.bookEdit),
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: ElementAction.moveTo,
-                        child: Row(
-                          spacing: Themes.spacingSmall,
-                          children: [
-                            const Icon(Icons.move_up_rounded),
-                            Text(strings.bookMoveTo),
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem(
-                        value: ElementAction.delete,
-                        child: Row(
-                          spacing: Themes.spacingSmall,
-                          children: [
-                            const Icon(Icons.delete_rounded),
-                            Text(strings.bookDeleteAction),
-                          ],
-                        ),
-                      ),
-                    ];
-                  },
-                  onSelected: (ElementAction value) {
-                    switch (value) {
-                      case ElementAction.edit:
-                        // Open EditBookScreen.
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => EditBookScreen(
-                            book: book,
-                          ),
-                        ));
-                        break;
-                      case ElementAction.moveTo:
-                        MaterialUtils.moveBookTo(context, book: book);
-                        break;
-                      case ElementAction.delete:
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: Text(strings.deleteBookTitle),
-                            content: Text(strings.deleteBookContent),
-                            actions: [
-                              // Cancel button.
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: ShelflessColors.onMainContentActive,
-                                ),
-                                child: Text(strings.cancel),
-                              ),
-
-                              // Confirm button.
-                              ElevatedButton(
-                                onPressed: () async {
-                                  // Prefetch handlers before async gaps.
-                                  final NavigatorState navigator = Navigator.of(context);
-                                  final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
-
-                                  // Delete the book.
-                                  await LibraryContentProvider.instance.deleteBook(book);
-
-                                  messenger.showSnackBar(
-                                    SnackBar(
-                                      // margin: const EdgeInsets.all(Themes.spacingMedium),
-                                      duration: Themes.durationShort,
-                                      behavior: SnackBarBehavior.floating,
-                                      width: Themes.snackBarSizeSmall,
-                                      content: Text(
-                                        strings.bookDeleted,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  );
-
-                                  // Pop back.
-                                  navigator.pop();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: ShelflessColors.error,
-                                  iconColor: ShelflessColors.onMainContentActive,
-                                  foregroundColor: ShelflessColors.onMainContentActive,
-                                ),
-                                child: Text(strings.ok),
-                              ),
-                            ],
-                          ),
-                        );
-                        break;
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(Themes.spacingSmall),
-                    child: Icon(
-                      Icons.more_vert_rounded,
+              ),
+            ),
+          ),
+        ViewMode.thinGrid => Stack(
+            children: [
+              BookThumbnailWidget(
+                book: book,
+                showOutBanner: true,
+                overlay: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: Themes.foregroundHighlightOpacity),
+                        Colors.transparent,
+                      ],
                     ),
                   ),
                 ),
+              ),
+              Container(
+                alignment: Alignment.topRight,
+                child: _buildPopupMenuButton(context),
+              )
+            ],
+          ),
+        ViewMode.wideGrid => Column(
+            spacing: Themes.spacingMedium,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              BookThumbnailWidget(
+                book: book,
+                showOutBanner: true,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Themes.spacingSmall),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        spacing: Themes.spacingXSmall,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          // Title.
+                          Text(
+                            book.raw.title,
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            textAlign: TextAlign.start,
+                          ),
+
+                          // Authors.
+                          if (authors.isNotEmpty)
+                            Text(
+                              authors.length <= 2
+                                  ? authors.map((Author author) => author.toString()).reduce((String value, String element) => "$value, $element")
+                                  : "${authors.first}, others",
+                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                        ],
+                      ),
+                    ),
+                    _buildPopupMenuButton(context),
+                  ],
+                ),
+              ),
+            ],
+          ),
+      },
+    );
+  }
+
+  Widget _buildPopupMenuButton(BuildContext context) {
+    return PopupMenuButton<ElementAction>(
+      itemBuilder: (BuildContext context) {
+        return [
+          PopupMenuItem(
+            value: ElementAction.edit,
+            child: Row(
+              spacing: Themes.spacingSmall,
+              children: [
+                const Icon(Icons.edit_rounded),
+                Text(strings.bookEdit),
               ],
             ),
           ),
-        ],
+          PopupMenuItem(
+            value: ElementAction.moveTo,
+            child: Row(
+              spacing: Themes.spacingSmall,
+              children: [
+                const Icon(Icons.move_up_rounded),
+                Text(strings.bookMoveTo),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: ElementAction.delete,
+            child: Row(
+              spacing: Themes.spacingSmall,
+              children: [
+                const Icon(Icons.delete_rounded),
+                Text(strings.bookDeleteAction),
+              ],
+            ),
+          ),
+        ];
+      },
+      onSelected: (ElementAction value) {
+        switch (value) {
+          case ElementAction.edit:
+            // Open EditBookScreen.
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => EditBookScreen(
+                book: book,
+              ),
+            ));
+            break;
+          case ElementAction.moveTo:
+            MaterialUtils.moveBookTo(context, book: book);
+            break;
+          case ElementAction.delete:
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: Text(strings.deleteBookTitle),
+                content: Text(strings.deleteBookContent),
+                actions: [
+                  // Cancel button.
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: TextButton.styleFrom(
+                      foregroundColor: ShelflessColors.onMainContentActive,
+                    ),
+                    child: Text(strings.cancel),
+                  ),
+
+                  // Confirm button.
+                  ElevatedButton(
+                    onPressed: () async {
+                      // Prefetch handlers before async gaps.
+                      final NavigatorState navigator = Navigator.of(context);
+                      final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
+                      // Delete the book.
+                      await LibraryContentProvider.instance.deleteBook(book);
+
+                      messenger.showSnackBar(
+                        SnackBar(
+                          // margin: const EdgeInsets.all(Themes.spacingMedium),
+                          duration: Themes.durationShort,
+                          behavior: SnackBarBehavior.floating,
+                          width: Themes.snackBarSizeSmall,
+                          content: Text(
+                            strings.bookDeleted,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+
+                      // Pop back.
+                      navigator.pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ShelflessColors.error,
+                      iconColor: ShelflessColors.onMainContentActive,
+                      foregroundColor: ShelflessColors.onMainContentActive,
+                    ),
+                    child: Text(strings.ok),
+                  ),
+                ],
+              ),
+            );
+            break;
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(Themes.spacingSmall),
+        child: Icon(Icons.more_vert_rounded),
       ),
     );
   }

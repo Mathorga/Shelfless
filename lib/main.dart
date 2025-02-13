@@ -23,7 +23,7 @@ class Shelfless extends StatelessWidget {
     return MaterialApp(
       title: Themes.appName,
       theme: Themes.shelflessTheme,
-      home: StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) {
+      home: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
         LibrariesProvider.instance.addListener(() {
           if (context.mounted) {
             setState(() {});

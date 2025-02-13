@@ -52,7 +52,7 @@ class SingleSelectionWidget extends StatelessWidget {
                 ],
               ),
               content: StatefulBuilder(
-                builder: (BuildContext context, void Function(void Function()) setState) {
+                builder: (BuildContext context, StateSetter setState) {
                   // Make sure updates are reacted to.
                   controller.addListener(() {
                     if (context.mounted) setState(() {});
