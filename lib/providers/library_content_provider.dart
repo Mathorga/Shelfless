@@ -227,6 +227,11 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Returns true if [location] is not referenced in any book.
+  Future<bool> isLocationRogue(StoreLocation location) async {
+    return await DatabaseHelper.instance.isLocationRogue(location);
+  }
+
   Future<void> addLocation(StoreLocation location) async {
     // Save the provided location to DB.
     await DatabaseHelper.instance.insertLocation(location);
@@ -240,6 +245,15 @@ class LibraryContentProvider with ChangeNotifier {
   Future<void> updateLocation(StoreLocation location) async {
     // Update the provided location in DB.
     await DatabaseHelper.instance.updateLocation(location);
+
+    notifyListeners();
+  }
+
+  /// Delete the provided location from DB.
+  Future<void> deleteLocation(StoreLocation location) async {
+    await DatabaseHelper.instance.deleteLocation(location);
+
+    locations.remove(location.id);
 
     notifyListeners();
   }

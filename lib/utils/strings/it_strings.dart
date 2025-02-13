@@ -39,6 +39,10 @@ class ItStrings implements Strings {
   @override String get publisherDeleted => "Editore eliminato";
   @override String get deletePublisherTitle => "Elimina editore";
   @override String get deletePublisherContent => "Vuoi davvero eliminare questo editore?\nL'operazione è irreversibile.";
+  @override String get cannotDeleteLocationContent => "Questa posizione compare ancora in alcuni libri.\nCancellali o modificali e poi riprova";
+  @override String get locationDeleted => "Posizione eliminata";
+  @override String get deleteLocationTitle => "Elimina posizione";
+  @override String get deleteLocationContent => "Vuoi davvero eliminare questa posizione?\nL'operazione è irreversibile.";
   @override String get authorInfo => "Scheda Autore";
   @override String get genreInfo => "Scheda Genere";
   @override String get publisherInfo => "Scheda Editore";

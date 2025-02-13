@@ -39,6 +39,10 @@ class Strings {
   String get publisherDeleted => "";
   String get deletePublisherTitle => "";
   String get deletePublisherContent => "";
+  String get cannotDeleteLocationContent => "";
+  String get locationDeleted => "";
+  String get deleteLocationTitle => "";
+  String get deleteLocationContent => "";
   String get authorInfo => "";
   String get genreInfo => "";
   String get publisherInfo => "";

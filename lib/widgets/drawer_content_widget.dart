@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/screens/authors_overview_screen.dart';
 import 'package:shelfless/screens/genres_overview_screen.dart';
+import 'package:shelfless/screens/locations_overview_screen.dart';
 import 'package:shelfless/screens/publishers_overview_screen.dart';
 import 'package:shelfless/screens/settings_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/libraries_list_widget.dart';
-import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class DrawerContentWidget extends StatelessWidget {
   const DrawerContentWidget({super.key});
@@ -127,18 +127,23 @@ class DrawerContentWidget extends StatelessWidget {
                   ),
 
                   // Locations.
-                  UnreleasedFeatureWidget(
-                    child: _buildLibraryEntry(
-                      child: Row(
-                        spacing: Themes.spacingMedium,
-                        children: [
-                          Icon(
-                            Icons.place_rounded,
-                            size: Themes.iconSizeLarge,
-                          ),
-                          Text(strings.locationsSectionTitle),
-                        ],
-                      ),
+                  _buildLibraryEntry(
+                    onPressed: () {
+                      final NavigatorState navigator = Navigator.of(context);
+
+                      navigator.push(MaterialPageRoute(
+                        builder: (BuildContext context) => LocationsOverviewScreen(),
+                      ));
+                    },
+                    child: Row(
+                      spacing: Themes.spacingMedium,
+                      children: [
+                        Icon(
+                          Icons.place_rounded,
+                          size: Themes.iconSizeLarge,
+                        ),
+                        Text(strings.locationsSectionTitle),
+                      ],
                     ),
                   ),
 
