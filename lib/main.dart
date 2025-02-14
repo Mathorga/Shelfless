@@ -1,10 +1,14 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shelfless/models/library_preview.dart';
 
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/screens/library_content_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 
 void main() async {
   await DatabaseHelper.instance.openDB();
@@ -33,9 +37,23 @@ class Shelfless extends StatelessWidget {
         return LibrariesProvider.instance.libraries.isEmpty
             // TODO Show an introductory library creation wizard instead of a bare EditLibraryScreen.
             ? EditLibraryScreen()
-            : LibraryContentScreen(
-                library: LibrariesProvider.instance.libraries.first,
-              );
+            : FutureBuilder(
+                future: SharedPreferences.getInstance(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  LibraryPreview library = LibrariesProvider.instance.libraries.first;
+
+                  // Try and read the latest open library from shared preferences.
+                  if (!snapshot.hasError && snapshot.hasData) {
+                    SharedPreferences sharedPrefs = snapshot.data;
+                    int? storedLibraryId = sharedPrefs.getInt(SharedPrefsKeys.openLibrary);
+                    LibraryPreview? foundLibrary = LibrariesProvider.instance.libraries.firstWhereOrNull((LibraryPreview preview) => preview.raw.id == storedLibraryId);
+                    library = foundLibrary ?? library;
+                  }
+
+                  return LibraryContentScreen(
+                    library: library,
+                  );
+                });
       }),
       routes: {},
     );

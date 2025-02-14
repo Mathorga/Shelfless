@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
@@ -6,6 +7,7 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/double_choice_dialog.dart';
 import 'package:shelfless/widgets/unreleased_feature_widget.dart';
@@ -106,12 +108,15 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
 
           // Simple library.
           return _buildLibraryEntry(
-            onPressed: () {
+            onPressed: () async {
               final NavigatorState navigator = Navigator.of(context);
 
               // Load the selected library's content.
               LibraryContentProvider.instance.clear();
               LibraryContentProvider.instance.fetchLibraryContent(library.raw);
+
+              // Store the selected library id to shared preferences.
+              if (library.raw.id != null) (await SharedPreferences.getInstance()).setInt(SharedPrefsKeys.openLibrary, library.raw.id!);
 
               navigator.pop();
             },
