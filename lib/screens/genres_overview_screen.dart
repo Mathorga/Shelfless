@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/genre_preview_widget.dart';
@@ -55,7 +56,18 @@ class _GenresOverviewScreenState extends State<GenresOverviewScreen> {
                       children: [
                         GenrePreviewWidget(
                           genre: genre,
-                          onTap: () {},
+                          onTap: () {
+                            final NavigatorState navigator = Navigator.of(context);
+
+                            // Filter the current library by the selected genre.
+                            LibraryContentProvider.instance.applyFilters(
+                              LibraryFilters(
+                                inGenresFilter: {genre.id},
+                              ),
+                            );
+
+                            navigator.pop();
+                          },
                         ),
                       ],
                     );

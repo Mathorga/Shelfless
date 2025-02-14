@@ -12,7 +12,7 @@ import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/screens/book_detail_screen.dart';
+import 'package:shelfless/screens/books_detail_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';

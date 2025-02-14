@@ -67,6 +67,11 @@ class DrawerContentWidget extends StatelessWidget {
                     // label: strings.authorsSectionTitle,
                     onPressed: () {
                       final NavigatorState navigator = Navigator.of(context);
+                      final ScaffoldState scaffold = Scaffold.of(context);
+
+                      if (scaffold.isDrawerOpen) {
+                        scaffold.closeDrawer();
+                      }
 
                       navigator.push(MaterialPageRoute(
                         builder: (BuildContext context) => AuthorsOverviewScreen(),
@@ -86,10 +91,15 @@ class DrawerContentWidget extends StatelessWidget {
 
                   // Genres.
                   _buildLibraryEntry(
-                    onPressed: () {
+                    onPressed: () async {
                       final NavigatorState navigator = Navigator.of(context);
+                      final ScaffoldState scaffold = Scaffold.of(context);
 
-                      navigator.push(MaterialPageRoute(
+                      if (scaffold.isDrawerOpen) {
+                        scaffold.closeDrawer();
+                      }
+
+                      await navigator.push(MaterialPageRoute(
                         builder: (BuildContext context) => GenresOverviewScreen(),
                       ));
                     },
@@ -109,6 +119,11 @@ class DrawerContentWidget extends StatelessWidget {
                   _buildLibraryEntry(
                     onPressed: () {
                       final NavigatorState navigator = Navigator.of(context);
+                      final ScaffoldState scaffold = Scaffold.of(context);
+
+                      if (scaffold.isDrawerOpen) {
+                        scaffold.closeDrawer();
+                      }
 
                       navigator.push(MaterialPageRoute(
                         builder: (BuildContext context) => PublishersOverviewScreen(),
@@ -130,6 +145,11 @@ class DrawerContentWidget extends StatelessWidget {
                   _buildLibraryEntry(
                     onPressed: () {
                       final NavigatorState navigator = Navigator.of(context);
+                      final ScaffoldState scaffold = Scaffold.of(context);
+
+                      if (scaffold.isDrawerOpen) {
+                        scaffold.closeDrawer();
+                      }
 
                       navigator.push(MaterialPageRoute(
                         builder: (BuildContext context) => LocationsOverviewScreen(),

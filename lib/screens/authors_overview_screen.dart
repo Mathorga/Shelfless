@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
@@ -55,17 +56,16 @@ class _AuthorsOverviewScreenState extends State<AuthorsOverviewScreen> {
                     return AuthorPreviewWidget(
                       author: author,
                       onTap: () {
-                        // if (!librariesProvider.currentLibrary!.books.any((Book book) => book.authors.contains(authors[index]))) {
-                        //   return;
-                        // }
+                        final NavigatorState navigator = Navigator.of(context);
 
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (BuildContext context) => BooksScreen(
-                        //       authors: {authors[index]},
-                        //     ),
-                        //   ),
-                        // );
+                        // Filter the current library by the selected author.
+                        LibraryContentProvider.instance.applyFilters(
+                          LibraryFilters(
+                            inAuthorsFilter: {author.id},
+                          ),
+                        );
+
+                        navigator.pop();
                       },
                     );
                   },

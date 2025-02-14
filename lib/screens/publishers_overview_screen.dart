@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
@@ -55,17 +56,16 @@ class _PublishersOverviewScreenState extends State<PublishersOverviewScreen> {
                     return PublisherPreviewWidget(
                       publisher: publisher,
                       onTap: () {
-                        // if (!librariesProvider.currentLibrary!.books.any((Book book) => book.publishers.contains(publishers[index]))) {
-                        //   return;
-                        // }
+                        final NavigatorState navigator = Navigator.of(context);
 
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (BuildContext context) => BooksScreen(
-                        //       publishers: {publishers[index]},
-                        //     ),
-                        //   ),
-                        // );
+                        // Filter the current library by the selected publisher.
+                        LibraryContentProvider.instance.applyFilters(
+                          LibraryFilters(
+                            inPublishersFilter: {publisher.id},
+                          ),
+                        );
+
+                        navigator.pop();
                       },
                     );
                   },

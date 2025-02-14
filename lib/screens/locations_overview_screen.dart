@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/screens/edit_location_screen.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
@@ -52,7 +53,21 @@ class _LocationsOverviewScreenState extends State<LocationsOverviewScreen> {
                     // Prefetch the publisher for later use.
                     StoreLocation? location = LibraryContentProvider.instance.locations.values.toList()[index];
 
-                    return LocationPreviewWidget(location: location);
+                    return LocationPreviewWidget(
+                      location: location,
+                      onTap: () {
+                        final NavigatorState navigator = Navigator.of(context);
+
+                        // Filter the current library by the selected location.
+                        LibraryContentProvider.instance.applyFilters(
+                          LibraryFilters(
+                            inLocationsFilter: {location.id},
+                          ),
+                        );
+
+                        navigator.pop();
+                      },
+                    );
                   },
                 ),
                 const SizedBox(height: fabAccessHeight),
