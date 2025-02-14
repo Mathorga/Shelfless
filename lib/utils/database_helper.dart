@@ -461,8 +461,10 @@ class DatabaseHelper {
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
 
+  /// Fetches and returns all books in the library with the provided [libraryId].
+  /// Returns books from all libraries if no library id is provided.
   Future<List<Book>> getLibraryBooks(
-    int libraryId, {
+    int? libraryId, {
     String? titleFilter,
     Set<int?>? authorsFilter,
     Set<int?>? genresFilter,

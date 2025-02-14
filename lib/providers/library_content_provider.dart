@@ -48,14 +48,24 @@ class LibraryContentProvider with ChangeNotifier {
   // ###############################################################################################################################################################################
 
   /// Asks the DB for the library with the prodided [rawLibrary].
-  Future<void> fetchLibraryContent(RawLibrary rawLibrary) async {
-    library = rawLibrary;
+  Future<void> openLibrary({RawLibrary? rawLibrary}) async {
+    if (rawLibrary != null) {
+      if (rawLibrary.id == null) return;
 
-    if (rawLibrary.id == null) return;
+      library = rawLibrary;
+    } else {
+      library = null;
+    }
 
+    await _fetchLibraryContent(rawLibrary);
+
+    notifyListeners();
+  }
+
+  Future<void> _fetchLibraryContent(RawLibrary? rawLibrary) async {
     // Fetch all books for the provided library.
     final List<Book> tmpBooks = await DatabaseHelper.instance.getLibraryBooks(
-      rawLibrary.id!,
+      rawLibrary?.id,
       titleFilter: _filters.titleFilter,
       authorsFilter: _filters.authorsFilter,
       genresFilter: _filters.genresFilter,
@@ -68,8 +78,6 @@ class LibraryContentProvider with ChangeNotifier {
     authors.addAll(Map.fromEntries((await DatabaseHelper.instance.getAuthors()).map((Author rawAuthor) => MapEntry(rawAuthor.id, rawAuthor))));
     publishers.addAll(Map.fromEntries((await DatabaseHelper.instance.getPublishers()).map((Publisher publisher) => MapEntry(publisher.id, publisher))));
     locations.addAll(Map.fromEntries((await DatabaseHelper.instance.getLocations()).map((StoreLocation location) => MapEntry(location.id, location))));
-
-    notifyListeners();
   }
 
   Future<void> storeNewBook(Book book) async {
@@ -323,10 +331,13 @@ class LibraryContentProvider with ChangeNotifier {
     clearContent();
 
     // Reread content with the provided filters applied.
-    fetchLibraryContent(library!);
+    openLibrary(rawLibrary: library);
   }
 
   LibraryFilters getFilters() => _filters;
+
+  /// Tells whether the current library content can be edited or not.
+  bool get editable => !_filters.isActive && library != null;
 
   void clearFilters() {
     _filters = LibraryFilters();

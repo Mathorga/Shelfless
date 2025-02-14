@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:shelfless/models/library_preview.dart';
@@ -60,6 +61,9 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                         // Pop dialog.
                         navigator.pop();
                       },
+                      onSecondOptionSelected: () {
+                        // TODO Import library from file.
+                      },
                       firstOption: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -70,15 +74,17 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                           Text(strings.newLib),
                         ],
                       ),
-                      secondOption: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.download_rounded,
-                            size: Themes.iconSizeLarge,
-                          ),
-                          Text(strings.importLib),
-                        ],
+                      secondOption: UnreleasedFeatureWidget(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.download_rounded,
+                              size: Themes.iconSizeLarge,
+                            ),
+                            Text(strings.importLib),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -96,10 +102,18 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
 
           // All libraries.
           if (index == LibrariesProvider.instance.libraries.length) {
-            return UnreleasedFeatureWidget(
-              child: _buildLibraryEntry(
-                child: Text("${strings.all} (${LibrariesProvider.instance.totalBooksCount})"),
-              ),
+            return _buildLibraryEntry(
+              onPressed: () {
+                final NavigatorState navigator = Navigator.of(context);
+
+                // Load the selected library's content.
+                LibraryContentProvider.instance.clear();
+                LibraryContentProvider.instance.openLibrary();
+
+                navigator.pop();
+              },
+              highlighted: LibraryContentProvider.instance.library == null,
+              child: Text("${strings.all} (${LibrariesProvider.instance.totalBooksCount})"),
             );
           }
 
@@ -113,7 +127,7 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
 
               // Load the selected library's content.
               LibraryContentProvider.instance.clear();
-              LibraryContentProvider.instance.fetchLibraryContent(library.raw);
+              LibraryContentProvider.instance.openLibrary(rawLibrary: library.raw);
 
               // Store the selected library id to shared preferences.
               if (library.raw.id != null) (await SharedPreferences.getInstance()).setInt(SharedPrefsKeys.openLibrary, library.raw.id!);

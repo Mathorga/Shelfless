@@ -32,7 +32,7 @@ enum LibraryAction {
 }
 
 class LibraryContentScreen extends StatefulWidget {
-  final LibraryPreview library;
+  final LibraryPreview? library;
 
   const LibraryContentScreen({
     super.key,
@@ -44,7 +44,7 @@ class LibraryContentScreen extends StatefulWidget {
 }
 
 class _LibraryContentScreenState extends State<LibraryContentScreen> {
-  late LibraryPreview library;
+  late LibraryPreview? library;
 
   ViewMode viewMode = ViewMode.extendedGrid;
 
@@ -65,18 +65,22 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
           setState(() {
             final RawLibrary? providerLibrary = LibraryContentProvider.instance.library;
 
-            // Make sure the provider's library is not null and it's not the one the user's already seeing.
-            if (providerLibrary != null && library.raw != providerLibrary) {
-              library = LibraryPreview(
-                raw: providerLibrary,
-              );
+            if (providerLibrary == null) {
+              library = null;
+            } else {
+              // Make sure the provider's library is not null and it's not the one the user's already seeing.
+              if (library?.raw != providerLibrary) {
+                library = LibraryPreview(
+                  raw: providerLibrary,
+                );
+              }
             }
           });
         }
       },
     );
 
-    LibraryContentProvider.instance.fetchLibraryContent(library.raw);
+    LibraryContentProvider.instance.openLibrary(rawLibrary: library?.raw);
   }
 
   void _readViewMode() async {
@@ -135,7 +139,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
             floating: true,
             shadowColor: Colors.transparent,
             title: Text(
-              library.raw.name,
+              library?.raw.name ?? strings.all,
               style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
@@ -213,10 +217,10 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                     case LibraryAction.displayMode:
                       break;
                     case LibraryAction.share:
-                      if (library.raw.id == null) return;
+                      if (library?.raw.id == null) return;
 
                       // Extract the library.
-                      final Map<String, String> libraryStrings = await DatabaseHelper.instance.extractLibrary(library.raw.id!);
+                      final Map<String, String> libraryStrings = await DatabaseHelper.instance.extractLibrary(library!.raw.id!);
 
                       // Compress the library files to a single .slz file.
                       final Archive archive = Archive();
@@ -241,7 +245,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                         // The name parameter in the XFile.fromData method is ignored in most platforms,
                         // so fileNameOverrides is used instead.
                         fileNameOverrides: [
-                          "${library.raw.name}.slz",
+                          "${library!.raw.name}.slz",
                         ],
                       );
                       break;
@@ -315,9 +319,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
           ),
         ],
       ),
-      floatingActionButton: filtersActive
-          ? null
-          : FloatingActionButton(
+      floatingActionButton: LibraryContentProvider.instance.editable
+          ? FloatingActionButton(
               onPressed: () {
                 final NavigatorState navigator = Navigator.of(context);
 
@@ -325,7 +328,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                 navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
               },
               child: Icon(Icons.add_rounded),
-            ),
+            )
+          : null,
     );
   }
 
@@ -335,8 +339,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
 
     // Navigate to book edit screen.
     navigator.push(MaterialPageRoute(
-      builder: (BuildContext context) => BookDetailScreen(
-        book: book,
+      builder: (BuildContext context) => BooksDetailScreen(
+        openingBook: book,
       ),
     ));
   }
