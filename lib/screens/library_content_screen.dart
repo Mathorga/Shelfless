@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:archive/archive.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/library_preview.dart';
@@ -17,10 +18,10 @@ import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/view_mode.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
-import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 import 'package:shelfless/widgets/drawer_content_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
 
@@ -45,13 +46,16 @@ class LibraryContentScreen extends StatefulWidget {
 class _LibraryContentScreenState extends State<LibraryContentScreen> {
   late LibraryPreview library;
 
-  ViewMode viewMode = ViewMode.wideGrid;
+  ViewMode viewMode = ViewMode.extendedGrid;
 
   @override
   void initState() {
     super.initState();
 
     library = widget.library;
+
+    // Try and read viewmode from shared preferences.
+    _readViewMode();
 
     // Start listening to changes in library content.
     LibraryContentProvider.instance.addListener(
@@ -75,6 +79,12 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     LibraryContentProvider.instance.fetchLibraryContent(library.raw);
   }
 
+  void _readViewMode() async {
+    final int? storedId = (await SharedPreferences.getInstance()).getInt(SharedPrefsKeys.viewMode);
+
+    if (storedId != null) setState(() => viewMode = ViewMode.values[storedId]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -90,21 +100,21 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final double leftRightPadding = Themes.spacingSmall;
 
     final double itemWidth = switch (viewMode) {
-      ViewMode.wideGrid => wideItemWidth,
-      ViewMode.thinGrid => thinItemWidth,
+      ViewMode.extendedGrid => wideItemWidth,
+      ViewMode.compactGrid => thinItemWidth,
       ViewMode.list => thinItemWidth,
     };
 
     final double itemHeight = switch (viewMode) {
-      ViewMode.wideGrid => wideItemHeight,
-      ViewMode.thinGrid => thinItemHeight,
+      ViewMode.extendedGrid => wideItemHeight,
+      ViewMode.compactGrid => thinItemHeight,
       ViewMode.list => thinItemHeight,
     };
 
     // The cross axis count should never go below 2.
     final int gridCrossAxisCount = switch (viewMode) {
-      ViewMode.wideGrid => max((screenSize.width / itemWidth).toInt(), 2),
-      ViewMode.thinGrid => max((screenSize.width / itemWidth).toInt(), 3),
+      ViewMode.extendedGrid => max((screenSize.width / itemWidth).toInt(), 2),
+      ViewMode.compactGrid => max((screenSize.width / itemWidth).toInt(), 3),
       ViewMode.list => max((screenSize.width / itemWidth).toInt(), 2),
     };
 
@@ -146,19 +156,20 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                 },
               ),
               IconButton(
-                onPressed: () {
+                onPressed: () async {
                   setState(() {
                     // Rotate ViewMode values.
                     viewMode = ViewMode.values[(viewMode.index + 1) % ViewMode.values.length];
-
-                    // TODO Store viewmode in shared preferences.
                   });
+
+                  // Store viewmode in shared preferences.
+                  (await SharedPreferences.getInstance()).setInt(SharedPrefsKeys.viewMode, viewMode.index);
                 },
                 icon: Icon(
                   switch (viewMode) {
                     ViewMode.list => Icons.table_rows_rounded,
-                    ViewMode.thinGrid => Icons.view_module_rounded,
-                    ViewMode.wideGrid => Icons.grid_view_rounded,
+                    ViewMode.compactGrid => Icons.view_module_rounded,
+                    ViewMode.extendedGrid => Icons.grid_view_rounded,
                   },
                 ),
               ),
@@ -269,12 +280,12 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                         (BuildContext context, int index) {
                           final Book book = books[index];
                           return switch (viewMode) {
-                            ViewMode.wideGrid => BookPreviewWidget(
+                            ViewMode.extendedGrid => BookPreviewWidget(
                                 book: book,
                                 viewMode: viewMode,
                                 onTap: () => _gotoBookDetails(book),
                               ),
-                            ViewMode.thinGrid => BookPreviewWidget(
+                            ViewMode.compactGrid => BookPreviewWidget(
                                 book: book,
                                 viewMode: viewMode,
                                 onTap: () => _gotoBookDetails(book),

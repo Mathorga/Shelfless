@@ -1,5 +1,5 @@
 enum ViewMode {
-  wideGrid,
-  thinGrid,
+  extendedGrid,
+  compactGrid,
   list,
 }

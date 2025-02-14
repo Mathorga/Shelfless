@@ -21,7 +21,7 @@ class BookPreviewWidget extends StatelessWidget {
   const BookPreviewWidget({
     super.key,
     required this.book,
-    this.viewMode = ViewMode.wideGrid,
+    this.viewMode = ViewMode.extendedGrid,
     this.onTap,
   });
 
@@ -37,6 +37,7 @@ class BookPreviewWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: switch (viewMode) {
+        // List view.
         ViewMode.list => Card(
             child: BookGenresBoxWidget(
               book: book,
@@ -53,7 +54,9 @@ class BookPreviewWidget extends StatelessWidget {
               ),
             ),
           ),
-        ViewMode.thinGrid => Stack(
+
+        // Compact grid view.
+        ViewMode.compactGrid => Stack(
             children: [
               BookThumbnailWidget(
                 book: book,
@@ -77,7 +80,9 @@ class BookPreviewWidget extends StatelessWidget {
               )
             ],
           ),
-        ViewMode.wideGrid => Column(
+
+        // Extended grid view.
+        ViewMode.extendedGrid => Column(
             spacing: Themes.spacingMedium,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
