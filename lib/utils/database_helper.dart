@@ -383,15 +383,11 @@ class DatabaseHelper {
     );
 
     // Delete all contained books.
-    await _db.delete(
-      booksTable,
-      where: "${booksTable}_library_id = ?",
-      whereArgs: [library.id]
-    );
+    await _db.delete(booksTable, where: "${booksTable}_library_id = ?", whereArgs: [library.id]);
   }
 
   /// Extracts all data regarding the library with the provided id.
-  Future<Map<String, String>> extractLibrary(int libraryId) async {
+  Future<Map<String, String>> serializeLibrary(int libraryId) async {
     final Map<String, String> result = {};
 
     // Fetch database info.
@@ -480,6 +476,140 @@ class DatabaseHelper {
     result[locationsTable] = jsonEncode(rawLocations);
 
     return result;
+  }
+
+  Future<void> deserializeLibrary(Map<String, String> libraryStrings) async {
+    // Make sure the provided data contains db info.
+    if (!libraryStrings.containsKey("db_info")) {
+      // TODO Specialize exception.
+      throw Exception();
+    }
+
+    // Read DB info.
+    Map<String, dynamic> dbInfo = jsonDecode(libraryStrings["db_info"]!);
+
+    // Make sure the provided data comes from a compatible database.
+    if (dbInfo["version"] != await _db.getVersion()) {
+      // TODO Specialize exception.
+      throw Exception();
+    }
+
+    // Store mappings between input ids and actual ids (after insert in DB).
+    Map<int, int> libraryIdsMapping = {};
+    Map<int, int> bookIdsMapping = {};
+    Map<int, int> authorIdsMapping = {};
+    Map<int, int> genreIdsMapping = {};
+    Map<int, int> publisherIdsMapping = {};
+    Map<int, int> locationIdsMapping = {};
+
+    // Read libraries data.
+    if (libraryStrings.containsKey(librariesTable)) {
+      final List<dynamic> elements = jsonDecode(libraryStrings[librariesTable]!);
+      for (Map<String, dynamic> inData in elements) {
+        // Remove the id before inserting in order not to clash with existing data.
+        final int inId = inData["${librariesTable}_id"];
+        inData["${librariesTable}_id"] = null;
+
+        // Store the element in DB and map its id.
+        libraryIdsMapping[inId] = await _db.insert(librariesTable, inData);
+      }
+    }
+
+    // Read authors data.
+    if (libraryStrings.containsKey(authorsTable)) {
+      final List<dynamic> elements = jsonDecode(libraryStrings[authorsTable]!);
+      for (Map<String, dynamic> inData in elements) {
+        // Remove the id before inserting in order not to clash with existing data.
+        final int inId = inData["${authorsTable}_id"];
+        inData["${authorsTable}_id"] = null;
+
+        // Store the element in DB and map its id.
+        authorIdsMapping[inId] = await _db.insert(authorsTable, inData);
+      }
+    }
+
+    // Read genres data.
+    if (libraryStrings.containsKey(genresTable)) {
+      final List<dynamic> elements = jsonDecode(libraryStrings[genresTable]!);
+      for (Map<String, dynamic> inData in elements) {
+        // Remove the id before inserting in order not to clash with existing data.
+        final int inId = inData["${genresTable}_id"];
+        inData["${genresTable}_id"] = null;
+
+        // Store the element in DB and map its id.
+        genreIdsMapping[inId] = await _db.insert(genresTable, inData);
+      }
+    }
+
+    // Read publishers data.
+    if (libraryStrings.containsKey(publishersTable)) {
+      final List<dynamic> elements = jsonDecode(libraryStrings[publishersTable]!);
+      for (Map<String, dynamic> inData in elements) {
+        // Remove the id before inserting in order not to clash with existing data.
+        final int inId = inData["${publishersTable}_id"];
+        inData["${publishersTable}_id"] = null;
+
+        // Store the element in DB and map its id.
+        publisherIdsMapping[inId] = await _db.insert(publishersTable, inData);
+      }
+    }
+
+    // Read locations data.
+    if (libraryStrings.containsKey(locationsTable)) {
+      final List<dynamic> elements = jsonDecode(libraryStrings[locationsTable]!);
+      for (Map<String, dynamic> inData in elements) {
+        // Remove the id before inserting in order not to clash with existing data.
+        final int inId = inData["${locationsTable}_id"];
+        inData["${locationsTable}_id"] = null;
+
+        // Store the element in DB and map its id.
+        locationIdsMapping[inId] = await _db.insert(locationsTable, inData);
+      }
+    }
+
+    // Read books data.
+    if (libraryStrings.containsKey(booksTable)) {
+      final List<dynamic> elements = jsonDecode(libraryStrings[booksTable]!);
+      for (Map<String, dynamic> inData in elements) {
+        // Remove the id before inserting in order not to clash with existing data.
+        final int inId = inData["${booksTable}_id"];
+        inData["${booksTable}_id"] = null;
+
+        // Update joins according to mappings.
+        inData["${booksTable}_library_id"] = libraryIdsMapping[inData["${booksTable}_library_id"]];
+        if (inData["${booksTable}_publisher_id"] != null) inData["${booksTable}_publisher_id"] = publisherIdsMapping[inData["${booksTable}_publisher_id"]];
+        if (inData["${booksTable}_location_id"] != null) inData["${booksTable}_location_id"] = locationIdsMapping[inData["${booksTable}_location_id"]];
+
+        // Store the element in DB and map its id.
+        bookIdsMapping[inId] = await _db.insert(booksTable, inData);
+      }
+    }
+
+    // Read book/author rel data.
+    if (libraryStrings.containsKey(bookAuthorRelTable)) {
+      final List<dynamic> elements = jsonDecode(libraryStrings[bookAuthorRelTable]!);
+      for (Map<String, dynamic> inData in elements) {
+        // Update joins according to mappings.
+        inData["${bookAuthorRelTable}_book_id"] = bookIdsMapping[inData["${bookAuthorRelTable}_book_id"]];
+        inData["${bookAuthorRelTable}_author_id"] = bookIdsMapping[inData["${bookAuthorRelTable}_author_id"]];
+
+        // Store the element in DB without mapping its id.
+        await _db.insert(bookAuthorRelTable, inData);
+      }
+    }
+
+    // Read book/genre rel data.
+    if (libraryStrings.containsKey(bookGenreRelTable)) {
+      final List<dynamic> elements = jsonDecode(libraryStrings[bookGenreRelTable]!);
+      for (Map<String, dynamic> inData in elements) {
+        // Update joins according to mappings.
+        inData["${bookGenreRelTable}_book_id"] = bookIdsMapping[inData["${bookGenreRelTable}_book_id"]];
+        inData["${bookGenreRelTable}_genre_id"] = bookIdsMapping[inData["${bookGenreRelTable}_genre_id"]];
+
+        // Store the element in DB without mapping its id.
+        await _db.insert(bookGenreRelTable, inData);
+      }
+    }
   }
 
   // ###############################################################################################################################################################################

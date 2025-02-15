@@ -146,6 +146,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
             ),
             centerTitle: true,
             actions: [
+              // Filters action.
               IconButton(
                 icon: Icon(
                   filtersActive ? Icons.filter_alt : Icons.filter_alt_outlined,
@@ -161,6 +162,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                   );
                 },
               ),
+
+              // View mode change action.
               IconButton(
                 onPressed: () async {
                   setState(() {
@@ -179,6 +182,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                   },
                 ),
               ),
+
+              // Editing actions.
               if (LibraryContentProvider.instance.editable)
                 PopupMenuButton<LibraryAction>(
                   itemBuilder: (BuildContext context) {
@@ -249,7 +254,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                         if (library?.raw.id == null) return;
 
                         // Extract the library.
-                        final Map<String, String> libraryStrings = await DatabaseHelper.instance.extractLibrary(library!.raw.id!);
+                        final Map<String, String> libraryStrings = await DatabaseHelper.instance.serializeLibrary(library!.raw.id!);
 
                         // Compress the library files to a single .slz file.
                         final Archive archive = Archive();
@@ -274,7 +279,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                           // The name parameter in the XFile.fromData method is ignored in most platforms,
                           // so fileNameOverrides is used instead.
                           fileNameOverrides: [
-                            "${library!.raw.name}.slz",
+                            "${library!.raw.name}.$libraryFileFormat",
                           ],
                         );
                         break;
