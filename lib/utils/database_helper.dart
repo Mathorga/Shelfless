@@ -373,11 +373,20 @@ class DatabaseHelper {
     );
   }
 
-  Future<void> deleteRawLibrary(RawLibrary libraryElement) async {
+  /// Deletes the provided [library] from DB along with all its books.
+  Future<void> deleteLibrary(RawLibrary library) async {
+    // Delete the provided library from DB.
     await _db.delete(
       librariesTable,
       where: "${librariesTable}_id = ?",
-      whereArgs: [libraryElement.id],
+      whereArgs: [library.id],
+    );
+
+    // Delete all contained books.
+    await _db.delete(
+      booksTable,
+      where: "${booksTable}_library_id = ?",
+      whereArgs: [library.id]
     );
   }
 

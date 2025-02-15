@@ -17,7 +17,7 @@ class ItStrings implements Strings {
   @override String get newLib => "Nuova";
   @override String get addLibraryTitle => "Nuova biblioteca";
   @override String get deleteLibraryTitle => "Elimina Biblioteca";
-  @override String get deleteLibraryContent => "Vuoi davvero eliminare";
+  @override String get deleteLibraryContent => "Vuoi davvero eliminare la biblieoteca?\nTutti i libri che contiene saranno cancellati.\nL'operazione è irreversibile.";
   @override String get imageSourceTitle => "Scegli un'immagine:";
   @override String get imageSourceCamera => "Fotocamera";
   @override String get imageSourceGallery => "Galleria";
@@ -75,6 +75,7 @@ class ItStrings implements Strings {
   @override String get bookInfoLocations => "Posizioni";
   @override String get insertTitle => "Inserisci";
   @override String get editTitle => "Modifica";
+  @override String get deleteTitle => "Elimina";
   @override String get authorTitle => "Autore";
   @override String get authorInfoFirstName => "Nome";
   @override String get authorInfoLastName => "Cognome";

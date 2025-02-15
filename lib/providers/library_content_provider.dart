@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/models/publisher.dart';
@@ -123,6 +124,23 @@ class LibraryContentProvider with ChangeNotifier {
     // Update libraries provider.
     LibrariesProvider.instance.refetchLibrary(library!);
     LibrariesProvider.instance.refetchLibrary(toLibrary);
+
+    notifyListeners();
+  }
+
+  /// Deletes the currently open library along with all its books.
+  Future<void> deleteLibrary() async {
+    if (library == null) return;
+
+    // Ask the backend to remove the library.
+    await DatabaseHelper.instance.deleteLibrary(library!);
+
+    // Also remove from libraries list.
+    LibrariesProvider.instance.libraries.removeWhere((LibraryPreview preview) => preview.raw == library);
+
+    // Clear all preexisting content and open all libraries.
+    clearContent();
+    await openLibrary();
 
     notifyListeners();
   }

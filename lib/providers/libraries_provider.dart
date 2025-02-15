@@ -54,13 +54,4 @@ class LibrariesProvider with ChangeNotifier {
 
     notifyListeners();
   }
-
-  Future<void> deleteLibrary(LibraryPreview libraryPreview) async {
-    // TODO Also delete all books related to the provided library id.
-    await DatabaseHelper.instance.deleteRawLibrary(libraryPreview.raw);
-
-    libraries.remove(libraryPreview);
-
-    notifyListeners();
-  }
 }
