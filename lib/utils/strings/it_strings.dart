@@ -72,6 +72,7 @@ class ItStrings implements Strings {
   @override String get bookInfoPublisher => "Editore";
   @override String get bookInfoPublishers => "Editori";
   @override String get bookInfoLocation => "Posizione";
+  @override String get bookInfoLocations => "Posizioni";
   @override String get insertTitle => "Inserisci";
   @override String get editTitle => "Modifica";
   @override String get authorTitle => "Autore";

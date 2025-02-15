@@ -484,6 +484,7 @@ class DatabaseHelper {
     Set<int?>? authorsFilter,
     Set<int?>? genresFilter,
     Set<int?>? publishersFilter,
+    Set<int?>? locationsFilter,
   }) async {
     final List<Map<String, dynamic>> rawData = await _db.rawQuery("""
     SELECT all_books.*
@@ -491,6 +492,7 @@ class DatabaseHelper {
       libraryId: libraryId,
       titleFilter: titleFilter,
       publishersFilter: publishersFilter,
+      locationsFilter: locationsFilter,
     )}) AS all_books
     JOIN (${filteredBookIds(
       authorsFilter: authorsFilter,

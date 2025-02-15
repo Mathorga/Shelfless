@@ -70,6 +70,7 @@ class EnStrings implements Strings {
   @override String get bookInfoPublisher => "Publisher";
   @override String get bookInfoPublishers => "Publishers";
   @override String get bookInfoLocation => "Location";
+  @override String get bookInfoLocations => "Locations";
   @override String get insertTitle => "Insert";
   @override String get editTitle => "Edit";
   @override String get authorTitle => "Author";

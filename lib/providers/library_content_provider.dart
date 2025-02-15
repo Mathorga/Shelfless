@@ -72,6 +72,7 @@ class LibraryContentProvider with ChangeNotifier {
       authorsFilter: _filters.authorsFilter,
       genresFilter: _filters.genresFilter,
       publishersFilter: _filters.publishersFilter,
+      locationsFilter: _filters.locationsFilter,
     );
     books.addAll(tmpBooks);
 

@@ -8,6 +8,7 @@ import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
+import 'package:shelfless/widgets/locations_selection_widget.dart';
 import 'package:shelfless/widgets/publishers_selection_widget.dart';
 
 class LibraryFilterWidget extends StatefulWidget {
@@ -104,6 +105,21 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
                     onPublisherUnselected: (int? unselectedPublisherId) {
                       setState(() {
                         _filters.publishersFilter.remove(unselectedPublisherId);
+                      });
+                    },
+                  ),
+
+                  // Locations selection.
+                  LocationsSelectionWidget(
+                    inSelectedIds: _filters.locationsFilter.toList(),
+                    onLocationsSelected: (Set<int?> selectedLocationIds) {
+                      setState(() {
+                        _filters.locationsFilter.addAll(selectedLocationIds);
+                      });
+                    },
+                    onLocationUnselected: (int? unselectedLocationId) {
+                      setState(() {
+                        _filters.locationsFilter.remove(unselectedLocationId);
                       });
                     },
                   ),
