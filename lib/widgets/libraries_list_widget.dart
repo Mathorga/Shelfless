@@ -18,7 +18,6 @@ import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/double_choice_dialog.dart';
-import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class LibrariesListWidget extends StatefulWidget {
   const LibrariesListWidget({super.key});
@@ -123,17 +122,15 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                           Text(strings.newLib),
                         ],
                       ),
-                      secondOption: UnreleasedFeatureWidget(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.download_rounded,
-                              size: Themes.iconSizeLarge,
-                            ),
-                            Text(strings.importLib),
-                          ],
-                        ),
+                      secondOption: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.download_rounded,
+                            size: Themes.iconSizeLarge,
+                          ),
+                          Text(strings.importLib),
+                        ],
                       ),
                     );
                   },
