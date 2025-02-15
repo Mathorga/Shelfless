@@ -113,7 +113,30 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                 navigator.pop();
               },
               highlighted: LibraryContentProvider.instance.library == null,
-              child: Text("${strings.all} (${LibrariesProvider.instance.totalBooksCount})"),
+              child: Row(
+                spacing: Themes.spacingSmall,
+                children: [
+                  if (LibraryContentProvider.instance.library == null)
+                    Icon(
+                      Icons.double_arrow_rounded,
+                      size: Themes.iconSizeSmall,
+                    ),
+                  Expanded(
+                    child: Text(
+                      "${strings.all} ${LibraryPreview.booksCountString(LibrariesProvider.instance.totalBooksCount)}",
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (LibraryContentProvider.instance.library == null)
+                    Transform.flip(
+                      flipX: true,
+                      child: Icon(
+                        Icons.double_arrow_rounded,
+                        size: Themes.iconSizeSmall,
+                      ),
+                    ),
+                ],
+              ),
             );
           }
 
