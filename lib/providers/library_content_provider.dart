@@ -62,6 +62,8 @@ class LibraryContentProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Fetches and stores content from the provided [rawLibrary].
+  /// Fetches from all if none is provided.
   Future<void> _fetchLibraryContent(RawLibrary? rawLibrary) async {
     // Fetch all books for the provided library.
     final List<Book> tmpBooks = await DatabaseHelper.instance.getLibraryBooks(

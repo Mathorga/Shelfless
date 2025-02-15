@@ -196,6 +196,7 @@ class DatabaseHelper {
     int? libraryId,
     String? titleFilter,
     Set<int?>? publishersFilter,
+    Set<int?>? locationsFilter,
   }) =>
       """
     SELECT $booksTable.*, ${bookAuthorRelTable}_author_id
@@ -205,6 +206,7 @@ class DatabaseHelper {
     ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
     ${titleFilter != null ? "AND ${booksTable}_title LIKE '%$titleFilter%'" : ""}
     ${publishersFilter != null && publishersFilter.isNotEmpty ? "AND ${booksTable}_publisher_id IN (${publishersFilter.join(",")})" : ""}
+    ${locationsFilter != null && locationsFilter.isNotEmpty ? "AND ${booksTable}_location_id IN (${locationsFilter.join(",")})" : ""}
     ORDER BY ${booksTable}_id ASC
   """;
 
@@ -212,6 +214,7 @@ class DatabaseHelper {
     int? libraryId,
     String? titleFilter,
     Set<int?>? publishersFilter,
+    Set<int?>? locationsFilter,
   }) =>
       """
     SELECT $booksTable.*, ${bookGenreRelTable}_genre_id
@@ -221,6 +224,7 @@ class DatabaseHelper {
     ${libraryId != null ? "AND ${booksTable}_library_id = $libraryId" : ""}
     ${titleFilter != null ? "AND ${booksTable}_title LIKE '%$titleFilter%'" : ""}
     ${publishersFilter != null && publishersFilter.isNotEmpty ? "AND ${booksTable}_publisher_id IN (${publishersFilter.join(",")})" : ""}
+    ${locationsFilter != null && locationsFilter.isNotEmpty ? "AND ${booksTable}_location_id IN (${locationsFilter.join(",")})" : ""}
     ORDER BY ${booksTable}_id ASC
   """;
 
@@ -228,12 +232,15 @@ class DatabaseHelper {
     int? libraryId,
     String? titleFilter,
     Set<int?>? publishersFilter,
+    Set<int?>? locationsFilter,
   }) =>
       """
     SELECT *, GROUP_CONCAT(${bookAuthorRelTable}_author_id) AS author_ids
     FROM (${booksWithAuthorId(
         libraryId: libraryId,
         titleFilter: titleFilter,
+        publishersFilter: publishersFilter,
+        locationsFilter: locationsFilter,
       )})
     WHERE 1 = 1
     GROUP BY ${booksTable}_id
@@ -245,12 +252,15 @@ class DatabaseHelper {
     int? libraryId,
     String? titleFilter,
     Set<int?>? publishersFilter,
+    Set<int?>? locationsFilter,
   }) =>
       """
     SELECT *, GROUP_CONCAT(${bookGenreRelTable}_genre_id) AS genre_ids
     FROM (${booksWithGenreId(
         libraryId: libraryId,
         titleFilter: titleFilter,
+        publishersFilter: publishersFilter,
+        locationsFilter: locationsFilter,
       )})
     GROUP BY ${booksTable}_id
   """;
@@ -259,16 +269,21 @@ class DatabaseHelper {
     int? libraryId,
     String? titleFilter,
     Set<int?>? publishersFilter,
+    Set<int?>? locationsFilter,
   }) =>
       """
     SELECT books_with_authors.*, books_with_genres.genre_ids
     FROM (${booksWithAggregateAuthorIds(
         libraryId: libraryId,
         titleFilter: titleFilter,
+        publishersFilter: publishersFilter,
+        locationsFilter: locationsFilter,
       )}) AS books_with_authors
     JOIN (${booksWithAggregateGenreIds(
         libraryId: libraryId,
         titleFilter: titleFilter,
+        publishersFilter: publishersFilter,
+        locationsFilter: locationsFilter,
       )}) AS books_with_genres
     ON books_with_authors.${booksTable}_id = books_with_genres.${booksTable}_id
     ORDER BY books_with_authors.${booksTable}_id ASC
