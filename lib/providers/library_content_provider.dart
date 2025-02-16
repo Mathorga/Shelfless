@@ -217,7 +217,7 @@ class LibraryContentProvider with ChangeNotifier {
   Future<void> deleteGenre(RawGenre genre) async {
     await DatabaseHelper.instance.deleteGenre(genre);
 
-    authors.remove(genre.id);
+    genres.remove(genre.id);
 
     notifyListeners();
   }
