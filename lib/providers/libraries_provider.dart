@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/models/raw_library.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 
 /// Holds all library previews and offers methods for CRUDing libraries.
 class LibrariesProvider with ChangeNotifier {

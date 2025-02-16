@@ -9,7 +9,7 @@ import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_filters_provider.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 
 class LibraryContentProvider with ChangeNotifier {
   // Private instance.

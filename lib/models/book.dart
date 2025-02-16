@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/raw_book.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 
 class Book {
   RawBook raw;

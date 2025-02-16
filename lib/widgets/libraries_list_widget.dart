@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -14,7 +15,7 @@ import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/constants.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/double_choice_dialog.dart';
@@ -102,6 +103,17 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                           String fileContent = String.fromCharCodes(archiveFile.readBytes()!.toList());
                           return MapEntry(fileName, fileContent);
                         }));
+
+                        // Make sure the provided data contains db info.
+                        if (!libraryStrings.containsKey("db_info")) {
+                          // TODO Let the user know the provided file is invalid.
+                          return;
+                        }
+
+                        if (!(await DatabaseHelper.instance.validateDbInfo(jsonDecode(libraryStrings["db_info"]!)))) {
+                          // TODO Let the user know the provided file is incompatible with the current app version.
+                          return;
+                        }
 
                         // Store read library to DB.
                         await DatabaseHelper.instance.deserializeLibrary(libraryStrings);
