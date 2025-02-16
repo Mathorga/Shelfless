@@ -643,9 +643,10 @@ class DatabaseHelper {
           List<Map<String, dynamic>> existingElements = await tnx.query(
             booksTable,
             where:
-                "${booksTable}_title = ? AND ${booksTable}_publish_year = ? AND ${booksTable}_publisher_id = ? AND ${booksTable}_location_id = ? AND ${booksTable}_edition = ? AND ${booksTable}_notes = ?",
+                "${booksTable}_title = ? AND ${booksTable}_library_id = ? AND ${booksTable}_publish_year = ? AND ${booksTable}_publisher_id = ? AND ${booksTable}_location_id = ? AND ${booksTable}_edition = ? AND ${booksTable}_notes = ?",
             whereArgs: [
               inData["${booksTable}_title"],
+              inData["${booksTable}_library_id"],
               inData["${booksTable}_publish_year"],
               inData["${booksTable}_publisher_id"],
               inData["${booksTable}_location_id"],
