@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -184,8 +183,8 @@ class BookDetailsWidget extends StatelessWidget {
                             context,
                             onPressed: () {
                               // setState(() {
-                                // Update book and store the update in DB.
-                                book.raw.out = !book.raw.out;
+                              // Update book and store the update in DB.
+                              book.raw.out = !book.raw.out;
                               // });
                               LibraryContentProvider.instance.storeBookUpdate(book);
                             },

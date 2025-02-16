@@ -591,7 +591,7 @@ class DatabaseHelper {
       for (Map<String, dynamic> inData in elements) {
         // Update joins according to mappings.
         inData["${bookAuthorRelTable}_book_id"] = bookIdsMapping[inData["${bookAuthorRelTable}_book_id"]];
-        inData["${bookAuthorRelTable}_author_id"] = bookIdsMapping[inData["${bookAuthorRelTable}_author_id"]];
+        inData["${bookAuthorRelTable}_author_id"] = authorIdsMapping[inData["${bookAuthorRelTable}_author_id"]];
 
         // Store the element in DB without mapping its id.
         await _db.insert(bookAuthorRelTable, inData);
@@ -604,7 +604,7 @@ class DatabaseHelper {
       for (Map<String, dynamic> inData in elements) {
         // Update joins according to mappings.
         inData["${bookGenreRelTable}_book_id"] = bookIdsMapping[inData["${bookGenreRelTable}_book_id"]];
-        inData["${bookGenreRelTable}_genre_id"] = bookIdsMapping[inData["${bookGenreRelTable}_genre_id"]];
+        inData["${bookGenreRelTable}_genre_id"] = genreIdsMapping[inData["${bookGenreRelTable}_genre_id"]];
 
         // Store the element in DB without mapping its id.
         await _db.insert(bookGenreRelTable, inData);

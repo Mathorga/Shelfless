@@ -21,6 +21,8 @@ class LibrariesProvider with ChangeNotifier {
 
   /// Asks the DB for all libraries and stores them for later use.
   Future<void> fetchLibraries() async {
+    libraries.clear();
+
     libraries.addAll(await DatabaseHelper.instance.getLibraries());
 
     notifyListeners();
@@ -53,5 +55,9 @@ class LibrariesProvider with ChangeNotifier {
     await DatabaseHelper.instance.updateRawLibrary(libraryPreview.raw);
 
     notifyListeners();
+  }
+
+  void clear() {
+    libraries.clear();
   }
 }

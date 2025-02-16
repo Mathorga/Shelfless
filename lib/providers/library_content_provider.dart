@@ -50,13 +50,10 @@ class LibraryContentProvider with ChangeNotifier {
 
   /// Asks the DB for the library with the prodided [rawLibrary].
   Future<void> openLibrary({RawLibrary? rawLibrary}) async {
-    if (rawLibrary != null) {
-      if (rawLibrary.id == null) return;
+    // The provided library has no id, so just get out.
+    if (rawLibrary != null && rawLibrary.id == null) return;
 
-      library = rawLibrary;
-    } else {
-      library = null;
-    }
+    library = rawLibrary;
 
     await _fetchLibraryContent(rawLibrary);
 
