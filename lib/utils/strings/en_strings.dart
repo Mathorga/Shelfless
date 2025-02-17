@@ -15,7 +15,7 @@ class EnStrings implements Strings {
   @override String get newLib => "New";
   @override String get addLibraryTitle => "Add a library";
   @override String get deleteLibraryTitle => "Deleting Library";
-  @override String get deleteLibraryContent => "Are you sure you want to delete";
+  @override String get deleteLibraryContent => "Are you sure you want to delete this library?\nAll contained books will be deleted as well.\nThis is irreversible.";
   @override String get imageSourceTitle => "Pick an image:";
   @override String get imageSourceCamera => "Camera";
   @override String get imageSourceGallery => "Gallery";
@@ -70,8 +70,10 @@ class EnStrings implements Strings {
   @override String get bookInfoPublisher => "Publisher";
   @override String get bookInfoPublishers => "Publishers";
   @override String get bookInfoLocation => "Location";
+  @override String get bookInfoLocations => "Locations";
   @override String get insertTitle => "Insert";
   @override String get editTitle => "Edit";
+  @override String get deleteTitle => "Delete";
   @override String get authorTitle => "Author";
   @override String get authorInfoFirstName => "First Name";
   @override String get authorInfoLastName => "LastName";

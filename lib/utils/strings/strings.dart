@@ -72,8 +72,10 @@ class Strings {
   String get bookInfoPublisher => "";
   String get bookInfoPublishers => "";
   String get bookInfoLocation => "";
+  String get bookInfoLocations => "";
   String get insertTitle => "";
   String get editTitle => "";
+  String get deleteTitle => "";
   String get authorTitle => "";
   String get authorInfoFirstName => "";
   String get authorInfoLastName => "";

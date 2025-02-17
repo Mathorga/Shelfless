@@ -11,6 +11,8 @@ class LibraryPreview {
     this.booksCount = 0,
   });
 
+  static String booksCountString(int booksCount) => "($booksCount ${booksCount == 1 ? strings.book : strings.books})";
+
   LibraryPreview.fromMap(Map<String, dynamic> map)
       : raw = RawLibrary.fromMap(map),
         booksCount = map["books_count"] ?? 0;
@@ -19,6 +21,6 @@ class LibraryPreview {
 
   @override
   String toString() {
-    return "${raw.name} ($booksCount ${booksCount == 1 ? strings.book : strings.books})";
+    return "${raw.name} ${LibraryPreview.booksCountString(booksCount)}";
   }
 }

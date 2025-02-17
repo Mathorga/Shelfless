@@ -9,7 +9,7 @@ import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/screens/library_content_screen.dart';
 import 'package:shelfless/screens/loading_screen.dart';
 import 'package:shelfless/themes/themes.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 
 void main() async {

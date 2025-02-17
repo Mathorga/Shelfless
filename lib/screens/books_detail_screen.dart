@@ -109,7 +109,7 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
                             final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
 
                             // Delete the book.
-                            await LibraryContentProvider.instance.deleteBook(_book);
+                            LibraryContentProvider.instance.deleteBook(_book);
 
                             messenger.showSnackBar(
                               SnackBar(
@@ -150,6 +150,7 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
       // body: _buildBookDetails(),
       body: PageView.builder(
         controller: _pageController,
+        physics: Themes.scrollPhysics,
         itemCount: LibraryContentProvider.instance.books.length,
         onPageChanged: (int index) {
           _book = LibraryContentProvider.instance.books[index];

@@ -11,23 +11,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/models/raw_library.dart';
+import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/books_detail_screen.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/constants.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/view_mode.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
+import 'package:shelfless/widgets/delete_dialog.dart';
 import 'package:shelfless/widgets/drawer_content_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
 
 enum LibraryAction {
   edit,
-  displayMode,
+  delete,
   share,
 }
 
@@ -144,6 +146,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
             ),
             centerTitle: true,
             actions: [
+              // Filters action.
               IconButton(
                 icon: Icon(
                   filtersActive ? Icons.filter_alt : Icons.filter_alt_outlined,
@@ -159,6 +162,8 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                   );
                 },
               ),
+
+              // View mode change action.
               IconButton(
                 onPressed: () async {
                   setState(() {
@@ -177,81 +182,110 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                   },
                 ),
               ),
-              PopupMenuButton<LibraryAction>(
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem(
-                      value: LibraryAction.edit,
-                      child: Row(
-                        spacing: Themes.spacingSmall,
-                        children: [
-                          const Icon(Icons.edit_rounded),
-                          Text(strings.editTitle),
-                        ],
+
+              // Editing actions.
+              if (LibraryContentProvider.instance.editable)
+                PopupMenuButton<LibraryAction>(
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(
+                        value: LibraryAction.edit,
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.edit_rounded),
+                            Text(strings.editTitle),
+                          ],
+                        ),
                       ),
-                    ),
-                    PopupMenuItem(
-                      value: LibraryAction.share,
-                      child: Row(
-                        spacing: Themes.spacingSmall,
-                        children: [
-                          const Icon(Icons.share_rounded),
-                          Text(strings.shareLibrary),
-                        ],
-                      ),
-                    ),
-                  ];
-                },
-                onSelected: (LibraryAction value) async {
-                  final NavigatorState navigator = Navigator.of(context);
-
-                  switch (value) {
-                    case LibraryAction.edit:
-                      navigator.push(MaterialPageRoute(builder: (BuildContext context) {
-                        return EditLibraryScreen(
-                          library: library,
-                          onDone: () => navigator.pop(),
-                        );
-                      }));
-                      break;
-                    case LibraryAction.displayMode:
-                      break;
-                    case LibraryAction.share:
-                      if (library?.raw.id == null) return;
-
-                      // Extract the library.
-                      final Map<String, String> libraryStrings = await DatabaseHelper.instance.extractLibrary(library!.raw.id!);
-
-                      // Compress the library files to a single .slz file.
-                      final Archive archive = Archive();
-                      libraryStrings.entries
-                          .map((MapEntry<String, String> element) => ArchiveFile(
-                                "${element.key}.json",
-                                element.value.length,
-                                element.value.codeUnits,
-                              ))
-                          .forEach((ArchiveFile file) => archive.addFile(file));
-                      final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
-
-                      // Share the library to other apps.
-                      Share.shareXFiles(
-                        [
-                          XFile.fromData(
-                            encodedArchive,
-                            length: encodedArchive.length,
-                            mimeType: "application/x-zip",
+                      // Only let the user delete a library if it's not the last one.
+                      if (LibrariesProvider.instance.libraries.length > 1)
+                        PopupMenuItem(
+                          value: LibraryAction.delete,
+                          child: Row(
+                            spacing: Themes.spacingSmall,
+                            children: [
+                              const Icon(Icons.delete_rounded),
+                              Text(strings.deleteTitle),
+                            ],
                           ),
-                        ],
-                        // The name parameter in the XFile.fromData method is ignored in most platforms,
-                        // so fileNameOverrides is used instead.
-                        fileNameOverrides: [
-                          "${library!.raw.name}.slz",
-                        ],
-                      );
-                      break;
-                  }
-                },
-              ),
+                        ),
+                      PopupMenuItem(
+                        value: LibraryAction.share,
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.share_rounded),
+                            Text(strings.shareLibrary),
+                          ],
+                        ),
+                      ),
+                    ];
+                  },
+                  onSelected: (LibraryAction value) async {
+                    final NavigatorState navigator = Navigator.of(context);
+
+                    switch (value) {
+                      case LibraryAction.edit:
+                        navigator.push(MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return EditLibraryScreen(
+                              library: library,
+                              onDone: () => navigator.pop(),
+                            );
+                          },
+                        ));
+                        break;
+                      case LibraryAction.delete:
+                        // Let the user know all contained books will be deleted as well.
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => DeleteDialog(
+                            titleString: strings.deleteLibraryTitle,
+                            contentString: strings.deleteLibraryContent,
+                            onConfirm: () async {
+                              // Actually delete the library.
+                              await LibraryContentProvider.instance.deleteLibrary();
+                            },
+                          ),
+                        );
+                        break;
+                      case LibraryAction.share:
+                        if (library?.raw.id == null) return;
+
+                        // Extract the library.
+                        final Map<String, String> libraryStrings = await DatabaseHelper.instance.serializeLibrary(library!.raw.id!);
+
+                        // Compress the library files to a single .slz file.
+                        final Archive archive = Archive();
+                        libraryStrings.entries
+                            .map((MapEntry<String, String> element) => ArchiveFile(
+                                  "${element.key}.json",
+                                  element.value.length,
+                                  element.value.codeUnits,
+                                ))
+                            .forEach((ArchiveFile file) => archive.addFile(file));
+                        final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
+
+                        // Share the library to other apps.
+                        Share.shareXFiles(
+                          [
+                            XFile.fromData(
+                              encodedArchive,
+                              length: encodedArchive.length,
+                              mimeType: "application/x-zip",
+                            ),
+                          ],
+                          // The name parameter in the XFile.fromData method is ignored in most platforms,
+                          // so fileNameOverrides is used instead.
+                          fileNameOverrides: [
+                            "${library!.raw.name}.$libraryFileFormat",
+                          ],
+                        );
+                        break;
+                    }
+                  },
+                ),
             ],
           ),
 

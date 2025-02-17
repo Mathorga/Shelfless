@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/screens/edit_genre_screen.dart';
+import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/publisher_label_widget.dart';
 import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
@@ -43,7 +43,7 @@ class _PublishersSelectionWidgetState extends State<PublishersSelectionWidget> {
     super.initState();
 
     LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.genres.keys.toList());
+      _selectionController.setIds(LibraryContentProvider.instance.publishers.keys.toList());
     });
   }
 
@@ -57,7 +57,7 @@ class _PublishersSelectionWidgetState extends State<PublishersSelectionWidget> {
           ? () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (BuildContext context) => const EditGenreScreen(),
+                  builder: (BuildContext context) => const EditPublisherScreen(),
                 ),
               );
             }

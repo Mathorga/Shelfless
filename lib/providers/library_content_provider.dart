@@ -2,13 +2,14 @@ import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
+import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_filters_provider.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 
 class LibraryContentProvider with ChangeNotifier {
   // Private instance.
@@ -49,19 +50,18 @@ class LibraryContentProvider with ChangeNotifier {
 
   /// Asks the DB for the library with the prodided [rawLibrary].
   Future<void> openLibrary({RawLibrary? rawLibrary}) async {
-    if (rawLibrary != null) {
-      if (rawLibrary.id == null) return;
+    // The provided library has no id, so just get out.
+    if (rawLibrary != null && rawLibrary.id == null) return;
 
-      library = rawLibrary;
-    } else {
-      library = null;
-    }
+    library = rawLibrary;
 
     await _fetchLibraryContent(rawLibrary);
 
     notifyListeners();
   }
 
+  /// Fetches and stores content from the provided [rawLibrary].
+  /// Fetches from all if none is provided.
   Future<void> _fetchLibraryContent(RawLibrary? rawLibrary) async {
     // Fetch all books for the provided library.
     final List<Book> tmpBooks = await DatabaseHelper.instance.getLibraryBooks(
@@ -70,6 +70,7 @@ class LibraryContentProvider with ChangeNotifier {
       authorsFilter: _filters.authorsFilter,
       genresFilter: _filters.genresFilter,
       publishersFilter: _filters.publishersFilter,
+      locationsFilter: _filters.locationsFilter,
     );
     books.addAll(tmpBooks);
 
@@ -120,6 +121,23 @@ class LibraryContentProvider with ChangeNotifier {
     // Update libraries provider.
     LibrariesProvider.instance.refetchLibrary(library!);
     LibrariesProvider.instance.refetchLibrary(toLibrary);
+
+    notifyListeners();
+  }
+
+  /// Deletes the currently open library along with all its books.
+  Future<void> deleteLibrary() async {
+    if (library == null) return;
+
+    // Ask the backend to remove the library.
+    await DatabaseHelper.instance.deleteLibrary(library!);
+
+    // Also remove from libraries list.
+    LibrariesProvider.instance.libraries.removeWhere((LibraryPreview preview) => preview.raw == library);
+
+    // Clear all preexisting content and open all libraries.
+    clearContent();
+    await openLibrary();
 
     notifyListeners();
   }
@@ -199,7 +217,7 @@ class LibraryContentProvider with ChangeNotifier {
   Future<void> deleteGenre(RawGenre genre) async {
     await DatabaseHelper.instance.deleteGenre(genre);
 
-    authors.remove(genre.id);
+    genres.remove(genre.id);
 
     notifyListeners();
   }

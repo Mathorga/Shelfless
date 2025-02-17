@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/models/raw_library.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 
 /// Holds all library previews and offers methods for CRUDing libraries.
 class LibrariesProvider with ChangeNotifier {
@@ -21,6 +21,8 @@ class LibrariesProvider with ChangeNotifier {
 
   /// Asks the DB for all libraries and stores them for later use.
   Future<void> fetchLibraries() async {
+    libraries.clear();
+
     libraries.addAll(await DatabaseHelper.instance.getLibraries());
 
     notifyListeners();
@@ -55,12 +57,7 @@ class LibrariesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteLibrary(LibraryPreview libraryPreview) async {
-    // TODO Also delete all books related to the provided library id.
-    await DatabaseHelper.instance.deleteRawLibrary(libraryPreview.raw);
-
-    libraries.remove(libraryPreview);
-
-    notifyListeners();
+  void clear() {
+    libraries.clear();
   }
 }

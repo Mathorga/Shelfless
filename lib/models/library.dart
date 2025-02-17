@@ -1,5 +1,5 @@
 import 'package:shelfless/models/book.dart';
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 
 class Library {
   int? id;

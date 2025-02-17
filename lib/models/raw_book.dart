@@ -1,7 +1,7 @@
 
 import 'dart:typed_data';
 
-import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/database/database_helper.dart';
 
 class RawBook {
   int? id;
