@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 
 import 'package:collection/collection.dart';
+import 'package:sqflite/sqflite.dart';
+
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/models/store_location.dart';
-import 'package:sqflite/sqflite.dart';
-
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/raw_library.dart';
@@ -533,7 +533,7 @@ class DatabaseHelper {
           // If there's a matching element in DB, then use that one instead.
           List<Map<String, dynamic>> existingElements = await tnx.query(
             authorsTable,
-            where: "${authorsTable}_first_name = ? AND ${authorsTable}_first_name = ? AND ${authorsTable}_nationality = ?",
+            where: "${authorsTable}_first_name = ? AND ${authorsTable}_last_name = ? AND ${authorsTable}_nationality = ?",
             whereArgs: [
               inData["${authorsTable}_first_name"],
               inData["${authorsTable}_last_name"],
@@ -642,14 +642,21 @@ class DatabaseHelper {
           // If there's a matching element in DB, then use that one instead.
           List<Map<String, dynamic>> existingElements = await tnx.query(
             booksTable,
-            where:
-                "${booksTable}_title = ? AND ${booksTable}_library_id = ? AND ${booksTable}_publish_year = ? AND ${booksTable}_publisher_id = ? AND ${booksTable}_location_id = ? AND ${booksTable}_edition = ? AND ${booksTable}_notes = ?",
+            where: """
+                ${booksTable}_title = ? AND
+                ${booksTable}_library_id = ? AND
+                ${booksTable}_publish_year = ? AND
+                ${booksTable}_publisher_id ${inData["${booksTable}_publisher_id"] == null ? "IS NULL" : "= ?"} AND
+                ${booksTable}_location_id ${inData["${booksTable}_location_id"] == null ? "IS NULL" : "= ?"} AND
+                ${booksTable}_edition = ? AND
+                ${booksTable}_notes = ?
+                """,
             whereArgs: [
               inData["${booksTable}_title"],
               inData["${booksTable}_library_id"],
               inData["${booksTable}_publish_year"],
-              inData["${booksTable}_publisher_id"],
-              inData["${booksTable}_location_id"],
+              if (inData["${booksTable}_publisher_id"] != null) inData["${booksTable}_publisher_id"],
+              if (inData["${booksTable}_location_id"] != null) inData["${booksTable}_location_id"],
               inData["${booksTable}_edition"],
               inData["${booksTable}_notes"],
             ],

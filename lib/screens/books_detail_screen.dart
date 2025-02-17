@@ -114,8 +114,6 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
                             messenger.showSnackBar(
                               SnackBar(
                                 duration: Themes.durationShort,
-                                behavior: SnackBarBehavior.floating,
-                                width: Themes.snackBarSizeSmall,
                                 content: Text(
                                   strings.bookDeleted,
                                   textAlign: TextAlign.center,

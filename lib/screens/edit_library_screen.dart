@@ -63,6 +63,19 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
             ),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
+                final ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+
+                if (_library?.raw.name.isEmpty ?? true) {
+                  scaffoldMessenger.showSnackBar(
+                    SnackBar(
+                      duration: Themes.durationShort,
+                      // TODO Move to strings.
+                      content: Text("No name provided"),
+                    ),
+                  );
+                  return;
+                }
+
                 // Actually save the library.
                 _inserting ? LibrariesProvider.instance.addLibrary(_library!) : LibrariesProvider.instance.updateLibrary(_library!);
 

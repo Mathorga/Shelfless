@@ -111,6 +111,7 @@ class Themes {
       closeIconColor: ShelflessColors.onMainContentActive,
       actionBackgroundColor: ShelflessColors.onMainContentInactive,
       dismissDirection: DismissDirection.horizontal,
+      width: Themes.snackBarSizeSmall,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Themes.radiusSmall),
