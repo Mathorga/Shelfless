@@ -1,3 +1,5 @@
+// https://godotshaders.com/shader/basic-vector-sprite-upscaling/
+
 #include <flutter/runtime_effect.glsl>
 
 //anti aliasing scaling, smaller value make lines more blurry
