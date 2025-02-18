@@ -47,4 +47,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+**/.cxx
+
 devtools_options.yaml

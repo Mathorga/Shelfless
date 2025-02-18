@@ -1,14 +1,14 @@
 #include <flutter/runtime_effect.glsl>
 
 //anti aliasing scaling, smaller value make lines more blurry
-const float AA_SCALE = 1.0;
+const float AA_SCALE = 2.0;
 
-const float DIST = 4.0;
+const float DIST = 1.0;
 
 //equality threshold of 2 colors before forming lines
-const float THRESHOLD = 0.2;
+const float THRESHOLD = 0.5;
 
-const vec2 IMAGE_SIZE = vec2(16.0, 16.0);
+const vec2 IMAGE_SIZE = vec2(32.0, 32.0);
 
 
 uniform sampler2D image;
@@ -24,9 +24,16 @@ vec4 diag(vec4 sum, vec2 uv, vec2 p1, vec2 p2, sampler2D img, float lineThicknes
     vec4 v1 = texture(img, uv + p1);
     vec4 v2 = texture(img, uv + p2);
 
+    vec2 ip = (floor(uv * IMAGE_SIZE) + 0.5);
+    vec2 ip1 = (floor(p1 * IMAGE_SIZE) + 0.5);
+    // vec2 ip1 = p1;
+    vec2 ip2 = (floor(p1 * IMAGE_SIZE) + 0.5);
+    // vec2 ip2 = p2;
+
     if (length(v1 - v2) < THRESHOLD) {
         vec2 dir = p2 - p1;
-        vec2 lp = uv - (uv + p1);
+        // vec2 lp = p1;
+        vec2 lp = (ip - (floor(ip + ip1) + 0.5)) / uSize;
         // vec2 lp = uv - ((floor((uv + p1) * IMAGE_SIZE) + 0.5) / IMAGE_SIZE);
         dir = normalize(vec2(dir.y, -dir.x));
         float l = clamp((lineThickness - dot(lp, dir)) * AA_SCALE, 0.0, 1.0);
@@ -36,15 +43,19 @@ vec4 diag(vec4 sum, vec2 uv, vec2 p1, vec2 p2, sampler2D img, float lineThicknes
 }
 
 void main() {
-    float lineThickness = 0.5;
+    float lineThickness = 0.4;
     vec2 uv = FlutterFragCoord().xy / uSize;
 
     // Center uv on original size pixel.
     // vec2 ip = uv;
-    vec2 ip = (floor(uv * IMAGE_SIZE) + 0.5) / IMAGE_SIZE;
-    vec2 size = uSize;
+    vec2 pixel_size = 1.0 / IMAGE_SIZE;
+    // vec2 ip = (uv * IMAGE_SIZE) * pixel_size;
+    vec2 ip = (floor(uv * IMAGE_SIZE) + 0.5) * pixel_size;
+    // vec2 size = uSize;
+    vec2 size = IMAGE_SIZE;
     // vec2 size = vec2(1.0, 1.0);
-    float dist = 1.0 / IMAGE_SIZE.x;
+    float dist = DIST * pixel_size.x;
+    // float dist = 1.0 / IMAGE_SIZE.x;
     // float dist = (uSize / IMAGE_SIZE);
     // float dist = ((uSize / IMAGE_SIZE) / IMAGE_SIZE).x;
 
@@ -52,10 +63,58 @@ void main() {
     vec4 s = texture(image, ip);
 
     //draw anti aliased diagonal lines of surrounding pixels as 'foreground'
-    s = diag(s, ip, vec2(-dist, 0.0) / size, vec2(0.0, dist) / size, image, lineThickness);
-    s = diag(s, ip, vec2(0.0, dist) / size, vec2(dist, 0.0) / size, image, lineThickness);
-    s = diag(s, ip, vec2(dist, 0.0) / size, vec2(0.0, -dist) / size, image, lineThickness);
-    s = diag(s, ip, vec2(0.0, -dist) / size, vec2(-dist, 0.0) / size, image, lineThickness);
+    s = diag(s, ip, vec2(-dist, 0.0), vec2(0.0, dist), image, lineThickness);
+    s = diag(s, ip, vec2(0.0, dist), vec2(dist, 0.0), image, lineThickness);
+    s = diag(s, ip, vec2(dist, 0.0), vec2(0.0, -dist), image, lineThickness);
+    s = diag(s, ip, vec2(0.0, -dist), vec2(-dist, 0.0), image, lineThickness);
 
     fragColor = s;
 }
+
+
+// #include <flutter/runtime_effect.glsl>
+
+// // Uniforms
+// uniform sampler2D u_texture;
+// uniform vec2 u_resolution;   // Canvas resolution
+// uniform float iTime;
+
+// const float u_threshold = 0.1;
+// const float u_aa_scale = 2.0;
+// const vec2 u_texture_size = vec2(16.0, 16.0); // Texture size
+
+// out vec4 fragColor;
+
+// // Function to draw diagonal lines connecting two pixels if within threshold
+// vec4 diag(vec4 sum, vec2 uv, vec2 p1, vec2 p2, sampler2D img, float lineThickness) {
+//     // Adjust the coordinates
+//     vec4 v1 = texture(img, (uv + p1) / u_texture_size);
+//     vec4 v2 = texture(img, (uv + p2) / u_texture_size);
+    
+//     if (length(v1 - v2) < u_threshold) {
+//         vec2 dir = p2 - p1;
+//         vec2 lp = uv - (floor(uv + p1) + 0.5);
+//         dir = normalize(vec2(dir.y, -dir.x));
+//         float l = clamp((lineThickness - dot(lp, dir)) * u_aa_scale, 0.0, 1.0);
+//         sum = mix(sum, v1, l);
+//     }
+//     return sum;
+// }
+
+// void main() {
+//     // Pixel coordinates
+//     vec2 uv = FlutterFragCoord().xy / u_resolution;
+
+//     // Define a base line thickness and start with nearest pixel as 'background'
+//     float lineThickness = 0.4;
+//     vec4 color = texture(u_texture, uv);
+
+//     // Draw anti-aliased diagonal lines between surrounding pixels as 'foreground'
+//     color = diag(color, uv, vec2(-1.0, 0.0), vec2(0.0, 1.0), u_texture, lineThickness);
+//     color = diag(color, uv, vec2(0.0, 1.0), vec2(1.0, 0.0), u_texture, lineThickness);
+//     color = diag(color, uv, vec2(1.0, 0.0), vec2(0.0, -1.0), u_texture, lineThickness);
+//     color = diag(color, uv, vec2(0.0, -1.0), vec2(-1.0, 0.0), u_texture, lineThickness);
+
+//     // Output the final color
+//     fragColor = color;
+// }
