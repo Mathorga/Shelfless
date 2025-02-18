@@ -4,6 +4,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+import 'package:image/image.dart' as img;
+
 class ShaderPainter extends CustomPainter {
   final ui.FragmentShader shader;
   final List<double> uniforms;
@@ -67,12 +69,18 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
   }
 
   void loadMyShader() async {
-    ui.decodeImageFromList(widget.imageData, (ui.Image image) {
-      setState(() {
-        _image = image;
-      });
+    final ui.Codec codec = await ui.instantiateImageCodec(
+      widget.imageData,
+      // targetWidth: 512,
+      // targetHeight: 512,
+      allowUpscaling: false,
+    );
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+    setState(() {
+      _image = frameInfo.image;
     });
-    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/circles.frag.glsl");
+
+    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/blur_upscale.frag.glsl");
     _shader = program.fragmentShader();
     setState(() {
       // trigger a repaint

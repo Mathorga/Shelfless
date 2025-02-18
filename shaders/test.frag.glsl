@@ -6,8 +6,9 @@ uniform sampler2D image;
 uniform float iTime;
 
 const int ML = 0;
-uniform float THRESHOLD = 0.001;
-uniform float AA_SCALE = 11.0;
+const float THRESHOLD = 0.001;
+const float AA_SCALE = 11.0;
+const float DIST = 4.0;
 
 bool eq(vec4 col1, vec4 col2) {
     vec4 diff = col1 - col2;
@@ -40,15 +41,15 @@ void main() {
     */
 
     vec4 c = texture(image, ip);
-    vec4 l = texture(image, ip + (vec2(-1.0, 0.0) / uSize));
-    vec4 d = texture(image, ip + (vec2(0.0, 1.0) / uSize));
-    vec4 r = texture(image, ip + (vec2(1.0, 0.0) / uSize));
-    vec4 u = texture(image, ip + (vec2(0.0, -1.0) / uSize));
+    vec4 l = texture(image, ip + (vec2(-DIST, 0.0) / uSize));
+    vec4 d = texture(image, ip + (vec2(0.0, DIST) / uSize));
+    vec4 r = texture(image, ip + (vec2(DIST, 0.0) / uSize));
+    vec4 u = texture(image, ip + (vec2(0.0, -DIST) / uSize));
 
-    vec4 ld = texture(image, ip + (vec2(-1.0, 1.0) / uSize));
-    vec4 lu = texture(image, ip + (vec2(-1.0, -1.0) / uSize));
-    vec4 rd = texture(image, ip + (vec2(1.0, 1.0) / uSize));
-    vec4 ru = texture(image, ip + (vec2(1.0, -1.0) / uSize));
+    vec4 ld = texture(image, ip + (vec2(-DIST, DIST) / uSize));
+    vec4 lu = texture(image, ip + (vec2(-DIST, -DIST) / uSize));
+    vec4 rd = texture(image, ip + (vec2(DIST, DIST) / uSize));
+    vec4 ru = texture(image, ip + (vec2(DIST, -DIST) / uSize));
 
     vec4 s = c;
 
@@ -59,16 +60,16 @@ void main() {
     if (eq(rd, c)) mask.z = 0;
     if (eq(ru, c)) mask.w = 0;
 
-    if (mask.x == 1) s = diag(s, ip, vec2(-1, 0) / uSize, vec2(0, 1) / uSize, l, d, LINE_THICKNESS);
-    if (mask.y == 1) s = diag(s, ip, vec2(0, -1) / uSize, vec2(-1, 0) / uSize, l, u, LINE_THICKNESS);
-    if (mask.z == 1) s = diag(s, ip, vec2(0, 1) / uSize, vec2(1, 0) / uSize, r, d, LINE_THICKNESS);
-    if (mask.w == 1) s = diag(s, ip, vec2(1, 0) / uSize, vec2(0, -1) / uSize, r, u, LINE_THICKNESS);
+    if (mask.x == 1) s = diag(s, ip, vec2(-DIST, 0) / uSize, vec2(0, DIST) / uSize, l, d, LINE_THICKNESS);
+    if (mask.y == 1) s = diag(s, ip, vec2(0, -DIST) / uSize, vec2(-DIST, 0) / uSize, l, u, LINE_THICKNESS);
+    if (mask.z == 1) s = diag(s, ip, vec2(0, DIST) / uSize, vec2(DIST, 0) / uSize, r, d, LINE_THICKNESS);
+    if (mask.w == 1) s = diag(s, ip, vec2(DIST, 0) / uSize, vec2(0, -DIST) / uSize, r, u, LINE_THICKNESS);
 
     vec4 f = c;
-    f = diag(f, ip, vec2(-1, 0) / uSize, vec2(0, 1) / uSize, l, d, LINE_THICKNESS);
-    f = diag(f, ip, vec2(0, -1) / uSize, vec2(-1, 0) / uSize, l, u, LINE_THICKNESS);
-    f = diag(f, ip, vec2(0, 1) / uSize, vec2(1, 0) / uSize, r, d, LINE_THICKNESS);
-    f = diag(f, ip, vec2(1, 0) / uSize, vec2(0, -1) / uSize, r, u, LINE_THICKNESS);
+    f = diag(f, ip, vec2(-DIST, 0) / uSize, vec2(0, DIST) / uSize, l, d, LINE_THICKNESS);
+    f = diag(f, ip, vec2(0, -DIST) / uSize, vec2(-DIST, 0) / uSize, l, u, LINE_THICKNESS);
+    f = diag(f, ip, vec2(0, DIST) / uSize, vec2(DIST, 0) / uSize, r, d, LINE_THICKNESS);
+    f = diag(f, ip, vec2(DIST, 0) / uSize, vec2(0, -DIST) / uSize, r, u, LINE_THICKNESS);
 
     fragColor = (s + f) / 2.0;
 }

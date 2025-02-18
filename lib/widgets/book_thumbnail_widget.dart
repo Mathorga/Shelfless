@@ -62,9 +62,9 @@ class BookThumbnailWidget extends StatelessWidget {
   }
 
   Widget _buildThumbImage() {
-    // return ShadedImageWidget(
-    //   imageData: book.raw.cover!,
-    // );
+    return ShadedImageWidget(
+      imageData: book.raw.cover!,
+    );
     return book.raw.cover != null
         ? Image.memory(
             book.raw.cover!,

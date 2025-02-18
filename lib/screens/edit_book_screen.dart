@@ -460,7 +460,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     );
 
     setState(() {
-      _book.raw.cover = img.encodeJpg(resizedImage);
+      _book.raw.cover = img.encodeBmp(resizedImage);
     });
   }
 }
