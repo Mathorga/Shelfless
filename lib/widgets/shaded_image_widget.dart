@@ -40,10 +40,16 @@ class ShaderPainter extends CustomPainter {
 
 class ShadedImageWidget extends StatefulWidget {
   final Uint8List imageData;
+  final int? upscaleWidth;
+  final int? upscaleHeight;
+  final bool applyFilter;
 
   const ShadedImageWidget({
     super.key,
     required this.imageData,
+    this.upscaleWidth,
+    this.upscaleHeight,
+    this.applyFilter = false,
   });
 
   @override
@@ -53,7 +59,6 @@ class ShadedImageWidget extends StatefulWidget {
 class _ShadedImageWidgetState extends State<ShadedImageWidget> {
   late Timer _timer;
   double _delta = 0;
-  ui.Image? _image;
   ui.FragmentShader? _shader;
 
   @override
@@ -68,19 +73,8 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
     super.dispose();
   }
 
-  void loadMyShader() async {
-    final ui.Codec codec = await ui.instantiateImageCodec(
-      widget.imageData,
-      // targetWidth: 512,
-      // targetHeight: 512,
-      allowUpscaling: false,
-    );
-    final ui.FrameInfo frameInfo = await codec.getNextFrame();
-    setState(() {
-      _image = frameInfo.image;
-    });
-
-    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/test_old.frag.glsl");
+  Future<void> loadMyShader() async {
+    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/blur_upscale.frag.glsl");
     _shader = program.fragmentShader();
     setState(() {
       // trigger a repaint
@@ -96,20 +90,56 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
     );
   }
 
+  Future<ui.Image> _decodeImage() async {
+    final ui.Codec codec = await ui.instantiateImageCodec(
+      widget.imageData,
+      targetWidth: widget.upscaleWidth,
+      targetHeight: widget.upscaleHeight,
+      allowUpscaling: widget.applyFilter,
+    );
+    final ui.FrameInfo frameInfo = await codec.getNextFrame();
+
+    return frameInfo.image;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (_shader == null || _image == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      return CustomPaint(
-        painter: ShaderPainter(
-          _shader!,
-          [_delta],
-          [_image],
-        ),
-      );
-    }
+    return FutureBuilder(
+      future: _decodeImage(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasError) {
+          // TODO Handle this better pls.
+          return Placeholder();
+        }
+
+        if (!snapshot.hasData) {
+          // TODO Handle this better pls.
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        final ui.Image image = snapshot.data;
+
+        if (_shader == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        return CustomPaint(
+          painter: ShaderPainter(
+            _shader!,
+            [
+              16.0,
+              16.0,
+            ],
+            [
+              image,
+            ],
+          ),
+        );
+      },
+    );
   }
 }

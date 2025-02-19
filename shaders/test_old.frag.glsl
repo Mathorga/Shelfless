@@ -3,22 +3,20 @@
 #include <flutter/runtime_effect.glsl>
 
 //anti aliasing scaling, smaller value make lines more blurry
-const float AA_SCALE = 2.0;
+const float AA_SCALE = 1.0;
 
 const float DIST = 1.0;
 
 //equality threshold of 2 colors before forming lines
 const float THRESHOLD = 0.5;
 
-const vec2 IMAGE_SIZE = vec2(32.0, 32.0);
-
-const vec2 PIXEL_SIZE = 1.0 / IMAGE_SIZE;
-
 
 uniform sampler2D image;
 uniform vec2 uSize;
-uniform float iTime;
+uniform vec2 image_size;
 
+
+vec2 PIXEL_SIZE = 1.0 / image_size;
 
 out vec4 fragColor;
 
@@ -29,9 +27,9 @@ vec4 diag(vec4 sum, vec2 uv, vec2 p1, vec2 p2, sampler2D img, float lineThicknes
     vec4 v2 = texture(img, uv + p2);
 
     // Convert points coordinates to 
-    vec2 ip = uv * IMAGE_SIZE;
-    vec2 ip1 = p1 * IMAGE_SIZE;
-    vec2 ip2 = p2 * IMAGE_SIZE;
+    vec2 ip = uv * image_size;
+    vec2 ip1 = p1 * image_size;
+    vec2 ip2 = p2 * image_size;
 
     if (length(v1 - v2) < THRESHOLD) {
         vec2 dir = p2 - p1;
