@@ -76,16 +76,22 @@ class BookThumbnailWidget extends StatelessWidget {
             isAntiAlias: true,
             filterQuality: FilterQuality.none,
           )
-        : Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: ShelflessColors.error,
-            child: Center(
-              child: Text(
-                "TODO PLACE STOCK IMAGE HERE",
-                textAlign: TextAlign.center,
-              ),
-            ),
+        : Image.asset(
+            "assets/images/covers/book_icon_low.png",
+            fit: BoxFit.cover,
+            isAntiAlias: true,
+            filterQuality: FilterQuality.none,
           );
+    // : Container(
+    //     width: double.infinity,
+    //     height: double.infinity,
+    //     color: ShelflessColors.error,
+    //     child: Center(
+    //       child: Text(
+    //         "TODO PLACE STOCK IMAGE HERE",
+    //         textAlign: TextAlign.center,
+    //       ),
+    //     ),
+    //   );
   }
 }
