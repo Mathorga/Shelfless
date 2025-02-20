@@ -1,4 +1,3 @@
-import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/book.dart';
@@ -63,38 +62,30 @@ class BookThumbnailWidget extends StatelessWidget {
   }
 
   Widget _buildThumbImage() {
-    return ShadedImageWidget(
-      imageData: book.raw.cover!,
-      upscaleWidth: 256,
-      upscaleHeight: 256,
-      applyFilter: true,
-    );
-    return Blur(
-      blur: 10.0,
-      blurColor: Colors.transparent,
-      colorOpacity: 0.0,
-      child: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: book.raw.cover != null
-            ? Image.memory(
-                book.raw.cover!,
-                fit: BoxFit.cover,
-                isAntiAlias: true,
-                filterQuality: FilterQuality.none,
-              )
-            : Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: ShelflessColors.error,
-                child: Center(
-                  child: Text(
-                    "TODO PLACE STOCK IMAGE HERE",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+    return book.raw.cover != null
+        ? ShadedImageWidget(
+            imageData: book.raw.cover!,
+            upscaleWidth: 256,
+            upscaleHeight: 256,
+            applyFilter: true,
+          )
+        // TODO Hide this behind an app setting.
+        // ? Image.memory(
+        //     book.raw.cover!,
+        //     fit: BoxFit.cover,
+        //     isAntiAlias: true,
+        //     filterQuality: FilterQuality.none,
+        //   )
+        : Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: ShelflessColors.error,
+            child: Center(
+              child: Text(
+                "TODO PLACE STOCK IMAGE HERE",
+                textAlign: TextAlign.center,
               ),
-      ),
-    );
+            ),
+          );
   }
 }
