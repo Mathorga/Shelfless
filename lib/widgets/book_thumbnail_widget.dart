@@ -63,19 +63,19 @@ class BookThumbnailWidget extends StatelessWidget {
 
   Widget _buildThumbImage() {
     return book.raw.cover != null
-        ? ShadedImageWidget(
-            imageData: book.raw.cover!,
-            upscaleWidth: 256,
-            upscaleHeight: 256,
-            applyFilter: true,
-          )
         // TODO Hide this behind an app setting.
-        // ? Image.memory(
-        //     book.raw.cover!,
-        //     fit: BoxFit.cover,
-        //     isAntiAlias: true,
-        //     filterQuality: FilterQuality.none,
+        // ? ShadedImageWidget(
+        //     imageData: book.raw.cover!,
+        //     upscaleWidth: 256,
+        //     upscaleHeight: 256,
+        //     applyFilter: true,
         //   )
+        ? Image.memory(
+            book.raw.cover!,
+            fit: BoxFit.cover,
+            isAntiAlias: true,
+            filterQuality: FilterQuality.none,
+          )
         : Container(
             width: double.infinity,
             height: double.infinity,
