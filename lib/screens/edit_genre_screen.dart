@@ -55,6 +55,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
           padding: const EdgeInsets.all(12.0),
           child: ListView(
             children: [
+              // Name
               EditSectionWidget(
                 children: [
                   Text(strings.genreInfoName),
@@ -62,31 +63,31 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                   TextFormField(
                     initialValue: _genre.name,
                     textCapitalization: TextCapitalization.words,
+                    textInputAction: TextInputAction.done,
                     onChanged: (String value) => _genre.name = value,
                   ),
                 ],
               ),
 
-              // Last name.
+              // Color.
               EditSectionWidget(
                 children: [
                   Text(strings.genreInfoColor),
                   Themes.spacer,
                   Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(Themes.spacingMedium),
                     child: GestureDetector(
                       onTap: () {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text(strings.genrePickColor),
+                              contentPadding: const EdgeInsets.all(0.0),
                               content: SingleChildScrollView(
-                                child: ColorPicker(
-                                  enableAlpha: false,
-                                  hexInputBar: true,
-                                  pickerAreaBorderRadius: BorderRadius.circular(15.0),
+                                child: SlidePicker(
                                   pickerColor: Color(_genre.color),
+                                  indicatorBorderRadius: BorderRadius.circular(Themes.radiusMedium),
+                                  enableAlpha: false,
                                   onColorChanged: (Color pickedColor) {
                                     setState(() {
                                       _genre.color = pickedColor.value;
@@ -94,15 +95,6 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                                   },
                                 ),
                               ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    // Dismiss dialog.
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(strings.ok),
-                                ),
-                              ],
                             );
                           },
                         );
