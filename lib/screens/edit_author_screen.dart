@@ -61,6 +61,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
                   TextFormField(
                     initialValue: _author.firstName,
                     textCapitalization: TextCapitalization.words,
+                    textInputAction: TextInputAction.next,
                     onChanged: (String value) => _author.firstName = value,
                   ),
                 ],
@@ -74,6 +75,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
                   TextFormField(
                     initialValue: _author.lastName,
                     textCapitalization: TextCapitalization.words,
+                    textInputAction: TextInputAction.done,
                     onChanged: (String value) => _author.lastName = value,
                   ),
                 ],

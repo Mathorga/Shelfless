@@ -102,7 +102,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     final double wideItemWidth = 200.0;
     final double thinItemWidth = 100.0;
     final double wideItemHeight = 280.0;
-    final double thinItemHeight = 180.0;
+    final double thinItemHeight = 100.0;
     final double leftRightPadding = Themes.spacingSmall;
 
     final double itemWidth = switch (viewMode) {

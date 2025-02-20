@@ -52,7 +52,7 @@ dependencies:
   image: 4.5.2
 
   # Color picker.
-  flutter_colorpicker: ^1.1.0
+  flutter_colorpicker: 1.1.0
 
   # Multiple choice FAB.
   flutter_expandable_fab: ^2.3.0
