@@ -17,12 +17,14 @@ class BookPreviewWidget extends StatelessWidget {
   final Book book;
   final ViewMode viewMode;
   final void Function()? onTap;
+  final void Function()? onDoubleTap;
 
   const BookPreviewWidget({
     super.key,
     required this.book,
     this.viewMode = ViewMode.extendedGrid,
     this.onTap,
+    this.onDoubleTap,
   });
 
   @override
@@ -36,6 +38,7 @@ class BookPreviewWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
+      onDoubleTap: onDoubleTap,
       child: switch (viewMode) {
         // List view.
         ViewMode.list => Card(

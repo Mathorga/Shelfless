@@ -133,6 +133,7 @@ flutter:
     - assets/images/covers/book_icon.png
     - assets/images/covers/book_icon_low.png
     - assets/images/covers/book_icon_2.png
+    - assets/images/covers/flower.png
     - pubspec.yaml
 
   # An image asset can refer to one or more resolution-specific "variants", see

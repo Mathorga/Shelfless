@@ -182,10 +182,9 @@ class BookDetailsWidget extends StatelessWidget {
                           child: _buildAction(
                             context,
                             onPressed: () {
-                              // setState(() {
                               // Update book and store the update in DB.
                               book.raw.out = !book.raw.out;
-                              // });
+
                               LibraryContentProvider.instance.storeBookUpdate(book);
                             },
                             label: book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction,
