@@ -81,6 +81,7 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
                     ),
                   ));
                   break;
+                case ElementAction.toggleOut:
                 case ElementAction.moveTo:
                   break;
                 case ElementAction.delete:

@@ -301,7 +301,6 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                             book: book,
                             viewMode: viewMode,
                             onTap: () => _gotoBookDetails(book),
-                            onDoubleTap: () => _toggleBookOut(book),
                           );
                         },
                         childCount: books.length,
@@ -323,13 +322,11 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                                 book: book,
                                 viewMode: viewMode,
                                 onTap: () => _gotoBookDetails(book),
-                                onDoubleTap: () => _toggleBookOut(book),
                               ),
                             ViewMode.compactGrid => BookPreviewWidget(
                                 book: book,
                                 viewMode: viewMode,
                                 onTap: () => _gotoBookDetails(book),
-                                onDoubleTap: () => _toggleBookOut(book),
                               ),
                             ViewMode.list => Placeholder(),
                           };
@@ -380,12 +377,5 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
         openingBook: book,
       ),
     ));
-  }
-
-  void _toggleBookOut(Book book) {
-    // Update book and store the update in DB.
-    book.raw.out = !book.raw.out;
-
-    LibraryContentProvider.instance.storeBookUpdate(book);
   }
 }

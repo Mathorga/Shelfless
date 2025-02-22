@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/book.dart';
@@ -17,14 +18,12 @@ class BookPreviewWidget extends StatelessWidget {
   final Book book;
   final ViewMode viewMode;
   final void Function()? onTap;
-  final void Function()? onDoubleTap;
 
   const BookPreviewWidget({
     super.key,
     required this.book,
     this.viewMode = ViewMode.extendedGrid,
     this.onTap,
-    this.onDoubleTap,
   });
 
   @override
@@ -38,7 +37,24 @@ class BookPreviewWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      onDoubleTap: onDoubleTap,
+      onLongPressStart: (LongPressStartDetails details) {
+        showMenu<ElementAction>(
+          context: context,
+          position: RelativeRect.fromLTRB(
+            details.globalPosition.dx,
+            details.globalPosition.dy,
+            details.globalPosition.dx,
+            details.globalPosition.dy,
+          ),
+          items: _buildActions(),
+        ).then((ElementAction? action) {
+          if (action == null) return;
+          if (!context.mounted) return;
+
+          _onActionSelected(context, action);
+        });
+      },
+      behavior: HitTestBehavior.deferToChild,
       child: switch (viewMode) {
         // List view.
         ViewMode.list => Card(
@@ -139,92 +155,112 @@ class BookPreviewWidget extends StatelessWidget {
     );
   }
 
+  List<PopupMenuEntry<ElementAction>> _buildActions() {
+    return [
+      PopupMenuItem(
+        value: ElementAction.edit,
+        child: Row(
+          spacing: Themes.spacingSmall,
+          children: [
+            const Icon(Icons.edit_rounded),
+            Text(strings.bookEdit),
+          ],
+        ),
+      ),
+
+      PopupMenuItem(
+        value: ElementAction.toggleOut,
+        child: Row(
+          spacing: Themes.spacingSmall,
+          children: [
+            Icon(book.raw.out ? Icons.file_download_rounded : Icons.file_upload_rounded),
+            Text(book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction),
+          ],
+        ),
+      ),
+
+      // Only show the "move to" button if there's a single library open.
+      if (LibraryContentProvider.instance.editable)
+        PopupMenuItem(
+          value: ElementAction.moveTo,
+          child: Row(
+            spacing: Themes.spacingSmall,
+            children: [
+              const Icon(Icons.move_up_rounded),
+              Text(strings.bookMoveTo),
+            ],
+          ),
+        ),
+
+      PopupMenuItem(
+        value: ElementAction.delete,
+        child: Row(
+          spacing: Themes.spacingSmall,
+          children: [
+            const Icon(Icons.delete_rounded),
+            Text(strings.bookDeleteAction),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  void _onActionSelected(BuildContext context, ElementAction action) {
+    switch (action) {
+      case ElementAction.edit:
+        // Open EditBookScreen.
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => EditBookScreen(
+            book: book,
+          ),
+        ));
+        break;
+      case ElementAction.toggleOut:
+        // Update book and store the update in DB.
+        book.raw.out = !book.raw.out;
+
+        LibraryContentProvider.instance.storeBookUpdate(book);
+        break;
+      case ElementAction.moveTo:
+        MaterialUtils.moveBookTo(context, book: book);
+        break;
+      case ElementAction.delete:
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => DeleteDialog(
+            titleString: strings.deleteBookTitle,
+            contentString: strings.deleteBookContent,
+            onConfirm: () async {
+              // Prefetch handlers before async gaps.
+              final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
+              // Delete the book.
+              await LibraryContentProvider.instance.deleteBook(book);
+
+              messenger.showSnackBar(
+                SnackBar(
+                  duration: Themes.durationShort,
+                  behavior: SnackBarBehavior.floating,
+                  width: Themes.snackBarSizeSmall,
+                  content: Text(
+                    strings.bookDeleted,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+        break;
+    }
+  }
+
   Widget _buildPopupMenuButton(BuildContext context) {
     return PopupMenuButton<ElementAction>(
       itemBuilder: (BuildContext context) {
-        return [
-          PopupMenuItem(
-            value: ElementAction.edit,
-            child: Row(
-              spacing: Themes.spacingSmall,
-              children: [
-                const Icon(Icons.edit_rounded),
-                Text(strings.bookEdit),
-              ],
-            ),
-          ),
-
-          // Only show the "move to" button if there's a single library open.
-          if (LibraryContentProvider.instance.editable)
-            PopupMenuItem(
-              value: ElementAction.moveTo,
-              child: Row(
-                spacing: Themes.spacingSmall,
-                children: [
-                  const Icon(Icons.move_up_rounded),
-                  Text(strings.bookMoveTo),
-                ],
-              ),
-            ),
-          PopupMenuItem(
-            value: ElementAction.delete,
-            child: Row(
-              spacing: Themes.spacingSmall,
-              children: [
-                const Icon(Icons.delete_rounded),
-                Text(strings.bookDeleteAction),
-              ],
-            ),
-          ),
-        ];
+        return _buildActions();
       },
-      onSelected: (ElementAction value) {
-        switch (value) {
-          case ElementAction.edit:
-            // Open EditBookScreen.
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) => EditBookScreen(
-                book: book,
-              ),
-            ));
-            break;
-          case ElementAction.moveTo:
-            MaterialUtils.moveBookTo(context, book: book);
-            break;
-          case ElementAction.delete:
-            showDialog(
-              context: context,
-              builder: (BuildContext context) => DeleteDialog(
-                titleString: strings.deleteBookTitle,
-                contentString: strings.deleteBookContent,
-                onConfirm: () async {
-                  // Prefetch handlers before async gaps.
-                  final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
-
-                  // Delete the book.
-                  await LibraryContentProvider.instance.deleteBook(book);
-
-                  messenger.showSnackBar(
-                    SnackBar(
-                      duration: Themes.durationShort,
-                      behavior: SnackBarBehavior.floating,
-                      width: Themes.snackBarSizeSmall,
-                      content: Text(
-                        strings.bookDeleted,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-            break;
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(Themes.spacingSmall),
-        child: Icon(Icons.more_vert_rounded),
-      ),
+      onSelected: (ElementAction value) => _onActionSelected(context, value),
     );
   }
 }
