@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/author.dart';
@@ -10,6 +11,38 @@ import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/utils/database/database_helper.dart';
+
+enum SortOrder {
+  titleAsc,
+  titleDesc,
+  publishYearAsc,
+  publishYearDesc,
+  authorsCountAsc,
+  authorsCountDesc,
+  genresCountAsc,
+  genresCountDesc,
+  publisherAsc,
+  publisherDesc,
+  locationAsc,
+  locationDesc,
+}
+
+extension SortOrderExtension on SortOrder {
+  bool get enabled => switch (this) {
+        SortOrder.titleAsc => true,
+        SortOrder.titleDesc => true,
+        SortOrder.publishYearAsc => true,
+        SortOrder.publishYearDesc => true,
+        _ => false,
+      };
+
+  String label() {
+    return switch (this) {
+      // TODO.
+      _ => name,
+    };
+  }
+}
 
 class LibraryContentProvider with ChangeNotifier {
   // Private instance.
@@ -44,6 +77,8 @@ class LibraryContentProvider with ChangeNotifier {
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
 
+  SortOrder sortOrder = SortOrder.titleAsc;
+
   // ###############################################################################################################################################################################
   // Content methods.
   // ###############################################################################################################################################################################
@@ -55,7 +90,11 @@ class LibraryContentProvider with ChangeNotifier {
 
     library = rawLibrary;
 
+    // TODO Read sort order from shared preferences.
+
     await _fetchLibraryContent(rawLibrary);
+
+    _intSortBooks();
 
     notifyListeners();
   }
@@ -85,6 +124,7 @@ class LibraryContentProvider with ChangeNotifier {
     await DatabaseHelper.instance.insertBook(book);
 
     books.add(book);
+    _intSortBooks();
 
     // Update libraries provider.
     // The library being null here is an error and should be thrown.
@@ -103,6 +143,7 @@ class LibraryContentProvider with ChangeNotifier {
 
     // Save the updated book version.
     books[index] = book;
+    _intSortBooks();
 
     notifyListeners();
   }
@@ -334,6 +375,14 @@ class LibraryContentProvider with ChangeNotifier {
     locations.clear();
   }
 
+  void clear() {
+    library = null;
+
+    clearContent();
+
+    clearFilters();
+  }
+
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
 
@@ -366,11 +415,103 @@ class LibraryContentProvider with ChangeNotifier {
   // ###############################################################################################################################################################################
   // ###############################################################################################################################################################################
 
-  void clear() {
-    library = null;
+  // ###############################################################################################################################################################################
+  // Sort methods.
+  // ###############################################################################################################################################################################
 
-    clearContent();
+  /// Sorts books according to the provided compare function.
+  void sortBooks(int Function(Book a, Book b) compare) {
+    books.sort(compare);
 
-    clearFilters();
+    notifyListeners();
   }
+
+  void _intSortBooks() {
+    switch (sortOrder) {
+      case SortOrder.titleAsc:
+        books.sort((Book a, Book b) => a.raw.title.compareTo(b.raw.title));
+        break;
+      case SortOrder.titleDesc:
+        books.sort((Book a, Book b) => b.raw.title.compareTo(a.raw.title));
+        break;
+      case SortOrder.authorsCountAsc:
+        books.sort((Book a, Book b) => a.authorIds.length.compareTo(b.authorIds.length));
+        break;
+      case SortOrder.authorsCountDesc:
+        books.sort((Book a, Book b) => b.authorIds.length.compareTo(a.authorIds.length));
+        break;
+      case SortOrder.genresCountAsc:
+        books.sort((Book a, Book b) => a.genreIds.length.compareTo(b.genreIds.length));
+        break;
+      case SortOrder.genresCountDesc:
+        books.sort((Book a, Book b) => b.genreIds.length.compareTo(a.genreIds.length));
+        break;
+      case SortOrder.publishYearAsc:
+        books.sort((Book a, Book b) => a.raw.publishYear.compareTo(b.raw.publishYear));
+        break;
+      case SortOrder.publishYearDesc:
+        books.sort((Book a, Book b) => b.raw.publishYear.compareTo(a.raw.publishYear));
+        break;
+      case SortOrder.publisherAsc:
+        books.sort((Book a, Book b) {
+          final Publisher? publisherA = publishers[a.raw.publisherId];
+          final Publisher? publisherB = publishers[b.raw.publisherId];
+
+          if (publisherA == null || publisherB == null) return 1;
+
+          return publisherA.name.compareTo(publisherB.name);
+        });
+        break;
+      case SortOrder.publisherDesc:
+        books.sort((Book a, Book b) {
+          final Publisher? publisherA = publishers[a.raw.publisherId];
+          final Publisher? publisherB = publishers[b.raw.publisherId];
+
+          if (publisherA == null || publisherB == null) return 1;
+
+          return publisherB.name.compareTo(publisherA.name);
+        });
+        break;
+      case SortOrder.locationAsc:
+        books.sort((Book a, Book b) {
+          final StoreLocation? locationA = locations[a.raw.locationId];
+          final StoreLocation? locationB = locations[b.raw.locationId];
+
+          if (locationA == null || locationB == null) return 1;
+
+          return locationA.name.compareTo(locationB.name);
+        });
+        break;
+      case SortOrder.locationDesc:
+        books.sort((Book a, Book b) {
+          final StoreLocation? locationA = locations[a.raw.locationId];
+          final StoreLocation? locationB = locations[b.raw.locationId];
+
+          if (locationA == null || locationB == null) return 1;
+
+          return locationB.name.compareTo(locationA.name);
+        });
+        break;
+    }
+  }
+
+  /// Sorts books according to the provided sort order.
+  void sortBooksBy(SortOrder order) {
+    if (order == sortOrder) return;
+
+    sortOrder = order;
+
+    _intSortBooks();
+
+    notifyListeners();
+  }
+
+  /// Compares two books by their title in ascending order.
+  static int compareByTitleAsc(Book a, Book b) => a.raw.title.compareTo(b.raw.title);
+
+  /// Compares two books by their title in descending order.
+  static int compareByTitleDesc(Book a, Book b) => b.raw.title.compareTo(a.raw.title);
+
+  // ###############################################################################################################################################################################
+  // ###############################################################################################################################################################################
 }

@@ -5,6 +5,7 @@ import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/material_utils.dart';
@@ -63,9 +64,21 @@ class BookPreviewWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(Themes.spacingSmall),
                 child: Row(
+                  spacing: Themes.spacingMedium,
                   children: [
+                    if (book.raw.out)
+                      Text(
+                        "[${strings.outLabel}]",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
                     Expanded(
-                      child: Text(book.raw.title),
+                      child: Row(
+                        children: [
+                          Text(book.raw.title),
+                        ],
+                      ),
                     ),
                     _buildPopupMenuButton(context),
                   ],

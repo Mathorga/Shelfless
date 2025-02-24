@@ -26,8 +26,10 @@ import 'package:shelfless/widgets/book_preview_widget.dart';
 import 'package:shelfless/widgets/delete_dialog.dart';
 import 'package:shelfless/widgets/drawer_content_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
+import 'package:shelfless/widgets/library_sort_order_list_widget.dart';
 
 enum LibraryAction {
+  sortBy,
   edit,
   delete,
   share,
@@ -188,6 +190,20 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                 PopupMenuButton<LibraryAction>(
                   itemBuilder: (BuildContext context) {
                     return [
+                      // Sort order button.
+                      PopupMenuItem(
+                        value: LibraryAction.sortBy,
+                        child: Row(
+                          spacing: Themes.spacingSmall,
+                          children: [
+                            const Icon(Icons.sort_rounded),
+                            // TODO Move to strings.
+                            Text("Sort by"),
+                          ],
+                        ),
+                      ),
+
+                      // Edit button.
                       PopupMenuItem(
                         value: LibraryAction.edit,
                         child: Row(
@@ -198,6 +214,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                           ],
                         ),
                       ),
+
                       // Only let the user delete a library if it's not the last one.
                       if (LibrariesProvider.instance.libraries.length > 1)
                         PopupMenuItem(
@@ -226,6 +243,15 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                     final NavigatorState navigator = Navigator.of(context);
 
                     switch (value) {
+                      case LibraryAction.sortBy:
+                        showBarModalBottomSheet(
+                          context: context,
+                          enableDrag: true,
+                          expand: false,
+                          backgroundColor: theme.colorScheme.surface,
+                          builder: (BuildContext context) => LibrarySortOrderListWidget(),
+                        );
+                        break;
                       case LibraryAction.edit:
                         navigator.push(MaterialPageRoute(
                           builder: (BuildContext context) {
