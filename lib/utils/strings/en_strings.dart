@@ -3,6 +3,9 @@ import 'package:shelfless/utils/strings/strings.dart';
 /// English strings.
 class EnStrings implements Strings {
   @override String get settings => "Settings";
+  @override String get setitngsSectionTitle => "App settings";
+  @override String get defaultCoverLabel => "Default cover image";
+  @override String get legalsSectionTitle => "Legals and support";
   @override String get privacyPolicyLabel => "Privacy policy";
   @override String get licensesLabel => "Licenses";
   @override String get supportLabel => "Contact support";
@@ -90,6 +93,7 @@ class EnStrings implements Strings {
   @override String get bookErrorNoTitleProvided => "No title provided";
   @override String get bookErrorNoAuthorProvided => "No author provided";
   @override String get bookErrorNoGenreProvided => "No genre provided";
+  @override String get libraryErrorNoNameProvided => "No name provided";
   @override String get genreTitle=> "Genre";
   @override String get genreInfoName=> "Name";
   @override String get genreInfoColor => "Color";
@@ -105,9 +109,14 @@ class EnStrings implements Strings {
   @override String get authorsSectionTitle => "Authors";
   @override String get publishersSectionTitle => "Publishers";
   @override String get locationsSectionTitle => "Locaitons";
-  @override String get shareLibrary => "Share";
-  @override String get exportLibrary => "Export";
-  @override String get updateLibrary => "Update";
+  @override String get librarySortBy => "Sort by";
+  @override String get libraryShare => "Share";
+  @override String get libraryExport => "Export";
+  @override String get libraryUpdate => "Update";
+  @override String get sortByTitleAsc => "Title A -> Z";
+  @override String get sortByTitleDesc => "Title Z -> A";
+  @override String get sortByPublishYearAsc => "Publication year 0 -> 9";
+  @override String get sortByPublishYearDesc => "Publication year 9 -> 0";
   @override String get filtersTitle => "Filters";
   @override String get filtersApply => "Apply";
   @override String get filtersCancel => "Cancel";

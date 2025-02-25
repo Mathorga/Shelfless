@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 
@@ -48,9 +49,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
   void initState() {
     super.initState();
 
-    LibraryContentProvider.instance.addListener(() {
-      if (context.mounted) setState(() {});
-    });
+    LibraryContentProvider.instance.addListener(_onContentChanged);
 
     _inserting = widget.book == null;
     _titleController = TextEditingController(text: widget.book?.raw.title ?? "");
@@ -65,6 +64,17 @@ class _EditBookScreenState extends State<EditBookScreen> {
               publishYear: DateTime.now().year,
             ),
           );
+  }
+
+  @override
+  void dispose() {
+    LibraryContentProvider.instance.removeListener(_onContentChanged);
+
+    super.dispose();
+  }
+
+  void _onContentChanged() {
+    if (context.mounted) setState(() {});
   }
 
   @override

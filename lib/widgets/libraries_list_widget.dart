@@ -32,7 +32,18 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
   void initState() {
     super.initState();
 
-    LibrariesProvider.instance.addListener(() => setState(() {}));
+    LibrariesProvider.instance.addListener(_onContentChanged);
+  }
+
+  @override
+  void dispose() {
+    LibrariesProvider.instance.removeListener(_onContentChanged);
+
+    super.dispose();
+  }
+
+  void _onContentChanged() {
+    if (context.mounted) setState(() {});
   }
 
   @override

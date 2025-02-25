@@ -4,8 +4,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import 'package:image/image.dart' as img;
-
 class ShaderPainter extends CustomPainter {
   final ui.FragmentShader shader;
   final List<double> uniforms;
@@ -57,8 +55,6 @@ class ShadedImageWidget extends StatefulWidget {
 }
 
 class _ShadedImageWidgetState extends State<ShadedImageWidget> {
-  late Timer _timer;
-  double _delta = 0;
   ui.FragmentShader? _shader;
 
   @override
@@ -67,11 +63,6 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
     loadMyShader();
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
 
   Future<void> loadMyShader() async {
     ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/blur_upscale.frag.glsl");
@@ -79,15 +70,6 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
     setState(() {
       // trigger a repaint
     });
-
-    _timer = Timer.periodic(
-      const Duration(milliseconds: 16),
-      (Timer timer) {
-        // setState(() {
-        //   _delta += 1 / 60;
-        // });
-      },
-    );
   }
 
   Future<ui.Image> _decodeImage() async {

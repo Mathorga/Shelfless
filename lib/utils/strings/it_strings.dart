@@ -5,6 +5,9 @@ import 'package:shelfless/utils/strings/strings.dart';
 /// Italian strings.
 class ItStrings implements Strings {
   @override String get settings => "Impostazioni";
+  @override String get setitngsSectionTitle => "Impostazioni app";
+  @override String get defaultCoverLabel => "Immagine di copertina di default";
+  @override String get legalsSectionTitle => "Informazioni legali e supporto";
   @override String get privacyPolicyLabel => "Informativa privacy";
   @override String get licensesLabel => "Licenze";
   @override String get supportLabel => "Contatta il supporto";
@@ -92,6 +95,7 @@ class ItStrings implements Strings {
   @override String get bookErrorNoTitleProvided => "Inserire un titolo";
   @override String get bookErrorNoAuthorProvided => "Inserire almeno un autore";
   @override String get bookErrorNoGenreProvided => "Inserire almeno un genere";
+  @override String get libraryErrorNoNameProvided => "Inserire un nome";
   @override String get genreTitle=> "Genere";
   @override String get genreInfoName=> "Nome";
   @override String get genreInfoColor => "Colore";
@@ -107,9 +111,14 @@ class ItStrings implements Strings {
   @override String get authorsSectionTitle => "Autori";
   @override String get publishersSectionTitle => "Editori";
   @override String get locationsSectionTitle => "Posizioni";
-  @override String get shareLibrary => "Condividi";
-  @override String get exportLibrary => "Esporta";
-  @override String get updateLibrary => "Aggiorna";
+  @override String get librarySortBy => "Ordina per";
+  @override String get libraryShare => "Condividi";
+  @override String get libraryExport => "Esporta";
+  @override String get libraryUpdate => "Aggiorna";
+  @override String get sortByTitleAsc => "Titolo A -> Z";
+  @override String get sortByTitleDesc => "Titolo Z -> A";
+  @override String get sortByPublishYearAsc => "Anno di pubblicazione 0 -> 9";
+  @override String get sortByPublishYearDesc => "Anno di pubblicazione 9 -> 0";
   @override String get filtersTitle => "Filtri";
   @override String get filtersApply => "Applica";
   @override String get filtersCancel => "Annulla";
