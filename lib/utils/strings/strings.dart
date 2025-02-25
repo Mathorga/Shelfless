@@ -5,6 +5,9 @@ import 'package:shelfless/utils/strings/it_strings.dart';
 
 class Strings {
   String get settings => "";
+  String get setitngsSectionTitle => "";
+  String get defaultCoverLabel => "";
+  String get legalsSectionTitle => "";
   String get privacyPolicyLabel => "";
   String get licensesLabel => "";
   String get supportLabel => "";
@@ -92,6 +95,7 @@ class Strings {
   String get bookErrorNoTitleProvided => "";
   String get bookErrorNoAuthorProvided => "";
   String get bookErrorNoGenreProvided => "";
+  String get libraryErrorNoNameProvided => "";
   String get genreTitle => "";
   String get genreInfoName => "";
   String get genreInfoColor => "";
@@ -107,9 +111,14 @@ class Strings {
   String get authorsSectionTitle => "";
   String get publishersSectionTitle => "";
   String get locationsSectionTitle => "";
-  String get shareLibrary => "";
-  String get exportLibrary => "";
-  String get updateLibrary => "";
+  String get librarySortBy => "";
+  String get libraryShare => "";
+  String get libraryExport => "";
+  String get libraryUpdate => "";
+  String get sortByTitleAsc => "";
+  String get sortByTitleDesc => "";
+  String get sortByPublishYearAsc => "";
+  String get sortByPublishYearDesc => "";
   String get filtersTitle => "";
   String get filtersApply => "";
   String get filtersCancel => "";

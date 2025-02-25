@@ -69,8 +69,7 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
                   scaffoldMessenger.showSnackBar(
                     SnackBar(
                       duration: Themes.durationShort,
-                      // TODO Move to strings.
-                      content: Text("No name provided"),
+                      content: Text(strings.libraryErrorNoNameProvided),
                     ),
                   );
                   return;

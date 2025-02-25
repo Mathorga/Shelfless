@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:shelfless/themes/shelfless_colors.dart';
 
 class Themes {
@@ -41,21 +43,26 @@ class Themes {
   static const Duration durationMedium = Duration(seconds: 2);
   static const Duration durationLong = Duration(seconds: 5);
 
-  /// Default max width, used for displaying columns and vertical lists on large screens.
+  // Default max width, used for displaying columns and vertical lists on large screens.
   static const double maxContentWidth = 500.0;
 
-  /// Default max dialog height, used for limiting a dialog's height on tall screens.
+  // Default max dialog height, used for limiting a dialog's height on tall screens.
   static const double maxDialogHeight = 400.0;
 
-  /// Thumbnail sizes.
+  // Thumbnail sizes.
   static const double thumbnailSizeXSmall = 50.0;
   static const double thumbnailSizeSmall = 100.0;
   static const double thumbnailSizeMedium = 200.0;
 
-  /// Snackbar sizes.
+  // Snackbar sizes.
   static const double snackBarSizeSmall = 200.0;
   static const double snackBarSizeMedium = 300.0;
   static const double snackBarSizeLarge = 500.0;
+
+  // Font sizes.
+  static const double fontSizeSmall = 12.0;
+  static const double fontSizeMedium = 16.0;
+  static const double fontSizeLarge = 24.0;
 
   static const double actionSize = spacingFAB + spacingLarge;
 

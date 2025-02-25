@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/author.dart';
@@ -11,6 +10,7 @@ import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_filters_provider.dart';
 import 'package:shelfless/utils/database/database_helper.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 enum SortOrder {
   titleAsc,
@@ -38,7 +38,10 @@ extension SortOrderExtension on SortOrder {
 
   String label() {
     return switch (this) {
-      // TODO.
+      SortOrder.titleAsc => strings.sortByTitleAsc,
+      SortOrder.titleDesc => strings.sortByTitleDesc,
+      SortOrder.publishYearAsc => strings.sortByPublishYearAsc,
+      SortOrder.publishYearDesc => strings.sortByPublishYearDesc,
       _ => name,
     };
   }

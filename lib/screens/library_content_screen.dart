@@ -29,6 +29,8 @@ import 'package:shelfless/widgets/library_filter_widget.dart';
 import 'package:shelfless/widgets/library_sort_order_list_widget.dart';
 
 enum LibraryAction {
+  filter,
+  toggleViewMode,
   sortBy,
   edit,
   delete,
@@ -185,24 +187,24 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                 ),
               ),
 
-              // Editing actions.
-              if (LibraryContentProvider.instance.editable)
-                PopupMenuButton<LibraryAction>(
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      // Sort order button.
-                      PopupMenuItem(
-                        value: LibraryAction.sortBy,
-                        child: Row(
-                          spacing: Themes.spacingSmall,
-                          children: [
-                            const Icon(Icons.sort_rounded),
-                            // TODO Move to strings.
-                            Text("Sort by"),
-                          ],
-                        ),
+              // More actions.
+              PopupMenuButton<LibraryAction>(
+                itemBuilder: (BuildContext context) {
+                  return [
+                    // Sort order button.
+                    PopupMenuItem(
+                      value: LibraryAction.sortBy,
+                      child: Row(
+                        spacing: Themes.spacingSmall,
+                        children: [
+                          const Icon(Icons.sort_rounded),
+                          Text(strings.librarySortBy),
+                        ],
                       ),
+                    ),
 
+                    // Library-related actions.
+                    if (LibraryContentProvider.instance.editable) ...[
                       // Edit button.
                       PopupMenuItem(
                         value: LibraryAction.edit,
@@ -233,85 +235,88 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                           spacing: Themes.spacingSmall,
                           children: [
                             const Icon(Icons.share_rounded),
-                            Text(strings.shareLibrary),
+                            Text(strings.libraryShare),
                           ],
                         ),
                       ),
-                    ];
-                  },
-                  onSelected: (LibraryAction value) async {
-                    final NavigatorState navigator = Navigator.of(context);
+                    ],
+                  ];
+                },
+                onSelected: (LibraryAction value) async {
+                  final NavigatorState navigator = Navigator.of(context);
 
-                    switch (value) {
-                      case LibraryAction.sortBy:
-                        showBarModalBottomSheet(
-                          context: context,
-                          enableDrag: true,
-                          expand: false,
-                          backgroundColor: theme.colorScheme.surface,
-                          builder: (BuildContext context) => LibrarySortOrderListWidget(),
-                        );
-                        break;
-                      case LibraryAction.edit:
-                        navigator.push(MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return EditLibraryScreen(
-                              library: library,
-                              onDone: () => navigator.pop(),
-                            );
+                  switch (value) {
+                    case LibraryAction.sortBy:
+                      showBarModalBottomSheet(
+                        context: context,
+                        enableDrag: true,
+                        expand: false,
+                        backgroundColor: theme.colorScheme.surface,
+                        builder: (BuildContext context) => LibrarySortOrderListWidget(),
+                      );
+                      break;
+                    case LibraryAction.edit:
+                      navigator.push(MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return EditLibraryScreen(
+                            library: library,
+                            onDone: () => navigator.pop(),
+                          );
+                        },
+                      ));
+                      break;
+                    case LibraryAction.delete:
+                      // Let the user know all contained books will be deleted as well.
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => DeleteDialog(
+                          titleString: strings.deleteLibraryTitle,
+                          contentString: strings.deleteLibraryContent,
+                          onConfirm: () async {
+                            // Actually delete the library.
+                            await LibraryContentProvider.instance.deleteLibrary();
                           },
-                        ));
-                        break;
-                      case LibraryAction.delete:
-                        // Let the user know all contained books will be deleted as well.
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => DeleteDialog(
-                            titleString: strings.deleteLibraryTitle,
-                            contentString: strings.deleteLibraryContent,
-                            onConfirm: () async {
-                              // Actually delete the library.
-                              await LibraryContentProvider.instance.deleteLibrary();
-                            },
+                        ),
+                      );
+                      break;
+                    case LibraryAction.share:
+                      if (library?.raw.id == null) return;
+
+                      // Extract the library.
+                      final Map<String, String> libraryStrings = await DatabaseHelper.instance.serializeLibrary(library!.raw.id!);
+
+                      // Compress the library files to a single .slz file.
+                      final Archive archive = Archive();
+                      libraryStrings.entries
+                          .map((MapEntry<String, String> element) => ArchiveFile(
+                                "${element.key}.json",
+                                element.value.length,
+                                element.value.codeUnits,
+                              ))
+                          .forEach((ArchiveFile file) => archive.addFile(file));
+                      final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
+
+                      // Share the library to other apps.
+                      Share.shareXFiles(
+                        [
+                          XFile.fromData(
+                            encodedArchive,
+                            length: encodedArchive.length,
+                            mimeType: "application/x-zip",
                           ),
-                        );
-                        break;
-                      case LibraryAction.share:
-                        if (library?.raw.id == null) return;
-
-                        // Extract the library.
-                        final Map<String, String> libraryStrings = await DatabaseHelper.instance.serializeLibrary(library!.raw.id!);
-
-                        // Compress the library files to a single .slz file.
-                        final Archive archive = Archive();
-                        libraryStrings.entries
-                            .map((MapEntry<String, String> element) => ArchiveFile(
-                                  "${element.key}.json",
-                                  element.value.length,
-                                  element.value.codeUnits,
-                                ))
-                            .forEach((ArchiveFile file) => archive.addFile(file));
-                        final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
-
-                        // Share the library to other apps.
-                        Share.shareXFiles(
-                          [
-                            XFile.fromData(
-                              encodedArchive,
-                              length: encodedArchive.length,
-                              mimeType: "application/x-zip",
-                            ),
-                          ],
-                          // The name parameter in the XFile.fromData method is ignored in most platforms,
-                          // so fileNameOverrides is used instead.
-                          fileNameOverrides: [
-                            "${library!.raw.name}.$libraryFileFormat",
-                          ],
-                        );
-                        break;
-                    }
-                  },
-                ),
+                        ],
+                        // The name parameter in the XFile.fromData method is ignored in most platforms,
+                        // so fileNameOverrides is used instead.
+                        fileNameOverrides: [
+                          "${library!.raw.name}.$libraryFileFormat",
+                        ],
+                      );
+                      break;
+                    default:
+                      break;
+                  }
+                },
+              ),
             ],
           ),
 

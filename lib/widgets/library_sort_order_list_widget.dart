@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/themes.dart';
 
@@ -14,11 +15,18 @@ class _LibrarySortOrderListWidgetState extends State<LibrarySortOrderListWidget>
   void initState() {
     super.initState();
 
-    LibraryContentProvider.instance.addListener(() {
-      if (context.mounted) {
-        setState(() {});
-      }
-    });
+    LibraryContentProvider.instance.addListener(_onContentChanged);
+  }
+
+  @override
+  void dispose() {
+    LibraryContentProvider.instance.removeListener(_onContentChanged);
+
+    super.dispose();
+  }
+
+  void _onContentChanged() {
+    if (context.mounted) setState(() {});
   }
 
   @override
