@@ -85,6 +85,9 @@ dependencies:
   # Open support emails.
   url_launcher: 6.3.1
 
+  # Markdown renderer.
+  markdown_widget: 2.3.2+6
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -130,6 +133,9 @@ flutter:
   #   - shaders/xbr_scaling.frag.glsl
 
   assets:
+    - pubspec.yaml
+    - assets/privacy_policy_en.md
+    - assets/privacy_policy_it.md
     - assets/images/covers/parrots.jpg
     - assets/images/covers/bookshelf.jpg
     - assets/images/covers/bookshelf.png
@@ -137,7 +143,6 @@ flutter:
     - assets/images/covers/book_icon_low.png
     - assets/images/covers/book_icon_2.png
     - assets/images/covers/flower.png
-    - pubspec.yaml
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

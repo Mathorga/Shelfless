@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:shelfless/screens/privacy_policy_screen.dart';
 
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
 
 import 'package:shelfless/themes/shelfless_colors.dart';
@@ -73,16 +74,22 @@ class SettingsScreen extends StatelessWidget {
               ),
 
               // Privacy policy.
-              UnreleasedFeatureWidget(
-                child: ListTile(
-                  title: Row(
-                    spacing: Themes.spacingMedium,
-                    children: [
-                      Icon(Icons.policy_rounded),
-                      Text(strings.privacyPolicyLabel),
-                    ],
-                  ),
+              ListTile(
+                title: Row(
+                  spacing: Themes.spacingMedium,
+                  children: [
+                    Icon(Icons.policy_rounded),
+                    Text(strings.privacyPolicyLabel),
+                  ],
                 ),
+                onTap: () {
+                  NavigatorState navigator = Navigator.of(context);
+              
+                  // Go to privacy policy screen.
+                  navigator.push(MaterialPageRoute(
+                    builder: (BuildContext context) => PrivacyPolicyScreen(),
+                  ));
+                },
               ),
 
               // Licenses.
