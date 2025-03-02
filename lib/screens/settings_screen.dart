@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shelfless/screens/privacy_policy_screen.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
@@ -37,12 +39,14 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
 
-              // Privacy policy.
+              // Default coverless book image.
               UnreleasedFeatureWidget(
                 child: ListTile(
                   title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     spacing: Themes.spacingMedium,
                     children: [
+                      Text(strings.defaultCoverLabel),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(Themes.radiusSmall),
                         child: SizedBox(
@@ -55,7 +59,31 @@ class SettingsScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(strings.defaultCoverLabel),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Titles' text capitalization.
+              UnreleasedFeatureWidget(
+                child: ListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      // TODO Move to strings.
+                      Text("Titles' capitalization"),
+
+                      Builder(builder: (BuildContext context) {
+                        int titlesCapitalizationIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? TextCapitalization.words.index;
+
+                        return Text(
+                          TextCapitalization.values[titlesCapitalizationIndex].name,
+                          style: TextStyle(
+                            color: ShelflessColors.onMainContentInactive,
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -84,7 +112,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 onTap: () {
                   NavigatorState navigator = Navigator.of(context);
-              
+
                   // Go to privacy policy screen.
                   navigator.push(MaterialPageRoute(
                     builder: (BuildContext context) => PrivacyPolicyScreen(),
