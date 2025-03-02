@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shelfless/screens/privacy_policy_screen.dart';
-import 'package:shelfless/utils/shared_prefs_helper.dart';
-import 'package:shelfless/utils/shared_prefs_keys.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
 
+import 'package:shelfless/screens/privacy_policy_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
@@ -46,7 +46,7 @@ class SettingsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     spacing: Themes.spacingMedium,
                     children: [
-                      Text(strings.defaultCoverLabel),
+                      Text(strings.settingDefaultCover),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(Themes.radiusSmall),
                         child: SizedBox(
@@ -71,8 +71,7 @@ class SettingsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     spacing: Themes.spacingMedium,
                     children: [
-                      // TODO Move to strings.
-                      Text("Titles' capitalization"),
+                      Text(strings.settingTitlesCapitalization),
 
                       Builder(builder: (BuildContext context) {
                         int titlesCapitalizationIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? TextCapitalization.words.index;
