@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:archive/archive.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:share_plus/share_plus.dart';
@@ -399,14 +400,9 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
   }
 
   void _gotoBookDetails(Book book) {
-    // Prefetch handlers before async gaps.
-    final NavigatorState navigator = Navigator.of(context);
-
     // Navigate to book edit screen.
-    navigator.push(MaterialPageRoute(
-      builder: (BuildContext context) => BooksDetailScreen(
-        openingBook: book,
-      ),
-    ));
+    context.pushTransparentRoute(
+      BooksDetailScreen(openingBook: book),
+    );
   }
 }

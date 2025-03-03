@@ -123,48 +123,56 @@ class BookDetailsWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // Authors.
-                      Padding(
-                        padding: const EdgeInsets.all(Themes.spacingLarge),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              strings.authorsSectionTitle,
-                              style: TextStyle(
-                                color: ShelflessColors.onMainContentInactive,
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(Themes.spacingLarge),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                strings.authorsSectionTitle,
+                                style: TextStyle(
+                                  color: ShelflessColors.onMainContentInactive,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(Themes.spacingMedium),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: book.authorIds.map((int authorId) => Text(LibraryContentProvider.instance.authors[authorId].toString())).toList(),
+                              Padding(
+                                padding: const EdgeInsets.all(Themes.spacingMedium),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  spacing: Themes.spacingSmall,
+                                  children: book.authorIds.map((int authorId) => Text(LibraryContentProvider.instance.authors[authorId].toString())).toList(),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
 
                       // Genres.
-                      Padding(
-                        padding: const EdgeInsets.all(Themes.spacingLarge),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              strings.genresSectionTitle,
-                              style: TextStyle(
-                                color: ShelflessColors.onMainContentInactive,
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(Themes.spacingLarge),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                strings.genresSectionTitle,
+                                style: TextStyle(
+                                  color: ShelflessColors.onMainContentInactive,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(Themes.spacingMedium),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: book.genreIds.map((int genreId) => Text(LibraryContentProvider.instance.genres[genreId].toString())).toList(),
+                              Padding(
+                                padding: const EdgeInsets.all(Themes.spacingMedium),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  spacing: Themes.spacingSmall,
+                                  children: book.genreIds.map((int genreId) => Text(LibraryContentProvider.instance.genres[genreId].toString())).toList(),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],

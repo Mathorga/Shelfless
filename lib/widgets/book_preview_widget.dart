@@ -49,7 +49,7 @@ class BookPreviewWidget extends StatelessWidget {
         ).then((ElementAction? action) {
           if (action == null) return;
           if (!context.mounted) return;
-
+    
           _onActionSelected(context, action);
         });
       },
@@ -84,7 +84,7 @@ class BookPreviewWidget extends StatelessWidget {
               ),
             ),
           ),
-
+    
         // Compact grid view.
         ViewMode.compactGrid => Stack(
             children: [
@@ -110,7 +110,7 @@ class BookPreviewWidget extends StatelessWidget {
               )
             ],
           ),
-
+    
         // Extended grid view.
         ViewMode.extendedGrid => Column(
             spacing: Themes.spacingMedium,
@@ -140,7 +140,7 @@ class BookPreviewWidget extends StatelessWidget {
                             maxLines: 2,
                             textAlign: TextAlign.start,
                           ),
-
+    
                           // Authors.
                           if (authors.isNotEmpty)
                             Text(
