@@ -412,7 +412,14 @@ class DatabaseHelper {
       FROM $booksTable
       WHERE ${booksTable}_library_id = $libraryId
     """;
-    final List<Map<String, dynamic>> rawBooks = await _db.rawQuery(booksQuery);
+    final List<Map<String, dynamic>> rawBooks = (await _db.rawQuery(booksQuery)).map<Map<String, dynamic>>(
+      (Map<String, dynamic> bookRecord) {
+        // String nino = utf8.decode(bookRecord["${booksTable}_cover"], allowMalformed: true);
+        Map<String, dynamic> updatedRecord = {...bookRecord};
+        updatedRecord["${booksTable}_cover"] = base64Encode(updatedRecord["${booksTable}_cover"]);
+        return updatedRecord;
+      },
+    ).toList();
     result[booksTable] = jsonEncode(rawBooks);
 
     // Fetch book/genre relationships info.
@@ -637,6 +644,9 @@ class DatabaseHelper {
           inData["${booksTable}_library_id"] = libraryIdsMapping[inData["${booksTable}_library_id"]];
           if (inData["${booksTable}_publisher_id"] != null) inData["${booksTable}_publisher_id"] = publisherIdsMapping[inData["${booksTable}_publisher_id"]];
           if (inData["${booksTable}_location_id"] != null) inData["${booksTable}_location_id"] = locationIdsMapping[inData["${booksTable}_location_id"]];
+
+          // Encode cover data.
+          if (inData["${booksTable}_cover"] != null) inData["${booksTable}_cover"] = base64Decode(inData["${booksTable}_cover"]);
 
           // Check whether the element already exists or not.
           // If there's a matching element in DB, then use that one instead.
