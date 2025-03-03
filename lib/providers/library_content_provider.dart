@@ -9,7 +9,9 @@ import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/providers/library_filters_provider.dart';
-import 'package:shelfless/utils/database/database_helper.dart';
+import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 
 enum SortOrder {
@@ -93,7 +95,11 @@ class LibraryContentProvider with ChangeNotifier {
 
     library = rawLibrary;
 
-    // TODO Read sort order from shared preferences.
+    // Read sort order from shared preferences.
+    final int? foundSortOrderIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.sortOrder);
+    if (foundSortOrderIndex != null) {
+      sortOrder = SortOrder.values[foundSortOrderIndex];
+    }
 
     await _fetchLibraryContent(rawLibrary);
 
@@ -503,6 +509,9 @@ class LibraryContentProvider with ChangeNotifier {
     if (order == sortOrder) return;
 
     sortOrder = order;
+
+    // Store the selected sort order to ahsred preferences.
+    SharedPrefsHelper.instance.data.setInt(SharedPrefsKeys.sortOrder, order.index);
 
     _intSortBooks();
 

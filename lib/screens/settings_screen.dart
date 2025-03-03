@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
 
+import 'package:shelfless/screens/privacy_policy_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
@@ -36,12 +39,14 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
 
-              // Privacy policy.
+              // Default coverless book image.
               UnreleasedFeatureWidget(
                 child: ListTile(
                   title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     spacing: Themes.spacingMedium,
                     children: [
+                      Text(strings.settingDefaultCover),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(Themes.radiusSmall),
                         child: SizedBox(
@@ -54,7 +59,30 @@ class SettingsScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(strings.defaultCoverLabel),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Titles' text capitalization.
+              UnreleasedFeatureWidget(
+                child: ListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Text(strings.settingTitlesCapitalization),
+
+                      Builder(builder: (BuildContext context) {
+                        int titlesCapitalizationIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? TextCapitalization.words.index;
+
+                        return Text(
+                          TextCapitalization.values[titlesCapitalizationIndex].name,
+                          style: TextStyle(
+                            color: ShelflessColors.onMainContentInactive,
+                          ),
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -73,16 +101,22 @@ class SettingsScreen extends StatelessWidget {
               ),
 
               // Privacy policy.
-              UnreleasedFeatureWidget(
-                child: ListTile(
-                  title: Row(
-                    spacing: Themes.spacingMedium,
-                    children: [
-                      Icon(Icons.policy_rounded),
-                      Text(strings.privacyPolicyLabel),
-                    ],
-                  ),
+              ListTile(
+                title: Row(
+                  spacing: Themes.spacingMedium,
+                  children: [
+                    Icon(Icons.policy_rounded),
+                    Text(strings.privacyPolicyLabel),
+                  ],
                 ),
+                onTap: () {
+                  NavigatorState navigator = Navigator.of(context);
+
+                  // Go to privacy policy screen.
+                  navigator.push(MaterialPageRoute(
+                    builder: (BuildContext context) => PrivacyPolicyScreen(),
+                  ));
+                },
               ),
 
               // Licenses.

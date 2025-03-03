@@ -138,6 +138,7 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
                   onPressed: () {
                     setState(() {
                       _filters.clear();
+                      _titleFilterController.clear();
                     });
                   },
                   child: Text(strings.filtersClear),

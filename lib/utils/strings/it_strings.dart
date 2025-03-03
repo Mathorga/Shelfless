@@ -6,7 +6,8 @@ import 'package:shelfless/utils/strings/strings.dart';
 class ItStrings implements Strings {
   @override String get settings => "Impostazioni";
   @override String get setitngsSectionTitle => "Impostazioni app";
-  @override String get defaultCoverLabel => "Immagine di copertina di default";
+  @override String get settingDefaultCover => "Immagine di copertina di default";
+  @override String get settingTitlesCapitalization => "Maiuscole per titoli e nomi";
   @override String get legalsSectionTitle => "Informazioni legali e supporto";
   @override String get privacyPolicyLabel => "Informativa privacy";
   @override String get licensesLabel => "Licenze";

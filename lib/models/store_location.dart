@@ -1,4 +1,4 @@
-import 'package:shelfless/utils/database/database_helper.dart';
+import 'package:shelfless/utils/database_helper.dart';
 
 class StoreLocation {
   int? id;
