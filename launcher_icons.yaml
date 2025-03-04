@@ -1,0 +1,14 @@
+# Run with:
+# dart run flutter_launcher_icons -f launcher_icons.yaml
+flutter_launcher_icons:
+  # Apply to both Android and iOS.
+  android: true
+  ios: true
+
+  # Transparent icons are not allowed in the Apple app store so the transparency has to be removed.
+  remove_alpha_ios: true
+
+  image_path_android: "assets/images/launcher/launcher_android.png"
+  image_path_ios: "assets/images/launcher/launcher_ios.png"
+  adaptive_icon_background: "#2C2C2C"
+  adaptive_icon_foreground: "assets/images/launcher/launcher_android.png"
