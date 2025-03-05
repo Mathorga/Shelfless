@@ -149,6 +149,7 @@ flutter:
     - assets/images/covers/book_icon_low.png
     - assets/images/covers/book_icon_2.png
     - assets/images/covers/flower.png
+    - assets/google_fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

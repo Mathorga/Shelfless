@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:collection/collection.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
@@ -20,6 +21,9 @@ void main() async {
 
   // Fetch libraries from DB.
   await LibrariesProvider.instance.fetchLibraries();
+
+  // Disable runtime fetchin google fonts, since used fonts are already in assets.
+  GoogleFonts.config.allowRuntimeFetching = false;
 
   runApp(const Shelfless());
 }
