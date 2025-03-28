@@ -28,7 +28,6 @@ class DialogButtonWidget extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              // insetPadding: const EdgeInsets.all(Themes.spacing),
               title: title,
               content: SizedBox(
                 width: min(screenSize.width, Themes.maxContentWidth),
