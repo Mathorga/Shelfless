@@ -30,7 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  collection: 1.19.0
+  collection: 1.19.1
 
   # Data distribution.
   provider: 6.1.2
@@ -132,11 +132,7 @@ flutter:
     - shaders/test_old.frag.glsl
     - shaders/test_old_2.frag.glsl
     - shaders/blur_upscale.frag.glsl
-    # - shaders/rotoscale.frag.glsl
     - shaders/circles.frag.glsl
-    # - shaders/xbr.glsl
-  #   - shaders/xbr_scaling.vert.glsl
-  #   - shaders/xbr_scaling.frag.glsl
 
   assets:
     - pubspec.yaml
@@ -149,7 +145,7 @@ flutter:
     - assets/images/covers/book_icon_low.png
     - assets/images/covers/book_icon_2.png
     - assets/images/covers/flower.png
-    - assets/google_fonts/
+    - assets/google_fonts/lexend_exa/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
