@@ -41,17 +41,19 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
       appBar: AppBar(
         title: Text(strings.privacyPolicyLabel),
       ),
-      body: _data == null
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Padding(
-            padding: const EdgeInsets.all(Themes.spacingMedium),
-            child: MarkdownWidget(
-                physics: Themes.scrollPhysics,
-                data: _data!,
-              ),
-          ),
+      body: SafeArea(
+        child: _data == null
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Padding(
+              padding: const EdgeInsets.all(Themes.spacingMedium),
+              child: MarkdownWidget(
+                  physics: Themes.scrollPhysics,
+                  data: _data!,
+                ),
+            ),
+      ),
     );
   }
 }

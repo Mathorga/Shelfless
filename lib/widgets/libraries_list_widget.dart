@@ -137,6 +137,7 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                       },
                       firstOption: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: Themes.spacingSmall,
                         children: [
                           Icon(
                             Icons.playlist_add_rounded,
@@ -147,6 +148,7 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                       ),
                       secondOption: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: Themes.spacingSmall,
                         children: [
                           Icon(
                             Icons.download_rounded,

@@ -36,43 +36,45 @@ class _LocationsOverviewScreenState extends State<LocationsOverviewScreen> {
       appBar: AppBar(
         title: Text(strings.locationsSectionTitle),
       ),
-      body: LibraryContentProvider.instance.locations.isEmpty
-          ? Center(
-              child: Text(strings.noLocationsFound),
-            )
-          : ListView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(12.0),
-              children: [
-                ...List.generate(
-                  LibraryContentProvider.instance.locations.length,
-                  (int index) {
-                    // Make sure the received index is somewhat valid.
-                    if (index > LibraryContentProvider.instance.locations.values.length) return const Placeholder();
-
-                    // Prefetch the publisher for later use.
-                    StoreLocation? location = LibraryContentProvider.instance.locations.values.toList()[index];
-
-                    return LocationPreviewWidget(
-                      location: location,
-                      onTap: () {
-                        final NavigatorState navigator = Navigator.of(context);
-
-                        // Filter the current library by the selected location.
-                        LibraryContentProvider.instance.applyFilters(
-                          LibraryFilters(
-                            inLocationsFilter: {location.id},
-                          ),
-                        );
-
-                        navigator.pop();
-                      },
-                    );
-                  },
-                ),
-                const SizedBox(height: fabAccessHeight),
-              ],
-            ),
+      body: SafeArea(
+        child: LibraryContentProvider.instance.locations.isEmpty
+            ? Center(
+                child: Text(strings.noLocationsFound),
+              )
+            : ListView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(12.0),
+                children: [
+                  ...List.generate(
+                    LibraryContentProvider.instance.locations.length,
+                    (int index) {
+                      // Make sure the received index is somewhat valid.
+                      if (index > LibraryContentProvider.instance.locations.values.length) return const Placeholder();
+        
+                      // Prefetch the publisher for later use.
+                      StoreLocation? location = LibraryContentProvider.instance.locations.values.toList()[index];
+        
+                      return LocationPreviewWidget(
+                        location: location,
+                        onTap: () {
+                          final NavigatorState navigator = Navigator.of(context);
+        
+                          // Filter the current library by the selected location.
+                          LibraryContentProvider.instance.applyFilters(
+                            LibraryFilters(
+                              inLocationsFilter: {location.id},
+                            ),
+                          );
+        
+                          navigator.pop();
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: fabAccessHeight),
+                ],
+              ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(

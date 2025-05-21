@@ -45,23 +45,25 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
         appBar: AppBar(
           title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.publisherTitle}"),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(Themes.spacingMedium),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              EditSectionWidget(
-                children: [
-                  Text(strings.publisherInfoName),
-                  Themes.spacer,
-                  TextFormField(
-                    initialValue: _publisher.name,
-                    textCapitalization: TextCapitalization.words,
-                    onChanged: (String value) => _publisher.name = value,
-                  ),
-                ],
-              ),
-            ],
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(Themes.spacingMedium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                EditSectionWidget(
+                  children: [
+                    Text(strings.publisherInfoName),
+                    Themes.spacer,
+                    TextFormField(
+                      initialValue: _publisher.name,
+                      textCapitalization: TextCapitalization.words,
+                      onChanged: (String value) => _publisher.name = value,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(

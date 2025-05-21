@@ -51,86 +51,88 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
         appBar: AppBar(
           title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.genreTitle}"),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: ListView(
-            children: [
-              // Name
-              EditSectionWidget(
-                children: [
-                  Text(strings.genreInfoName),
-                  Themes.spacer,
-                  TextFormField(
-                    initialValue: _genre.name,
-                    textCapitalization: TextCapitalization.words,
-                    textInputAction: TextInputAction.done,
-                    onChanged: (String value) => _genre.name = value,
-                  ),
-                ],
-              ),
-
-              // Color.
-              EditSectionWidget(
-                children: [
-                  Text(strings.genreInfoColor),
-                  Themes.spacer,
-                  Padding(
-                    padding: const EdgeInsets.all(Themes.spacingMedium),
-                    child: GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              contentPadding: const EdgeInsets.all(0.0),
-                              content: SingleChildScrollView(
-                                child: SlidePicker(
-                                  pickerColor: Color(_genre.color),
-                                  indicatorBorderRadius: BorderRadius.circular(Themes.radiusMedium),
-                                  enableAlpha: false,
-                                  onColorChanged: (Color pickedColor) {
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ListView(
+              children: [
+                // Name
+                EditSectionWidget(
+                  children: [
+                    Text(strings.genreInfoName),
+                    Themes.spacer,
+                    TextFormField(
+                      initialValue: _genre.name,
+                      textCapitalization: TextCapitalization.words,
+                      textInputAction: TextInputAction.done,
+                      onChanged: (String value) => _genre.name = value,
+                    ),
+                  ],
+                ),
+          
+                // Color.
+                EditSectionWidget(
+                  children: [
+                    Text(strings.genreInfoColor),
+                    Themes.spacer,
+                    Padding(
+                      padding: const EdgeInsets.all(Themes.spacingMedium),
+                      child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                contentPadding: const EdgeInsets.all(0.0),
+                                content: SingleChildScrollView(
+                                  child: SlidePicker(
+                                    pickerColor: Color(_genre.color),
+                                    indicatorBorderRadius: BorderRadius.circular(Themes.radiusMedium),
+                                    enableAlpha: false,
+                                    onColorChanged: (Color pickedColor) {
+                                      setState(() {
+                                        _genre.color = pickedColor.value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.0),
+                                color: Color(_genre.color),
+                              ),
+                              height: 100,
+                              width: double.infinity,
+                            ),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                  onPressed: () {
+                                    // Pick a random color.
                                     setState(() {
-                                      _genre.color = pickedColor.value;
+                                      _genre.color = Utils.randomColor();
                                     });
                                   },
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Color(_genre.color),
+                                  icon: const Icon(Icons.refresh_rounded)),
                             ),
-                            height: 100,
-                            width: double.infinity,
-                          ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                                onPressed: () {
-                                  // Pick a random color.
-                                  setState(() {
-                                    _genre.color = Utils.randomColor();
-                                  });
-                                },
-                                icon: const Icon(Icons.refresh_rounded)),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(
-                height: 24.0,
-              ),
-            ],
+                  ],
+                ),
+          
+                const SizedBox(
+                  height: 24.0,
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(

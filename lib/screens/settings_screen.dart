@@ -23,155 +23,176 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(strings.settings),
       ),
-      body: Stack(
-        children: [
-          ListView(
-            children: [
-              // App settings.
-              Padding(
-                padding: const EdgeInsets.all(Themes.spacingMedium),
-                child: Text(
-                  strings.setitngsSectionTitle,
-                  style: TextStyle(
-                    color: ShelflessColors.onMainContentInactive,
-                    fontSize: Themes.fontSizeSmall,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            ListView(
+              children: [
+                // App settings.
+                Padding(
+                  padding: const EdgeInsets.all(Themes.spacingMedium),
+                  child: Text(
+                    strings.setitngsSectionTitle,
+                    style: TextStyle(
+                      color: ShelflessColors.onMainContentInactive,
+                      fontSize: Themes.fontSizeSmall,
+                    ),
                   ),
                 ),
-              ),
-
-              // Default coverless book image.
-              UnreleasedFeatureWidget(
-                child: ListTile(
+        
+                // Default coverless book image.
+                UnreleasedFeatureWidget(
+                  child: ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      spacing: Themes.spacingMedium,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            strings.settingDefaultCover,
+                          ),
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(Themes.radiusSmall),
+                          child: SizedBox(
+                            width: Themes.spacingXXLarge,
+                            height: Themes.spacingXXLarge,
+                            child: Image.asset(
+                              "assets/images/covers/flower.png",
+                              fit: BoxFit.cover,
+                              filterQuality: FilterQuality.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+        
+                // Titles' text capitalization.
+                UnreleasedFeatureWidget(
+                  child: ListTile(
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      spacing: Themes.spacingMedium,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            strings.settingTitlesCapitalization,
+                          ),
+                        ),
+                        Builder(builder: (BuildContext context) {
+                          int titlesCapitalizationIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? TextCapitalization.words.index;
+        
+                          return Text(
+                            TextCapitalization.values[titlesCapitalizationIndex].name,
+                            style: TextStyle(
+                              color: ShelflessColors.onMainContentInactive,
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
+        
+                // Legals and support.
+                Padding(
+                  padding: const EdgeInsets.all(Themes.spacingMedium),
+                  child: Text(
+                    strings.legalsSectionTitle,
+                    style: TextStyle(
+                      color: ShelflessColors.onMainContentInactive,
+                      fontSize: Themes.fontSizeSmall,
+                    ),
+                  ),
+                ),
+        
+                // Privacy policy.
+                ListTile(
                   title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     spacing: Themes.spacingMedium,
                     children: [
-                      Text(strings.settingDefaultCover),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(Themes.radiusSmall),
-                        child: SizedBox(
-                          width: Themes.spacingXXLarge,
-                          height: Themes.spacingXXLarge,
-                          child: Image.asset(
-                            "assets/images/covers/flower.png",
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.none,
-                          ),
+                      Icon(Icons.policy_rounded),
+                      Expanded(
+                        child: Text(
+                          strings.privacyPolicyLabel,
                         ),
                       ),
                     ],
                   ),
+                  onTap: () {
+                    NavigatorState navigator = Navigator.of(context);
+        
+                    // Go to privacy policy screen.
+                    navigator.push(MaterialPageRoute(
+                      builder: (BuildContext context) => PrivacyPolicyScreen(),
+                    ));
+                  },
                 ),
-              ),
-
-              // Titles' text capitalization.
-              UnreleasedFeatureWidget(
-                child: ListTile(
+        
+                // Licenses.
+                ListTile(
                   title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     spacing: Themes.spacingMedium,
                     children: [
-                      Text(strings.settingTitlesCapitalization),
-
-                      Builder(builder: (BuildContext context) {
-                        int titlesCapitalizationIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? TextCapitalization.words.index;
-
-                        return Text(
-                          TextCapitalization.values[titlesCapitalizationIndex].name,
-                          style: TextStyle(
-                            color: ShelflessColors.onMainContentInactive,
-                          ),
-                        );
-                      }),
+                      Icon(Icons.assignment_rounded),
+                      Expanded(
+                        child: Text(
+                          strings.licensesLabel,
+                        ),
+                      ),
                     ],
                   ),
+                  onTap: () => showLicensePage(context: context),
                 ),
-              ),
-
-              // Legals and support.
-              Padding(
-                padding: const EdgeInsets.all(Themes.spacingMedium),
-                child: Text(
-                  strings.legalsSectionTitle,
-                  style: TextStyle(
-                    color: ShelflessColors.onMainContentInactive,
-                    fontSize: Themes.fontSizeSmall,
+        
+                // Contact support.
+                ListTile(
+                  title: Row(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Icon(Icons.support_agent_rounded),
+                      Expanded(
+                        child: Text(
+                          strings.supportLabel,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-
-              // Privacy policy.
-              ListTile(
-                title: Row(
-                  spacing: Themes.spacingMedium,
-                  children: [
-                    Icon(Icons.policy_rounded),
-                    Text(strings.privacyPolicyLabel),
-                  ],
-                ),
-                onTap: () {
-                  NavigatorState navigator = Navigator.of(context);
-
-                  // Go to privacy policy screen.
-                  navigator.push(MaterialPageRoute(
-                    builder: (BuildContext context) => PrivacyPolicyScreen(),
-                  ));
-                },
-              ),
-
-              // Licenses.
-              ListTile(
-                title: Row(
-                  spacing: Themes.spacingMedium,
-                  children: [
-                    Icon(Icons.assignment_rounded),
-                    Text(strings.licensesLabel),
-                  ],
-                ),
-                onTap: () => showLicensePage(context: context),
-              ),
-
-              // Contact support.
-              ListTile(
-                title: Row(
-                  spacing: Themes.spacingMedium,
-                  children: [
-                    Icon(Icons.support_agent_rounded),
-                    Text(strings.supportLabel),
-                  ],
-                ),
-                onTap: () {
-                  // Open an email to the support address.
-                  launchUrl(Uri.parse("mailto:michelettiluka@gmail.com?subject=Shelfless%20Support"));
-                },
-              ),
-            ],
-          ),
-
-          // Version label.
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingMedium),
-              child: DefaultTextStyle(
-                style: theme.textTheme.labelMedium?.copyWith(color: ShelflessColors.onMainContentInactive) ?? TextStyle(),
-                child: FutureBuilder(
-                  future: rootBundle.loadString("pubspec.yaml"),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) return Text("...");
-
-                    if (snapshot.hasError) return Text(strings.genericError);
-
-                    final String pubspecString = snapshot.data;
-                    final YamlMap pubspecData = loadYaml(pubspecString);
-                    final String versionString = pubspecData["version"];
-                    return Text("${Themes.appName} v${versionString.split("+").first}");
+                  onTap: () {
+                    // Open an email to the support address.
+                    launchUrl(Uri.parse("mailto:michelettiluka@gmail.com?subject=Shelfless%20Support"));
                   },
+                ),
+              ],
+            ),
+        
+            // Version label.
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(Themes.spacingMedium),
+                child: DefaultTextStyle(
+                  style: theme.textTheme.labelMedium?.copyWith(color: ShelflessColors.onMainContentInactive) ?? TextStyle(),
+                  child: FutureBuilder(
+                    future: rootBundle.loadString("pubspec.yaml"),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData) return Text("...");
+        
+                      if (snapshot.hasError) return Text(strings.genericError);
+        
+                      final String pubspecString = snapshot.data;
+                      final YamlMap pubspecData = loadYaml(pubspecString);
+                      final String versionString = pubspecData["version"];
+                      return Text("${Themes.appName} v${versionString.split("+").first}");
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

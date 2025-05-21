@@ -114,7 +114,7 @@ class DatabaseHelper {
         ${authorsTable}_id INTEGER PRIMARY KEY AUTOINCREMENT,
         ${authorsTable}_first_name TEXT NOT NULL,
         ${authorsTable}_last_name TEXT NOT NULL,
-        ${authorsTable}_nationality TEXT
+        ${authorsTable}_homeland TEXT
       )
       """,
     );
@@ -540,11 +540,11 @@ class DatabaseHelper {
           // If there's a matching element in DB, then use that one instead.
           List<Map<String, dynamic>> existingElements = await tnx.query(
             authorsTable,
-            where: "${authorsTable}_first_name = ? AND ${authorsTable}_last_name = ? AND ${authorsTable}_nationality = ?",
+            where: "${authorsTable}_first_name = ? AND ${authorsTable}_last_name = ? AND ${authorsTable}_homeland = ?",
             whereArgs: [
               inData["${authorsTable}_first_name"],
               inData["${authorsTable}_last_name"],
-              inData["${authorsTable}_nationality"],
+              inData["${authorsTable}_homeland"],
             ],
             limit: 1,
           );
