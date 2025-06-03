@@ -7,27 +7,27 @@ class Author {
 
   String lastName;
 
-  String nationality;
+  String homeLand;
 
   Author({
     this.id,
     required this.firstName,
     required this.lastName,
-    this.nationality = "",
+    this.homeLand = "",
   });
 
   Author.fromMap(Map<String, dynamic> map)
       : id = map["${DatabaseHelper.authorsTable}_id"],
         firstName = map["${DatabaseHelper.authorsTable}_first_name"],
         lastName = map["${DatabaseHelper.authorsTable}_last_name"],
-        nationality = map["${DatabaseHelper.authorsTable}_nationality"];
+        homeLand = map["${DatabaseHelper.authorsTable}_homeland"];
 
   Map<String, dynamic> toMap() {
     return {
       "${DatabaseHelper.authorsTable}_id": id,
       "${DatabaseHelper.authorsTable}_first_name": firstName,
       "${DatabaseHelper.authorsTable}_last_name": lastName,
-      "${DatabaseHelper.authorsTable}_nationality": nationality,
+      "${DatabaseHelper.authorsTable}_homeland": homeLand,
     };
   }
 
@@ -36,7 +36,7 @@ class Author {
     return Author(
       firstName: firstName,
       lastName: lastName,
-      nationality: nationality,
+      homeLand: homeLand,
     );
   }
 
@@ -44,7 +44,7 @@ class Author {
   void copyFrom(Author other) {
     firstName = other.firstName;
     lastName = other.lastName;
-    nationality = other.nationality;
+    homeLand = other.homeLand;
   }
 
   @override
@@ -54,8 +54,8 @@ class Author {
 
   @override
   bool operator ==(Object other) =>
-      other is Author && other.runtimeType == runtimeType && other.firstName == firstName && other.lastName == lastName && other.nationality == nationality;
+      other is Author && other.runtimeType == runtimeType && other.firstName == firstName && other.lastName == lastName && other.homeLand == homeLand;
 
   @override
-  int get hashCode => firstName.hashCode + lastName.hashCode + nationality.hashCode;
+  int get hashCode => firstName.hashCode + lastName.hashCode + homeLand.hashCode;
 }

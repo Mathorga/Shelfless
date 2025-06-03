@@ -156,25 +156,27 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
           ],
         ),
         extendBodyBehindAppBar: true,
-        body: PageView.builder(
-          controller: _pageController,
-          physics: PageScrollPhysics(),
-          itemCount: LibraryContentProvider.instance.books.length,
-          onPageChanged: (int index) {
-            _book = LibraryContentProvider.instance.books[index];
-          },
-          itemBuilder: (BuildContext context, int index) => StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              LibraryContentProvider.instance.addListener(() {
-                if (mounted) setState(() {});
-              });
-      
-              final Book pageBook = LibraryContentProvider.instance.books[index];
-      
-              return BookDetailsWidget(
-                book: pageBook,
-              );
+        body: SafeArea(
+          child: PageView.builder(
+            controller: _pageController,
+            physics: PageScrollPhysics(),
+            itemCount: LibraryContentProvider.instance.books.length,
+            onPageChanged: (int index) {
+              _book = LibraryContentProvider.instance.books[index];
             },
+            itemBuilder: (BuildContext context, int index) => StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                LibraryContentProvider.instance.addListener(() {
+                  if (mounted) setState(() {});
+                });
+                
+                final Book pageBook = LibraryContentProvider.instance.books[index];
+                
+                return BookDetailsWidget(
+                  book: pageBook,
+                );
+              },
+            ),
           ),
         ),
       ),

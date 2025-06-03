@@ -47,18 +47,20 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
             appBar: AppBar(
               title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.libraryTitle}"),
             ),
-            body: Padding(
-              padding: const EdgeInsets.all(Themes.spacingMedium),
-              child: EditSectionWidget(
-                children: [
-                  Text(strings.libraryInfoName),
-                  Themes.spacer,
-                  TextFormField(
-                    initialValue: _library?.raw.name,
-                    textCapitalization: TextCapitalization.words,
-                    onChanged: (String value) => _library?.raw.name = value,
-                  ),
-                ],
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(Themes.spacingMedium),
+                child: EditSectionWidget(
+                  children: [
+                    Text(strings.libraryInfoName),
+                    Themes.spacer,
+                    TextFormField(
+                      initialValue: _library?.raw.name,
+                      textCapitalization: TextCapitalization.words,
+                      onChanged: (String value) => _library?.raw.name = value,
+                    ),
+                  ],
+                ),
               ),
             ),
             floatingActionButton: FloatingActionButton.extended(

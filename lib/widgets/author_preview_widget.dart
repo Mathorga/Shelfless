@@ -40,7 +40,7 @@ class AuthorPreviewWidget extends StatelessWidget {
                       textAlign: TextAlign.start,
                     ),
                     Text(
-                      author.nationality.isNotEmpty ? author.nationality : "-",
+                      author.homeLand.isNotEmpty ? author.homeLand : "-",
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: ShelflessColors.onMainContentInactive,
                       ),

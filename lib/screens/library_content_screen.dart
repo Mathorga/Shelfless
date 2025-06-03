@@ -134,262 +134,264 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
 
     return Scaffold(
       drawer: Drawer(
-        child: DrawerContentWidget(),
+        child: SafeArea(child: DrawerContentWidget()),
       ),
-      body: CustomScrollView(
-        // Make sure no scrolling is allowed when no books are available.
-        physics: books.isEmpty ? NeverScrollableScrollPhysics() : Themes.scrollPhysics,
-        slivers: [
-          SliverAppBar(
-            pinned: false,
-            snap: false,
-            floating: true,
-            shadowColor: Colors.transparent,
-            title: Text(
-              library?.raw.name ?? strings.all,
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            centerTitle: true,
-            actions: [
-              // Filters action.
-              IconButton(
-                icon: Icon(
-                  filtersActive ? Icons.filter_alt : Icons.filter_alt_outlined,
-                  color: filtersActive ? theme.colorScheme.primary : theme.colorScheme.onSurface,
-                ),
-                onPressed: () {
-                  showBarModalBottomSheet(
-                    context: context,
-                    enableDrag: true,
-                    expand: false,
-                    backgroundColor: theme.colorScheme.surface,
-                    builder: (BuildContext context) => LibraryFilterWidget(),
-                  );
-                },
+      body: SafeArea(
+        child: CustomScrollView(
+          // Make sure no scrolling is allowed when no books are available.
+          physics: books.isEmpty ? NeverScrollableScrollPhysics() : Themes.scrollPhysics,
+          slivers: [
+            SliverAppBar(
+              pinned: false,
+              snap: false,
+              floating: true,
+              shadowColor: Colors.transparent,
+              title: Text(
+                library?.raw.name ?? strings.all,
+                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-
-              // View mode change action.
-              IconButton(
-                onPressed: () async {
-                  setState(() {
-                    // Rotate ViewMode values.
-                    viewMode = ViewMode.values[(viewMode.index + 1) % ViewMode.values.length];
-                  });
-
-                  // Store viewmode in shared preferences.
-                  (await SharedPreferences.getInstance()).setInt(SharedPrefsKeys.viewMode, viewMode.index);
-                },
-                icon: Icon(
-                  switch (viewMode) {
-                    ViewMode.list => Icons.table_rows_rounded,
-                    ViewMode.compactGrid => Icons.view_module_rounded,
-                    ViewMode.extendedGrid => Icons.grid_view_rounded,
+              centerTitle: true,
+              actions: [
+                // Filters action.
+                IconButton(
+                  icon: Icon(
+                    filtersActive ? Icons.filter_alt : Icons.filter_alt_outlined,
+                    color: filtersActive ? theme.colorScheme.primary : theme.colorScheme.onSurface,
+                  ),
+                  onPressed: () {
+                    showBarModalBottomSheet(
+                      context: context,
+                      enableDrag: true,
+                      expand: false,
+                      backgroundColor: theme.colorScheme.surface,
+                      builder: (BuildContext context) => LibraryFilterWidget(),
+                    );
                   },
                 ),
-              ),
-
-              // More actions.
-              PopupMenuButton<LibraryAction>(
-                itemBuilder: (BuildContext context) {
-                  return [
-                    // Sort order button.
-                    PopupMenuItem(
-                      value: LibraryAction.sortBy,
-                      child: Row(
-                        spacing: Themes.spacingSmall,
-                        children: [
-                          const Icon(Icons.sort_rounded),
-                          Text(strings.librarySortBy),
-                        ],
-                      ),
-                    ),
-
-                    // Library-related actions.
-                    if (LibraryContentProvider.instance.editable) ...[
-                      // Edit button.
+            
+                // View mode change action.
+                IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      // Rotate ViewMode values.
+                      viewMode = ViewMode.values[(viewMode.index + 1) % ViewMode.values.length];
+                    });
+            
+                    // Store viewmode in shared preferences.
+                    (await SharedPreferences.getInstance()).setInt(SharedPrefsKeys.viewMode, viewMode.index);
+                  },
+                  icon: Icon(
+                    switch (viewMode) {
+                      ViewMode.list => Icons.table_rows_rounded,
+                      ViewMode.compactGrid => Icons.view_module_rounded,
+                      ViewMode.extendedGrid => Icons.grid_view_rounded,
+                    },
+                  ),
+                ),
+            
+                // More actions.
+                PopupMenuButton<LibraryAction>(
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      // Sort order button.
                       PopupMenuItem(
-                        value: LibraryAction.edit,
+                        value: LibraryAction.sortBy,
                         child: Row(
                           spacing: Themes.spacingSmall,
                           children: [
-                            const Icon(Icons.edit_rounded),
-                            Text(strings.editTitle),
+                            const Icon(Icons.sort_rounded),
+                            Text(strings.librarySortBy),
                           ],
                         ),
                       ),
-
-                      // Only let the user delete a library if it's not the last one.
-                      if (LibrariesProvider.instance.libraries.length > 1)
+            
+                      // Library-related actions.
+                      if (LibraryContentProvider.instance.editable) ...[
+                        // Edit button.
                         PopupMenuItem(
-                          value: LibraryAction.delete,
+                          value: LibraryAction.edit,
                           child: Row(
                             spacing: Themes.spacingSmall,
                             children: [
-                              const Icon(Icons.delete_rounded),
-                              Text(strings.deleteTitle),
+                              const Icon(Icons.edit_rounded),
+                              Text(strings.editTitle),
                             ],
                           ),
                         ),
-                      PopupMenuItem(
-                        value: LibraryAction.share,
-                        child: Row(
-                          spacing: Themes.spacingSmall,
-                          children: [
-                            const Icon(Icons.share_rounded),
-                            Text(strings.libraryShare),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ];
-                },
-                onSelected: (LibraryAction value) async {
-                  final NavigatorState navigator = Navigator.of(context);
-
-                  switch (value) {
-                    case LibraryAction.sortBy:
-                      showBarModalBottomSheet(
-                        context: context,
-                        enableDrag: true,
-                        expand: false,
-                        backgroundColor: theme.colorScheme.surface,
-                        builder: (BuildContext context) => LibrarySortOrderListWidget(),
-                      );
-                      break;
-                    case LibraryAction.edit:
-                      navigator.push(MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return EditLibraryScreen(
-                            library: library,
-                            onDone: () => navigator.pop(),
-                          );
-                        },
-                      ));
-                      break;
-                    case LibraryAction.delete:
-                      // Let the user know all contained books will be deleted as well.
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => DeleteDialog(
-                          titleString: strings.deleteLibraryTitle,
-                          contentString: strings.deleteLibraryContent,
-                          onConfirm: () async {
-                            // Actually delete the library.
-                            await LibraryContentProvider.instance.deleteLibrary();
-                          },
-                        ),
-                      );
-                      break;
-                    case LibraryAction.share:
-                      if (library?.raw.id == null) return;
-
-                      // Extract the library.
-                      final Map<String, String> libraryStrings = await DatabaseHelper.instance.serializeLibrary(library!.raw.id!);
-
-                      // Compress the library files to a single .slz file.
-                      final Archive archive = Archive();
-                      libraryStrings.entries
-                          .map((MapEntry<String, String> element) => ArchiveFile(
-                                "${element.key}.json",
-                                element.value.length,
-                                element.value.codeUnits,
-                              ))
-                          .forEach((ArchiveFile file) => archive.addFile(file));
-                      final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
-
-                      // Share the library to other apps.
-                      Share.shareXFiles(
-                        [
-                          XFile.fromData(
-                            encodedArchive,
-                            length: encodedArchive.length,
-                            mimeType: "application/x-zip",
+            
+                        // Only let the user delete a library if it's not the last one.
+                        if (LibrariesProvider.instance.libraries.length > 1)
+                          PopupMenuItem(
+                            value: LibraryAction.delete,
+                            child: Row(
+                              spacing: Themes.spacingSmall,
+                              children: [
+                                const Icon(Icons.delete_rounded),
+                                Text(strings.deleteTitle),
+                              ],
+                            ),
                           ),
-                        ],
-                        // The name parameter in the XFile.fromData method is ignored in most platforms,
-                        // so fileNameOverrides is used instead.
-                        fileNameOverrides: [
-                          "${library!.raw.name}.$libraryFileFormat",
-                        ],
-                      );
-                      break;
-                    default:
-                      break;
-                  }
-                },
+                        PopupMenuItem(
+                          value: LibraryAction.share,
+                          child: Row(
+                            spacing: Themes.spacingSmall,
+                            children: [
+                              const Icon(Icons.share_rounded),
+                              Text(strings.libraryShare),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ];
+                  },
+                  onSelected: (LibraryAction value) async {
+                    final NavigatorState navigator = Navigator.of(context);
+            
+                    switch (value) {
+                      case LibraryAction.sortBy:
+                        showBarModalBottomSheet(
+                          context: context,
+                          enableDrag: true,
+                          expand: false,
+                          backgroundColor: theme.colorScheme.surface,
+                          builder: (BuildContext context) => LibrarySortOrderListWidget(),
+                        );
+                        break;
+                      case LibraryAction.edit:
+                        navigator.push(MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return EditLibraryScreen(
+                              library: library,
+                              onDone: () => navigator.pop(),
+                            );
+                          },
+                        ));
+                        break;
+                      case LibraryAction.delete:
+                        // Let the user know all contained books will be deleted as well.
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => DeleteDialog(
+                            titleString: strings.deleteLibraryTitle,
+                            contentString: strings.deleteLibraryContent,
+                            onConfirm: () async {
+                              // Actually delete the library.
+                              await LibraryContentProvider.instance.deleteLibrary();
+                            },
+                          ),
+                        );
+                        break;
+                      case LibraryAction.share:
+                        if (library?.raw.id == null) return;
+            
+                        // Extract the library.
+                        final Map<String, String> libraryStrings = await DatabaseHelper.instance.serializeLibrary(library!.raw.id!);
+            
+                        // Compress the library files to a single .slz file.
+                        final Archive archive = Archive();
+                        libraryStrings.entries
+                            .map((MapEntry<String, String> element) => ArchiveFile(
+                                  "${element.key}.json",
+                                  element.value.length,
+                                  element.value.codeUnits,
+                                ))
+                            .forEach((ArchiveFile file) => archive.addFile(file));
+                        final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
+            
+                        // Share the library to other apps.
+                        Share.shareXFiles(
+                          [
+                            XFile.fromData(
+                              encodedArchive,
+                              length: encodedArchive.length,
+                              mimeType: "application/x-zip",
+                            ),
+                          ],
+                          // The name parameter in the XFile.fromData method is ignored in most platforms,
+                          // so fileNameOverrides is used instead.
+                          fileNameOverrides: [
+                            "${library!.raw.name}.$libraryFileFormat",
+                          ],
+                        );
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                ),
+              ],
+            ),
+            
+            if (books.isNotEmpty)
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: leftRightPadding),
+                sliver: viewMode == ViewMode.list
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            final Book book = books[index];
+                            return BookPreviewWidget(
+                              book: book,
+                              viewMode: viewMode,
+                              onTap: () => _gotoBookDetails(book),
+                            );
+                          },
+                          childCount: books.length,
+                        ),
+                      )
+                    : SliverGrid(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: gridCrossAxisCount,
+                          crossAxisSpacing: crossAxisSpacing,
+                          mainAxisSpacing: mainAxisSpacing,
+                          childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / gridCrossAxisCount) / itemHeight,
+                          // childAspectRatio: itemWidth / itemHeight,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            final Book book = books[index];
+                            return switch (viewMode) {
+                              ViewMode.extendedGrid => BookPreviewWidget(
+                                  book: book,
+                                  viewMode: viewMode,
+                                  onTap: () => _gotoBookDetails(book),
+                                ),
+                              ViewMode.compactGrid => BookPreviewWidget(
+                                  book: book,
+                                  viewMode: viewMode,
+                                  onTap: () => _gotoBookDetails(book),
+                                ),
+                              ViewMode.list => Placeholder(),
+                            };
+                          },
+                          childCount: books.length,
+                        ),
+                      ),
               ),
-            ],
-          ),
-
-          if (books.isNotEmpty)
-            SliverPadding(
-              padding: EdgeInsets.symmetric(horizontal: leftRightPadding),
-              sliver: viewMode == ViewMode.list
-                  ? SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          final Book book = books[index];
-                          return BookPreviewWidget(
-                            book: book,
-                            viewMode: viewMode,
-                            onTap: () => _gotoBookDetails(book),
-                          );
-                        },
-                        childCount: books.length,
-                      ),
-                    )
-                  : SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: gridCrossAxisCount,
-                        crossAxisSpacing: crossAxisSpacing,
-                        mainAxisSpacing: mainAxisSpacing,
-                        childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / gridCrossAxisCount) / itemHeight,
-                        // childAspectRatio: itemWidth / itemHeight,
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          final Book book = books[index];
-                          return switch (viewMode) {
-                            ViewMode.extendedGrid => BookPreviewWidget(
-                                book: book,
-                                viewMode: viewMode,
-                                onTap: () => _gotoBookDetails(book),
-                              ),
-                            ViewMode.compactGrid => BookPreviewWidget(
-                                book: book,
-                                viewMode: viewMode,
-                                onTap: () => _gotoBookDetails(book),
-                              ),
-                            ViewMode.list => Placeholder(),
-                          };
-                        },
-                        childCount: books.length,
-                      ),
-                    ),
-            ),
-
-          if (books.isEmpty)
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Center(
-                child: Text(strings.noBooksFound),
+            
+            if (books.isEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(
+                  child: Text(strings.noBooksFound),
+                ),
+              ),
+            
+            // Space left for the FAB.
+            SliverToBoxAdapter(
+              // TODO Check whether adding the device botto inset also works on Android, since it's designed for iOS.
+              child: SizedBox(
+                height: fabAccessHeight + devicePadding.bottom,
               ),
             ),
-
-          // Space left for the FAB.
-          SliverToBoxAdapter(
-            // TODO Check whether adding the device botto inset also works on Android, since it's designed for iOS.
-            child: SizedBox(
-              height: fabAccessHeight + devicePadding.bottom,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: LibraryContentProvider.instance.editable
           ? FloatingActionButton(
               onPressed: () {
                 final NavigatorState navigator = Navigator.of(context);
-
+    
                 // Navigate to EditBookScreen
                 navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
               },

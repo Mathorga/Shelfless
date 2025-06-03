@@ -45,23 +45,25 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
         appBar: AppBar(
           title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.locationTitle}"),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              EditSectionWidget(
-                children: [
-                  Text(strings.locationInfoName),
-                  Themes.spacer,
-                  TextFormField(
-                    initialValue: _location.name,
-                    textCapitalization: TextCapitalization.words,
-                    onChanged: (String value) => _location.name = value,
-                  ),
-                ],
-              ),
-            ],
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(Themes.spacingMedium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                EditSectionWidget(
+                  children: [
+                    Text(strings.locationInfoName),
+                    Themes.spacer,
+                    TextFormField(
+                      initialValue: _location.name,
+                      textCapitalization: TextCapitalization.words,
+                      onChanged: (String value) => _location.name = value,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(

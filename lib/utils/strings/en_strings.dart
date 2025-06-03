@@ -80,7 +80,8 @@ class EnStrings implements Strings {
   @override String get deleteTitle => "Delete";
   @override String get authorTitle => "Author";
   @override String get authorInfoFirstName => "First Name";
-  @override String get authorInfoLastName => "LastName";
+  @override String get authorInfoLastName => "Last Name";
+  @override String get authorInfoHomeland => "Home Land";
   @override String get editDone => "Done";
   @override String get bookTitle => "Book";
   @override String get addOne => "Add one";

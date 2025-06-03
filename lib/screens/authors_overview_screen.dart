@@ -36,43 +36,45 @@ class _AuthorsOverviewScreenState extends State<AuthorsOverviewScreen> {
       appBar: AppBar(
         title: Text(strings.authorsSectionTitle),
       ),
-      body: LibraryContentProvider.instance.authors.isEmpty
-          ? Center(
-              child: Text(strings.noAuthorsFound),
-            )
-          : ListView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(12.0),
-              children: [
-                ...List.generate(
-                  LibraryContentProvider.instance.authors.length,
-                  (int index) {
-                    // Make sure the received index is somewhat valid.
-                    if (index > LibraryContentProvider.instance.authors.values.length) return const Placeholder();
-
-                    // Prefetch the genre for later use.
-                    Author? author = LibraryContentProvider.instance.authors.values.toList()[index];
-
-                    return AuthorPreviewWidget(
-                      author: author,
-                      onTap: () {
-                        final NavigatorState navigator = Navigator.of(context);
-
-                        // Filter the current library by the selected author.
-                        LibraryContentProvider.instance.applyFilters(
-                          LibraryFilters(
-                            inAuthorsFilter: {author.id},
-                          ),
-                        );
-
-                        navigator.pop();
-                      },
-                    );
-                  },
-                ),
-                const SizedBox(height: fabAccessHeight),
-              ],
-            ),
+      body: SafeArea(
+        child: LibraryContentProvider.instance.authors.isEmpty
+            ? Center(
+                child: Text(strings.noAuthorsFound),
+              )
+            : ListView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(12.0),
+                children: [
+                  ...List.generate(
+                    LibraryContentProvider.instance.authors.length,
+                    (int index) {
+                      // Make sure the received index is somewhat valid.
+                      if (index > LibraryContentProvider.instance.authors.values.length) return const Placeholder();
+        
+                      // Prefetch the genre for later use.
+                      Author? author = LibraryContentProvider.instance.authors.values.toList()[index];
+        
+                      return AuthorPreviewWidget(
+                        author: author,
+                        onTap: () {
+                          final NavigatorState navigator = Navigator.of(context);
+        
+                          // Filter the current library by the selected author.
+                          LibraryContentProvider.instance.applyFilters(
+                            LibraryFilters(
+                              inAuthorsFilter: {author.id},
+                            ),
+                          );
+        
+                          navigator.pop();
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: fabAccessHeight),
+                ],
+              ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(

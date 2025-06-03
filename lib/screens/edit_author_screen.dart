@@ -48,39 +48,55 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
         appBar: AppBar(
           title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.authorTitle}"),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // First name.
-              EditSectionWidget(
-                children: [
-                  Text(strings.authorInfoFirstName),
-                  Themes.spacer,
-                  TextFormField(
-                    initialValue: _author.firstName,
-                    textCapitalization: TextCapitalization.words,
-                    textInputAction: TextInputAction.next,
-                    onChanged: (String value) => _author.firstName = value,
-                  ),
-                ],
-              ),
-
-              // Last name.
-              EditSectionWidget(
-                children: [
-                  Text(strings.authorInfoLastName),
-                  Themes.spacer,
-                  TextFormField(
-                    initialValue: _author.lastName,
-                    textCapitalization: TextCapitalization.words,
-                    textInputAction: TextInputAction.done,
-                    onChanged: (String value) => _author.lastName = value,
-                  ),
-                ],
-              ),
-            ],
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(Themes.spacingMedium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // First name.
+                EditSectionWidget(
+                  children: [
+                    Text(strings.authorInfoFirstName),
+                    Themes.spacer,
+                    TextFormField(
+                      initialValue: _author.firstName,
+                      textCapitalization: TextCapitalization.words,
+                      textInputAction: TextInputAction.next,
+                      onChanged: (String value) => _author.firstName = value,
+                    ),
+                  ],
+                ),
+          
+                // Last name.
+                EditSectionWidget(
+                  children: [
+                    Text(strings.authorInfoLastName),
+                    Themes.spacer,
+                    TextFormField(
+                      initialValue: _author.lastName,
+                      textCapitalization: TextCapitalization.words,
+                      textInputAction: TextInputAction.done,
+                      onChanged: (String value) => _author.lastName = value,
+                    ),
+                  ],
+                ),
+          
+                // Home Land.
+                EditSectionWidget(
+                  children: [
+                    Text(strings.authorInfoHomeland),
+                    Themes.spacer,
+                    TextFormField(
+                      initialValue: _author.homeLand,
+                      textCapitalization: TextCapitalization.words,
+                      textInputAction: TextInputAction.done,
+                      onChanged: (String value) => _author.homeLand = value,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
@@ -90,9 +106,9 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
             Navigator.of(context).pop();
           },
           label: Row(
+            spacing: Themes.spacingMedium,
             children: [
               Text(strings.editDone),
-              const SizedBox(width: 12.0),
               const Icon(Icons.check),
             ],
           ),

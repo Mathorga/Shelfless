@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:collection/collection.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,12 @@ void main() async {
 
   // Disable runtime fetchin google fonts, since used fonts are already in assets.
   GoogleFonts.config.allowRuntimeFetching = false;
+
+  // Limit orientation to portrait.
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(const Shelfless());
 }
