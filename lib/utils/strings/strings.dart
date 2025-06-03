@@ -3,11 +3,24 @@ import 'dart:io';
 import 'package:shelfless/utils/strings/en_strings.dart';
 import 'package:shelfless/utils/strings/it_strings.dart';
 
+enum AppLocales {
+  en,
+  it,
+  system;
+
+  String get label => switch(this) {
+    AppLocales.en => "English",
+    AppLocales.it => "Italiano",
+    AppLocales.system => "System default",
+  };
+}
+
 abstract class Strings {
   String get settings;
   String get setitngsSectionTitle;
   String get settingDefaultCover;
   String get settingTitlesCapitalization;
+  String get settingAppLanguage;
   String get legalsSectionTitle;
   String get privacyPolicyLabel;
   String get licensesLabel;

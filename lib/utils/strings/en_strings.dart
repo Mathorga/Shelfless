@@ -6,6 +6,7 @@ class EnStrings implements Strings {
   @override String get setitngsSectionTitle => "App settings";
   @override String get settingDefaultCover => "Default cover image";
   @override String get settingTitlesCapitalization => "Titles' capitalization";
+  @override String get settingAppLanguage => "App language";
   @override String get legalsSectionTitle => "Legals and support";
   @override String get privacyPolicyLabel => "Privacy policy";
   @override String get licensesLabel => "Licenses";

@@ -10,4 +10,7 @@ class SharedPrefsKeys {
 
   // The preferred capitalization for title. Users can change it from the app's settings.
   static const String titlesCapitalization = "titles_capitalization";
+
+  // The preferred application language locale. Users can change it from the app's settings.
+  static const String appLocale = "app_locale";
 }
