@@ -50,3 +50,7 @@ app.*.map.json
 **/.cxx
 
 devtools_options.yaml
+
+# FVM Version Cache
+.fvm/
+.fvmrc

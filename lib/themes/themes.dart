@@ -97,7 +97,7 @@ class Themes {
     searchBarTheme: SearchBarThemeData(
       backgroundColor: WidgetStatePropertyAll(ShelflessColors.lightBackground),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: ShelflessColors.lightBackground,
       clipBehavior: Clip.antiAlias,
       surfaceTintColor: ShelflessColors.lightBackground,
@@ -139,7 +139,7 @@ class Themes {
         borderRadius: BorderRadius.circular(Themes.radiusMedium),
       ),
     ),
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Themes.radiusMedium),
       ),
