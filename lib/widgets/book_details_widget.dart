@@ -8,16 +8,19 @@ import 'package:shelfless/models/book.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/material_utils.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 
 class BookDetailsWidget extends StatelessWidget {
   final Book book;
+  final void Function(ElementAction action)? onBookActionPerformed;
 
   const BookDetailsWidget({
     super.key,
     required this.book,
+    this.onBookActionPerformed,
   });
 
   @override
@@ -194,6 +197,8 @@ class BookDetailsWidget extends StatelessWidget {
                               book.raw.out = !book.raw.out;
 
                               LibraryContentProvider.instance.storeBookUpdate(book);
+
+                              onBookActionPerformed?.call(ElementAction.toggleOut);
                             },
                             label: book.raw.out ? strings.bookMarkInAction : strings.bookMarkOutAction,
                           ),
@@ -202,8 +207,12 @@ class BookDetailsWidget extends StatelessWidget {
                           flex: 1,
                           child: _buildAction(
                             context,
-                            onPressed: () {
-                              MaterialUtils.moveBookTo(context, book: book);
+                            onPressed: () async {
+                              await MaterialUtils.moveBookTo(
+                                context,
+                                book: book,
+                                onBookMoved: () => onBookActionPerformed?.call(ElementAction.moveTo),
+                              );
                             },
                             label: strings.bookMoveTo,
                           ),

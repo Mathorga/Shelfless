@@ -92,11 +92,16 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
                     ));
                     break;
                   case ElementAction.toggleOut:
+                    break;
                   case ElementAction.moveTo:
+                    final NavigatorState navigator = Navigator.of(context);
+
+                    // Pop back when the book is moved.
+                    navigator.pop();
                     break;
                   case ElementAction.delete:
                     final NavigatorState navigator = Navigator.of(context);
-      
+
                     final bool? deleted = await showDialog<bool>(
                       context: context,
                       builder: (BuildContext context) => AlertDialog(
@@ -111,17 +116,17 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
                             ),
                             child: Text(strings.cancel),
                           ),
-      
+
                           // Confirm button.
                           ElevatedButton(
                             onPressed: () async {
                               // Prefetch handlers before async gaps.
                               final NavigatorState navigator = Navigator.of(context);
                               final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
-      
+
                               // Delete the book.
                               LibraryContentProvider.instance.deleteBook(_book);
-      
+
                               messenger.showSnackBar(
                                 SnackBar(
                                   duration: Themes.durationShort,
@@ -131,7 +136,7 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
                                   ),
                                 ),
                               );
-      
+
                               // Pop dialog.
                               navigator.pop(true);
                             },
@@ -145,10 +150,10 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
                         ],
                       ),
                     );
-      
+
                     // Pop back if the book was deleted.
                     if (deleted == true) navigator.pop();
-      
+
                     break;
                 }
               },
@@ -168,11 +173,23 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
               LibraryContentProvider.instance.addListener(() {
                 if (mounted) setState(() {});
               });
-              
+
               final Book pageBook = LibraryContentProvider.instance.books[index];
-              
+
               return BookDetailsWidget(
                 book: pageBook,
+                onBookActionPerformed: (ElementAction action) {
+                  final NavigatorState navigator = Navigator.of(context);
+
+                  switch (action) {
+                    case ElementAction.moveTo:
+                    case ElementAction.delete:
+                      navigator.pop();
+                      break;
+                    default:
+                      break;
+                  }
+                },
               );
             },
           ),

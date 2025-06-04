@@ -9,7 +9,11 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/library_preview_widget.dart';
 
 class MaterialUtils {
-  static void moveBookTo(BuildContext context, {required Book book}) {
+  static Future<void> moveBookTo(
+    BuildContext context, {
+    required Book book,
+    void Function()? onBookMoved,
+  }) async {
     // There's no other library, so let the user know the book cannot be moved anywhere.
     if (LibrariesProvider.instance.libraries.length <= 1) {
       showDialog(
@@ -22,12 +26,11 @@ class MaterialUtils {
       return;
     }
 
-    // Get all libraries excluding the currently open one.
-    final Iterable<LibraryPreview> libraries =
-        LibrariesProvider.instance.libraries.where((LibraryPreview libraryPreview) => libraryPreview.raw != LibraryContentProvider.instance.library);
+    // Get all libraries excluding the one the provided book is currently in.
+    final Iterable<LibraryPreview> libraries = LibrariesProvider.instance.libraries.where((LibraryPreview libraryPreview) => libraryPreview.raw.id != book.raw.libraryId);
 
     // Let the user pick the library to move the book to.
-    showDialog(
+    await showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: Text(strings.bookMoveTo),
@@ -49,6 +52,8 @@ class MaterialUtils {
                             LibraryContentProvider.instance.moveBookTo(book, libraryPreview.raw);
 
                             navigator.pop();
+
+                            onBookMoved?.call();
                           },
                           child: LibraryPreviewWidget(library: libraryPreview),
                         ))

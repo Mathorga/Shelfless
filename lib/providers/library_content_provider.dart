@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:shelfless/models/author.dart';
@@ -159,17 +160,22 @@ class LibraryContentProvider with ChangeNotifier {
 
   /// Moves the book to another library in DB and stores the update.
   Future<void> moveBookTo(Book book, RawLibrary toLibrary) async {
+    // Fetch the source library before going on with moving.
+    RawLibrary? srcLibrary = library ?? LibrariesProvider.instance.libraries.firstWhereOrNull((LibraryPreview library) => library.raw.id == book.raw.libraryId)?.raw;
+    
+    assert(srcLibrary != null, "No source library: cannot move book");
+
     // Update the book's library id.
     book.raw.libraryId = toLibrary.id;
 
     // Ask the DB to move the book.
     await DatabaseHelper.instance.moveBookTo(book, toLibrary);
 
-    // Remove the provided book from memory if moved to another library.
-    if (toLibrary != library) books.remove(book);
+    // Remove the provided book from memory if moved to another library and a specific library is actually open.
+    if (library != null && toLibrary != library) books.remove(book);
 
     // Update libraries provider.
-    LibrariesProvider.instance.refetchLibrary(library!);
+    LibrariesProvider.instance.refetchLibrary(srcLibrary!);
     LibrariesProvider.instance.refetchLibrary(toLibrary);
 
     notifyListeners();
