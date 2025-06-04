@@ -1,4 +1,4 @@
-package glyder.app.shelfless
+package mathorga.app.shelfless
 
 import io.flutter.embedding.android.FlutterActivity
 
