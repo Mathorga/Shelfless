@@ -10,7 +10,10 @@ import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/config.dart';
 import 'package:shelfless/utils/constants.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/double_choice_dialog.dart';
@@ -109,12 +112,13 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         Themes.spacer,
                         TextFormField(
                           controller: _titleController,
-                          textCapitalization: TextCapitalization.words,
+                          textCapitalization:
+                              TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
                           onChanged: (String value) => _book.raw.title = value,
                         ),
                       ],
                     ),
-        
+
                     // Cover.
                     EditSectionWidget(
                       spacing: Themes.spacingMedium,
@@ -159,7 +163,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                         ),
                                 ),
                               ),
-        
+
                               // Only show the remove cover button if a cover is actually selected.
                               if (_book.raw.cover != null)
                                 Positioned(
@@ -181,7 +185,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         Text(strings.coverDescription),
                       ],
                     ),
-        
+
                     // Authors.
                     AuthorsSelectionWidget(
                       inSelectedIds: _book.authorIds,
@@ -197,7 +201,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         });
                       },
                     ),
-        
+
                     // Publish year.
                     EditSectionWidget(
                       children: [
@@ -241,7 +245,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         ),
                       ],
                     ),
-        
+
                     // Genres.
                     GenresSelectionWidget(
                       inSelectedIds: _book.genreIds,
@@ -252,14 +256,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         for (int? genreId in selectedGenreIds) {
                           // Make sure the genreId is not null.
                           if (genreId == null) continue;
-        
+
                           if (!_book.genreIds.contains(genreId)) {
                             genreIds.add(genreId);
                           } else {
                             duplicates = true;
                           }
                         }
-        
+
                         if (duplicates) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -268,7 +272,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             ),
                           );
                         }
-        
+
                         LibraryContentProvider.instance.addGenresToBook(genreIds, _book);
                       },
                       onGenreUnselected: (int genreId) {
@@ -279,7 +283,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         });
                       },
                     ),
-        
+
                     // Publisher.
                     PublisherSelectionWidget(
                       insertNew: true,
@@ -287,7 +291,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       onPublisherSelected: (int? publisherId) {
                         // Make sure the publisherId is not null.
                         if (publisherId == null) return;
-        
+
                         // Set the book publisher.
                         LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
                       },
@@ -295,7 +299,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         LibraryContentProvider.instance.removePublisherFromBook(_book);
                       },
                     ),
-        
+
                     // Location.
                     LocationSelectionWidget(
                       insertNew: true,
@@ -303,7 +307,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       onLocationSelected: (int? locationId) {
                         // Make sure the locationId is not null.
                         if (locationId == null) return;
-        
+
                         // Set the book location.
                         LibraryContentProvider.instance.addLocationToBook(locationId, _book);
                       },
@@ -311,7 +315,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         LibraryContentProvider.instance.removeLocationFromBook(_book);
                       },
                     ),
-        
+
                     // Notes.
                     EditSectionWidget(
                       children: [
@@ -327,7 +331,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         ),
                       ],
                     ),
-        
+
                     // Fab spacing.
                     // TODO Check whether adding the device botto inset also works on Android, since it's designed for iOS.
                     SizedBox(height: fabAccessHeight + devicePadding.bottom),

@@ -5,6 +5,9 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/config.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/utils.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
@@ -63,13 +66,14 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                     Themes.spacer,
                     TextFormField(
                       initialValue: _genre.name,
-                      textCapitalization: TextCapitalization.words,
+                      textCapitalization:
+                          TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
                       textInputAction: TextInputAction.done,
                       onChanged: (String value) => _genre.name = value,
                     ),
                   ],
                 ),
-          
+
                 // Color.
                 EditSectionWidget(
                   children: [
@@ -127,7 +131,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                     ),
                   ],
                 ),
-          
+
                 const SizedBox(
                   height: 24.0,
                 ),

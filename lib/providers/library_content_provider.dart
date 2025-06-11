@@ -27,10 +27,8 @@ enum SortOrder {
   publisherAsc,
   publisherDesc,
   locationAsc,
-  locationDesc,
-}
+  locationDesc;
 
-extension SortOrderExtension on SortOrder {
   bool get enabled => switch (this) {
         SortOrder.titleAsc => true,
         SortOrder.titleDesc => true,

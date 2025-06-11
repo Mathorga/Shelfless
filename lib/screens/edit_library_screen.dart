@@ -4,6 +4,9 @@ import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/config.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
@@ -56,7 +59,8 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
                     Themes.spacer,
                     TextFormField(
                       initialValue: _library?.raw.name,
-                      textCapitalization: TextCapitalization.words,
+                      textCapitalization:
+                          TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
                       onChanged: (String value) => _library?.raw.name = value,
                     ),
                   ],

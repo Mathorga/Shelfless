@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/config.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/unfocus_widget.dart';
@@ -57,7 +60,8 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
                     Themes.spacer,
                     TextFormField(
                       initialValue: _location.name,
-                      textCapitalization: TextCapitalization.words,
+                      textCapitalization:
+                          TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
                       onChanged: (String value) => _location.name = value,
                     ),
                   ],

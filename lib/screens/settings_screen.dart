@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shelfless/utils/config.dart';
+import 'package:shelfless/utils/text_capitalization_extension.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
@@ -11,6 +13,79 @@ import 'package:shelfless/utils/shared_prefs_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/unreleased_feature_widget.dart';
+
+/// List tile for text capitalization. Separated for performance.
+class _TextCapitalizationSetting extends StatefulWidget {
+  const _TextCapitalizationSetting();
+
+  @override
+  State<_TextCapitalizationSetting> createState() => _TextCapitalizationSettingState();
+}
+
+class _TextCapitalizationSettingState extends State<_TextCapitalizationSetting> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        spacing: Themes.spacingMedium,
+        children: [
+          Expanded(
+            child: Text(strings.settingTitlesCapitalization),
+          ),
+          Builder(
+            builder: (BuildContext context) {
+              int titlesCapitalizationIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index;
+
+              return Text(
+                TextCapitalization.values[titlesCapitalizationIndex].label,
+                style: TextStyle(
+                  color: ShelflessColors.onMainContentInactive,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text(strings.settingTitlesCapitalization),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: TextCapitalization.values
+                  .map((TextCapitalization element) => Card(
+                        color: ShelflessColors.mainContentActive,
+                        child: InkWell(
+                          onTap: () async {
+                            // Prefetch handlers before async gaps.
+                            final NavigatorState navigator = Navigator.of(context);
+
+                            // Store the setting.
+                            await SharedPrefsHelper.instance.data.setInt(SharedPrefsKeys.titlesCapitalization, element.index);
+                            setState(() {});
+
+                            // Pop the dialog.
+                            navigator.pop();
+                          },
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
+                              child: Text(element.label),
+                            ),
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -76,33 +151,7 @@ class SettingsScreen extends StatelessWidget {
                       ),
 
                       // Titles' text capitalization.
-                      UnreleasedFeatureWidget(
-                        child: ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            spacing: Themes.spacingMedium,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  strings.settingTitlesCapitalization,
-                                ),
-                              ),
-                              Builder(
-                                builder: (BuildContext context) {
-                                  int titlesCapitalizationIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? TextCapitalization.words.index;
-
-                                  return Text(
-                                    TextCapitalization.values[titlesCapitalizationIndex].name,
-                                    style: TextStyle(
-                                      color: ShelflessColors.onMainContentInactive,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      _TextCapitalizationSetting(),
 
                       // App language.
                       UnreleasedFeatureWidget(
