@@ -139,4 +139,8 @@ class ItStrings implements Strings {
   @override String get genericError => "Si è verificato un errore";
   @override String get unreleasedFeatureAlert => "Questa funzionalità sarà introdotta con un futuro aggiornamento.";
   @override String get coverDescription => "Considera la copertina come un'idea della copertina originale, non starci troppo a pensare e scegli una foto che ti piace, o che ti ricorda questo libro. L'immagine sarà comunque compressa.";
+  @override String textCapitalizationSentences() => "Ogni frase";
+  @override String textCapitalizationWords() => "Ogni parola";
+  @override String textCapitalizationCharacters() => "Ogni lettera";
+  @override String textCapitalizationNone() => "Mai";
 }

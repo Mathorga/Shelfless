@@ -137,4 +137,8 @@ class EnStrings implements Strings {
   @override String get genericError => "An error occurred";
   @override String get unreleasedFeatureAlert => "This feature will be released in a future update.";
   @override String get coverDescription => "Think of this as just a hint to the real book cover, don't think about it too much and pick whatever you like or reminds you of this book. The image will be highly compressed anyway.";
+  @override String textCapitalizationSentences() => "All sentences";
+  @override String textCapitalizationWords() => "All words";
+  @override String textCapitalizationCharacters() => "All characters";
+  @override String textCapitalizationNone() => "None";
 }

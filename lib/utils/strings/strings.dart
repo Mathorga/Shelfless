@@ -151,6 +151,10 @@ abstract class Strings {
   String get genericError;
   String get unreleasedFeatureAlert;
   String get coverDescription;
+  String textCapitalizationSentences();
+  String textCapitalizationWords();
+  String textCapitalizationCharacters();
+  String textCapitalizationNone();
 }
 
 Strings get strings {
