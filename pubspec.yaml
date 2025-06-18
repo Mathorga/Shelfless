@@ -130,6 +130,7 @@ flutter:
     - shaders/test_old_2.frag.glsl
     - shaders/blur_upscale.frag.glsl
     - shaders/circles.frag.glsl
+    - shaders/clean_edge.frag.glsl
 
   assets:
     - pubspec.yaml

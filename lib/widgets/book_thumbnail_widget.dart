@@ -5,6 +5,7 @@ import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_genres_box_widget.dart';
+import 'package:shelfless/widgets/shaded_image_widget.dart';
 
 /// Displays a book thumbnail image.
 class BookThumbnailWidget extends StatelessWidget {
@@ -62,18 +63,18 @@ class BookThumbnailWidget extends StatelessWidget {
             duration: Duration(milliseconds: 200),
             child: book.raw.cover != null
                 // TODO Hide this behind an app setting.
-                // ? ShadedImageWidget(
-                //     imageData: book.raw.cover!,
-                //     upscaleWidth: 256,
-                //     upscaleHeight: 256,
-                //     applyFilter: true,
-                //   )
-                ? Image.memory(
-                    book.raw.cover!,
-                    fit: BoxFit.cover,
-                    isAntiAlias: true,
-                    filterQuality: FilterQuality.none,
+                ? ShadedImageWidget(
+                    imageData: book.raw.cover!,
+                    upscaleWidth: 256,
+                    upscaleHeight: 256,
+                    applyFilter: true,
                   )
+                // ? Image.memory(
+                //     book.raw.cover!,
+                //     fit: BoxFit.cover,
+                //     isAntiAlias: true,
+                //     filterQuality: FilterQuality.none,
+                //   )
                 : Image.asset(
                     "assets/images/covers/flower.png",
                     fit: BoxFit.cover,

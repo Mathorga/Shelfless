@@ -65,7 +65,7 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
 
 
   Future<void> loadMyShader() async {
-    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/blur_upscale.frag.glsl");
+    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/clean_edge.frag.glsl");
     _shader = program.fragmentShader();
     setState(() {
       // trigger a repaint
