@@ -4,9 +4,16 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+enum SpecialUniform {
+  canvasWidth,
+  canvasHeight,
+  textureWidth,
+  textureHeight;
+}
+
 class ShaderPainter extends CustomPainter {
   final ui.FragmentShader shader;
-  final List<double> uniforms;
+  final List<dynamic> uniforms;
   final List<ui.Image?> images;
 
   ShaderPainter(
@@ -18,17 +25,38 @@ class ShaderPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     for (int i = 0; i < images.length; i++) {
-      shader.setImageSampler(i, images[i]!);
+      final ui.Image? image = images[i];
+      shader.setImageSampler(i, image!);
     }
-    shader.setFloat(0, size.width);
-    shader.setFloat(1, size.height);
+
     for (int i = 0; i < uniforms.length; i++) {
-      shader.setFloat(i, uniforms[i]);
+      final dynamic uniform = uniforms[i];
+
+      if (uniform is double) {
+        shader.setFloat(i, uniform);
+        continue;
+      }
+
+      if (uniform is SpecialUniform) {
+        switch (uniform) {
+          case SpecialUniform.canvasWidth:
+            shader.setFloat(i, size.width);
+            break;
+          case SpecialUniform.canvasHeight:
+            shader.setFloat(i, size.height);
+            break;
+          default:
+            break;
+        }
+        continue;
+      }
     }
 
     final Paint paint = Paint();
 
     paint.shader = shader;
+    paint.isAntiAlias = false;
+    paint.filterQuality = FilterQuality.none;
     canvas.drawRect(Offset.zero & size, paint);
   }
 
@@ -63,9 +91,8 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
     loadShader();
   }
 
-
   Future<void> loadShader() async {
-    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/clean_edge.frag.glsl");
+    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/test_old.frag.glsl");
     _shader = program.fragmentShader();
     setState(() {
       // trigger a repaint
@@ -113,8 +140,10 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
           painter: ShaderPainter(
             _shader!,
             [
-              16.0,
-              16.0,
+              SpecialUniform.canvasWidth,
+              SpecialUniform.canvasHeight,
+              image.width.toDouble(),
+              image.height.toDouble(),
             ],
             [
               image,

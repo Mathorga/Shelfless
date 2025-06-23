@@ -31,7 +31,7 @@ WARNING: Does not work as well with upscaled textures: use only on true size tex
 #include <flutter/runtime_effect.glsl>
 
 // Enables 2:1 slopes. otherwise only uses 45 degree slopes.
-// #define SLOPE
+#define SLOPE
 
 // Cleans up small detail slope transitions (if SLOPE is enabled)
 // if only using for rotation, CLEANUP has negligable effect and should be disabled for speed.
@@ -369,7 +369,7 @@ void main() {
     vec4 col = c;
 
     // c_orner, b_ack, and u_p slices
-    // (slices from neighbor pixels will only ever reach these 3 quadrants
+    // slices from neighbor pixels will only ever reach these 3 quadrants
     vec4 c_col = slice_dist(local, vec2( 1.0, 1.0), point_dir, vec4[15](ub, u, uf, uff, b, c, f, ff, db, d, df, dff, ddb, dd, ddf));
     vec4 b_col = slice_dist(local, vec2(-1.0, 1.0), point_dir, vec4[15](uf, u, ub, ubb, f, c, b, bb, df, d, db, dbb, ddf, dd, ddb));
     vec4 u_col = slice_dist(local, vec2( 1.0,-1.0), point_dir, vec4[15](db, d, df, dff, b, c, f, ff, ub, u, uf, uff, uub, uu, uuf));
@@ -384,6 +384,6 @@ void main() {
         col = u_col;
     }
 
-    // fragColor = texture(image, px);
+    // fragColor = texture(image, FlutterFragCoord());
     fragColor = col;
 }

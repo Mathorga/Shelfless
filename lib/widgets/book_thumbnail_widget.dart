@@ -65,8 +65,8 @@ class BookThumbnailWidget extends StatelessWidget {
                 // TODO Hide this behind an app setting.
                 ? ShadedImageWidget(
                     imageData: book.raw.cover!,
-                    upscaleWidth: 256,
-                    upscaleHeight: 256,
+                    // upscaleWidth: 256,
+                    // upscaleHeight: 256,
                     applyFilter: true,
                   )
                 // ? Image.memory(
