@@ -23,7 +23,7 @@ class ShaderPainter extends CustomPainter {
     shader.setFloat(0, size.width);
     shader.setFloat(1, size.height);
     for (int i = 0; i < uniforms.length; i++) {
-      shader.setFloat(i + 2, uniforms[i]);
+      shader.setFloat(i, uniforms[i]);
     }
 
     final Paint paint = Paint();
@@ -60,11 +60,11 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
   @override
   void initState() {
     super.initState();
-    loadMyShader();
+    loadShader();
   }
 
 
-  Future<void> loadMyShader() async {
+  Future<void> loadShader() async {
     ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/clean_edge.frag.glsl");
     _shader = program.fragmentShader();
     setState(() {

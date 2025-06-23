@@ -31,14 +31,15 @@ WARNING: Does not work as well with upscaled textures: use only on true size tex
 #include <flutter/runtime_effect.glsl>
 
 // Enables 2:1 slopes. otherwise only uses 45 degree slopes.
-#define SLOPE
+// #define SLOPE
 
 // Cleans up small detail slope transitions (if SLOPE is enabled)
 // if only using for rotation, CLEANUP has negligable effect and should be disabled for speed.
 #define CLEANUP
 
 uniform sampler2D image;
-uniform vec2 uSize;
+uniform vec2 canvas_size;
+uniform vec2 texture_size;
 
 out vec4 fragColor;
 
@@ -118,26 +119,25 @@ float distToLine(vec2 testPt, vec2 pt1, vec2 pt2, vec2 dir) {
 vec4 slice_dist(
     vec2 point,
     vec2 mainDir,
-    vec2 px,
     vec2 point_dir,
-    vec2 start,
-    vec2 modifier
+    vec4 data[15]
 ){
-    vec4 ub = texture(image, (px + (start * modifier * vec2(0, 0)) * point_dir) / uSize);
-    vec4 u = texture(image, (px + (start * modifier * vec2(1, 0)) * point_dir) / uSize);
-    vec4 uf = texture(image, (px + (start * modifier * vec2(2, 0)) * point_dir) / uSize);
-    vec4 uff = texture(image, (px + (start * modifier * vec2(3, 0)) * point_dir) / uSize);
-    vec4 b = texture(image, (px + (start * modifier * vec2(0, 1)) * point_dir) / uSize);
-    vec4 c = texture(image, (px + (start * modifier * vec2(1, 1)) * point_dir) / uSize);
-    vec4 f = texture(image, (px + (start * modifier * vec2(2, 1)) * point_dir) / uSize);
-    vec4 ff = texture(image, (px + (start * modifier * vec2(3, 1)) * point_dir) / uSize);
-    vec4 db = texture(image, (px + (start * modifier * vec2(0, 2)) * point_dir) / uSize);
-    vec4 d = texture(image, (px + (start * modifier * vec2(1, 2)) * point_dir) / uSize);
-    vec4 df = texture(image, (px + (start * modifier * vec2(2, 2)) * point_dir) / uSize);
-    vec4 dff = texture(image, (px + (start * modifier * vec2(3, 2)) * point_dir) / uSize);
-    vec4 ddb = texture(image, (px + (start * modifier * vec2(0, 3)) * point_dir) / uSize);
-    vec4 dd = texture(image, (px + (start * modifier * vec2(1, 3)) * point_dir) / uSize);
-    vec4 ddf = texture(image, (px + (start * modifier * vec2(2, 3)) * point_dir) / uSize);
+
+    vec4 ub = data[0];
+    vec4 u = data[1];
+    vec4 uf = data[2];
+    vec4 uff = data[3];
+    vec4 b = data[4];
+    vec4 c = data[5];
+    vec4 f = data[6];
+    vec4 ff = data[7];
+    vec4 db = data[8];
+    vec4 d = data[9];
+    vec4 df = data[10];
+    vec4 dff = data[11];
+    vec4 ddb = data[12];
+    vec4 dd = data[13];
+    vec4 ddf = data[14];
 
     //clamped range prevents inacccurate identity (no change) result, feel free to disable if necessary
     #ifdef SLOPE
@@ -322,12 +322,13 @@ vec4 slice_dist(
 }
 
 void main() {
-    vec2 resolution = uSize;
+    vec2 resolution = texture_size;
     vec2 size = resolution.xy + 0.0001; //fix for some sort of rounding error
-    vec2 px = FlutterFragCoord().xy * size;
+    vec2 texture_coords = FlutterFragCoord().xy / canvas_size;
+    vec2 px = texture_coords.xy * size;
     vec2 local = fract(px);
     px = ceil(px);
-    
+
     vec2 point_dir = round(local) * 2.0 - 1.0;
     
     // Neighbor pixels
@@ -339,45 +340,39 @@ void main() {
     // [dbb]   [d b]   [ d ]   [d f]   [dff]
     //         [ddb]   [d d]   [ddf]
 
-    // vec4 uub = texture(image, (px + vec2(-1.0,-2.0) * point_dir) / size);
-    // vec4 uu = texture(image, (px + vec2( 0.0,-2.0) * point_dir) / size);
-    // vec4 uuf = texture(image, (px + vec2( 1.0,-2.0) * point_dir) / size);
+    vec4 uub = texture(image, (px + vec2(-1.0,-2.0) * point_dir) / size);
+    vec4 uu = texture(image, (px + vec2( 0.0,-2.0) * point_dir) / size);
+    vec4 uuf = texture(image, (px + vec2( 1.0,-2.0) * point_dir) / size);
 
-    // vec4 ubb = texture(image, (px + vec2(-2.0,-2.0) * point_dir) / size);
-    // vec4 ub = texture(image, (px + vec2(-1.0,-1.0) * point_dir) / size);
-    // vec4 u = texture(image, (px + vec2( 0.0,-1.0) * point_dir) / size);
-    // vec4 uf = texture(image, (px + vec2( 1.0,-1.0) * point_dir) / size);
-    // vec4 uff = texture(image, (px + vec2( 2.0,-1.0) * point_dir) / size);
+    vec4 ubb = texture(image, (px + vec2(-2.0,-2.0) * point_dir) / size);
+    vec4 ub = texture(image, (px + vec2(-1.0,-1.0) * point_dir) / size);
+    vec4 u = texture(image, (px + vec2( 0.0,-1.0) * point_dir) / size);
+    vec4 uf = texture(image, (px + vec2( 1.0,-1.0) * point_dir) / size);
+    vec4 uff = texture(image, (px + vec2( 2.0,-1.0) * point_dir) / size);
 
-    // vec4 bb = texture(image, (px + vec2(-2.0, 0.0) * point_dir) / size);
-    // vec4 b = texture(image, (px + vec2(-1.0, 0.0) * point_dir) / size);
+    vec4 bb = texture(image, (px + vec2(-2.0, 0.0) * point_dir) / size);
+    vec4 b = texture(image, (px + vec2(-1.0, 0.0) * point_dir) / size);
     vec4 c = texture(image, (px + vec2( 0.0, 0.0) * point_dir) / size);
-    // vec4 f = texture(image, (px + vec2( 1.0, 0.0) * point_dir) / size);
-    // vec4 ff = texture(image, (px + vec2( 2.0, 0.0) * point_dir) / size);
+    vec4 f = texture(image, (px + vec2( 1.0, 0.0) * point_dir) / size);
+    vec4 ff = texture(image, (px + vec2( 2.0, 0.0) * point_dir) / size);
 
-    // vec4 dbb = texture(image, (px + vec2(-2.0, 1.0) * point_dir) / size);
-    // vec4 db = texture(image, (px + vec2(-1.0, 1.0) * point_dir) / size);
-    // vec4 d = texture(image, (px + vec2( 0.0, 1.0) * point_dir) / size);
-    // vec4 df = texture(image, (px + vec2( 1.0, 1.0) * point_dir) / size);
-    // vec4 dff = texture(image, (px + vec2( 2.0, 1.0) * point_dir) / size);
+    vec4 dbb = texture(image, (px + vec2(-2.0, 1.0) * point_dir) / size);
+    vec4 db = texture(image, (px + vec2(-1.0, 1.0) * point_dir) / size);
+    vec4 d = texture(image, (px + vec2( 0.0, 1.0) * point_dir) / size);
+    vec4 df = texture(image, (px + vec2( 1.0, 1.0) * point_dir) / size);
+    vec4 dff = texture(image, (px + vec2( 2.0, 1.0) * point_dir) / size);
 
-    // vec4 ddb = texture(image, (px + vec2(-1.0, 2.0) * point_dir) / size);
-    // vec4 dd = texture(image, (px + vec2( 0.0, 2.0) * point_dir) / size);
-    // vec4 ddf = texture(image, (px + vec2( 1.0, 2.0) * point_dir) / size);
+    vec4 ddb = texture(image, (px + vec2(-1.0, 2.0) * point_dir) / size);
+    vec4 dd = texture(image, (px + vec2( 0.0, 2.0) * point_dir) / size);
+    vec4 ddf = texture(image, (px + vec2( 1.0, 2.0) * point_dir) / size);
 
     vec4 col = c;
 
     // c_orner, b_ack, and u_p slices
     // (slices from neighbor pixels will only ever reach these 3 quadrants
-    vec2 c_start = vec2(-1.0, -1.0);
-    vec2 c_mod = vec2(1.0, 1.0);
-    vec2 b_start = vec2(1.0, -1.0);
-    vec2 b_mod = vec2(-1.0, 1.0);
-    vec2 u_start = vec2(-1.0, 1.0);
-    vec2 u_mod = vec2(1.0, -1.0);
-    vec4 c_col = slice_dist(local, vec2( 1.0, 1.0), px, point_dir, size, c_start, c_mod);
-    vec4 b_col = slice_dist(local, vec2(-1.0, 1.0), px, point_dir, size, b_start, b_mod);
-    vec4 u_col = slice_dist(local, vec2( 1.0,-1.0), px, point_dir, size, u_start, u_mod);
+    vec4 c_col = slice_dist(local, vec2( 1.0, 1.0), point_dir, vec4[15](ub, u, uf, uff, b, c, f, ff, db, d, df, dff, ddb, dd, ddf));
+    vec4 b_col = slice_dist(local, vec2(-1.0, 1.0), point_dir, vec4[15](uf, u, ub, ubb, f, c, b, bb, df, d, db, dbb, ddf, dd, ddb));
+    vec4 u_col = slice_dist(local, vec2( 1.0,-1.0), point_dir, vec4[15](db, d, df, dff, b, c, f, ff, ub, u, uf, uff, uub, uu, uuf));
 
     if (c_col.r >= 0.0) {
         col = c_col;
@@ -389,6 +384,6 @@ void main() {
         col = u_col;
     }
 
-    // fragColor = texture(image, texture_coords.xy);
+    // fragColor = texture(image, px);
     fragColor = col;
 }
