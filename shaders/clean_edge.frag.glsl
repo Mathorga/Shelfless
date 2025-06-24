@@ -30,13 +30,6 @@ WARNING: Does not work as well with upscaled textures: use only on true size tex
 
 #include <flutter/runtime_effect.glsl>
 
-// Enables 2:1 slopes. otherwise only uses 45 degree slopes.
-#define SLOPE
-
-// Cleans up small detail slope transitions (if SLOPE is enabled)
-// if only using for rotation, CLEANUP has negligable effect and should be disabled for speed.
-#define CLEANUP
-
 uniform sampler2D image;
 uniform vec2 canvas_size;
 uniform vec2 texture_size;
@@ -51,9 +44,9 @@ vec3 highest_color = vec3(1.0, 1.0, 1.0);
 // How close two colors should be to be considered "similar".
 // can group shapes of visually similar colors, but creates
 // some artifacting and should be kept as low as possible.
-float similar_threshold = 0.0;
+float similar_threshold = 0.2;
 
-float line_width = 1.0;
+float line_width = 0.75;
 
 const float scale = 4.0;
 const mat3 yuv_matrix = mat3(
@@ -140,13 +133,8 @@ vec4 slice_dist(
     vec4 ddf = data[14];
 
     //clamped range prevents inacccurate identity (no change) result, feel free to disable if necessary
-    #ifdef SLOPE
-    float minWidth = 0.45;
-    float maxWidth = 1.142;
-    #else
     float minWidth = 0.0;
     float maxWidth = 1.4;
-    #endif
 
     float _line_width = max(minWidth, min(maxWidth, line_width));
     point = mainDir * (point - 0.5) + 0.5; //flip point
@@ -169,68 +157,7 @@ vec4 slice_dist(
     float dist = 1.0;
     bool flip = false;
     vec2 center = vec2(0.5,0.5);
-    
-    #ifdef SLOPE
-    if(similar3(f, d, db) && !similar3(f, d, b) && !similar(uf, db)){ //lower shallow 2:1 slant
-        if(similar(c, df) && higher(c, f)){ //single pixel wide diagonal, dont flip
-            
-        } else {
-            //priority edge cases
-            if(higher(c, f)){
-                flip = true; 
-            }
-            if(similar(u, f) && !similar(c, df) && !higher(c, u)){
-                flip = true; 
-            }
-        }
-        
-        if(flip){
-            dist = _line_width-distToLine(point, center+vec2(1.5, -1.0)*point_dir, center+vec2(-0.5, 0.0)*point_dir, -point_dir); //midpoints of neighbor two-pixel groupings
-        } else {
-            dist = distToLine(point, center+vec2(1.5, 0.0)*point_dir, center+vec2(-0.5, 1.0)*point_dir, point_dir); //midpoints of neighbor two-pixel groupings
-        }
-        
-        //cleanup slant transitions
-        #ifdef CLEANUP
-        if(!flip && similar(c, uf) && !(similar3(c, uf, uff) && !similar3(c, uf, ff) && !similar(d, uff))){ //shallow
-            float dist2 = distToLine(point, center+vec2(2.0, -1.0)*point_dir, center+vec2(-0.0, 1.0)*point_dir, point_dir); 
-            dist = min(dist, dist2);
-        }
-        #endif
-        
-        dist -= (_line_width/2.0);
-        return dist <= 0.0 ? ((cd(c,f) <= cd(c,d)) ? f : d) : vec4(-1.0);
-    } else if(similar3(uf, f, d) && !similar3(u, f, d) && !similar(uf, db)){ //forward steep 2:1 slant
-        if(similar(c, df) && higher(c, d)){ //single pixel wide diagonal, dont flip
-            
-        } else {
-            //priority edge cases
-            if(higher(c, d)){ 
-                flip = true; 
-            }
-            if(similar(b, d) && !similar(c, df) && !higher(c, d)){
-                flip = true; 
-            }
-        }
-        
-        if(flip){
-            dist = _line_width-distToLine(point, center+vec2(0.0, -0.5)*point_dir, center+vec2(-1.0, 1.5)*point_dir, -point_dir); //midpoints of neighbor two-pixel groupings
-        } else {
-            dist = distToLine(point, center+vec2(1.0, -0.5)*point_dir, center+vec2(0.0, 1.5)*point_dir, point_dir); //midpoints of neighbor two-pixel groupings
-        }
-        
-        //cleanup slant transitions
-        #ifdef CLEANUP
-        if(!flip && similar(c, db) && !(similar3(c, db, ddb) && !similar3(c, db, dd) && !similar(f, ddb))){ //steep
-            float dist2 = distToLine(point, center+vec2(1.0, 0.0)*point_dir, center+vec2(-1.0, 2.0)*point_dir, point_dir); 
-            dist = min(dist, dist2);
-        }
-        #endif
-        
-        dist -= (_line_width/2.0);
-        return dist <= 0.0 ? ((cd(c,f) <= cd(c,d)) ? f : d) : vec4(-1.0);
-    } else 
-    #endif
+
     if(similar(f, d)) { //45 diagonal
         if(similar(c, df) && higher(c, f)){ //single pixel diagonal along neighbors, dont flip
             if(!similar(c, dd) && !similar(c, ff)){ //line against triple color stripe edge case
@@ -255,69 +182,11 @@ vec4 slice_dist(
         } else {
             dist = distToLine(point, center+vec2(1.0, 0.0)*point_dir, center+vec2(0.0, 1.0)*point_dir, point_dir); //midpoints of corner neighbor pixels
         }
-        
-        //cleanup slant transitions
-        #ifdef SLOPE
-        #ifdef CLEANUP
-        if(!flip && similar3(c, uf, uff) && !similar3(c, uf, ff) && !similar(d, uff)){ //shallow
-            float dist2 = distToLine(point, center+vec2(1.5, 0.0)*point_dir, center+vec2(-0.5, 1.0)*point_dir, point_dir); 
-            dist = max(dist, dist2);
-        } 
-        
-        if(!flip && similar3(ddb, db, c) && !similar3(dd, db, c) && !similar(ddb, f)){ //steep
-            float dist2 = distToLine(point, center+vec2(1.0, -0.5)*point_dir, center+vec2(0.0, 1.5)*point_dir, point_dir); 
-            dist = max(dist, dist2);
-        }
-        #endif
-        #endif
-        
+
         dist -= (_line_width/2.0);
         return dist <= 0.0 ? ((cd(c,f) <= cd(c,d)) ? f : d) : vec4(-1.0);
     } 
-    #ifdef SLOPE
-    else if(similar3(ff, df, d) && !similar3(ff, df, c) && !similar(uff, d)){ //far corner of shallow slant 
-        
-        if(similar(f, dff) && higher(f, ff)){ //single pixel wide diagonal, dont flip
-            
-        } else {
-            //priority edge cases
-            if(higher(f, ff)){ 
-                flip = true; 
-            }
-            if(similar(uf, ff) && !similar(f, dff) && !higher(f, uf)){
-                flip = true; 
-            }
-        }
-        if(flip){
-            dist = _line_width-distToLine(point, center+vec2(1.5+1.0, -1.0)*point_dir, center+vec2(-0.5+1.0, 0.0)*point_dir, -point_dir); //midpoints of neighbor two-pixel groupings
-        } else {
-            dist = distToLine(point, center+vec2(1.5+1.0, 0.0)*point_dir, center+vec2(-0.5+1.0, 1.0)*point_dir, point_dir); //midpoints of neighbor two-pixel groupings
-        }
-        
-        dist -= (_line_width/2.0);
-        return dist <= 0.0 ? ((cd(f,ff) <= cd(f,df)) ? ff : df) : vec4(-1.0);
-    } else if(similar3(f, df, dd) && !similar3(c, df, dd) && !similar(f, ddb)){ //far corner of steep slant
-        if(similar(d, ddf) && higher(d, dd)){ //single pixel wide diagonal, dont flip
-            
-        } else {
-            //priority edge cases
-            if(higher(d, dd)){ 
-                flip = true; 
-            }
-            if(similar(db, dd) && !similar(d, ddf) && !higher(d, dd)){
-                flip = true; 
-            }
-        }
 
-        if(flip){
-            dist = _line_width-distToLine(point, center+vec2(0.0, -0.5+1.0)*point_dir, center+vec2(-1.0, 1.5+1.0)*point_dir, -point_dir); //midpoints of neighbor two-pixel groupings
-        } else {
-            dist = distToLine(point, center+vec2(1.0, -0.5+1.0)*point_dir, center+vec2(0.0, 1.5+1.0)*point_dir, point_dir); //midpoints of neighbor two-pixel groupings
-        }
-        dist -= (_line_width/2.0);
-        return dist <= 0.0 ? ((cd(d,df) <= cd(d,dd)) ? df : dd) : vec4(-1.0);
-    }
-    #endif
     return vec4(-1.0);
 }
 
