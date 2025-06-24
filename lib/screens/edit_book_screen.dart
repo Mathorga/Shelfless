@@ -16,6 +16,7 @@ import 'package:shelfless/utils/shared_prefs_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
+import 'package:shelfless/widgets/book_cover_image_widget.dart';
 import 'package:shelfless/widgets/double_choice_dialog.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
@@ -132,35 +133,31 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                 height: Themes.thumbnailSizeMedium,
                                 child: GestureDetector(
                                   onTap: _pickImage,
-                                  child: _book.raw.cover != null
-                                      ? ClipRRect(
-                                          borderRadius: BorderRadius.circular(Themes.radiusMedium),
-                                          child: Image.memory(
-                                            _book.raw.cover!,
-                                            fit: BoxFit.cover,
-                                            isAntiAlias: false,
-                                            filterQuality: FilterQuality.none,
-                                          ),
-                                        )
-                                      : Card(
-                                          color: ShelflessColors.mainContentActive,
-                                          child: Center(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(Themes.spacingSmall),
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                spacing: Themes.spacingSmall,
-                                                children: [
-                                                  Icon(Icons.image_rounded),
-                                                  Text(
-                                                    strings.bookInfoNoImageSelected,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(Themes.radiusMedium),
+                                    child: BookCoverImageWidget(
+                                      book: _book,
+                                      child: Card(
+                                        color: ShelflessColors.mainContentActive,
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(Themes.spacingSmall),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              spacing: Themes.spacingSmall,
+                                              children: [
+                                                Icon(Icons.image_rounded),
+                                                Text(
+                                                  strings.bookInfoNoImageSelected,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
 
