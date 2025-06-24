@@ -1,14 +1,15 @@
 #include <flutter/runtime_effect.glsl>
 
-out vec4 fragColor;
-uniform vec2 uSize;
-uniform sampler2D image;
-uniform float iTime;
-
 const int ML = 0;
 const float THRESHOLD = 0.001;
 const float AA_SCALE = 11.0;
 const float DIST = 4.0;
+
+uniform sampler2D image;
+uniform vec2 canvas_size;
+uniform vec2 texture_size;
+
+out vec4 fragColor;
 
 bool eq(vec4 col1, vec4 col2) {
     vec4 diff = col1 - col2;
@@ -30,9 +31,10 @@ vec4 diag(vec4 sum, vec2 uv, vec2 point1, vec2 point2, vec4 color1, vec4 color2,
 
 void main() {
     float LINE_THICKNESS = 0.4;
-    vec2 uv = FlutterFragCoord().xy / uSize;
-    vec2 ip = uv;
+    vec2 uv = FlutterFragCoord().xy / canvas_size;
     // ip = uv * (1.0 / TEXTURE_PIXEL_SIZE);
+    vec2 ip = uv;
+    // vec2 ip = uv * texture_size;
 
     /*
         lu	u	ru
@@ -41,15 +43,15 @@ void main() {
     */
 
     vec4 c = texture(image, ip);
-    vec4 l = texture(image, ip + (vec2(-DIST, 0.0) / uSize));
-    vec4 d = texture(image, ip + (vec2(0.0, DIST) / uSize));
-    vec4 r = texture(image, ip + (vec2(DIST, 0.0) / uSize));
-    vec4 u = texture(image, ip + (vec2(0.0, -DIST) / uSize));
+    vec4 l = texture(image, ip + (vec2(-DIST, 0.0) / canvas_size));
+    vec4 d = texture(image, ip + (vec2(0.0, DIST) / canvas_size));
+    vec4 r = texture(image, ip + (vec2(DIST, 0.0) / canvas_size));
+    vec4 u = texture(image, ip + (vec2(0.0, -DIST) / canvas_size));
 
-    vec4 ld = texture(image, ip + (vec2(-DIST, DIST) / uSize));
-    vec4 lu = texture(image, ip + (vec2(-DIST, -DIST) / uSize));
-    vec4 rd = texture(image, ip + (vec2(DIST, DIST) / uSize));
-    vec4 ru = texture(image, ip + (vec2(DIST, -DIST) / uSize));
+    vec4 ld = texture(image, ip + (vec2(-DIST, DIST) / canvas_size));
+    vec4 lu = texture(image, ip + (vec2(-DIST, -DIST) / canvas_size));
+    vec4 rd = texture(image, ip + (vec2(DIST, DIST) / canvas_size));
+    vec4 ru = texture(image, ip + (vec2(DIST, -DIST) / canvas_size));
 
     vec4 s = c;
 
@@ -60,16 +62,16 @@ void main() {
     if (eq(rd, c)) mask.z = 0;
     if (eq(ru, c)) mask.w = 0;
 
-    if (mask.x == 1) s = diag(s, ip, vec2(-DIST, 0) / uSize, vec2(0, DIST) / uSize, l, d, LINE_THICKNESS);
-    if (mask.y == 1) s = diag(s, ip, vec2(0, -DIST) / uSize, vec2(-DIST, 0) / uSize, l, u, LINE_THICKNESS);
-    if (mask.z == 1) s = diag(s, ip, vec2(0, DIST) / uSize, vec2(DIST, 0) / uSize, r, d, LINE_THICKNESS);
-    if (mask.w == 1) s = diag(s, ip, vec2(DIST, 0) / uSize, vec2(0, -DIST) / uSize, r, u, LINE_THICKNESS);
+    if (mask.x == 1) s = diag(s, ip, vec2(-DIST, 0) / canvas_size, vec2(0, DIST) / canvas_size, l, d, LINE_THICKNESS);
+    if (mask.y == 1) s = diag(s, ip, vec2(0, -DIST) / canvas_size, vec2(-DIST, 0) / canvas_size, l, u, LINE_THICKNESS);
+    if (mask.z == 1) s = diag(s, ip, vec2(0, DIST) / canvas_size, vec2(DIST, 0) / canvas_size, r, d, LINE_THICKNESS);
+    if (mask.w == 1) s = diag(s, ip, vec2(DIST, 0) / canvas_size, vec2(0, -DIST) / canvas_size, r, u, LINE_THICKNESS);
 
     vec4 f = c;
-    f = diag(f, ip, vec2(-DIST, 0) / uSize, vec2(0, DIST) / uSize, l, d, LINE_THICKNESS);
-    f = diag(f, ip, vec2(0, -DIST) / uSize, vec2(-DIST, 0) / uSize, l, u, LINE_THICKNESS);
-    f = diag(f, ip, vec2(0, DIST) / uSize, vec2(DIST, 0) / uSize, r, d, LINE_THICKNESS);
-    f = diag(f, ip, vec2(DIST, 0) / uSize, vec2(0, -DIST) / uSize, r, u, LINE_THICKNESS);
+    f = diag(f, ip, vec2(-DIST, 0) / canvas_size, vec2(0, DIST) / canvas_size, l, d, LINE_THICKNESS);
+    f = diag(f, ip, vec2(0, -DIST) / canvas_size, vec2(-DIST, 0) / canvas_size, l, u, LINE_THICKNESS);
+    f = diag(f, ip, vec2(0, DIST) / canvas_size, vec2(DIST, 0) / canvas_size, r, d, LINE_THICKNESS);
+    f = diag(f, ip, vec2(DIST, 0) / canvas_size, vec2(0, -DIST) / canvas_size, r, u, LINE_THICKNESS);
 
     fragColor = (s + f) / 2.0;
 }

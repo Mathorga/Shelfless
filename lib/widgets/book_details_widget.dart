@@ -49,7 +49,7 @@ class BookDetailsWidget extends StatelessWidget {
             },
             blendMode: BlendMode.dstOut,
             child: Blur(
-              blur: Themes.blurStrengthHigh,
+              blur: Themes.blurStrengthXHigh,
               colorOpacity: Themes.blurOpacity,
               blurColor: Colors.transparent,
               child: SizedBox(

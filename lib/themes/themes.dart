@@ -34,7 +34,8 @@ class Themes {
   static const double foregroundHighlightOpacity = 0.4;
   static const double blurOpacity = 0.1;
 
-  static const double blurStrengthHigh = 20.0;
+  static const double blurStrengthXHigh = 100.0;
+  static const double blurStrengthHigh = 50.0;
   static const double blurStrengthMedium = 20.0;
 
   // Default durations.
