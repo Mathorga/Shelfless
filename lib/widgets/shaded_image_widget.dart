@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 
 enum SpecialUniform {
   canvasWidth,
-  canvasHeight,
-  textureWidth,
-  textureHeight;
+  canvasHeight;
 }
 
 class ShaderPainter extends CustomPainter {
@@ -44,8 +42,6 @@ class ShaderPainter extends CustomPainter {
             break;
           case SpecialUniform.canvasHeight:
             shader.setFloat(i, size.height);
-            break;
-          default:
             break;
         }
         continue;
@@ -92,6 +88,7 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
   }
 
   Future<void> loadShader() async {
+    // TODO Read from shared preferences when the dedicated user setting is released.
     ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/clean_edge.frag.glsl");
     _shader = program.fragmentShader();
     setState(() {

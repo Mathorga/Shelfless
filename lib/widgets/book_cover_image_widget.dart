@@ -60,9 +60,6 @@ class BookCoverImageWidget extends StatelessWidget {
     }
 
     // Display the book's cover image otherwise.
-    return ShadedImageWidget(
-      imageData: book.raw.cover!,
-      applyFilter: false,
-    );
+    return ShadedImageWidget(imageData: book.raw.cover!);
   }
 }
