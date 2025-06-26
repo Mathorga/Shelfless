@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:shelfless/models/book.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
+import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/widgets/shaded_image_widget.dart';
 
 /// Displays the provided book's cover image as per app settings.
@@ -14,27 +17,52 @@ class BookCoverImageWidget extends StatelessWidget {
     this.child,
   });
 
+  Widget _buildBackground(Widget child) {
+    return Center(
+      child: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: ColoredBox(
+          color: ShelflessColors.mainBackground.withAlpha(0x7F),
+          child: child,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Only display child or default image if the provided book has no cover image.
     if (book.raw.cover == null) {
       return child ??
-          Image.asset(
-            "assets/images/covers/flower.png",
-            fit: BoxFit.cover,
-            isAntiAlias: true,
-            filterQuality: FilterQuality.none,
+          FutureBuilder(
+            // TODO Read this from shared preferences when the user setting is enabled.
+            future: rootBundle.load("assets/images/covers/flower.png"),
+            builder: (BuildContext context, AsyncSnapshot<ByteData> snapshot) {
+              if (snapshot.hasError) {
+                return _buildBackground(
+                  Icon(
+                    Icons.broken_image_rounded,
+                    size: Themes.iconSizeXLarge,
+                  ),
+                );
+              }
+
+              if (!snapshot.hasData) {
+                return _buildBackground(CircularProgressIndicator());
+              }
+
+              // Read raw data from asset.
+              final Uint8List data = snapshot.data!.buffer.asUint8List();
+              return ShadedImageWidget(imageData: data);
+            },
           );
     }
 
+    // Display the book's cover image otherwise.
     return ShadedImageWidget(
       imageData: book.raw.cover!,
       applyFilter: false,
     );
-    // return Image.memory(
-    //   book.raw.cover!,
-    //   fit: BoxFit.cover,
-    //   isAntiAlias: false,
-    //   filterQuality: FilterQuality.none,
-    // );
   }
 }
