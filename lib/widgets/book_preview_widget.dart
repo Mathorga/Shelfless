@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/author.dart';
+import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -9,7 +10,7 @@ import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/material_utils.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/view_mode.dart';
-import 'package:shelfless/widgets/book_genres_box_widget.dart';
+import 'package:shelfless/widgets/colored_border_widget.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 import 'package:shelfless/widgets/delete_dialog.dart';
 
@@ -34,6 +35,12 @@ class BookPreviewWidget extends StatelessWidget {
         .nonNulls
         .toList();
 
+    // Prepare colors with custom alpha value.
+    final List<Color> genreColors = book.genreIds.map((int genreId) {
+      final RawGenre? genre = LibraryContentProvider.instance.genres[genreId];
+      return genre != null ? Color(genre.color) : Colors.transparent;
+    }).toList();
+
     return GestureDetector(
       onTap: onTap,
       onLongPressStart: (LongPressStartDetails details) {
@@ -57,8 +64,8 @@ class BookPreviewWidget extends StatelessWidget {
       child: switch (viewMode) {
         // List view.
         ViewMode.list => Card(
-            child: BookGenresBoxWidget(
-              book: book,
+            child: ColoredBorderWidget(
+              colors: genreColors,
               child: Padding(
                 padding: const EdgeInsets.all(Themes.spacingSmall),
                 child: Row(

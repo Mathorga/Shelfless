@@ -20,6 +20,7 @@ import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/view_mode.dart';
@@ -64,36 +65,54 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
     // Try and read viewmode from shared preferences.
     _readViewMode();
 
-    // Start listening to changes in library content.
-    LibraryContentProvider.instance.addListener(
-      () {
-        if (context.mounted) {
-          // Here setState must be called regardless of the internal state, otherwise changes will be noticed only on library change.
-          setState(() {
-            final RawLibrary? providerLibrary = LibraryContentProvider.instance.library;
+    // Start listening to changes in shared preferences.
+    SharedPrefsHelper.instance.addListener(_onSharedPrefUpdated);
 
-            if (providerLibrary == null) {
-              library = null;
-            } else {
-              // Make sure the provider's library is not null and it's not the one the user's already seeing.
-              if (library?.raw != providerLibrary) {
-                library = LibraryPreview(
-                  raw: providerLibrary,
-                );
-              }
-            }
-          });
-        }
-      },
-    );
+    // Start listening to changes in library content.
+    LibraryContentProvider.instance.addListener(_onLibraryContentUpdated);
 
     LibraryContentProvider.instance.openLibrary(rawLibrary: library?.raw);
+  }
+
+  void _onSharedPrefUpdated() {
+    if (context.mounted) {
+      setState(() {});
+    }
+  }
+
+  void _onLibraryContentUpdated() {
+    if (context.mounted) {
+      // Here setState must be called regardless of the internal state, otherwise changes will be noticed only on library change.
+      setState(() {
+        final RawLibrary? providerLibrary = LibraryContentProvider.instance.library;
+
+        if (providerLibrary == null) {
+          library = null;
+        } else {
+          // Make sure the provider's library is not null and it's not the one the user's already seeing.
+          if (library?.raw != providerLibrary) {
+            library = LibraryPreview(
+              raw: providerLibrary,
+            );
+          }
+        }
+      });
+    }
   }
 
   void _readViewMode() async {
     final int? storedId = (await SharedPreferences.getInstance()).getInt(SharedPrefsKeys.viewMode);
 
     if (storedId != null) setState(() => viewMode = ViewMode.values[storedId]);
+  }
+
+  @override
+  void dispose() {
+    // Remove listeners.
+    LibraryContentProvider.instance.removeListener(_onSharedPrefUpdated);
+    SharedPrefsHelper.instance.removeListener(_onLibraryContentUpdated);
+
+    super.dispose();
   }
 
   @override
@@ -168,7 +187,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                     );
                   },
                 ),
-            
+
                 // View mode change action.
                 IconButton(
                   onPressed: () async {
@@ -176,7 +195,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                       // Rotate ViewMode values.
                       viewMode = ViewMode.values[(viewMode.index + 1) % ViewMode.values.length];
                     });
-            
+
                     // Store viewmode in shared preferences.
                     (await SharedPreferences.getInstance()).setInt(SharedPrefsKeys.viewMode, viewMode.index);
                   },
@@ -188,7 +207,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                     },
                   ),
                 ),
-            
+
                 // More actions.
                 PopupMenuButton<LibraryAction>(
                   itemBuilder: (BuildContext context) {
@@ -204,7 +223,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                           ],
                         ),
                       ),
-            
+
                       // Library-related actions.
                       if (LibraryContentProvider.instance.editable) ...[
                         // Edit button.
@@ -218,7 +237,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                             ],
                           ),
                         ),
-            
+
                         // Only let the user delete a library if it's not the last one.
                         if (LibrariesProvider.instance.libraries.length > 1)
                           PopupMenuItem(
@@ -246,7 +265,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                   },
                   onSelected: (LibraryAction value) async {
                     final NavigatorState navigator = Navigator.of(context);
-            
+
                     switch (value) {
                       case LibraryAction.sortBy:
                         showBarModalBottomSheet(
@@ -283,10 +302,10 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                         break;
                       case LibraryAction.share:
                         if (library?.raw.id == null) return;
-            
+
                         // Extract the library.
                         final Map<String, String> libraryStrings = await DatabaseHelper.instance.serializeLibrary(library!.raw.id!);
-            
+
                         // Compress the library files to a single .slz file.
                         final Archive archive = Archive();
                         libraryStrings.entries
@@ -297,7 +316,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                                 ))
                             .forEach((ArchiveFile file) => archive.addFile(file));
                         final Uint8List encodedArchive = ZipEncoder().encodeBytes(archive);
-            
+
                         // Share the library to other apps.
                         Share.shareXFiles(
                           [
@@ -321,7 +340,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                 ),
               ],
             ),
-            
+
             if (books.isNotEmpty)
               SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: leftRightPadding),
@@ -368,7 +387,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                         ),
                       ),
               ),
-            
+
             if (books.isEmpty)
               SliverFillRemaining(
                 hasScrollBody: false,
@@ -376,7 +395,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                   child: Text(strings.noBooksFound),
                 ),
               ),
-            
+
             // Space left for the FAB.
             SliverToBoxAdapter(
               // TODO Check whether adding the device botto inset also works on Android, since it's designed for iOS.
@@ -391,7 +410,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
           ? FloatingActionButton(
               onPressed: () {
                 final NavigatorState navigator = Navigator.of(context);
-    
+
                 // Navigate to EditBookScreen
                 navigator.push(MaterialPageRoute(builder: (BuildContext context) => EditBookScreen()));
               },

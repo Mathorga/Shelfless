@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shelfless/utils/assets.dart';
 import 'package:shelfless/utils/config.dart';
 import 'package:shelfless/utils/text_capitalization_extension.dart';
+import 'package:shelfless/widgets/colored_border_widget.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
@@ -55,30 +58,119 @@ class _TextCapitalizationSettingState extends State<_TextCapitalizationSetting> 
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: TextCapitalization.values
-                  .map((TextCapitalization element) => Card(
-                        color: ShelflessColors.mainContentActive,
-                        child: InkWell(
-                          onTap: () async {
-                            // Prefetch handlers before async gaps.
-                            final NavigatorState navigator = Navigator.of(context);
+                  .map(
+                    (TextCapitalization element) => Card(
+                      color: ShelflessColors.mainContentActive,
+                      child: InkWell(
+                        onTap: () async {
+                          // Prefetch handlers before async gaps.
+                          final NavigatorState navigator = Navigator.of(context);
 
-                            // Store the setting.
-                            await SharedPrefsHelper.instance.data.setInt(SharedPrefsKeys.titlesCapitalization, element.index);
-                            setState(() {});
+                          // Store the setting.
+                          setState(() {
+                            SharedPrefsHelper.instance.setValue(SharedPrefsKeys.titlesCapitalization, element.index);
+                          });
 
-                            // Pop the dialog.
-                            navigator.pop();
-                          },
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingMedium),
-                              child: Text(element.label),
-                            ),
+                          // Pop the dialog.
+                          navigator.pop();
+                        },
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.all(Themes.spacingMedium),
+                            child: Text(element.label),
                           ),
                         ),
-                      ))
+                      ),
+                    ),
+                  )
                   .toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// List tile for default book cover image. Separated for performance.
+class _DefaultCoverImageSetting extends StatefulWidget {
+  const _DefaultCoverImageSetting();
+
+  @override
+  State<_DefaultCoverImageSetting> createState() => __DefaultCoverImageSettingState();
+}
+
+class __DefaultCoverImageSettingState extends State<_DefaultCoverImageSetting> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        spacing: Themes.spacingMedium,
+        children: [
+          Expanded(
+            child: Text(strings.settingDefaultCover),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(Themes.radiusSmall),
+            child: SizedBox(
+              width: Themes.spacingXXLarge,
+              height: Themes.spacingXXLarge,
+              child: Image.asset(
+                Assets.defaultCovers[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.defaultBookCoverImage) ?? Config.defaultBookCoverImage],
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.none,
+              ),
+            ),
+          ),
+        ],
+      ),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text(strings.settingDefaultCover),
+            content: SizedBox(
+              width: Themes.maxContentWidth,
+              child: GridView.count(
+                crossAxisCount: 3,
+                physics: Themes.scrollPhysics,
+                mainAxisSpacing: Themes.spacingMedium,
+                crossAxisSpacing: Themes.spacingMedium,
+                shrinkWrap: true,
+                children: Assets.defaultCovers
+                    .mapIndexed(
+                      (int index, String imagePath) => GestureDetector(
+                        onTap: () {
+                          final NavigatorState navigator = Navigator.of(context);
+
+                          // Store the user selected cover.
+                          setState(() {
+                            SharedPrefsHelper.instance.setLoudValue(SharedPrefsKeys.defaultBookCoverImage, index);
+                          });
+
+                          navigator.pop();
+                        },
+                        child: ColoredBorderWidget(
+                          colors: index == SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.defaultBookCoverImage)
+                              ? [
+                                  ShelflessColors.primary,
+                                  ShelflessColors.secondary,
+                                ]
+                              : [],
+                          thickness: Themes.spacingSmall,
+                          borderRadius: Themes.radiusMedium,
+                          child: Image.asset(
+                            imagePath,
+                            fit: BoxFit.cover,
+                            filterQuality: FilterQuality.none,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
           ),
         );
@@ -122,33 +214,7 @@ class SettingsScreen extends StatelessWidget {
                       ),
 
                       // Default coverless book image.
-                      UnreleasedFeatureWidget(
-                        child: ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            spacing: Themes.spacingMedium,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  strings.settingDefaultCover,
-                                ),
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(Themes.radiusSmall),
-                                child: SizedBox(
-                                  width: Themes.spacingXXLarge,
-                                  height: Themes.spacingXXLarge,
-                                  child: Image.asset(
-                                    "assets/images/covers/flower.png",
-                                    fit: BoxFit.cover,
-                                    filterQuality: FilterQuality.none,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      _DefaultCoverImageSetting(),
 
                       // Titles' text capitalization.
                       _TextCapitalizationSetting(),
@@ -253,7 +319,7 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         onTap: () {
                           // Open an email to the support address.
-                          launchUrl(Uri.parse("mailto:michelettiluka@gmail.com?subject=Shelfless%20Support"));
+                          launchUrl(Uri.parse(Config.supportEmailAddress));
                         },
                       ),
                     ],
@@ -270,7 +336,7 @@ class SettingsScreen extends StatelessWidget {
                 child: DefaultTextStyle(
                   style: theme.textTheme.labelMedium?.copyWith(color: ShelflessColors.onMainContentInactive) ?? TextStyle(),
                   child: FutureBuilder(
-                    future: rootBundle.loadString("pubspec.yaml"),
+                    future: rootBundle.loadString(Assets.pubspec),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData) return Text("...");
 

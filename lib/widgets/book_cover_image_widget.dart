@@ -4,6 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/assets.dart';
+import 'package:shelfless/utils/config.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/widgets/shaded_image_widget.dart';
 
 /// Displays the provided book's cover image as per app settings.
@@ -36,8 +40,8 @@ class BookCoverImageWidget extends StatelessWidget {
     if (book.raw.cover == null) {
       return child ??
           FutureBuilder(
-            // TODO Read this from shared preferences when the user setting is enabled.
-            future: rootBundle.load("assets/images/covers/flower.png"),
+            // Read the default book cover from asset as UInt8List. The default cover is stored in shared prefs.
+            future: rootBundle.load(Assets.defaultCovers[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.defaultBookCoverImage) ?? Config.defaultBookCoverImage]),
             builder: (BuildContext context, AsyncSnapshot<ByteData> snapshot) {
               if (snapshot.hasError) {
                 return _buildBackground(

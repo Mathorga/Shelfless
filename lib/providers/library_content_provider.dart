@@ -509,13 +509,13 @@ class LibraryContentProvider with ChangeNotifier {
   }
 
   /// Sorts books according to the provided sort order.
-  void sortBooksBy(SortOrder order) {
+  void sortBooksBy(SortOrder order) async {
     if (order == sortOrder) return;
 
     sortOrder = order;
 
     // Store the selected sort order to ahsred preferences.
-    SharedPrefsHelper.instance.data.setInt(SharedPrefsKeys.sortOrder, order.index);
+    SharedPrefsHelper.instance.setValue(SharedPrefsKeys.sortOrder, order.index);
 
     _intSortBooks();
 

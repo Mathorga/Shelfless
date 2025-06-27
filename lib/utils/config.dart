@@ -10,6 +10,12 @@ class Config {
   /// Starting value for titles capitalization.
   static const TextCapitalization defaultTitlesCapitalization = TextCapitalization.words;
 
+  /// Starting value for default book cover image.
+  static const int defaultBookCoverImage = 2;
+
+  /// Email address for support emails.
+  static const String supportEmailAddress = "mailto:michelettiluka@gmail.com?subject=Shelfless%20Support";
+
   // ###############################################################################################################################################################################
   // Features.
   // ###############################################################################################################################################################################
