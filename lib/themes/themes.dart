@@ -61,7 +61,8 @@ class Themes {
   // Thumbnail sizes.
   static const double thumbnailSizeXSmall = 50.0;
   static const double thumbnailSizeSmall = 100.0;
-  static const double thumbnailSizeMedium = 200.0;
+  static const double thumbnailSizeMedium = 150.0;
+  static const double thumbnailSizeLarge = 200.0;
 
   // Snackbar sizes.
   static const double snackBarSizeSmall = 200.0;
@@ -72,6 +73,9 @@ class Themes {
   static const double fontSizeSmall = 12.0;
   static const double fontSizeMedium = 16.0;
   static const double fontSizeLarge = 24.0;
+  static const double fontSizeXLarge = 36.0;
+  static const double fontSizeXXLarge = 48.0;
+  static const double fontSizeXXXLarge = 64.0;
 
   static const double actionSize = spacingFAB + spacingLarge;
 
@@ -113,6 +117,7 @@ class Themes {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Themes.radiusMedium),
       ),
+      // TODO Move to themes.
       elevation: 6.0,
     ),
     popupMenuTheme: PopupMenuThemeData(
@@ -135,6 +140,7 @@ class Themes {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
+        backgroundColor: ShelflessColors.lightBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Themes.radiusMedium),
         ),
@@ -143,6 +149,7 @@ class Themes {
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
         borderSide: const BorderSide(
+          // TODO Move to themes.
           width: 2.0,
         ),
         borderRadius: BorderRadius.circular(Themes.radiusMedium),
@@ -152,7 +159,7 @@ class Themes {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Themes.radiusMedium),
       ),
-      backgroundColor: ShelflessColors.lightBackground,
+      backgroundColor: ShelflessColors.mainBackground,
     ),
   );
 

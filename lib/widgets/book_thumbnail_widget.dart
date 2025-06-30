@@ -27,8 +27,8 @@ class BookThumbnailWidget extends StatelessWidget {
     }).toList();
 
     return ColoredBorderWidget(
-      width: Themes.thumbnailSizeMedium,
-      height: Themes.thumbnailSizeMedium,
+      width: Themes.thumbnailSizeLarge,
+      height: Themes.thumbnailSizeLarge,
       borderRadius: Themes.radiusLarge,
       colors: genreColors,
       child: Stack(
