@@ -83,7 +83,6 @@ class BookDetailsWidget extends StatelessWidget {
                       Center(
                         child: BookThumbnailWidget(
                           book: book,
-                          showOutBanner: true,
                         ),
                       ),
                     ],
@@ -288,11 +287,14 @@ class BookDetailsWidget extends StatelessWidget {
         foregroundColor: ShelflessColors.onMainContentActive,
         backgroundColor: ShelflessColors.mainContentInactive,
       ),
-      child: Padding(
+      child: Container(
+        height: Themes.actionSize,
+        alignment: Alignment.center,
         padding: const EdgeInsets.all(Themes.spacingMedium),
         child: Text(
           label,
-          maxLines: 1,
+          maxLines: 2,
+          textAlign: TextAlign.center,
         ),
       ),
     );

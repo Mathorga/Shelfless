@@ -107,7 +107,7 @@ class MultipleSelectionWidget extends StatelessWidget {
           },
           child: Icon(
             Icons.close_rounded,
-            color: ShelflessColors.error,
+            color: ShelflessColors.errorLight,
           ),
         ),
       ],

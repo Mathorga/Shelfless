@@ -3,22 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
-import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_cover_image_widget.dart';
 import 'package:shelfless/widgets/colored_border_widget.dart';
 
 /// Displays a book thumbnail image.
 class BookThumbnailWidget extends StatelessWidget {
   final Book book;
-  final bool showOutBanner;
   final Widget? overlay;
 
   const BookThumbnailWidget({
     super.key,
     required this.book,
-    this.showOutBanner = false,
     this.overlay,
   });
 
@@ -63,16 +59,10 @@ class BookThumbnailWidget extends StatelessWidget {
         ),
         if (book.raw.out)
           Positioned(
-            top: 0.0,
-            left: 0.0,
-            right: 0.0,
-            child: Container(
-              width: double.infinity,
-              height: Themes.spacingXLarge,
-              color: ShelflessColors.secondary,
-              child: Center(
-                child: Text(strings.outLabel),
-              ),
+            bottom: Themes.spacingSmall,
+            right: Themes.spacingSmall,
+            child: Icon(
+              Icons.do_disturb_alt_rounded,
             ),
           ),
       ],

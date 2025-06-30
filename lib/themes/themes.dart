@@ -45,6 +45,13 @@ class Themes {
   static const Duration durationMedium = Duration(seconds: 2);
   static const Duration durationLong = Duration(seconds: 5);
 
+  // Default alpha values.
+  static const int alphaNone = 0x00;
+  static const int alphaLow = 0x23;
+  static const int alphaMedium = 0x7F;
+  static const int alphaHigh = 0xAA;
+  static const int alphaFull = 0xFF;
+
   // Default max width, used for displaying columns and vertical lists on large screens.
   static const double maxContentWidth = 500.0;
 

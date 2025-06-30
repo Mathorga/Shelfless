@@ -172,7 +172,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                         _book.raw.cover = null;
                                       });
                                     },
-                                    style: IconButton.styleFrom(backgroundColor: ShelflessColors.error),
+                                    style: IconButton.styleFrom(backgroundColor: ShelflessColors.errorLight),
                                     icon: Icon(Icons.close_rounded),
                                   ),
                                 ),

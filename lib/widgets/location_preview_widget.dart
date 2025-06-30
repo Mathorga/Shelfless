@@ -131,7 +131,7 @@ class LocationPreviewWidget extends StatelessWidget {
                                   navigator.pop();
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: ShelflessColors.error,
+                                  backgroundColor: ShelflessColors.errorLight,
                                   iconColor: ShelflessColors.onMainContentActive,
                                   foregroundColor: ShelflessColors.onMainContentActive,
                                 ),

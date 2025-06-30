@@ -141,7 +141,7 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
                               navigator.pop(true);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: ShelflessColors.error,
+                              backgroundColor: ShelflessColors.errorLight,
                               iconColor: ShelflessColors.onMainContentActive,
                               foregroundColor: ShelflessColors.onMainContentActive,
                             ),

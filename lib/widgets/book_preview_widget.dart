@@ -5,6 +5,7 @@ import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_book_screen.dart';
+import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/material_utils.dart';
@@ -56,7 +57,7 @@ class BookPreviewWidget extends StatelessWidget {
         ).then((ElementAction? action) {
           if (action == null) return;
           if (!context.mounted) return;
-    
+
           _onActionSelected(context, action);
         });
       },
@@ -66,38 +67,40 @@ class BookPreviewWidget extends StatelessWidget {
         ViewMode.list => Card(
             child: ColoredBorderWidget(
               colors: genreColors,
-              child: Padding(
-                padding: const EdgeInsets.all(Themes.spacingSmall),
-                child: Row(
-                  spacing: Themes.spacingMedium,
-                  children: [
-                    if (book.raw.out)
-                      Text(
-                        "[${strings.outLabel}]",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
+              child: AnimatedContainer(
+                decoration: BoxDecoration(
+                  color: book.raw.out ? ShelflessColors.mainBackground.withAlpha(Themes.alphaLow) : ShelflessColors.mainBackground.withAlpha(Themes.alphaMedium),
+                ),
+                duration: Themes.durationXXShort,
+                child: Padding(
+                  padding: const EdgeInsets.all(Themes.spacingSmall),
+                  child: Row(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      if (book.raw.out) ...[
+                        Icon(Icons.do_disturb_alt_rounded),
+                      ],
+                      Expanded(
+                        child: Text(
+                          book.raw.title,
+                          // TODO Move to themes.
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Text(book.raw.title),
-                        ],
-                      ),
-                    ),
-                    _buildPopupMenuButton(context),
-                  ],
+                      _buildPopupMenuButton(context),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-    
+
         // Compact grid view.
         ViewMode.compactGrid => Stack(
             children: [
               BookThumbnailWidget(
                 book: book,
-                showOutBanner: true,
                 overlay: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -117,7 +120,7 @@ class BookPreviewWidget extends StatelessWidget {
               )
             ],
           ),
-    
+
         // Extended grid view.
         ViewMode.extendedGrid => Column(
             spacing: Themes.spacingMedium,
@@ -125,7 +128,6 @@ class BookPreviewWidget extends StatelessWidget {
             children: [
               BookThumbnailWidget(
                 book: book,
-                showOutBanner: true,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Themes.spacingSmall),
@@ -147,7 +149,7 @@ class BookPreviewWidget extends StatelessWidget {
                             maxLines: 2,
                             textAlign: TextAlign.start,
                           ),
-    
+
                           // Authors.
                           if (authors.isNotEmpty)
                             Text(

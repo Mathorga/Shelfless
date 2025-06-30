@@ -55,13 +55,12 @@ class ItStrings implements Strings {
   @override String get bookInfo => "Scheda Libro";
   @override String get firstName => "Nome";
   @override String get lastName => "Cognome";
-  @override String get outLabel => "PRESTATO";
   @override String get bookEdit => "Modifica";
   @override String get bookMoveTo => "Sposta in";
   @override String get bookMoveToNoLibrary => "Non ci sono altre librerie, non puoi spostare libri al momento.";
   @override String get bookMoveToDescription => "Scegli una libreria in cui spostare il libro:";
-  @override String get bookMarkOutAction => "Imposta come assente";
-  @override String get bookMarkInAction => "Imposta come rientrato";
+  @override String get bookMarkOutAction => "Imposta non disponibile";
+  @override String get bookMarkInAction => "Imposta disponibile";
   @override String get bookDeleteAction => "Elimina";
   @override String get bookDeleted => "Libro cancellato";
   @override String get deleteBookTitle => "Eliminazione";
