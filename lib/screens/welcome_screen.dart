@@ -9,7 +9,6 @@ import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/utils.dart';
 import 'package:shelfless/widgets/app_name_widget.dart';
 import 'package:shelfless/widgets/double_choice_widget.dart';
-import 'package:shelfless/widgets/unreleased_feature_widget.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -114,22 +113,20 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                secondOption: UnreleasedFeatureWidget(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: Themes.spacingSmall,
-                    children: [
-                      Icon(
-                        Icons.download_rounded,
-                        size: Themes.iconSizeLarge,
-                      ),
-                      Text(
-                        // TODO Move to strings.
-                        "Import an existing library",
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
+                secondOption: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: Themes.spacingSmall,
+                  children: [
+                    Icon(
+                      Icons.download_rounded,
+                      size: Themes.iconSizeLarge,
+                    ),
+                    Text(
+                      // TODO Move to strings.
+                      "Import an existing library",
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
               ),
             ),

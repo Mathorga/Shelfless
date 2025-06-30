@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
-import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/screens/library_content_screen.dart';
 import 'package:shelfless/screens/welcome_screen.dart';
 import 'package:shelfless/themes/themes.dart';
