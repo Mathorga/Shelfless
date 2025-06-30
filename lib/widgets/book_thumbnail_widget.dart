@@ -31,8 +31,8 @@ class BookThumbnailWidget extends StatelessWidget {
     }).toList();
 
     return ColoredBorderWidget(
-      width: 200.0,
-      height: 200.0,
+      width: Themes.thumbnailSizeMedium,
+      height: Themes.thumbnailSizeMedium,
       borderRadius: Themes.radiusLarge,
       colors: genreColors,
       child: Stack(
@@ -57,7 +57,7 @@ class BookThumbnailWidget extends StatelessWidget {
           child: AnimatedOpacity(
             opacity: book.raw.out ? Themes.unavailableFeatureOpacity : 1.0,
             curve: Curves.easeInCubic,
-            duration: Duration(milliseconds: 200),
+            duration: Themes.durationXXShort,
             child: BookCoverImageWidget(book: book),
           ),
         ),

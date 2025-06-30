@@ -39,6 +39,7 @@ class Themes {
   static const double blurStrengthMedium = 20.0;
 
   // Default durations.
+  static const Duration durationXXShort = Duration(milliseconds: 200);
   static const Duration durationXShort = Duration(milliseconds: 500);
   static const Duration durationShort = Duration(seconds: 1);
   static const Duration durationMedium = Duration(seconds: 2);
