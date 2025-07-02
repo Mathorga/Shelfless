@@ -8,6 +8,7 @@ import 'package:shelfless/screens/settings_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/app_name_widget.dart';
 import 'package:shelfless/widgets/libraries_list_widget.dart';
 
 class DrawerContentWidget extends StatelessWidget {
@@ -16,7 +17,6 @@ class DrawerContentWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EdgeInsets screenPadding = MediaQuery.paddingOf(context);
-    final ThemeData theme = Theme.of(context);
 
     return Column(
       spacing: Themes.spacingSmall,
@@ -27,20 +27,7 @@ class DrawerContentWidget extends StatelessWidget {
         ),
 
         // App name.
-        ShaderMask(
-          shaderCallback: (Rect rect) => LinearGradient(
-            colors: [
-              ShelflessColors.secondary,
-              ShelflessColors.primary,
-            ],
-          ).createShader(rect),
-          child: Text(
-            Themes.appName,
-            style: theme.textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+        AppNameWidget(),
 
         Expanded(
           child: SingleChildScrollView(
