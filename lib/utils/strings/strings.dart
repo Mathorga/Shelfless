@@ -8,14 +8,19 @@ enum AppLocales {
   it,
   system;
 
-  String get label => switch(this) {
-    AppLocales.en => "English",
-    AppLocales.it => "Italiano",
-    AppLocales.system => "System default",
-  };
+  String get label => switch (this) {
+        AppLocales.en => "English",
+        AppLocales.it => "Italiano",
+        AppLocales.system => "System default",
+      };
 }
 
 abstract class Strings {
+  String get welcomeHeader;
+  String get welcomeSubtitle;
+  String get welcomeSuggestion;
+  String get welcomeActionCreate;
+  String get welcomeActionImport;
   String get settings;
   String get setitngsSectionTitle;
   String get settingDefaultCover;

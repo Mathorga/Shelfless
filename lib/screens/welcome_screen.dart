@@ -6,6 +6,7 @@ import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/database_helper.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/utils.dart';
 import 'package:shelfless/widgets/app_name_widget.dart';
 import 'package:shelfless/widgets/double_choice_widget.dart';
@@ -29,8 +30,7 @@ class WelcomeScreen extends StatelessWidget {
                 spacing: Themes.spacingMedium,
                 children: [
                   Text(
-                    // TODO Move to strings.
-                    "Welcome to",
+                    strings.welcomeHeader,
                     style: TextStyle(fontSize: Themes.fontSizeXLarge),
                   ),
 
@@ -42,14 +42,12 @@ class WelcomeScreen extends StatelessWidget {
                   ),
 
                   // Welcome message.
-                  // TODO Move to strings.
                   Text(
-                    "Your personal library catalogue",
+                    strings.welcomeSubtitle,
                     style: TextStyle(fontSize: Themes.fontSizeMedium),
                   ),
                   Text(
-                    // TODO Move to strings.
-                    "Start by creating a new library or importing an existing one from file",
+                    strings.welcomeSuggestion,
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -104,8 +102,7 @@ class WelcomeScreen extends StatelessWidget {
                       size: Themes.iconSizeLarge,
                     ),
                     Text(
-                      // TODO Move to strings.
-                      "Create a new library",
+                      strings.welcomeActionCreate,
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -119,8 +116,7 @@ class WelcomeScreen extends StatelessWidget {
                       size: Themes.iconSizeLarge,
                     ),
                     Text(
-                      // TODO Move to strings.
-                      "Import an existing library",
+                      strings.welcomeActionImport,
                       textAlign: TextAlign.center,
                     ),
                   ],
