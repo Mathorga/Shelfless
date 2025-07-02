@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:shelfless/providers/libraries_provider.dart';
 
+import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/database_helper.dart';
@@ -72,9 +72,6 @@ class WelcomeScreen extends StatelessWidget {
                   ));
                 },
                 onSecondOptionSelected: () async {
-                  // Prefetch handlers before async gaps.
-                  final NavigatorState navigator = Navigator.of(context);
-
                   final Map<String, String>? libraryStrings;
 
                   try {
@@ -96,7 +93,7 @@ class WelcomeScreen extends StatelessWidget {
                   }
 
                   // Pop dialog.
-                  navigator.pop();
+                  // navigator.pop();
                 },
                 firstOption: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
