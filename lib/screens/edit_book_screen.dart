@@ -129,8 +129,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           child: Stack(
                             children: [
                               SizedBox(
-                                width: Themes.thumbnailSizeMedium,
-                                height: Themes.thumbnailSizeMedium,
+                                width: Themes.thumbnailSizeLarge,
+                                height: Themes.thumbnailSizeLarge,
                                 child: GestureDetector(
                                   onTap: _pickImage,
                                   child: ClipRRect(

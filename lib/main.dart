@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
-import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/screens/library_content_screen.dart';
+import 'package:shelfless/screens/welcome_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/shared_prefs_helper.dart';
@@ -52,7 +52,8 @@ class Shelfless extends StatelessWidget {
           });
 
           // TODO Show an introductory library creation wizard instead of a bare EditLibraryScreen.
-          if (LibrariesProvider.instance.libraries.isEmpty) return EditLibraryScreen();
+          // if (LibrariesProvider.instance.libraries.isEmpty) return EditLibraryScreen();
+          if (LibrariesProvider.instance.libraries.isEmpty) return WelcomeScreen();
 
           // Try and read the latest open library from shared preferences.
           LibraryPreview library = LibrariesProvider.instance.libraries.first;
