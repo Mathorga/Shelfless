@@ -15,7 +15,7 @@ class Config {
   static const int defaultBookCoverImage = 2;
 
   /// Starting value for default app locale (language).
-  static int defaultAppLocale = AppLocales.system.index;
+  static int defaultAppLocale = AppLocale.system.index;
 
   /// Email address for support emails.
   static const String supportEmailAddress = "mailto:michelettiluka@gmail.com?subject=Shelfless%20Support";

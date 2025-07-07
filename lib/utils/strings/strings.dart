@@ -5,15 +5,15 @@ import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/en_strings.dart';
 import 'package:shelfless/utils/strings/it_strings.dart';
 
-enum AppLocales {
+enum AppLocale {
   en,
   it,
   system;
 
   String get label => switch (this) {
-        AppLocales.en => "English",
-        AppLocales.it => "Italiano",
-        AppLocales.system => "System default",
+        AppLocale.en => "English",
+        AppLocale.it => "Italiano",
+        AppLocale.system => "System default",
       };
 }
 
@@ -165,14 +165,14 @@ abstract class Strings {
 
 Strings get strings {
   // Read setting from shared preferences.
-  final int localePref = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? AppLocales.system.index;
+  final int localePref = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? AppLocale.system.index;
 
-  switch (AppLocales.values[localePref]) {
-    case AppLocales.it:
+  switch (AppLocale.values[localePref]) {
+    case AppLocale.it:
       return ItStrings();
-    case AppLocales.en:
+    case AppLocale.en:
       return EnStrings();
-    case AppLocales.system:
+    case AppLocale.system:
       final String locale = Platform.localeName;
 
       if (locale.contains("en")) {

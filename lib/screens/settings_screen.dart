@@ -200,7 +200,7 @@ class _AppLanguageSettingState extends State<_AppLanguageSetting> {
             child: Text(strings.settingAppLanguage),
           ),
           Text(
-            AppLocales.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? Config.defaultAppLocale].label,
+            AppLocale.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? Config.defaultAppLocale].label,
             style: settingValueTextStyle,
           ),
         ],
@@ -215,9 +215,9 @@ class _AppLanguageSettingState extends State<_AppLanguageSetting> {
               child: ListView(
                 physics: Themes.scrollPhysics,
                 shrinkWrap: true,
-                children: AppLocales.values
+                children: AppLocale.values
                     .mapIndexed(
-                      (int index, AppLocales value) => GestureDetector(
+                      (int index, AppLocale value) => GestureDetector(
                         onTap: () {
                           final NavigatorState navigator = Navigator.of(context);
 
