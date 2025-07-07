@@ -1,5 +1,5 @@
 enum ViewMode {
   extendedGrid,
   compactGrid,
-  list,
+  list;
 }

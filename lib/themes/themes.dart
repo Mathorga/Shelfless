@@ -70,7 +70,8 @@ class Themes {
   static const double snackBarSizeLarge = 500.0;
 
   // Font sizes.
-  static const double fontSizeSmall = 12.0;
+  static const double fontSizeXSmall = 12.0;
+  static const double fontSizeSmall = 14.0;
   static const double fontSizeMedium = 16.0;
   static const double fontSizeLarge = 24.0;
   static const double fontSizeXLarge = 36.0;

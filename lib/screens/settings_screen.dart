@@ -1,10 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shelfless/utils/assets.dart';
-import 'package:shelfless/utils/config.dart';
-import 'package:shelfless/utils/text_capitalization_extension.dart';
-import 'package:shelfless/widgets/colored_border_widget.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
@@ -12,10 +8,18 @@ import 'package:yaml/yaml.dart';
 import 'package:shelfless/screens/privacy_policy_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/assets.dart';
+import 'package:shelfless/utils/config.dart';
 import 'package:shelfless/utils/shared_prefs_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
-import 'package:shelfless/widgets/unreleased_feature_widget.dart';
+import 'package:shelfless/utils/text_capitalization_extension.dart';
+import 'package:shelfless/widgets/colored_border_widget.dart';
+
+const TextStyle settingValueTextStyle = TextStyle(
+  color: ShelflessColors.onMainContentInactive,
+  fontSize: Themes.fontSizeSmall,
+);
 
 /// List tile for text capitalization. Separated for performance.
 class _TextCapitalizationSetting extends StatefulWidget {
@@ -42,9 +46,7 @@ class _TextCapitalizationSettingState extends State<_TextCapitalizationSetting> 
 
               return Text(
                 TextCapitalization.values[titlesCapitalizationIndex].label,
-                style: TextStyle(
-                  color: ShelflessColors.onMainContentInactive,
-                ),
+                style: settingValueTextStyle,
               );
             },
           ),
@@ -60,7 +62,6 @@ class _TextCapitalizationSettingState extends State<_TextCapitalizationSetting> 
               children: TextCapitalization.values
                   .map(
                     (TextCapitalization element) => Card(
-                      color: ShelflessColors.mainContentActive,
                       child: InkWell(
                         onTap: () async {
                           // Prefetch handlers before async gaps.
@@ -98,10 +99,10 @@ class _DefaultCoverImageSetting extends StatefulWidget {
   const _DefaultCoverImageSetting();
 
   @override
-  State<_DefaultCoverImageSetting> createState() => __DefaultCoverImageSettingState();
+  State<_DefaultCoverImageSetting> createState() => _DefaultCoverImageSettingState();
 }
 
-class __DefaultCoverImageSettingState extends State<_DefaultCoverImageSetting> {
+class _DefaultCoverImageSettingState extends State<_DefaultCoverImageSetting> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -179,6 +180,72 @@ class __DefaultCoverImageSettingState extends State<_DefaultCoverImageSetting> {
   }
 }
 
+/// List tile for default book cover image. Separated for performance.
+class _AppLanguageSetting extends StatefulWidget {
+  const _AppLanguageSetting();
+
+  @override
+  State<_AppLanguageSetting> createState() => _AppLanguageSettingState();
+}
+
+class _AppLanguageSettingState extends State<_AppLanguageSetting> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        spacing: Themes.spacingMedium,
+        children: [
+          Expanded(
+            child: Text(strings.settingAppLanguage),
+          ),
+          Text(
+            AppLocales.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? Config.defaultAppLocale].label,
+            style: settingValueTextStyle,
+          ),
+        ],
+      ),
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text(strings.settingAppLanguage),
+            content: SizedBox(
+              width: Themes.maxContentWidth,
+              child: ListView(
+                physics: Themes.scrollPhysics,
+                shrinkWrap: true,
+                children: AppLocales.values
+                    .mapIndexed(
+                      (int index, AppLocales value) => GestureDetector(
+                        onTap: () {
+                          final NavigatorState navigator = Navigator.of(context);
+
+                          // Store the user selected cover.
+                          setState(() {
+                            SharedPrefsHelper.instance.setLoudValue(SharedPrefsKeys.appLocale, index);
+                          });
+
+                          navigator.pop();
+                        },
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(Themes.spacingMedium),
+                            child: Text(value.label),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -208,7 +275,7 @@ class SettingsScreen extends StatelessWidget {
                           strings.setitngsSectionTitle,
                           style: TextStyle(
                             color: ShelflessColors.onMainContentInactive,
-                            fontSize: Themes.fontSizeSmall,
+                            fontSize: Themes.fontSizeXSmall,
                           ),
                         ),
                       ),
@@ -220,33 +287,7 @@ class SettingsScreen extends StatelessWidget {
                       _TextCapitalizationSetting(),
 
                       // App language.
-                      UnreleasedFeatureWidget(
-                        child: ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            spacing: Themes.spacingMedium,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  strings.settingAppLanguage,
-                                ),
-                              ),
-                              Builder(
-                                builder: (BuildContext context) {
-                                  int appLanguageIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? AppLocales.system.index;
-
-                                  return Text(
-                                    AppLocales.values[appLanguageIndex].label,
-                                    style: TextStyle(
-                                      color: ShelflessColors.onMainContentInactive,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      _AppLanguageSetting(),
                     ],
                   ),
 
@@ -260,7 +301,7 @@ class SettingsScreen extends StatelessWidget {
                           strings.legalsSectionTitle,
                           style: TextStyle(
                             color: ShelflessColors.onMainContentInactive,
-                            fontSize: Themes.fontSizeSmall,
+                            fontSize: Themes.fontSizeXSmall,
                           ),
                         ),
                       ),

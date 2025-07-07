@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:shelfless/utils/shaders.dart';
 
 enum SpecialUniform {
   canvasWidth,
@@ -89,7 +90,7 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
 
   Future<void> loadShader() async {
     // TODO Read from shared preferences when the dedicated user setting is released.
-    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset("shaders/clean_edge.frag.glsl");
+    ui.FragmentProgram program = await ui.FragmentProgram.fromAsset(Shaders.cleanEdge);
     _shader = program.fragmentShader();
     setState(() {
       // trigger a repaint

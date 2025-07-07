@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 /// Utility class: holds all app settings and controls for customization.
 class Config {
@@ -12,6 +13,9 @@ class Config {
 
   /// Starting value for default book cover image.
   static const int defaultBookCoverImage = 2;
+
+  /// Starting value for default app locale (language).
+  static int defaultAppLocale = AppLocales.system.index;
 
   /// Email address for support emails.
   static const String supportEmailAddress = "mailto:michelettiluka@gmail.com?subject=Shelfless%20Support";
