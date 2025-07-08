@@ -6,7 +6,7 @@ At Shelfless, we respect your privacy and are committed to protecting any person
 
 1. Data Collection
 
-We want to reassure you that [Your App Name] does not collect any personal information or data from you when you use our app. We do not request, store, or process any personally identifiable information such as your name, email address, phone number, or any other data.
+We want to reassure you that Shelfless does not collect any personal information or data from you when you use our app. We do not request, store, or process any personally identifiable information such as your name, email address, phone number, or any other data.
 
 2. Data Sharing
 

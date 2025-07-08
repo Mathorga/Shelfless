@@ -1,6 +1,6 @@
 Informativa sulla privacy per Shelfless
 
-Data di entrata in vigore: [Inserisci data]
+Data di entrata in vigore: 1 Marzo 2025
 
 In Shelfless, rispettiamo la tua privacy e ci impegniamo a proteggere qualsiasi informazione personale che condividi con noi. La presente Informativa sulla privacy spiega come gestiamo eventuali dati relativi all’utilizzo della nostra applicazione mobile.
 
