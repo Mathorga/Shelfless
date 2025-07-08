@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 
 /// Displays the full privacy policy in a dedicated screen.
@@ -28,8 +30,26 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
 
   /// Fetches the privacy policy file from assets and updates the view.
   Future<void> _fetchSourceFile() async {
-    final String locale = Platform.localeName;
-    final String policyFilePath = locale.contains("it") ? "assets/privacy_policy_it.md" : "assets/privacy_policy_en.md";
+    // final String locale = Platform.localeName;
+    final int localePref = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? AppLocale.system.index;
+    final AppLocale locale = AppLocale.values[localePref];
+    String policyFilePath = "assets/privacy_policy_en.md";
+    switch (locale) {
+      case AppLocale.it:
+        policyFilePath = "assets/privacy_policy_it.md";
+        break;
+      case AppLocale.en:
+        policyFilePath = "assets/privacy_policy_en.md";
+        break;
+      case AppLocale.system:
+        final String locale = Platform.localeName;
+
+        if (locale.contains("it")) {
+          policyFilePath = "assets/privacy_policy_it.md";
+        }
+        break;
+    }
+    ;
 
     _data = await rootBundle.loadString(policyFilePath);
     setState(() {});
@@ -47,12 +67,12 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                 child: CircularProgressIndicator(),
               )
             : Padding(
-              padding: const EdgeInsets.all(Themes.spacingMedium),
-              child: MarkdownWidget(
+                padding: const EdgeInsets.all(Themes.spacingMedium),
+                child: MarkdownWidget(
                   physics: Themes.scrollPhysics,
                   data: _data!,
                 ),
-            ),
+              ),
       ),
     );
   }
