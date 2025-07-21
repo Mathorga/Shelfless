@@ -34,9 +34,20 @@ class Themes {
   static const double foregroundHighlightOpacity = 0.4;
   static const double blurOpacity = 0.1;
 
+  // Blur strengths.
   static const double blurStrengthXHigh = 100.0;
   static const double blurStrengthHigh = 50.0;
   static const double blurStrengthMedium = 20.0;
+
+  // Border side thicknesses.
+  static const double borderSideThick = 3.0;
+  static const double borderSideMedium = 2.0;
+  static const double borderSideThin = 1.0;
+
+  // Elevation values.
+  static const double elevationHigh = 9.0;
+  static const double elevationMedium = 6.0;
+  static const double elevationLow = 3.0;
 
   // Default durations.
   static const Duration durationXXShort = Duration(milliseconds: 200);
@@ -90,14 +101,14 @@ class Themes {
   );
 
   static final ThemeData _baseTheme = ThemeData(
-    scaffoldBackgroundColor: ShelflessColors.mainBackground,
+    scaffoldBackgroundColor: ShelflessColors.backgroundMedium,
     colorScheme: ColorScheme.dark(
       primary: ShelflessColors.primary,
       secondary: ShelflessColors.secondary,
-      surface: ShelflessColors.mainBackground,
+      surface: ShelflessColors.backgroundMedium,
     ),
     appBarTheme: const AppBarTheme(
-      color: ShelflessColors.mainBackground,
+      color: ShelflessColors.backgroundMedium,
       elevation: 0.0,
       scrolledUnderElevation: 0.0,
       centerTitle: true,
@@ -109,17 +120,16 @@ class Themes {
       thickness: Themes.spacingXXSmall,
     ),
     searchBarTheme: SearchBarThemeData(
-      backgroundColor: WidgetStatePropertyAll(ShelflessColors.lightBackground),
+      backgroundColor: WidgetStatePropertyAll(ShelflessColors.backgroundLight),
     ),
     cardTheme: CardThemeData(
-      color: ShelflessColors.lightBackground,
+      color: ShelflessColors.backgroundLight,
       clipBehavior: Clip.antiAlias,
-      surfaceTintColor: ShelflessColors.lightBackground,
+      surfaceTintColor: ShelflessColors.backgroundLight,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Themes.radiusMedium),
       ),
-      // TODO Move to themes.
-      elevation: 6.0,
+      elevation: elevationMedium,
     ),
     popupMenuTheme: PopupMenuThemeData(
       color: ShelflessColors.mainContentInactive,
@@ -141,7 +151,7 @@ class Themes {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: ShelflessColors.lightBackground,
+        backgroundColor: ShelflessColors.backgroundXLight,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(Themes.radiusMedium),
         ),
@@ -150,8 +160,7 @@ class Themes {
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
         borderSide: const BorderSide(
-          // TODO Move to themes.
-          width: 2.0,
+          width: borderSideMedium,
         ),
         borderRadius: BorderRadius.circular(Themes.radiusMedium),
       ),
@@ -160,7 +169,7 @@ class Themes {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Themes.radiusMedium),
       ),
-      backgroundColor: ShelflessColors.mainBackground,
+      backgroundColor: ShelflessColors.backgroundMedium,
     ),
   );
 

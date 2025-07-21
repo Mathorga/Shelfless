@@ -23,7 +23,7 @@ class EditSectionWidget extends StatelessWidget {
     return SizedBox(
       width: min(mediaQuery.size.width, Themes.maxContentWidth),
       child: Card(
-        color: ShelflessColors.lightBackground,
+        color: ShelflessColors.backgroundLight,
         child: Padding(
           padding: const EdgeInsets.all(Themes.spacingMedium),
           child: Column(

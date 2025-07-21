@@ -69,7 +69,7 @@ class BookPreviewWidget extends StatelessWidget {
               colors: genreColors,
               child: AnimatedContainer(
                 decoration: BoxDecoration(
-                  color: book.raw.out ? ShelflessColors.mainBackground.withAlpha(Themes.alphaLow) : ShelflessColors.mainBackground.withAlpha(Themes.alphaMedium),
+                  color: book.raw.out ? ShelflessColors.backgroundMedium.withAlpha(Themes.alphaLow) : ShelflessColors.backgroundMedium.withAlpha(Themes.alphaMedium),
                 ),
                 duration: Themes.durationXXShort,
                 child: Padding(

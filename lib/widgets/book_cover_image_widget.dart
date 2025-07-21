@@ -27,7 +27,7 @@ class BookCoverImageWidget extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         child: ColoredBox(
-          color: ShelflessColors.mainBackground.withAlpha(0x7F),
+          color: ShelflessColors.backgroundMedium.withAlpha(0x7F),
           child: child,
         ),
       ),
