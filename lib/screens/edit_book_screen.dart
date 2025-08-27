@@ -8,6 +8,7 @@ import 'package:image/image.dart' as img;
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/screens/crop_cover_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/config.dart';
@@ -398,6 +399,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
   void _pickImage() async {
     if (!mounted) return;
 
+    // Prefetch handlers before async gaps.
+    final NavigatorState navigator = Navigator.of(context);
+
     // Let the user select the image source.
     ImageSource? imageSource = await showDialog<ImageSource>(
       context: context,
@@ -439,12 +443,19 @@ class _EditBookScreenState extends State<EditBookScreen> {
     if (imageSource == null) return;
 
     // Pick file and make sure one is actually picked.
-    // TODO Before actually returning the image, allow the user to correctly frame the image.
     final XFile? pickedFile = await ImagePicker().pickImage(source: imageSource);
+
     if (pickedFile == null) return;
 
     // Decode the file as image and make sure it is a known image format.
     final Uint8List fileData = await pickedFile.readAsBytes();
+
+    // TODO Before actually returning the image, allow the user to correctly frame the image.
+    await navigator.push(MaterialPageRoute(
+      builder: (BuildContext context) => CropCoverScreen(
+        image: Image.memory(fileData),
+      ),
+    ));
 
     img.Image? image;
 
