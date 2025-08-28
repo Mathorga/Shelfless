@@ -13,7 +13,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/view_mode.dart';
 import 'package:shelfless/widgets/colored_border_widget.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
-import 'package:shelfless/widgets/delete_dialog.dart';
+import 'package:shelfless/dialogs/delete_dialog.dart';
 
 class BookPreviewWidget extends StatelessWidget {
   final Book book;
