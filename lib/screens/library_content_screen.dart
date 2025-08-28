@@ -25,7 +25,7 @@ import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/view_mode.dart';
 import 'package:shelfless/widgets/book_preview_widget.dart';
-import 'package:shelfless/widgets/delete_dialog.dart';
+import 'package:shelfless/dialogs/delete_dialog.dart';
 import 'package:shelfless/widgets/drawer_content_widget.dart';
 import 'package:shelfless/widgets/library_filter_widget.dart';
 import 'package:shelfless/widgets/library_sort_order_list_widget.dart';

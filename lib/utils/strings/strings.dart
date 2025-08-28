@@ -154,7 +154,10 @@ abstract class Strings {
   String get search;
   String get genericInfo;
   String get genericWarning;
-  String get genericError;
+  String get genericErrorTitle;
+  String get genericErrorContent;
+  String get unexpectedErrorContent;
+  String get imageReadErrorContent;
   String get unreleasedFeatureAlert;
   String get coverDescription;
   String textCapitalizationSentences();

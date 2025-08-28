@@ -381,7 +381,7 @@ class SettingsScreen extends StatelessWidget {
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (!snapshot.hasData) return Text("...");
 
-                      if (snapshot.hasError) return Text(strings.genericError);
+                      if (snapshot.hasError) return Text(strings.genericErrorContent);
 
                       final String pubspecString = snapshot.data;
                       final YamlMap pubspecData = loadYaml(pubspecString);

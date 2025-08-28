@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 
+import 'package:shelfless/dialogs/error_dialog.dart';
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/models/raw_book.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
+import 'package:shelfless/screens/crop_cover_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/config.dart';
@@ -17,7 +19,7 @@ import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/book_cover_image_widget.dart';
-import 'package:shelfless/widgets/double_choice_dialog.dart';
+import 'package:shelfless/dialogs/double_choice_dialog.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
 import 'package:shelfless/widgets/location_selection_widget.dart';
@@ -398,6 +400,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
   void _pickImage() async {
     if (!mounted) return;
 
+    // Prefetch handlers before async gaps.
+    final NavigatorState navigator = Navigator.of(context);
+
     // Let the user select the image source.
     ImageSource? imageSource = await showDialog<ImageSource>(
       context: context,
@@ -439,12 +444,22 @@ class _EditBookScreenState extends State<EditBookScreen> {
     if (imageSource == null) return;
 
     // Pick file and make sure one is actually picked.
-    // TODO Before actually returning the image, allow the user to correctly frame the image.
     final XFile? pickedFile = await ImagePicker().pickImage(source: imageSource);
+
     if (pickedFile == null) return;
 
     // Decode the file as image and make sure it is a known image format.
-    final Uint8List fileData = await pickedFile.readAsBytes();
+    Uint8List fileData = await pickedFile.readAsBytes();
+
+    // Before actually returning the image, allow the user to correctly frame the image.
+    final Uint8List? croppedImageData = await navigator.push(MaterialPageRoute(
+      builder: (BuildContext context) => CropCoverScreen(
+        image: Image.memory(fileData),
+      ),
+    ));
+
+    // Use the cropped image if possible.
+    fileData = croppedImageData ?? fileData;
 
     img.Image? image;
 
@@ -457,13 +472,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
     if (image == null) {
       if (mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text(strings.genericError),
-            content: Text("Something went wrong while reading your image, try and pick another one."),
-          ),
-        );
+        ErrorDialog(
+          message: strings.imageReadErrorContent,
+        ).show(context);
       }
       return;
     }
