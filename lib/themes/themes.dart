@@ -69,6 +69,11 @@ class Themes {
   // Default max dialog height, used for limiting a dialog's height on tall screens.
   static const double maxDialogHeight = 400.0;
 
+  // Button widths.
+  static const double buttonWidthSmall = 100.0;
+  static const double buttonWidthLarge = 150.0;
+  static const double buttonWidthMax = 200.0;
+
   // Thumbnail sizes.
   static const double thumbnailSizeXSmall = 50.0;
   static const double thumbnailSizeSmall = 100.0;

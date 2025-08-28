@@ -14,7 +14,7 @@ import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/utils.dart';
-import 'package:shelfless/widgets/double_choice_dialog.dart';
+import 'package:shelfless/dialogs/double_choice_dialog.dart';
 
 class LibrariesListWidget extends StatefulWidget {
   const LibrariesListWidget({super.key});
