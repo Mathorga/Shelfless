@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
+import 'package:intl/intl.dart';
 
 import 'package:shelfless/dialogs/error_dialog.dart';
 import 'package:shelfless/models/book.dart';
@@ -204,7 +205,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     // Publish year.
                     EditSectionWidget(
                       children: [
-                        Text(strings.bookInfoPublishDate),
+                        Text(strings.bookInfoPublishYear),
                         Themes.spacer,
                         GestureDetector(
                           onTap: () async {
@@ -238,6 +239,76 @@ class _EditBookScreenState extends State<EditBookScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.all(Themes.spacingMedium),
                                 child: Center(child: Text((_book.raw.publishYear).toString())),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Acquisition date.
+                    EditSectionWidget(
+                      children: [
+                        // TODO Move to strings!
+                        Text("Date acquired"),
+                        Themes.spacer,
+                        GestureDetector(
+                          onTap: () async {
+                            final DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: _book.raw.dateAcquired ?? DateTime.now(),
+                              firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
+                              lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
+                            );
+
+                            if (pickedDate == null) return;
+
+                            setState(() {
+                              _book.raw.dateAcquired = pickedDate;
+                            });
+                          },
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Card(
+                              color: ShelflessColors.mainContentActive,
+                              child: Padding(
+                                padding: const EdgeInsets.all(Themes.spacingMedium),
+                                child: Center(child: Text(_book.raw.dateAcquired != null ? DateFormat.yMd().format(_book.raw.dateAcquired!) : "-")),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Read date.
+                    EditSectionWidget(
+                      children: [
+                        // TODO Move to strings!
+                        Text("Date read"),
+                        Themes.spacer,
+                        GestureDetector(
+                          onTap: () async {
+                            final DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: _book.raw.dateRead ?? DateTime.now(),
+                              firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
+                              lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
+                            );
+
+                            if (pickedDate == null) return;
+
+                            setState(() {
+                              _book.raw.dateRead = pickedDate;
+                            });
+                          },
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Card(
+                              color: ShelflessColors.mainContentActive,
+                              child: Padding(
+                                padding: const EdgeInsets.all(Themes.spacingMedium),
+                                child: Center(child: Text(_book.raw.dateRead != null ? DateFormat.yMd().format(_book.raw.dateRead!) : "-")),
                               ),
                             ),
                           ),

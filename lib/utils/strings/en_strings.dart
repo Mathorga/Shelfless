@@ -74,7 +74,7 @@ class EnStrings implements Strings {
   @override String get bookInfoNoImageSelected => "no image selected";
   @override String get bookInfoLibrary => "Library";
   @override String get bookInfoAuthors => "Authors";
-  @override String get bookInfoPublishDate => "Publish date";
+  @override String get bookInfoPublishYear => "Publish year";
   @override String get bookInfoGenres => "Genres";
   @override String get bookInfoPublisher => "Publisher";
   @override String get bookInfoPublishers => "Publishers";

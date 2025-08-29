@@ -47,7 +47,7 @@ class DatabaseHelper {
     // Open the database and store the reference.
     _db = await openDatabase(
       "${await getDatabasesPath()}/shelfless.db",
-      version: 1,
+      version: 2,
       onCreate: (Database db, int version) async {
         // Perform upgrades from version 1 to the current version.
         for (int v = 1; v <= version; v++) {
@@ -70,15 +70,17 @@ class DatabaseHelper {
   static Future<void> upgradeDb(Database db, int targetVersion) async {
     switch (targetVersion) {
       case 1:
-        await upgradeVersion1(db);
+        await _v1(db);
         break;
+      case 2:
+        await _v2(db);
       default:
         break;
     }
   }
 
   /// Performs database definition for version 1.
-  static Future<void> upgradeVersion1(Database db) async {
+  static Future<void> _v1(Database db) async {
     // Libraries table.
     await db.execute(
       """
@@ -172,6 +174,13 @@ class DatabaseHelper {
       )
       """,
     );
+  }
+
+  /// Performs database alters for version 2.
+  static Future<void> _v2(Database db) async {
+    // Add date columns to books table.
+    await db.execute("ALTER TABLE $booksTable ADD COLUMN ${bookGenreRelTable}_date_acquired TEXT");
+    await db.execute("ALTER TABLE $booksTable ADD COLUMN ${bookGenreRelTable}_date_read TEXT");
   }
 
   // ###############################################################################################################################################################################

@@ -88,7 +88,7 @@ class BookDetailsWidget extends StatelessWidget {
                     ],
                   ),
 
-                  // Title, edition, publisher and publication year.
+                  // Title, edition, publisher and dates.
                   Column(
                     spacing: Themes.spacingSmall,
                     children: [
@@ -113,10 +113,10 @@ class BookDetailsWidget extends StatelessWidget {
 
                       // Publication year.
                       Center(
-                        child: Text(
-                          "${book.raw.publishYear}",
-                        ),
+                        child: Text("${strings.bookInfoPublishYear}: ${book.raw.publishYear}"),
                       ),
+
+                      if (book.raw.dateAcquired != null) Center(child: Text("Acquisition date: ${book.raw.dateAcquired}"),),
                     ],
                   ),
 

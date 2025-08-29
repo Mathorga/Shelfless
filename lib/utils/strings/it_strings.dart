@@ -76,7 +76,7 @@ class ItStrings implements Strings {
   @override String get bookInfoNoImageSelected => "nessuna immagine selezionata";
   @override String get bookInfoLibrary => "Biblioteca";
   @override String get bookInfoAuthors => "Autori";
-  @override String get bookInfoPublishDate => "Anno di pubblicazione";
+  @override String get bookInfoPublishYear => "Anno di pubblicazione";
   @override String get bookInfoGenres => "Generi";
   @override String get bookInfoPublisher => "Editore";
   @override String get bookInfoPublishers => "Editori";

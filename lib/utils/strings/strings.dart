@@ -90,7 +90,7 @@ abstract class Strings {
   String get bookInfoNoImageSelected;
   String get bookInfoLibrary;
   String get bookInfoAuthors;
-  String get bookInfoPublishDate;
+  String get bookInfoPublishYear;
   String get bookInfoGenres;
   String get bookInfoPublisher;
   String get bookInfoPublishers;

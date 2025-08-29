@@ -8,11 +8,20 @@ class Config {
   /// Devmode is not available in release builds.
   static const bool devmode = true && !kReleaseMode;
 
+  /// Tells whether older version libraries (of books) can be imported or not.
+  static const bool allowOutdatedLibraries = true;
+
   /// Starting value for titles capitalization.
   static const TextCapitalization defaultTitlesCapitalization = TextCapitalization.words;
 
   /// Starting value for default book cover image.
   static const int defaultBookCoverImage = 2;
+
+  /// Book date threshold in years in the past: a book can be acquired or read up to 200 years before now.
+  static const int pastBookDateThreshold = 200;
+
+  /// Book date threshold in years in the future: a book can be acquired or read up to 10 years from now.
+  static const int futureBookDateThreshold = 10;
 
   /// Starting value for default app locale (language).
   static int defaultAppLocale = AppLocale.system.index;
