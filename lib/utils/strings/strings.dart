@@ -152,6 +152,9 @@ abstract class Strings {
   String get noPublishersFound;
   String get noBooksFound;
   String get search;
+  String get genericConfirmTitle;
+  String get genericConfirmContent;
+  String get cancelConfirmContent;
   String get genericInfo;
   String get genericWarning;
   String get genericErrorTitle;
@@ -160,6 +163,7 @@ abstract class Strings {
   String get imageReadErrorContent;
   String get unreleasedFeatureAlert;
   String get coverDescription;
+  String get cropImageTitle;
   String textCapitalizationSentences();
   String textCapitalizationWords();
   String textCapitalizationCharacters();

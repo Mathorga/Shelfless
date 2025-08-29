@@ -136,6 +136,9 @@ class EnStrings implements Strings {
   @override String get noPublishersFound => "No publishers found";
   @override String get noBooksFound => "No books found";
   @override String get search => "Search";
+  @override String get genericConfirmTitle => "Confirm";
+  @override String get genericConfirmContent => "Are you sure?";
+  @override String get cancelConfirmContent => "Are you sure you want to cancel the operation?";
   @override String get genericInfo => "Info";
   @override String get genericWarning => "Warning";
   @override String get genericErrorTitle => "Error";
@@ -144,6 +147,7 @@ class EnStrings implements Strings {
   @override String get imageReadErrorContent => "Something went wrong while reading your image, try and pick another one.";
   @override String get unreleasedFeatureAlert => "This feature will be released in a future update.";
   @override String get coverDescription => "Think of this as just a hint to the real book cover, don't think about it too much and pick whatever you like or reminds you of this book. The image will be highly compressed anyway.";
+  @override String get cropImageTitle => "Crop image";
   @override String textCapitalizationSentences() => "All sentences";
   @override String textCapitalizationWords() => "All words";
   @override String textCapitalizationCharacters() => "All characters";

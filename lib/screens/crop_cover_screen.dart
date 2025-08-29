@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:crop_image/crop_image.dart';
+import 'package:shelfless/dialogs/confirm_dialog.dart';
 
 import 'package:shelfless/dialogs/error_dialog.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -29,99 +30,134 @@ class _CropCoverScreenState extends State<CropCoverScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // TODO Move to strings!
-        title: Text("Crop image"),
-        actions: [],
-      ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(Themes.spacingLarge),
-            child: Column(
-              spacing: Themes.spacingMedium,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(Themes.spacingMedium),
-                    child: CropImage(
-                      controller: _controller,
-                      image: widget.image,
+    return PopScope(
+      onPopInvokedWithResult: (bool didPop, Object? result) {
+        if (didPop) return;
 
-                      /// The size of the corner of the crop grid. Defaults to 25.
-                      gridCornerSize: Themes.spacingLarge,
-                      gridThinWidth: Themes.borderSideThin,
-                      gridThickWidth: Themes.borderSideThick,
-                      alwaysShowThirdLines: true,
+        ConfirmDialog(
+          title: strings.cancel,
+          message: strings.cancelConfirmContent,
+          onNo: () => Navigator.of(context).pop(),
+          onYes: () {
+            final NavigatorState navigator = Navigator.of(context);
+
+            // Pop the confirm dialog.
+            navigator.pop();
+
+            // Pop back to the previous screen.
+            navigator.pop();
+          },
+        ).show(context);
+      },
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(strings.cropImageTitle),
+          actions: [],
+        ),
+        body: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(Themes.spacingLarge),
+              child: Column(
+                spacing: Themes.spacingMedium,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(Themes.spacingMedium),
+                      child: CropImage(
+                        controller: _controller,
+                        image: widget.image,
+
+                        /// The size of the corner of the crop grid. Defaults to 25.
+                        gridCornerSize: Themes.spacingLarge,
+                        gridThinWidth: Themes.borderSideThin,
+                        gridThickWidth: Themes.borderSideThick,
+                        alwaysShowThirdLines: true,
+                      ),
                     ),
                   ),
-                ),
-                Row(
-                  spacing: Themes.spacingMedium,
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: SizedBox(
-                        height: Themes.spacingFAB,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: Text(strings.cancel),
+                  Row(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: Themes.spacingFAB,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              ConfirmDialog(
+                                title: strings.cancel,
+                                message: strings.cancelConfirmContent,
+                                onNo: () => Navigator.of(context).pop(),
+                                onYes: () {
+                                  final NavigatorState navigator = Navigator.of(context);
+
+                                  // Pop the confirm dialog.
+                                  navigator.pop();
+
+                                  // Pop back to the previous screen.
+                                  navigator.pop();
+                                },
+                              ).show(context);
+                            },
+                            child: Text(strings.cancel),
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: SizedBox(
-                        height: Themes.spacingFAB,
-                        child: FloatingActionButton(
-                          onPressed: () async {
-                            // Prefetch handlers before async gaps.
-                            final NavigatorState navigator = Navigator.of(context);
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          height: Themes.spacingFAB,
+                          child: FloatingActionButton(
+                            onPressed: () async {
+                              // Prefetch handlers before async gaps.
+                              final NavigatorState navigator = Navigator.of(context);
 
-                            setState(() {
-                              _loading = true;
-                            });
-
-                            final ui.Image result;
-                            Uint8List? resultData;
-
-                            try {
-                              result = await _controller.croppedBitmap();
-                              resultData = (await result.toByteData(format: ui.ImageByteFormat.png))?.buffer.asUint8List();
-                            } catch (e) {
-                              // Stop showing the loading indicator.
                               setState(() {
-                                _loading = false;
+                                _loading = true;
                               });
 
-                              // Let the user know something went wrong.
-                              if (context.mounted) showUnexpectedErrorDialog(context);
+                              final ui.Image result;
+                              Uint8List? resultData;
 
-                              return;
-                            }
+                              try {
+                                result = await _controller.croppedBitmap();
+                                resultData = (await result.toByteData(format: ui.ImageByteFormat.png))?.buffer.asUint8List();
+                              } catch (e) {
+                                // Stop showing the loading indicator.
+                                setState(() {
+                                  _loading = false;
+                                });
 
-                            if (resultData == null) {
-                              navigator.pop();
-                              return;
-                            }
+                                // Let the user know something went wrong.
+                                if (context.mounted) showUnexpectedErrorDialog(context);
 
-                            navigator.pop(resultData);
-                          },
-                          child: Text(strings.editDone),
+                                return;
+                              }
+
+                              if (resultData == null) {
+                                navigator.pop();
+                                return;
+                              }
+
+                              navigator.pop(resultData);
+                            },
+                            child: Text(strings.editDone),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          if (_loading)
-            Center(
-              child: CircularProgressIndicator(),
-            ),
-        ],
+            if (_loading)
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        ),
       ),
     );
   }

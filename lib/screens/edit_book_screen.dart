@@ -458,8 +458,11 @@ class _EditBookScreenState extends State<EditBookScreen> {
       ),
     ));
 
+    // Just return if the operation was cancelled or for any reason no image was returned.
+    if (croppedImageData == null) return;
+
     // Use the cropped image if possible.
-    fileData = croppedImageData ?? fileData;
+    fileData = croppedImageData;
 
     img.Image? image;
 
