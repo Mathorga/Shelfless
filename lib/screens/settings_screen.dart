@@ -1,14 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:collection/collection.dart';
-import 'package:intl/intl.dart';
-import 'package:shelfless/dialogs/settings/date_format_setting_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
 
+import 'package:shelfless/dialogs/settings/date_format_setting_dialog.dart';
 import 'package:shelfless/screens/privacy_policy_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
