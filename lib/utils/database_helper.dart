@@ -602,10 +602,10 @@ class DatabaseHelper {
           // If there's a matching element in DB, then use that one instead.
           List<Map<String, dynamic>> existingElements = await tnx.query(
             publishersTable,
-            where: "${publishersTable}_name = ? AND ${publishersTable}_website = ?",
+            where: "${publishersTable}_name = ? AND ${publishersTable}_website ${inData["${publishersTable}_id"] == null ? "IS" : "="} ?",
             whereArgs: [
               inData["${publishersTable}_name"],
-              inData["${publishersTable}_website"],
+              inData["${publishersTable}_website"] ?? "NULL",
             ],
             limit: 1,
           );

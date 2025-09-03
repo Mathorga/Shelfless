@@ -112,24 +112,46 @@ class BookDetailsWidget extends StatelessWidget {
                       // Publisher.
                       if (LibraryContentProvider.instance.publishers[book.raw.publisherId] != null)
                         Center(
-                          child: Text("${LibraryContentProvider.instance.publishers[book.raw.publisherId]!}"),
+                          child: Text(
+                            "${LibraryContentProvider.instance.publishers[book.raw.publisherId]!}",
+                            style: TextStyle(fontSize: Themes.fontSizeXSmall),
+                          ),
                         ),
 
                       // Publication year.
                       Center(
-                        child: Text("${strings.bookInfoPublishYear}: ${book.raw.publishYear}"),
+                        child: Text("${book.raw.publishYear}"),
                       ),
 
-                      // Date acquired.
-                      if (book.raw.dateAcquired != null) Center(child: Builder(
-                        builder: (BuildContext context) {
-                          // Read stored format value.
-                          final String dateFormatString = SharedPrefsHelper.instance.data.getString(SharedPrefsKeys.dateFormat) ?? Config.defaultDateFormat;
-                          final DateFormat dateFormat = DateFormat(dateFormatString);
+                      // Dates.
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Date acquired.
+                          if (book.raw.dateAcquired != null)
+                            Builder(
+                              builder: (BuildContext context) {
+                                // Read stored format value.
+                                final String dateFormatString = SharedPrefsHelper.instance.data.getString(SharedPrefsKeys.dateFormat) ?? Config.defaultDateFormat;
+                                final DateFormat dateFormat = DateFormat(dateFormatString);
+                            
+                                return Text("${strings.bookInfoDateAcquired}: ${dateFormat.format(book.raw.dateAcquired!)}");
+                              },
+                            ),
 
-                          return Text("${strings.bookInfoDateAcquired}: ${dateFormat.format(book.raw.dateAcquired!)}");
-                        }
-                      ),),
+                          // Date read.
+                          if (book.raw.dateRead != null)
+                            Builder(
+                              builder: (BuildContext context) {
+                                // Read stored format value.
+                                final String dateFormatString = SharedPrefsHelper.instance.data.getString(SharedPrefsKeys.dateFormat) ?? Config.defaultDateFormat;
+                                final DateFormat dateFormat = DateFormat(dateFormatString);
+                            
+                                return Text("${strings.bookInfoDateRead}: ${dateFormat.format(book.raw.dateRead!)}");
+                              },
+                            ),
+                        ],
+                      ),
                     ],
                   ),
 
