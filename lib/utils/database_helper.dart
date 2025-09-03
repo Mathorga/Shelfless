@@ -51,13 +51,13 @@ class DatabaseHelper {
       onCreate: (Database db, int version) async {
         // Perform upgrades from version 1 to the current version.
         for (int v = 1; v <= version; v++) {
-          upgradeDb(db, v);
+          await upgradeDb(db, v);
         }
       },
-      onUpgrade: (Database db, int oldVersion, int newVersion) {
+      onUpgrade: (Database db, int oldVersion, int newVersion) async {
         // Perform upgrades from oldVersion to newVersion.
         for (int v = oldVersion + 1; v <= newVersion; v++) {
-          upgradeDb(db, v);
+          await upgradeDb(db, v);
         }
       },
       onDowngrade: (Database db, int oldVersion, int newVersion) {
@@ -179,8 +179,8 @@ class DatabaseHelper {
   /// Performs database alters for version 2.
   static Future<void> _v2(Database db) async {
     // Add date columns to books table.
-    await db.execute("ALTER TABLE $booksTable ADD COLUMN ${bookGenreRelTable}_date_acquired TEXT");
-    await db.execute("ALTER TABLE $booksTable ADD COLUMN ${bookGenreRelTable}_date_read TEXT");
+    await db.execute("ALTER TABLE $booksTable ADD COLUMN ${booksTable}_date_acquired TEXT");
+    await db.execute("ALTER TABLE $booksTable ADD COLUMN ${booksTable}_date_read TEXT");
   }
 
   // ###############################################################################################################################################################################

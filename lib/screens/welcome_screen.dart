@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:shelfless/dialogs/error_dialog.dart';
 
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
@@ -87,6 +89,13 @@ class WelcomeScreen extends StatelessWidget {
                     LibrariesProvider.instance.fetchLibraries();
                   } catch (e) {
                     // TODO Let the user know.
+                    if (context.mounted) {
+                      ErrorDialog(
+                        message: "OOPS! something went wrong",
+                      ).show(context);
+                    }
+
+                    log(e.toString());
                     return;
                   }
 
