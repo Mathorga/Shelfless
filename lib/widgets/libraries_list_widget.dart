@@ -92,8 +92,7 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                               // Let the user know the provided file is incompatible with the current app version.
                               if (context.mounted) {
                                 ErrorDialog(
-                                  // TODO Move to strings!
-                                  message: "The selected library is incompatible with your current app version.",
+                                  message: strings.incompatibleLibraryVersionErrorContent,
                                 ).show(context);
                               }
 

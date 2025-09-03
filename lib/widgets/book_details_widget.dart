@@ -3,13 +3,17 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:blur/blur.dart';
+import 'package:intl/intl.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/config.dart';
 import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/material_utils.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 
@@ -116,7 +120,16 @@ class BookDetailsWidget extends StatelessWidget {
                         child: Text("${strings.bookInfoPublishYear}: ${book.raw.publishYear}"),
                       ),
 
-                      if (book.raw.dateAcquired != null) Center(child: Text("Acquisition date: ${book.raw.dateAcquired}"),),
+                      // Date acquired.
+                      if (book.raw.dateAcquired != null) Center(child: Builder(
+                        builder: (BuildContext context) {
+                          // Read stored format value.
+                          final String dateFormatString = SharedPrefsHelper.instance.data.getString(SharedPrefsKeys.dateFormat) ?? Config.defaultDateFormat;
+                          final DateFormat dateFormat = DateFormat(dateFormatString);
+
+                          return Text("${strings.bookInfoDateAcquired}: ${dateFormat.format(book.raw.dateAcquired!)}");
+                        }
+                      ),),
                     ],
                   ),
 

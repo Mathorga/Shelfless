@@ -17,6 +17,9 @@ class Config {
   /// Starting value for default book cover image.
   static const int defaultBookCoverImage = 2;
 
+  /// Default value for displaying dates.
+  static const String defaultDateFormat = "yyyy/MM/dd";
+
   /// Book date threshold in years in the past: a book can be acquired or read up to 200 years before now.
   static const int pastBookDateThreshold = 200;
 

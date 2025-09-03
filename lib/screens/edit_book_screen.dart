@@ -249,8 +249,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     // Acquisition date.
                     EditSectionWidget(
                       children: [
-                        // TODO Move to strings!
-                        Text("Date acquired"),
+                        Text(strings.bookInfoDateAcquired),
                         Themes.spacer,
                         GestureDetector(
                           onTap: () async {
@@ -284,8 +283,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     // Read date.
                     EditSectionWidget(
                       children: [
-                        // TODO Move to strings!
-                        Text("Date read"),
+                        Text(strings.bookInfoDateRead),
                         Themes.spacer,
                         GestureDetector(
                           onTap: () async {
