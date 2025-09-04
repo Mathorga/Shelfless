@@ -72,9 +72,6 @@ class WelcomeScreen extends StatelessWidget {
                   ));
                 },
                 onSecondOptionSelected: () async {
-                  // Prefetch handlers before async gaps.
-                  final NavigatorState navigator = Navigator.of(context);
-
                   final Map<String, String>? libraryStrings;
 
                   try {
