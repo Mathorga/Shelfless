@@ -3,7 +3,9 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+
 import 'package:shelfless/utils/shaders.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 enum SpecialUniform {
   canvasWidth,
@@ -92,9 +94,9 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
     // TODO Read from shared preferences when the dedicated user setting is released.
     ui.FragmentProgram program = await ui.FragmentProgram.fromAsset(Shaders.cleanEdge);
     _shader = program.fragmentShader();
-    setState(() {
-      // trigger a repaint
-    });
+
+    // Trigger a repaint.
+    setState(() {});
   }
 
   Future<ui.Image> _decodeImage() async {
@@ -115,12 +117,12 @@ class _ShadedImageWidgetState extends State<ShadedImageWidget> {
       future: _decodeImage(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
-          // TODO Handle this better pls.
-          return Placeholder();
+          return Center(
+            child: Text(strings.genericErrorContent),
+          );
         }
 
         if (!snapshot.hasData) {
-          // TODO Handle this better pls.
           return const Center(
             child: CircularProgressIndicator(),
           );

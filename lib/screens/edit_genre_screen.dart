@@ -95,7 +95,7 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
                                     enableAlpha: false,
                                     onColorChanged: (Color pickedColor) {
                                       setState(() {
-                                        _genre.color = pickedColor.value;
+                                        _genre.color = pickedColor.toARGB32();
                                       });
                                     },
                                   ),

@@ -401,7 +401,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
                     ),
 
                     // Fab spacing.
-                    // TODO Check whether adding the device botto inset also works on Android, since it's designed for iOS.
                     SizedBox(height: fabAccessHeight + devicePadding.bottom),
                   ],
                 ),

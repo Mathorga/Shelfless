@@ -155,8 +155,6 @@ class DrawerContentWidget extends StatelessWidget {
                   ),
 
                   Divider(),
-
-                  // TODO Add all user-defined collections if present.
                 ],
               ),
             ),

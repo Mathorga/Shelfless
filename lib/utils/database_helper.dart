@@ -60,8 +60,11 @@ class DatabaseHelper {
           await upgradeDb(db, v);
         }
       },
-      onDowngrade: (Database db, int oldVersion, int newVersion) {
-        // TODO Handle version downgrade.
+      onDowngrade: (Database db, int oldVersion, int newVersion) async {
+        // Perform downgrades from oldVersion to newVersion.
+        for (int v = oldVersion - 1; v >= newVersion; v--) {
+          await downgradeDb(db, v);
+        }
       },
     );
   }
@@ -73,7 +76,18 @@ class DatabaseHelper {
         await _v1(db);
         break;
       case 2:
-        await _v2(db);
+        await _v1To2(db);
+      default:
+        break;
+    }
+  }
+
+  /// Redirects to the correct version downgrade to perform.
+  static Future<void> downgradeDb(Database db, int targetVersion) async {
+    switch (targetVersion) {
+      case 1:
+        await _v2To1(db);
+        break;
       default:
         break;
     }
@@ -176,11 +190,18 @@ class DatabaseHelper {
     );
   }
 
-  /// Performs database alters for version 2.
-  static Future<void> _v2(Database db) async {
+  /// Performs database alters from version 1 to 2.
+  static Future<void> _v1To2(Database db) async {
     // Add date columns to books table.
     await db.execute("ALTER TABLE $booksTable ADD COLUMN ${booksTable}_date_acquired TEXT");
     await db.execute("ALTER TABLE $booksTable ADD COLUMN ${booksTable}_date_read TEXT");
+  }
+
+  /// Performs database alters from version 2 to 1.
+  static Future<void> _v2To1(Database db) async {
+    // Add date columns to books table.
+    await db.execute("ALTER TABLE $booksTable DROP COLUMN ${booksTable}_date_acquired TEXT");
+    await db.execute("ALTER TABLE $booksTable DROP COLUMN ${booksTable}_date_read TEXT");
   }
 
   // ###############################################################################################################################################################################

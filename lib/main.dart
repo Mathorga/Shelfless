@@ -76,7 +76,7 @@ class _ShelflessState extends State<Shelfless> {
             }
           });
 
-          // TODO Show an introductory library creation wizard instead of a bare EditLibraryScreen.
+          // Show an introductory library creation wizard instead of a bare EditLibraryScreen.
           if (LibrariesProvider.instance.libraries.isEmpty) return WelcomeScreen();
 
           // Try and read the latest open library from shared preferences.

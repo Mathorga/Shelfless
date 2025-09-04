@@ -83,8 +83,7 @@ class BookPreviewWidget extends StatelessWidget {
                       Expanded(
                         child: Text(
                           book.raw.title,
-                          // TODO Move to themes.
-                          maxLines: 2,
+                          maxLines: Themes.previewBookTitleMaxLines,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

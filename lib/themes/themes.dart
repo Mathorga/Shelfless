@@ -94,6 +94,9 @@ class Themes {
   static const double fontSizeXXLarge = 48.0;
   static const double fontSizeXXXLarge = 64.0;
 
+  // Book preview.
+  static const int previewBookTitleMaxLines = 2;
+
   static const double actionSize = spacingFAB + spacingLarge;
 
   /// Default scroll physics, used to animated scrollables (columns, rows, lists, etc).

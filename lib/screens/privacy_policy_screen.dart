@@ -49,7 +49,6 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
         }
         break;
     }
-    ;
 
     _data = await rootBundle.loadString(policyFilePath);
     setState(() {});
