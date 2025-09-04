@@ -1,5 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:collection/collection.dart';
 
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/models/book.dart';
