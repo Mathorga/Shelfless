@@ -105,9 +105,6 @@ class WelcomeScreen extends StatelessWidget {
 
                     return;
                   }
-
-                  // Pop dialog.
-                  navigator.pop();
                 },
                 firstOption: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
