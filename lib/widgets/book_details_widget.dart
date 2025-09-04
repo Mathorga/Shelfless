@@ -3,13 +3,17 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:blur/blur.dart';
+import 'package:intl/intl.dart';
 
 import 'package:shelfless/models/book.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/config.dart';
 import 'package:shelfless/utils/element_action.dart';
 import 'package:shelfless/utils/material_utils.dart';
+import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/book_thumbnail_widget.dart';
 
@@ -88,7 +92,7 @@ class BookDetailsWidget extends StatelessWidget {
                     ],
                   ),
 
-                  // Title, edition, publisher and publication year.
+                  // Title, edition, publisher and dates.
                   Column(
                     spacing: Themes.spacingSmall,
                     children: [
@@ -108,14 +112,45 @@ class BookDetailsWidget extends StatelessWidget {
                       // Publisher.
                       if (LibraryContentProvider.instance.publishers[book.raw.publisherId] != null)
                         Center(
-                          child: Text("${LibraryContentProvider.instance.publishers[book.raw.publisherId]!}"),
+                          child: Text(
+                            "${LibraryContentProvider.instance.publishers[book.raw.publisherId]!}",
+                            style: TextStyle(fontSize: Themes.fontSizeXSmall),
+                          ),
                         ),
 
                       // Publication year.
                       Center(
-                        child: Text(
-                          "${book.raw.publishYear}",
-                        ),
+                        child: Text("${book.raw.publishYear}"),
+                      ),
+
+                      // Dates.
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Date acquired.
+                          if (book.raw.dateAcquired != null)
+                            Builder(
+                              builder: (BuildContext context) {
+                                // Read stored format value.
+                                final String dateFormatString = SharedPrefsHelper.instance.data.getString(SharedPrefsKeys.dateFormat) ?? Config.defaultDateFormat;
+                                final DateFormat dateFormat = DateFormat(dateFormatString);
+                            
+                                return Text("${strings.bookInfoDateAcquired}: ${dateFormat.format(book.raw.dateAcquired!)}");
+                              },
+                            ),
+
+                          // Date read.
+                          if (book.raw.dateRead != null)
+                            Builder(
+                              builder: (BuildContext context) {
+                                // Read stored format value.
+                                final String dateFormatString = SharedPrefsHelper.instance.data.getString(SharedPrefsKeys.dateFormat) ?? Config.defaultDateFormat;
+                                final DateFormat dateFormat = DateFormat(dateFormatString);
+                            
+                                return Text("${strings.bookInfoDateRead}: ${dateFormat.format(book.raw.dateRead!)}");
+                              },
+                            ),
+                        ],
                       ),
                     ],
                   ),

@@ -28,6 +28,7 @@ abstract class Strings {
   String get settingDefaultCover;
   String get settingTitlesCapitalization;
   String get settingAppLanguage;
+  String get settingDateFormat;
   String get legalsSectionTitle;
   String get privacyPolicyLabel;
   String get licensesLabel;
@@ -50,6 +51,7 @@ abstract class Strings {
   String get ok;
   String get confirm;
   String get cancel;
+  String get example;
   String get genericCannotDelete;
   String get cannotDeleteAuthorContent;
   String get authorDeleted;
@@ -90,7 +92,9 @@ abstract class Strings {
   String get bookInfoNoImageSelected;
   String get bookInfoLibrary;
   String get bookInfoAuthors;
-  String get bookInfoPublishDate;
+  String get bookInfoPublishYear;
+  String get bookInfoDateAcquired;
+  String get bookInfoDateRead;
   String get bookInfoGenres;
   String get bookInfoPublisher;
   String get bookInfoPublishers;
@@ -161,6 +165,7 @@ abstract class Strings {
   String get genericErrorContent;
   String get unexpectedErrorContent;
   String get imageReadErrorContent;
+  String get incompatibleLibraryVersionErrorContent;
   String get unreleasedFeatureAlert;
   String get coverDescription;
   String get cropImageTitle;

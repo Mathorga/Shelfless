@@ -12,6 +12,7 @@ class EnStrings implements Strings {
   @override String get settingDefaultCover => "Default cover image";
   @override String get settingTitlesCapitalization => "Titles capitalization";
   @override String get settingAppLanguage => "App language";
+  @override String get settingDateFormat => "Date format";
   @override String get legalsSectionTitle => "Legals and support";
   @override String get privacyPolicyLabel => "Privacy policy";
   @override String get licensesLabel => "Licenses";
@@ -34,6 +35,7 @@ class EnStrings implements Strings {
   @override String get ok => "OK";
   @override String get confirm => "Confirm";
   @override String get cancel => "Cancel";
+  @override String get example => "Example";
   @override String get genericCannotDelete => "Cannot delete";
   @override String get cannotDeleteAuthorContent => "Some books still refer to this author.\nDelete or edit them first then try again";
   @override String get authorDeleted => "Author deleted";
@@ -74,7 +76,9 @@ class EnStrings implements Strings {
   @override String get bookInfoNoImageSelected => "no image selected";
   @override String get bookInfoLibrary => "Library";
   @override String get bookInfoAuthors => "Authors";
-  @override String get bookInfoPublishDate => "Publish date";
+  @override String get bookInfoPublishYear => "Publish year";
+  @override String get bookInfoDateAcquired => "Date acquired";
+  @override String get bookInfoDateRead => "Date read";
   @override String get bookInfoGenres => "Genres";
   @override String get bookInfoPublisher => "Publisher";
   @override String get bookInfoPublishers => "Publishers";
@@ -145,6 +149,7 @@ class EnStrings implements Strings {
   @override String get genericErrorContent => "An error occurred, try again later";
   @override String get unexpectedErrorContent => "An unexpected error occurred, try again later";
   @override String get imageReadErrorContent => "Something went wrong while reading your image, try and pick another one.";
+  @override String get incompatibleLibraryVersionErrorContent => "The selected library is incompatible with your current app version.";
   @override String get unreleasedFeatureAlert => "This feature will be released in a future update.";
   @override String get coverDescription => "Think of this as just a hint to the real book cover, don't think about it too much and pick whatever you like or reminds you of this book. The image will be highly compressed anyway.";
   @override String get cropImageTitle => "Crop image";

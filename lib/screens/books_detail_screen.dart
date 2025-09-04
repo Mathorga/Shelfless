@@ -171,7 +171,7 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
           itemBuilder: (BuildContext context, int index) => StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               LibraryContentProvider.instance.addListener(() {
-                if (mounted) setState(() {});
+                if (context.mounted) setState(() {});
               });
 
               final Book pageBook = LibraryContentProvider.instance.books[index];
