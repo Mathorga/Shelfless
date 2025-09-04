@@ -47,17 +47,17 @@ class DatabaseHelper {
     // Open the database and store the reference.
     _db = await openDatabase(
       "${await getDatabasesPath()}/shelfless.db",
-      version: 1,
+      version: 2,
       onCreate: (Database db, int version) async {
         // Perform upgrades from version 1 to the current version.
         for (int v = 1; v <= version; v++) {
-          upgradeDb(db, v);
+          await upgradeDb(db, v);
         }
       },
-      onUpgrade: (Database db, int oldVersion, int newVersion) {
+      onUpgrade: (Database db, int oldVersion, int newVersion) async {
         // Perform upgrades from oldVersion to newVersion.
         for (int v = oldVersion + 1; v <= newVersion; v++) {
-          upgradeDb(db, v);
+          await upgradeDb(db, v);
         }
       },
       onDowngrade: (Database db, int oldVersion, int newVersion) {
@@ -70,15 +70,17 @@ class DatabaseHelper {
   static Future<void> upgradeDb(Database db, int targetVersion) async {
     switch (targetVersion) {
       case 1:
-        await upgradeVersion1(db);
+        await _v1(db);
         break;
+      case 2:
+        await _v2(db);
       default:
         break;
     }
   }
 
   /// Performs database definition for version 1.
-  static Future<void> upgradeVersion1(Database db) async {
+  static Future<void> _v1(Database db) async {
     // Libraries table.
     await db.execute(
       """
@@ -172,6 +174,13 @@ class DatabaseHelper {
       )
       """,
     );
+  }
+
+  /// Performs database alters for version 2.
+  static Future<void> _v2(Database db) async {
+    // Add date columns to books table.
+    await db.execute("ALTER TABLE $booksTable ADD COLUMN ${booksTable}_date_acquired TEXT");
+    await db.execute("ALTER TABLE $booksTable ADD COLUMN ${booksTable}_date_read TEXT");
   }
 
   // ###############################################################################################################################################################################
@@ -593,10 +602,10 @@ class DatabaseHelper {
           // If there's a matching element in DB, then use that one instead.
           List<Map<String, dynamic>> existingElements = await tnx.query(
             publishersTable,
-            where: "${publishersTable}_name = ? AND ${publishersTable}_website = ?",
+            where: "${publishersTable}_name = ? AND ${publishersTable}_website ${inData["${publishersTable}_id"] == null ? "IS" : "="} ?",
             whereArgs: [
               inData["${publishersTable}_name"],
-              inData["${publishersTable}_website"],
+              inData["${publishersTable}_website"] ?? "NULL",
             ],
             limit: 1,
           );

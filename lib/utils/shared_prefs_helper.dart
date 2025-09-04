@@ -42,7 +42,7 @@ class SharedPrefsHelper with ChangeNotifier {
   }
 
   /// Stores the provided value to shared preference and notifies all listeners about it.
-  Future<void> setLoudValue(String key, dynamic value) async {
+  Future<void> setValueAloud(String key, dynamic value) async {
     setValue(key, value);
 
     notifyListeners();

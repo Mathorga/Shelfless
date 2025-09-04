@@ -16,4 +16,7 @@ class SharedPrefsKeys {
 
   // The preferred application language locale. Users can change it from the app's settings.
   static const String appLocale = "app_locale";
+
+  // The preferred application dates format. Users can change it from the app's settings.
+  static const String dateFormat = "date_format";
 }

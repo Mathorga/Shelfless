@@ -14,6 +14,7 @@ class ItStrings implements Strings {
   @override String get settingDefaultCover => "Immagine di copertina di default";
   @override String get settingTitlesCapitalization => "Maiuscole per titoli e nomi";
   @override String get settingAppLanguage => "Lingua";
+  @override String get settingDateFormat => "Formato delle date";
   @override String get legalsSectionTitle => "Informazioni legali e supporto";
   @override String get privacyPolicyLabel => "Informativa privacy";
   @override String get licensesLabel => "Licenze";
@@ -36,6 +37,7 @@ class ItStrings implements Strings {
   @override String get ok => "OK";
   @override String get confirm => "Conferma";
   @override String get cancel => "Annulla";
+  @override String get example => "Esempio";
   @override String get genericCannotDelete => "Impossibile cancellare";
   @override String get cannotDeleteAuthorContent => "Questo autore compare ancora in alcuni libri.\nCancellali o modificali e poi riprova";
   @override String get authorDeleted => "Autore eliminato";
@@ -76,7 +78,9 @@ class ItStrings implements Strings {
   @override String get bookInfoNoImageSelected => "nessuna immagine selezionata";
   @override String get bookInfoLibrary => "Biblioteca";
   @override String get bookInfoAuthors => "Autori";
-  @override String get bookInfoPublishDate => "Anno di pubblicazione";
+  @override String get bookInfoPublishYear => "Anno di pubblicazione";
+  @override String get bookInfoDateAcquired => "Data di acquisizione";
+  @override String get bookInfoDateRead => "Date di lettura";
   @override String get bookInfoGenres => "Generi";
   @override String get bookInfoPublisher => "Editore";
   @override String get bookInfoPublishers => "Editori";
@@ -147,6 +151,7 @@ class ItStrings implements Strings {
   @override String get genericErrorContent => "Si è verificato un errore, riprova più tardi.";
   @override String get unexpectedErrorContent => "Si è verificato un errore imprevisto, riprova più tardi";
   @override String get imageReadErrorContent => "Si è verificato un errore nella lettura dell'immagine, prova a selezionarne un'altra.";
+  @override String get incompatibleLibraryVersionErrorContent => "La libreria selezionata non è compatibile con la versione dell'app attualmente in uso.";
   @override String get unreleasedFeatureAlert => "Questa funzionalità sarà introdotta con un futuro aggiornamento.";
   @override String get coverDescription => "Considera la copertina come un'idea della copertina originale, non starci troppo a pensare e scegli una foto che ti piace, o che ti ricorda questo libro. L'immagine sarà comunque compressa.";
   @override String get cropImageTitle => "Ritaglia immagine";

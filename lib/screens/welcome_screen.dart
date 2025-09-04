@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import 'package:shelfless/dialogs/error_dialog.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/config.dart';
 import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/utils.dart';
@@ -75,9 +77,18 @@ class WelcomeScreen extends StatelessWidget {
                   try {
                     libraryStrings = await Utils.deserializeLibrary();
 
-                    if (!(await DatabaseHelper.instance.validateDbInfo(jsonDecode(libraryStrings["db_info"]!)))) {
-                      // TODO Let the user know the provided file is incompatible with the current app version.
-                      return;
+                    // Only check for database version if outdated libraries are not allowed.
+                    if (!Config.allowOutdatedLibraries) {
+                      if (!(await DatabaseHelper.instance.validateDbInfo(jsonDecode(libraryStrings["db_info"]!)))) {
+                        // Let the user know the provided file is incompatible with the current app version.
+                        if (context.mounted) {
+                          ErrorDialog(
+                            message: strings.incompatibleLibraryVersionErrorContent,
+                          ).show(context);
+                        }
+
+                        return;
+                      }
                     }
 
                     // Store read library to DB.
@@ -86,12 +97,11 @@ class WelcomeScreen extends StatelessWidget {
                     // Refetch libraries.
                     LibrariesProvider.instance.fetchLibraries();
                   } catch (e) {
-                    // TODO Let the user know.
+                    // Let the user know something went wrong.
+                    if (context.mounted) showUnexpectedErrorDialog(context);
+
                     return;
                   }
-
-                  // Pop dialog.
-                  // navigator.pop();
                 },
                 firstOption: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

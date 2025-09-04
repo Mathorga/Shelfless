@@ -75,13 +75,13 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
   }
 
   void _onSharedPrefUpdated() {
-    if (context.mounted) {
+    if (mounted) {
       setState(() {});
     }
   }
 
   void _onLibraryContentUpdated() {
-    if (context.mounted) {
+    if (mounted) {
       // Here setState must be called regardless of the internal state, otherwise changes will be noticed only on library change.
       setState(() {
         final RawLibrary? providerLibrary = LibraryContentProvider.instance.library;

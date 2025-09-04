@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shelfless/dialogs/error_dialog.dart';
 
 import 'package:shelfless/models/library_preview.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
@@ -10,6 +11,7 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/config.dart';
 import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
@@ -84,9 +86,18 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                         try {
                           libraryStrings = await Utils.deserializeLibrary();
 
-                          if (!(await DatabaseHelper.instance.validateDbInfo(jsonDecode(libraryStrings["db_info"]!)))) {
-                            // TODO Let the user know the provided file is incompatible with the current app version.
-                            return;
+                          // Only check for database version if outdated libraries are not allowed.
+                          if (!Config.allowOutdatedLibraries) {
+                            if (!(await DatabaseHelper.instance.validateDbInfo(jsonDecode(libraryStrings["db_info"]!)))) {
+                              // Let the user know the provided file is incompatible with the current app version.
+                              if (context.mounted) {
+                                ErrorDialog(
+                                  message: strings.incompatibleLibraryVersionErrorContent,
+                                ).show(context);
+                              }
+
+                              return;
+                            }
                           }
 
                           // Store read library to DB.
@@ -95,7 +106,9 @@ class _LibrariesListWidgetState extends State<LibrariesListWidget> {
                           // Refetch libraries.
                           LibrariesProvider.instance.fetchLibraries();
                         } catch (e) {
-                          // TODO Let the user know.
+                          // Let the user know something went wrong.
+                          if (context.mounted) showUnexpectedErrorDialog(context);
+
                           return;
                         }
 

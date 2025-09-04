@@ -5,23 +5,16 @@ import 'package:shelfless/utils/database_helper.dart';
 
 class RawBook {
   int? id;
-
   String title;
-
   Uint8List? cover;
-
   int? libraryId;
-
   int publishYear;
-
+  DateTime? dateAcquired;
+  DateTime? dateRead;
   int? publisherId;
-
   int? locationId;
-
   bool out;
-
   int edition;
-
   String notes;
 
   RawBook({
@@ -30,6 +23,8 @@ class RawBook {
     this.cover,
     required this.libraryId,
     this.publishYear = 0,
+    this.dateAcquired,
+    this.dateRead,
     this.publisherId,
     this.locationId,
     this.out = false,
@@ -43,6 +38,8 @@ class RawBook {
         cover = map["${DatabaseHelper.booksTable}_cover"],
         libraryId = map["${DatabaseHelper.booksTable}_library_id"],
         publishYear = map["${DatabaseHelper.booksTable}_publish_year"],
+        dateAcquired = DateTime.tryParse(map["${DatabaseHelper.booksTable}_date_acquired"] ?? ""),
+        dateRead = DateTime.tryParse(map["${DatabaseHelper.booksTable}_date_read"] ?? ""),
         publisherId = map["${DatabaseHelper.booksTable}_publisher_id"],
         locationId = map["${DatabaseHelper.booksTable}_location_id"],
         out = map["${DatabaseHelper.booksTable}_out"] == 1,
@@ -58,6 +55,8 @@ class RawBook {
       libraryId: libraryId,
       publishYear: publishYear,
       publisherId: publisherId,
+      dateAcquired: dateAcquired,
+      dateRead: dateRead,
       locationId: locationId,
       out: out,
       edition: edition,
@@ -72,6 +71,8 @@ class RawBook {
     cover = other.cover;
     libraryId = other.libraryId;
     publishYear = other.publishYear;
+    dateAcquired = other.dateAcquired;
+    dateRead = other.dateRead;
     publisherId = other.publisherId;
     locationId = other.locationId;
     out = other.out;
@@ -86,6 +87,8 @@ class RawBook {
       "${DatabaseHelper.booksTable}_cover": cover,
       "${DatabaseHelper.booksTable}_library_id": libraryId,
       "${DatabaseHelper.booksTable}_publish_year": publishYear,
+      "${DatabaseHelper.booksTable}_date_acquired": dateAcquired?.toIso8601String(),
+      "${DatabaseHelper.booksTable}_date_read": dateRead?.toIso8601String(),
       "${DatabaseHelper.booksTable}_publisher_id": publisherId,
       "${DatabaseHelper.booksTable}_location_id": locationId,
       "${DatabaseHelper.booksTable}_out": out ? 1 : 0,
@@ -100,6 +103,8 @@ class RawBook {
       other.runtimeType == runtimeType &&
       other.title == title &&
       other.publishYear == publishYear &&
+      other.dateAcquired == dateAcquired &&
+      other.dateRead == dateRead &&
       other.publisherId == publisherId &&
       other.locationId == locationId &&
       other.out == out &&
@@ -109,6 +114,8 @@ class RawBook {
   int get hashCode =>
       title.hashCode +
       publishYear.hashCode +
+      dateAcquired.hashCode +
+      dateRead.hashCode +
       publisherId.hashCode +
       locationId.hashCode +
       out.hashCode +

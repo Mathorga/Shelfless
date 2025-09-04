@@ -1,10 +1,11 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:collection/collection.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
 
+import 'package:shelfless/dialogs/settings/date_format_setting_dialog.dart';
 import 'package:shelfless/screens/privacy_policy_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -22,14 +23,14 @@ const TextStyle settingValueTextStyle = TextStyle(
 );
 
 /// List tile for text capitalization. Separated for performance.
-class _TextCapitalizationSetting extends StatefulWidget {
-  const _TextCapitalizationSetting();
+class _TitlesCapitalizationSetting extends StatefulWidget {
+  const _TitlesCapitalizationSetting();
 
   @override
-  State<_TextCapitalizationSetting> createState() => _TextCapitalizationSettingState();
+  State<_TitlesCapitalizationSetting> createState() => _TitlesCapitalizationSettingState();
 }
 
-class _TextCapitalizationSettingState extends State<_TextCapitalizationSetting> {
+class _TitlesCapitalizationSettingState extends State<_TitlesCapitalizationSetting> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -55,39 +56,48 @@ class _TextCapitalizationSettingState extends State<_TextCapitalizationSetting> 
       onTap: () {
         showDialog(
           context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text(strings.settingTitlesCapitalization),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: TextCapitalization.values
-                  .map(
-                    (TextCapitalization element) => Card(
-                      child: InkWell(
-                        onTap: () async {
-                          // Prefetch handlers before async gaps.
-                          final NavigatorState navigator = Navigator.of(context);
+          builder: (BuildContext context) {
+            final ThemeData theme = Theme.of(context);
+            final int storedValue = (SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization)) ?? Config.defaultTitlesCapitalization.index;
 
-                          // Store the setting.
-                          setState(() {
-                            SharedPrefsHelper.instance.setValue(SharedPrefsKeys.titlesCapitalization, element.index);
-                          });
+            return AlertDialog(
+              title: Text(strings.settingTitlesCapitalization),
+              content: SizedBox(
+                width: Themes.maxContentWidth,
+                child: ListView(
+                  physics: Themes.scrollPhysics,
+                  shrinkWrap: true,
+                  children: TextCapitalization.values
+                      .mapIndexed(
+                        (int index, TextCapitalization element) => Card(
+                          child: InkWell(
+                            onTap: () async {
+                              // Prefetch handlers before async gaps.
+                              final NavigatorState navigator = Navigator.of(context);
 
-                          // Pop the dialog.
-                          navigator.pop();
-                        },
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.all(Themes.spacingMedium),
-                            child: Text(element.label),
+                              // Store the setting.
+                              setState(() {
+                                SharedPrefsHelper.instance.setValue(SharedPrefsKeys.titlesCapitalization, element.index);
+                              });
+
+                              // Pop the dialog.
+                              navigator.pop();
+                            },
+                            child: Card(
+                              color: storedValue == index ? theme.colorScheme.secondary : null,
+                              child: Padding(
+                                padding: const EdgeInsets.all(Themes.spacingMedium),
+                                child: Text(element.label),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
+                      )
+                      .toList(),
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -130,50 +140,55 @@ class _DefaultCoverImageSettingState extends State<_DefaultCoverImageSetting> {
       onTap: () {
         showDialog(
           context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text(strings.settingDefaultCover),
-            content: SizedBox(
-              width: Themes.maxContentWidth,
-              child: GridView.count(
-                crossAxisCount: 3,
-                physics: Themes.scrollPhysics,
-                mainAxisSpacing: Themes.spacingMedium,
-                crossAxisSpacing: Themes.spacingMedium,
-                shrinkWrap: true,
-                children: Assets.defaultCovers
-                    .mapIndexed(
-                      (int index, String imagePath) => GestureDetector(
-                        onTap: () {
-                          final NavigatorState navigator = Navigator.of(context);
+          builder: (BuildContext context) {
+            final ThemeData theme = Theme.of(context);
+            final int storedValue = (SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.defaultBookCoverImage)) ?? Config.defaultBookCoverImage;
 
-                          // Store the user selected cover.
-                          setState(() {
-                            SharedPrefsHelper.instance.setLoudValue(SharedPrefsKeys.defaultBookCoverImage, index);
-                          });
+            return AlertDialog(
+              title: Text(strings.settingDefaultCover),
+              content: SizedBox(
+                width: Themes.maxContentWidth,
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  physics: Themes.scrollPhysics,
+                  mainAxisSpacing: Themes.spacingMedium,
+                  crossAxisSpacing: Themes.spacingMedium,
+                  shrinkWrap: true,
+                  children: Assets.defaultCovers
+                      .mapIndexed(
+                        (int index, String imagePath) => GestureDetector(
+                          onTap: () {
+                            final NavigatorState navigator = Navigator.of(context);
 
-                          navigator.pop();
-                        },
-                        child: ColoredBorderWidget(
-                          colors: index == SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.defaultBookCoverImage)
-                              ? [
-                                  ShelflessColors.primary,
-                                  ShelflessColors.secondary,
-                                ]
-                              : [],
-                          thickness: Themes.spacingSmall,
-                          borderRadius: Themes.radiusMedium,
-                          child: Image.asset(
-                            imagePath,
-                            fit: BoxFit.cover,
-                            filterQuality: FilterQuality.none,
+                            // Store the user selected cover.
+                            setState(() {
+                              SharedPrefsHelper.instance.setValueAloud(SharedPrefsKeys.defaultBookCoverImage, index);
+                            });
+
+                            navigator.pop();
+                          },
+                          child: ColoredBorderWidget(
+                            colors: index == storedValue
+                                ? [
+                                    theme.colorScheme.primary,
+                                    theme.colorScheme.secondary,
+                                  ]
+                                : [],
+                            thickness: Themes.spacingSmall,
+                            borderRadius: Themes.radiusMedium,
+                            child: Image.asset(
+                              imagePath,
+                              fit: BoxFit.cover,
+                              filterQuality: FilterQuality.none,
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                    .toList(),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -208,38 +223,93 @@ class _AppLanguageSettingState extends State<_AppLanguageSetting> {
       onTap: () {
         showDialog(
           context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text(strings.settingAppLanguage),
-            content: SizedBox(
-              width: Themes.maxContentWidth,
-              child: ListView(
-                physics: Themes.scrollPhysics,
-                shrinkWrap: true,
-                children: AppLocale.values
-                    .mapIndexed(
-                      (int index, AppLocale value) => GestureDetector(
-                        onTap: () {
-                          final NavigatorState navigator = Navigator.of(context);
+          builder: (BuildContext context) {
+            final ThemeData theme = Theme.of(context);
+            final int storedValue = (SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale)) ?? Config.defaultAppLocale;
 
-                          // Store the user selected cover.
-                          setState(() {
-                            SharedPrefsHelper.instance.setLoudValue(SharedPrefsKeys.appLocale, index);
-                          });
+            return AlertDialog(
+              title: Text(strings.settingAppLanguage),
+              content: SizedBox(
+                width: Themes.maxContentWidth,
+                child: ListView(
+                  physics: Themes.scrollPhysics,
+                  shrinkWrap: true,
+                  children: AppLocale.values
+                      .mapIndexed(
+                        (int index, AppLocale value) => GestureDetector(
+                          onTap: () {
+                            final NavigatorState navigator = Navigator.of(context);
 
-                          navigator.pop();
-                        },
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(Themes.spacingMedium),
-                            child: Text(value.label),
+                            // Store the user selected cover.
+                            setState(() {
+                              SharedPrefsHelper.instance.setValueAloud(SharedPrefsKeys.appLocale, index);
+                            });
+
+                            navigator.pop();
+                          },
+                          child: Card(
+                            color: storedValue == index ? theme.colorScheme.secondary : null,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
+                              child: Text(value.label),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                    .toList(),
+                      )
+                      .toList(),
+                ),
               ),
-            ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+/// List tile for default book cover image. Separated for performance.
+class _DateFormatSetting extends StatefulWidget {
+  const _DateFormatSetting();
+
+  @override
+  State<_DateFormatSetting> createState() => _DateFormatSettingState();
+}
+
+class _DateFormatSettingState extends State<_DateFormatSetting> {
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        spacing: Themes.spacingMedium,
+        children: [
+          Expanded(
+            child: Text(strings.settingDateFormat),
           ),
+          Text(
+            SharedPrefsHelper.instance.data.getString(SharedPrefsKeys.dateFormat) ?? Config.defaultDateFormat,
+            style: settingValueTextStyle,
+          ),
+        ],
+      ),
+      onTap: () async {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return DateFormatSettingDialog(
+              onCancel: () {
+                Navigator.of(context).pop();
+              },
+              onConfirm: (String value) {
+                final NavigatorState navigator = Navigator.of(context);
+
+                setState(() {
+                  SharedPrefsHelper.instance.setValueAloud(SharedPrefsKeys.dateFormat, value);
+                });
+                navigator.pop();
+              },
+            );
+          },
         );
       },
     );
@@ -284,10 +354,13 @@ class SettingsScreen extends StatelessWidget {
                       _DefaultCoverImageSetting(),
 
                       // Titles' text capitalization.
-                      _TextCapitalizationSetting(),
+                      _TitlesCapitalizationSetting(),
 
                       // App language.
                       _AppLanguageSetting(),
+
+                      // Dates format.
+                      _DateFormatSetting(),
                     ],
                   ),
 
