@@ -23,9 +23,9 @@ import 'package:shelfless/widgets/book_cover_image_widget.dart';
 import 'package:shelfless/dialogs/double_choice_dialog.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
+import 'package:shelfless/widgets/slippery_text_form_field_widget.dart';
 import 'package:shelfless/widgets/location_selection_widget.dart';
 import 'package:shelfless/widgets/publisher_selection_widget.dart';
-import 'package:shelfless/widgets/unfocus_widget.dart';
 
 class EditBookScreen extends StatefulWidget {
   static const String routeName = "/edit-book";
@@ -46,11 +46,6 @@ class EditBookScreen extends StatefulWidget {
 class _EditBookScreenState extends State<EditBookScreen> {
   late Book _book;
 
-  late final TextEditingController _titleController;
-  late final TextEditingController _notesController;
-  final FocusNode _titleFocusNode = FocusNode();
-  final FocusNode _notesFocusNode = FocusNode();
-
   // Insert flag: tells whether the widget is used for adding or editing a book.
   bool _inserting = true;
 
@@ -61,8 +56,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
     LibraryContentProvider.instance.addListener(_onContentChanged);
 
     _inserting = widget.book == null;
-    _titleController = TextEditingController(text: widget.book?.raw.title ?? "");
-    _notesController = TextEditingController(text: widget.book?.raw.notes ?? "");
 
     // The book is copied in order not to edit the original one by mistake.
     _book = widget.book != null
@@ -100,65 +93,61 @@ class _EditBookScreenState extends State<EditBookScreen> {
         title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
       ),
       body: SafeArea(
-        child: UnfocusWidget(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingMedium),
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // Title.
-                    EditSectionWidget(
-                      children: [
-                        Text(strings.bookInfoTitle),
-                        Themes.spacer,
-                        TextFormField(
-                          controller: _titleController,
-                          focusNode: _titleFocusNode,
-                          onTapOutside: (PointerDownEvent event) => _titleFocusNode.unfocus(),
-                          textCapitalization:
-                              TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
-                          onChanged: (String value) => _book.raw.title = value,
-                        ),
-                      ],
-                    ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(Themes.spacingMedium),
+            child: SizedBox(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Title.
+                  EditSectionWidget(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Text(strings.bookInfoTitle),
+                      SlipperyTextFormFieldWidget(
+                        initialValue: widget.book?.raw.title,
+                        onChanged: (String value) => _book.raw.title = value,
+                        textCapitalization:
+                            TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
+                      ),
+                    ],
+                  ),
 
-                    // Cover.
-                    EditSectionWidget(
-                      spacing: Themes.spacingMedium,
-                      children: [
-                        Text(strings.bookInfoCover),
-                        Center(
-                          child: Stack(
-                            children: [
-                              SizedBox(
-                                width: Themes.thumbnailSizeLarge,
-                                height: Themes.thumbnailSizeLarge,
-                                child: GestureDetector(
-                                  onTap: _pickImage,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(Themes.radiusMedium),
-                                    child: BookCoverImageWidget(
-                                      book: _book,
-                                      child: Card(
-                                        color: ShelflessColors.mainContentActive,
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(Themes.spacingSmall),
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              spacing: Themes.spacingSmall,
-                                              children: [
-                                                Icon(Icons.image_rounded),
-                                                Text(
-                                                  strings.bookInfoNoImageSelected,
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
+                  // Cover.
+                  EditSectionWidget(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Text(strings.bookInfoCover),
+                      Center(
+                        child: Stack(
+                          children: [
+                            SizedBox(
+                              width: Themes.thumbnailSizeLarge,
+                              height: Themes.thumbnailSizeLarge,
+                              child: GestureDetector(
+                                onTap: _pickImage,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(Themes.radiusMedium),
+                                  child: BookCoverImageWidget(
+                                    book: _book,
+                                    child: Card(
+                                      color: ShelflessColors.mainContentActive,
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(Themes.spacingSmall),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            spacing: Themes.spacingSmall,
+                                            children: [
+                                              Icon(Icons.image_rounded),
+                                              Text(
+                                                strings.bookInfoNoImageSelected,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -166,249 +155,244 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   ),
                                 ),
                               ),
+                            ),
 
-                              // Only show the remove cover button if a cover is actually selected.
-                              if (_book.raw.cover != null)
-                                Positioned(
-                                  top: Themes.spacingSmall,
-                                  right: Themes.spacingSmall,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _book.raw.cover = null;
-                                      });
-                                    },
-                                    style: IconButton.styleFrom(backgroundColor: ShelflessColors.errorLight),
-                                    icon: Icon(Icons.close_rounded),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        Text(strings.coverDescription),
-                      ],
-                    ),
-
-                    // Authors.
-                    AuthorsSelectionWidget(
-                      inSelectedIds: _book.authorIds,
-                      insertNew: true,
-                      onAuthorsSelected: (Set<int?> selectedAuthorIds) {
-                        setState(() {
-                          _book.authorIds = selectedAuthorIds.nonNulls.toList();
-                        });
-                      },
-                      onAuthorUnselected: (int authorId) {
-                        setState(() {
-                          _book.authorIds.remove(authorId);
-                        });
-                      },
-                    ),
-
-                    // Publish year.
-                    EditSectionWidget(
-                      children: [
-                        Text(strings.bookInfoPublishYear),
-                        Themes.spacer,
-                        GestureDetector(
-                          onTap: () async {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: Text(strings.selectPublishYear),
-                                content: SizedBox(
-                                  width: dialogWidth,
-                                  height: Themes.maxDialogHeight,
-                                  child: YearPicker(
-                                    firstDate: DateTime(0),
-                                    lastDate: DateTime(currentYear),
-                                    selectedDate: DateTime(_book.raw.publishYear),
-                                    currentDate: DateTime(_book.raw.publishYear),
-                                    onChanged: (DateTime value) {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        _book.raw.publishYear = value.year;
-                                      });
-                                    },
-                                  ),
+                            // Only show the remove cover button if a cover is actually selected.
+                            if (_book.raw.cover != null)
+                              Positioned(
+                                top: Themes.spacingSmall,
+                                right: Themes.spacingSmall,
+                                child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _book.raw.cover = null;
+                                    });
+                                  },
+                                  style: IconButton.styleFrom(backgroundColor: ShelflessColors.errorLight),
+                                  icon: Icon(Icons.close_rounded),
                                 ),
                               ),
-                            );
-                          },
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Card(
-                              color: ShelflessColors.mainContentActive,
-                              child: Padding(
-                                padding: const EdgeInsets.all(Themes.spacingMedium),
-                                child: Center(child: Text((_book.raw.publishYear).toString())),
-                              ),
-                            ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Text(strings.coverDescription),
+                    ],
+                  ),
 
-                    // Acquisition date.
-                    EditSectionWidget(
-                      children: [
-                        Text(strings.bookInfoDateAcquired),
-                        Themes.spacer,
-                        GestureDetector(
-                          onTap: () async {
-                            final DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: _book.raw.dateAcquired ?? DateTime.now(),
-                              firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
-                              lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
-                            );
+                  // Authors.
+                  AuthorsSelectionWidget(
+                    inSelectedIds: _book.authorIds,
+                    insertNew: true,
+                    onAuthorsSelected: (Set<int?> selectedAuthorIds) {
+                      setState(() {
+                        _book.authorIds = selectedAuthorIds.nonNulls.toList();
+                      });
+                    },
+                    onAuthorUnselected: (int authorId) {
+                      setState(() {
+                        _book.authorIds.remove(authorId);
+                      });
+                    },
+                  ),
 
-                            if (pickedDate == null) return;
-
-                            setState(() {
-                              _book.raw.dateAcquired = pickedDate;
-                            });
-                          },
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Card(
-                              color: ShelflessColors.mainContentActive,
-                              child: Padding(
-                                padding: const EdgeInsets.all(Themes.spacingMedium),
-                                child: Center(child: Text(_book.raw.dateAcquired != null ? DateFormat.yMd().format(_book.raw.dateAcquired!) : "-")),
+                  // Publish year.
+                  EditSectionWidget(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Text(strings.bookInfoPublishYear),
+                      GestureDetector(
+                        onTap: () async {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: Text(strings.selectPublishYear),
+                              content: SizedBox(
+                                width: dialogWidth,
+                                height: Themes.maxDialogHeight,
+                                child: YearPicker(
+                                  firstDate: DateTime(0),
+                                  lastDate: DateTime(currentYear),
+                                  selectedDate: DateTime(_book.raw.publishYear),
+                                  currentDate: DateTime(_book.raw.publishYear),
+                                  onChanged: (DateTime value) {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      _book.raw.publishYear = value.year;
+                                    });
+                                  },
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Read date.
-                    EditSectionWidget(
-                      children: [
-                        Text(strings.bookInfoDateRead),
-                        Themes.spacer,
-                        GestureDetector(
-                          onTap: () async {
-                            final DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: _book.raw.dateRead ?? DateTime.now(),
-                              firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
-                              lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
-                            );
-
-                            if (pickedDate == null) return;
-
-                            setState(() {
-                              _book.raw.dateRead = pickedDate;
-                            });
-                          },
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Card(
-                              color: ShelflessColors.mainContentActive,
-                              child: Padding(
-                                padding: const EdgeInsets.all(Themes.spacingMedium),
-                                child: Center(child: Text(_book.raw.dateRead != null ? DateFormat.yMd().format(_book.raw.dateRead!) : "-")),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Genres.
-                    GenresSelectionWidget(
-                      inSelectedIds: _book.genreIds,
-                      insertNew: true,
-                      onGenresSelected: (Set<int?> selectedGenreIds) {
-                        bool duplicates = false;
-                        Set<int> genreIds = {};
-                        for (int? genreId in selectedGenreIds) {
-                          // Make sure the genreId is not null.
-                          if (genreId == null) continue;
-
-                          if (!_book.genreIds.contains(genreId)) {
-                            genreIds.add(genreId);
-                          } else {
-                            duplicates = true;
-                          }
-                        }
-
-                        if (duplicates) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(strings.genreAlreadyAdded),
-                              duration: const Duration(milliseconds: 1000),
                             ),
                           );
-                        }
-
-                        LibraryContentProvider.instance.addGenresToBook(genreIds, _book);
-                      },
-                      onGenreUnselected: (int genreId) {
-                        // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
-                        // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
-                        setState(() {
-                          _book.genreIds.remove(genreId);
-                        });
-                      },
-                    ),
-
-                    // Publisher.
-                    PublisherSelectionWidget(
-                      insertNew: true,
-                      selectedPublisherId: _book.raw.publisherId,
-                      onPublisherSelected: (int? publisherId) {
-                        // Make sure the publisherId is not null.
-                        if (publisherId == null) return;
-
-                        // Set the book publisher.
-                        LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
-                      },
-                      onPublisherUnselected: (int? publisherId) {
-                        LibraryContentProvider.instance.removePublisherFromBook(_book);
-                      },
-                    ),
-
-                    // Location.
-                    LocationSelectionWidget(
-                      insertNew: true,
-                      selectedLocationId: _book.raw.locationId,
-                      onLocationSelected: (int? locationId) {
-                        // Make sure the locationId is not null.
-                        if (locationId == null) return;
-
-                        // Set the book location.
-                        LibraryContentProvider.instance.addLocationToBook(locationId, _book);
-                      },
-                      onLocationUnselected: (int? locationId) {
-                        LibraryContentProvider.instance.removeLocationFromBook(_book);
-                      },
-                    ),
-
-                    // Notes.
-                    EditSectionWidget(
-                      children: [
-                        Text(strings.bookInfoNotes),
-                        Themes.spacer,
-                        TextFormField(
-                          controller: _notesController,
-                          maxLines: null,
-                          focusNode: _notesFocusNode,
-                          onTapOutside: (PointerDownEvent event) => _notesFocusNode.unfocus(),
-                          textCapitalization: TextCapitalization.sentences,
-                          onChanged: (String value) {
-                            _book.raw.notes = value;
-                          },
+                        },
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Card(
+                            color: ShelflessColors.mainContentActive,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
+                              child: Center(child: Text((_book.raw.publishYear).toString())),
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
 
-                    // Fab spacing.
-                    SizedBox(height: fabAccessHeight + devicePadding.bottom),
-                  ],
-                ),
+                  // Acquisition date.
+                  EditSectionWidget(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Text(strings.bookInfoDateAcquired),
+                      GestureDetector(
+                        onTap: () async {
+                          final DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: _book.raw.dateAcquired ?? DateTime.now(),
+                            firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
+                            lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
+                          );
+
+                          if (pickedDate == null) return;
+
+                          setState(() {
+                            _book.raw.dateAcquired = pickedDate;
+                          });
+                        },
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Card(
+                            color: ShelflessColors.mainContentActive,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
+                              child: Center(child: Text(_book.raw.dateAcquired != null ? DateFormat.yMd().format(_book.raw.dateAcquired!) : "-")),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Read date.
+                  EditSectionWidget(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Text(strings.bookInfoDateRead),
+                      GestureDetector(
+                        onTap: () async {
+                          final DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: _book.raw.dateRead ?? DateTime.now(),
+                            firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
+                            lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
+                          );
+
+                          if (pickedDate == null) return;
+
+                          setState(() {
+                            _book.raw.dateRead = pickedDate;
+                          });
+                        },
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Card(
+                            color: ShelflessColors.mainContentActive,
+                            child: Padding(
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
+                              child: Center(child: Text(_book.raw.dateRead != null ? DateFormat.yMd().format(_book.raw.dateRead!) : "-")),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // Genres.
+                  GenresSelectionWidget(
+                    inSelectedIds: _book.genreIds,
+                    insertNew: true,
+                    onGenresSelected: (Set<int?> selectedGenreIds) {
+                      bool duplicates = false;
+                      Set<int> genreIds = {};
+                      for (int? genreId in selectedGenreIds) {
+                        // Make sure the genreId is not null.
+                        if (genreId == null) continue;
+
+                        if (!_book.genreIds.contains(genreId)) {
+                          genreIds.add(genreId);
+                        } else {
+                          duplicates = true;
+                        }
+                      }
+
+                      if (duplicates) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(strings.genreAlreadyAdded),
+                            duration: const Duration(milliseconds: 1000),
+                          ),
+                        );
+                      }
+
+                      LibraryContentProvider.instance.addGenresToBook(genreIds, _book);
+                    },
+                    onGenreUnselected: (int genreId) {
+                      // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
+                      // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
+                      setState(() {
+                        _book.genreIds.remove(genreId);
+                      });
+                    },
+                  ),
+
+                  // Publisher.
+                  PublisherSelectionWidget(
+                    insertNew: true,
+                    selectedPublisherId: _book.raw.publisherId,
+                    onPublisherSelected: (int? publisherId) {
+                      // Make sure the publisherId is not null.
+                      if (publisherId == null) return;
+
+                      // Set the book publisher.
+                      LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
+                    },
+                    onPublisherUnselected: (int? publisherId) {
+                      LibraryContentProvider.instance.removePublisherFromBook(_book);
+                    },
+                  ),
+
+                  // Location.
+                  LocationSelectionWidget(
+                    insertNew: true,
+                    selectedLocationId: _book.raw.locationId,
+                    onLocationSelected: (int? locationId) {
+                      // Make sure the locationId is not null.
+                      if (locationId == null) return;
+
+                      // Set the book location.
+                      LibraryContentProvider.instance.addLocationToBook(locationId, _book);
+                    },
+                    onLocationUnselected: (int? locationId) {
+                      LibraryContentProvider.instance.removeLocationFromBook(_book);
+                    },
+                  ),
+
+                  // Notes.
+                  EditSectionWidget(
+                    spacing: Themes.spacingMedium,
+                    children: [
+                      Text(strings.bookInfoNotes),
+                      SlipperyTextFormFieldWidget(
+                        initialValue: widget.book?.raw.notes,
+                        textCapitalization: TextCapitalization.sentences,
+                        onChanged: (String value) => _book.raw.notes = value,
+                      ),
+                    ],
+                  ),
+
+                  // Fab spacing.
+                  SizedBox(height: fabAccessHeight + devicePadding.bottom),
+                ],
               ),
             ),
           ),

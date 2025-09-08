@@ -8,7 +8,7 @@ import 'package:shelfless/utils/shared_prefs_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
-import 'package:shelfless/widgets/unfocus_widget.dart';
+import 'package:shelfless/widgets/slippery_text_form_field_widget.dart';
 
 class EditPublisherScreen extends StatefulWidget {
   final Publisher? publisher;
@@ -43,46 +43,44 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UnfocusWidget(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.publisherTitle}"),
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(Themes.spacingMedium),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                EditSectionWidget(
-                  children: [
-                    Text(strings.publisherInfoName),
-                    Themes.spacer,
-                    TextFormField(
-                      initialValue: _publisher.name,
-                      textCapitalization:
-                          TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
-                      onChanged: (String value) => _publisher.name = value,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            // Actually save the author.
-            _inserting ? LibraryContentProvider.instance.addPublisher(_publisher) : LibraryContentProvider.instance.updatePublisher(widget.publisher!..copyFrom(_publisher));
-            Navigator.of(context).pop();
-          },
-          label: Row(
-            spacing: Themes.spacingMedium,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.publisherTitle}"),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(Themes.spacingMedium),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(strings.editDone),
-              const Icon(Icons.check),
+              EditSectionWidget(
+                spacing: Themes.spacingMedium,
+                children: [
+                  Text(strings.publisherInfoName),
+                  SlipperyTextFormFieldWidget(
+                    initialValue: _publisher.name,
+                    textCapitalization:
+                        TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
+                    onChanged: (String value) => _publisher.name = value,
+                  ),
+                ],
+              ),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Actually save the author.
+          _inserting ? LibraryContentProvider.instance.addPublisher(_publisher) : LibraryContentProvider.instance.updatePublisher(widget.publisher!..copyFrom(_publisher));
+          Navigator.of(context).pop();
+        },
+        label: Row(
+          spacing: Themes.spacingMedium,
+          children: [
+            Text(strings.editDone),
+            const Icon(Icons.check),
+          ],
         ),
       ),
     );
