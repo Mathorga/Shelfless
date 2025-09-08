@@ -46,8 +46,10 @@ class EditBookScreen extends StatefulWidget {
 class _EditBookScreenState extends State<EditBookScreen> {
   late Book _book;
 
-  late TextEditingController _titleController;
-  late TextEditingController _notesController;
+  late final TextEditingController _titleController;
+  late final TextEditingController _notesController;
+  final FocusNode _titleFocusNode = FocusNode();
+  final FocusNode _notesFocusNode = FocusNode();
 
   // Insert flag: tells whether the widget is used for adding or editing a book.
   bool _inserting = true;
@@ -101,7 +103,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
         child: UnfocusWidget(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Padding(
               padding: const EdgeInsets.all(Themes.spacingMedium),
               child: SizedBox(
@@ -116,6 +117,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         Themes.spacer,
                         TextFormField(
                           controller: _titleController,
+                          focusNode: _titleFocusNode,
+                          onTapOutside: (PointerDownEvent event) => _titleFocusNode.unfocus(),
                           textCapitalization:
                               TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
                           onChanged: (String value) => _book.raw.title = value,
@@ -392,6 +395,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         TextFormField(
                           controller: _notesController,
                           maxLines: null,
+                          focusNode: _notesFocusNode,
+                          onTapOutside: (PointerDownEvent event) => _notesFocusNode.unfocus(),
                           textCapitalization: TextCapitalization.sentences,
                           onChanged: (String value) {
                             _book.raw.notes = value;
