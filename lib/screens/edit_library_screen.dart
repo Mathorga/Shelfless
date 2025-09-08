@@ -9,7 +9,7 @@ import 'package:shelfless/utils/shared_prefs_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
-import 'package:shelfless/widgets/unfocus_widget.dart';
+import 'package:shelfless/widgets/slippery_text_form_field_widget.dart';
 
 class EditLibraryScreen extends StatefulWidget {
   final LibraryPreview? library;
@@ -43,65 +43,63 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
   @override
   Widget build(BuildContext context) {
     // Fetch provider to save changes.
-    return UnfocusWidget(
-      child: Stack(
-        children: [
-          Scaffold(
-            appBar: AppBar(
-              title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.libraryTitle}"),
-            ),
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(Themes.spacingMedium),
-                child: EditSectionWidget(
-                  children: [
-                    Text(strings.libraryInfoName),
-                    Themes.spacer,
-                    TextFormField(
-                      initialValue: _library?.raw.name,
-                      textCapitalization:
-                          TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
-                      onChanged: (String value) => _library?.raw.name = value,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: () {
-                final ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
-
-                if (_library?.raw.name.isEmpty ?? true) {
-                  scaffoldMessenger.showSnackBar(
-                    SnackBar(
-                      duration: Themes.durationShort,
-                      content: Text(strings.libraryErrorNoNameProvided),
-                    ),
-                  );
-                  return;
-                }
-
-                // Actually save the library.
-                _inserting ? LibrariesProvider.instance.addLibrary(_library!) : LibrariesProvider.instance.updateLibrary(_library!);
-
-                // Call parent back on done.
-                widget.onDone?.call();
-              },
-              label: Row(
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.libraryTitle}"),
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(Themes.spacingMedium),
+              child: EditSectionWidget(
+                spacing: Themes.spacingMedium,
                 children: [
-                  Text(strings.editDone),
-                  const SizedBox(width: 12.0),
-                  const Icon(Icons.check),
+                  Text(strings.libraryInfoName),
+                  SlipperyTextFormFieldWidget(
+                    initialValue: _library?.raw.name,
+                    textCapitalization:
+                        TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
+                    onChanged: (String value) => _library?.raw.name = value,
+                  ),
                 ],
               ),
             ),
           ),
-          if (_library == null)
-            Center(
-              child: CircularProgressIndicator(),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              final ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+    
+              if (_library?.raw.name.isEmpty ?? true) {
+                scaffoldMessenger.showSnackBar(
+                  SnackBar(
+                    duration: Themes.durationShort,
+                    content: Text(strings.libraryErrorNoNameProvided),
+                  ),
+                );
+                return;
+              }
+    
+              // Actually save the library.
+              _inserting ? LibrariesProvider.instance.addLibrary(_library!) : LibrariesProvider.instance.updateLibrary(_library!);
+    
+              // Call parent back on done.
+              widget.onDone?.call();
+            },
+            label: Row(
+              children: [
+                Text(strings.editDone),
+                const SizedBox(width: 12.0),
+                const Icon(Icons.check),
+              ],
             ),
-        ],
-      ),
+          ),
+        ),
+        if (_library == null)
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+      ],
     );
   }
 }

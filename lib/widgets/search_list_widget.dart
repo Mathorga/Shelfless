@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/slippery_text_form_field_widget.dart';
 
 /// Simple searchable list of elements.
 class SearchListWidget<T> extends StatefulWidget {
@@ -46,11 +47,13 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextFormField(
-          decoration: InputDecoration(labelText: strings.search),
-          onChanged: (String? value) {
+        SlipperyTextFormFieldWidget(
+          decoration: InputDecoration(
+            labelText: strings.search,
+          ),
+          onChanged: (String value) {
             setState(() {
-              _filter = value?.toLowerCase();
+              _filter = value.toLowerCase();
             });
           },
         ),

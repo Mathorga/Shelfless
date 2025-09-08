@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:crop_image/crop_image.dart';
-import 'package:shelfless/dialogs/confirm_dialog.dart';
 
+import 'package:shelfless/dialogs/confirm_dialog.dart';
 import 'package:shelfless/dialogs/error_dialog.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';

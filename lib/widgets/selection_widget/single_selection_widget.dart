@@ -33,6 +33,7 @@ class SingleSelectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EditSectionWidget(
+      spacing: Themes.spacingMedium,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -78,8 +79,7 @@ class SingleSelectionWidget extends StatelessWidget {
             ),
           ],
         ),
-        if (selecteIds.isNotEmpty) ...[
-          Themes.spacer,
+        if (selecteIds.isNotEmpty)
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
@@ -87,7 +87,6 @@ class SingleSelectionWidget extends StatelessWidget {
               children: selecteIds.map((int? id) => _buildPreview(id)).toList(),
             ),
           ),
-        ],
       ],
     );
   }
