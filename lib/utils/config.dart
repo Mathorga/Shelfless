@@ -20,6 +20,9 @@ class Config {
   /// Default value for displaying dates.
   static const String defaultDateFormat = "yyyy/MM/dd";
 
+  /// Tells whether books' cover images should be displayed using a custom shader or not.
+  static const bool useCoverImageShader = false;
+
   /// Book date threshold in years in the past: a book can be acquired or read up to 200 years before now.
   static const int pastBookDateThreshold = 200;
 

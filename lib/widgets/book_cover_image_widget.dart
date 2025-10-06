@@ -58,12 +58,24 @@ class BookCoverImageWidget extends StatelessWidget {
 
               // Read raw data from asset.
               final Uint8List data = snapshot.data!.buffer.asUint8List();
-              return ShadedImageWidget(imageData: data);
+              return Config.useCoverImageShader
+                  ? ShadedImageWidget(imageData: data)
+                  : Image.memory(
+                      data,
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.none,
+                    );
             },
           );
     }
 
     // Display the book's cover image otherwise.
-    return ShadedImageWidget(imageData: book.raw.cover!);
+    return Config.useCoverImageShader
+        ? ShadedImageWidget(imageData: book.raw.cover!)
+        : Image.memory(
+            book.raw.cover!,
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.none,
+          );
   }
 }
