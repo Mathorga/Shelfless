@@ -18,6 +18,7 @@ enum AppLocale {
 }
 
 abstract class Strings {
+  String get credits;
   String get welcomeHeader;
   String get welcomeSubtitle;
   String get welcomeSuggestion;

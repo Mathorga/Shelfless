@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:shelfless/utils/strings/strings.dart';
 
 /// Utility class: holds all app settings and controls for customization.
@@ -28,6 +29,9 @@ class Config {
 
   /// Book date threshold in years in the future: a book can be acquired or read up to 10 years from now.
   static const int futureBookDateThreshold = 10;
+
+  /// Amount of time credits are displayed on screen before navigating to other screens.
+  static const Duration creditsDuration = Duration(seconds: 2);
 
   /// Starting value for default app locale (language).
   static int defaultAppLocale = AppLocale.system.index;
