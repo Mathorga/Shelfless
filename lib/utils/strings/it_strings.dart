@@ -4,7 +4,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 
 /// Italian strings.
 class ItStrings implements Strings {
-  @override String get credits => "A mio padre,\nMaurizio Micheletti";
+  @override String get credits => "A mio padre Maurizio Micheletti";
   @override String get welcomeHeader => "Benvenuto in";
   @override String get welcomeSubtitle => "Il tuo catalogo di libri presonale";
   @override String get welcomeSuggestion => "Inizia creando una nuova biblioteca o importandone una da file";
