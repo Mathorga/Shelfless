@@ -4,6 +4,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 
 /// Italian strings.
 class ItStrings implements Strings {
+  @override String get dedication => "A mio padre Maurizio Micheletti";
   @override String get welcomeHeader => "Benvenuto in";
   @override String get welcomeSubtitle => "Il tuo catalogo di libri presonale";
   @override String get welcomeSuggestion => "Inizia creando una nuova biblioteca o importandone una da file";
@@ -19,6 +20,8 @@ class ItStrings implements Strings {
   @override String get privacyPolicyLabel => "Informativa privacy";
   @override String get licensesLabel => "Licenze";
   @override String get supportLabel => "Contatta il supporto";
+  @override String get othersSectionLabel => "Altro";
+  @override String get dedicationLabel => "Dedica";
   @override String get librariesTitle => "Biblioteche";
   @override String get othersTitle => "Altro";
   @override String get all => "Tutti";
