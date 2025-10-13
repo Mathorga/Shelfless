@@ -19,4 +19,7 @@ class SharedPrefsKeys {
 
   // The preferred application dates format. Users can change it from the app's settings.
   static const String dateFormat = "date_format";
+
+  // Whether the initial credits screen has been shown or not.
+  static const String startupCreditsShown = "head_credits_shown";
 }

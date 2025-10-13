@@ -4,10 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shelfless/providers/libraries_provider.dart';
-import 'package:shelfless/screens/credits_screen.dart';
+import 'package:shelfless/screens/dedication_screen.dart';
+import 'package:shelfless/screens/router_screen.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/shared_prefs_helper.dart';
+import 'package:shelfless/utils/shared_prefs_keys.dart';
 
 void main() async {
   // Open the local database.
@@ -39,7 +41,25 @@ class Shelfless extends StatelessWidget {
     return MaterialApp(
       title: Themes.appName,
       theme: Themes.shelflessTheme,
-      home: CreditsScreen(),
+      home: Builder(
+        builder: (BuildContext context) {
+          // Check whether startup credits were shown or not.
+          final bool startupCreditsShown = SharedPrefsHelper.instance.data.getBool(SharedPrefsKeys.startupCreditsShown) ?? false;
+
+          // Make sure credits aren't shown at next startup.
+          if (!startupCreditsShown) SharedPrefsHelper.instance.data.setBool(SharedPrefsKeys.startupCreditsShown, true);
+
+          return startupCreditsShown
+              ? RouterScreen()
+              : DedicationScreen(
+                  destination: MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return RouterScreen();
+                    },
+                  ),
+                );
+        },
+      ),
       routes: {},
     );
   }

@@ -18,7 +18,7 @@ enum AppLocale {
 }
 
 abstract class Strings {
-  String get credits;
+  String get dedication;
   String get welcomeHeader;
   String get welcomeSubtitle;
   String get welcomeSuggestion;
@@ -34,6 +34,8 @@ abstract class Strings {
   String get privacyPolicyLabel;
   String get licensesLabel;
   String get supportLabel;
+  String get othersSectionLabel;
+  String get dedicationLabel;
   String get librariesTitle;
   String get othersTitle;
   String get all;

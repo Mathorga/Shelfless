@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:collection/collection.dart';
+import 'package:shelfless/screens/dedication_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
 
@@ -434,6 +435,48 @@ class SettingsScreen extends StatelessWidget {
                         onTap: () {
                           // Open an email to the support address.
                           launchUrl(Uri.parse(Config.supportEmailAddress));
+                        },
+                      ),
+                    ],
+                  ),
+
+                  // Others.
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(Themes.spacingMedium),
+                        child: Text(
+                          strings.othersSectionLabel,
+                          style: TextStyle(
+                            color: ShelflessColors.onMainContentInactive,
+                            fontSize: Themes.fontSizeXSmall,
+                          ),
+                        ),
+                      ),
+
+                      // Dedication.
+                      ListTile(
+                        title: Row(
+                          spacing: Themes.spacingMedium,
+                          children: [
+                            Icon(Icons.history_edu_rounded),
+                            Expanded(
+                              child: Text(
+                                strings.dedicationLabel,
+                              ),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          NavigatorState navigator = Navigator.of(context);
+
+                          // Go to dedication screen.
+                          navigator.push(MaterialPageRoute(
+                            builder: (BuildContext context) => DedicationScreen(
+                              landing: true,
+                            ),
+                          ));
                         },
                       ),
                     ],
