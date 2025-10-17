@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/themes/themes.dart';
+import 'package:shelfless/utils/strings/strings.dart';
 
 class LibrarySortOrderListWidget extends StatefulWidget {
   const LibrarySortOrderListWidget({super.key});
@@ -40,7 +41,7 @@ class _LibrarySortOrderListWidgetState extends State<LibrarySortOrderListWidget>
         children: [
           // Title.
           Text(
-            "Sort by",
+            strings.librarySortBy,
             style: theme.textTheme.headlineSmall,
           ),
           SingleChildScrollView(
