@@ -14,11 +14,10 @@ class MultipleSelectionWidget extends StatelessWidget {
   final void Function()? onInsertNewRequested;
   final bool Function(int? id, String? filter) listItemsFilter;
   final Widget Function(int? id) listItemBuilder;
-  final List<int?> selecteIds;
   final void Function(Set<int?> ids)? onItemsSelected;
   final void Function(int id)? onItemUnselected;
 
-  MultipleSelectionWidget({
+  const MultipleSelectionWidget({
     super.key,
     this.title,
     required this.controller,
@@ -28,7 +27,7 @@ class MultipleSelectionWidget extends StatelessWidget {
     List<int?>? inSelectedIds,
     this.onItemsSelected,
     this.onItemUnselected,
-  }) : selecteIds = inSelectedIds ?? [];
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +60,7 @@ class MultipleSelectionWidget extends StatelessWidget {
 
                   return SearchListWidget<int?>(
                     values: controller.sourceIds,
-                    selectedValues: selecteIds,
+                    selectedValues: controller.selectedIds,
                     multiple: true,
                     filter: listItemsFilter,
                     builder: listItemBuilder,
@@ -79,12 +78,12 @@ class MultipleSelectionWidget extends StatelessWidget {
             ),
           ],
         ),
-        if (selecteIds.isNotEmpty)
+        if (controller.selectedIds.isNotEmpty)
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: selecteIds.map((int? id) => _buildPreview(id)).toList(),
+              children: controller.selectedIds.map((int? id) => _buildPreview(id)).toList(),
             ),
           ),
       ],

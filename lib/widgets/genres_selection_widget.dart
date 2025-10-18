@@ -43,7 +43,7 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
     super.initState();
 
     LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.genres.keys.toList());
+      _selectionController.setSourceIds(LibraryContentProvider.instance.genres.keys.toList());
     });
   }
 

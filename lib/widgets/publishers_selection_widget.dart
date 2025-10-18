@@ -43,7 +43,7 @@ class _PublishersSelectionWidgetState extends State<PublishersSelectionWidget> {
     super.initState();
 
     LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.publishers.keys.toList());
+      _selectionController.setSourceIds(LibraryContentProvider.instance.publishers.keys.toList());
     });
   }
 

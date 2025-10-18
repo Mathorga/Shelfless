@@ -99,10 +99,12 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // Actually save the author.
-          _inserting ? LibraryContentProvider.instance.addAuthor(_author) : LibraryContentProvider.instance.updateAuthor(widget.author!..copyFrom(_author));
-          Navigator.of(context).pop();
+        onPressed: () async {
+          final NavigatorState navigator = Navigator.of(context);
+
+          // Actually save the author and pop it back.
+          _inserting ? await LibraryContentProvider.instance.addAuthor(_author) : await LibraryContentProvider.instance.updateAuthor(widget.author!..copyFrom(_author));
+          navigator.pop(_author);
         },
         label: Row(
           spacing: Themes.spacingMedium,

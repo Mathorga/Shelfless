@@ -43,7 +43,7 @@ class _LocationsSelectionWidgetState extends State<LocationsSelectionWidget> {
     super.initState();
 
     LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.locations.keys.toList());
+      _selectionController.setSourceIds(LibraryContentProvider.instance.locations.keys.toList());
     });
   }
 

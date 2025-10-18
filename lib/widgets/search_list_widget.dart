@@ -43,6 +43,13 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   }
 
   @override
+  void didUpdateWidget(covariant SearchListWidget<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _selection.addAll(widget.selectedValues);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,

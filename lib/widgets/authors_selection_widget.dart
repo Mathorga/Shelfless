@@ -34,8 +34,9 @@ class AuthorsSelectionWidget extends StatefulWidget {
 }
 
 class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
-  final SelectionController _selectionController = SelectionController(
+  late final SelectionController _selectionController = SelectionController(
     sourceIds: LibraryContentProvider.instance.authors.keys.toList(),
+    selectedIds: widget.selectedAuthorIds,
   );
 
   @override
@@ -43,8 +44,15 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
     super.initState();
 
     LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.authors.keys.toList());
+      _selectionController.setSourceIds(LibraryContentProvider.instance.authors.keys.toList());
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant AuthorsSelectionWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _selectionController.selectedIds = widget.selectedAuthorIds;
   }
 
   @override
@@ -52,14 +60,16 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
     return MultipleSelectionWidget(
       title: strings.bookInfoAuthors,
       controller: _selectionController,
-      inSelectedIds: widget.selectedAuthorIds,
+      // inSelectedIds: widget.selectedAuthorIds,
       onInsertNewRequested: widget.insertNew
-          ? () {
-              Navigator.of(context).push(
+          ? () async {
+              final Author newAuthor = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => const EditAuthorScreen(),
                 ),
               );
+
+              _selectionController.addSelection(newAuthor.id);
             }
           : null,
       onItemsSelected: widget.onAuthorsSelected,
