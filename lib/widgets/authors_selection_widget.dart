@@ -78,7 +78,7 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
               WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
                 // Move the scroll view to the end.
                 _searchScrollController.animateTo(
-                  _searchScrollController.position.maxScrollExtent + _searchScrollController.offset,
+                  _searchScrollController.position.maxScrollExtent,
                   duration: Themes.durationShort,
                   // TODO Move to Themes.
                   curve: Curves.fastOutSlowIn,
