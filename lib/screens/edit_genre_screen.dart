@@ -137,10 +137,12 @@ class _EditGenreScreenState extends State<EditGenreScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
+          final NavigatorState navigator = Navigator.of(context);
+
           // Actually save the genre.
-          _inserting ? LibraryContentProvider.instance.addGenre(_genre) : LibraryContentProvider.instance.updateGenre(widget.genre!..copyFrom(_genre));
-          Navigator.of(context).pop();
+          _inserting ? await LibraryContentProvider.instance.addGenre(_genre) : await LibraryContentProvider.instance.updateGenre(widget.genre!..copyFrom(_genre));
+          navigator.pop(_genre);
         },
         label: Row(
           children: [

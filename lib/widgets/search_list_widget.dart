@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/themes/themes.dart';
@@ -11,10 +12,12 @@ class SearchListWidget<T> extends StatefulWidget {
   final void Function(Set<T>)? onElementsSelected;
   final void Function()? onCancel;
   final bool multiple;
+
+  /// List of all values.
   final List<T> values;
 
-  /// List of all preselected values.
-  final List<T> selectedValues;
+  /// Set of all preselected values.
+  final Set<T> selectedValues;
 
   const SearchListWidget({
     super.key,
@@ -24,7 +27,7 @@ class SearchListWidget<T> extends StatefulWidget {
     this.onCancel,
     this.multiple = false,
     this.values = const [],
-    this.selectedValues = const [],
+    this.selectedValues = const {},
   });
 
   @override
@@ -34,6 +37,7 @@ class SearchListWidget<T> extends StatefulWidget {
 class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   String? _filter;
   final Set<T> _selection = {};
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -46,7 +50,27 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   void didUpdateWidget(covariant SearchListWidget<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selection.addAll(widget.selectedValues);
+    if (!setEquals(widget.selectedValues, _selection)) {
+      _selection.addAll(widget.selectedValues);
+
+      // Wait for the next frame to be rendered.
+      WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+        // Move the scroll view to the end.
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent + _scrollController.offset,
+          duration: Themes.durationShort,
+          // TODO Move to Themes.
+          curve: Curves.fastOutSlowIn,
+        );
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _selection.clear();
+
+    super.dispose();
   }
 
   @override
@@ -68,6 +92,7 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
         Expanded(
           child: SingleChildScrollView(
             physics: Themes.scrollPhysics,
+            controller: _scrollController,
             child: Column(
               children: [
                 ...widget.values

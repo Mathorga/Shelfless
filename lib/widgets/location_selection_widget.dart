@@ -52,7 +52,7 @@ class _LocationSelectionWidgetState extends State<LocationSelectionWidget> {
     return SingleSelectionWidget(
       title: strings.bookInfoLocation,
       controller: _selectionController,
-      inSelectedIds: [widget.selectedLocationId].nonNulls.toList(),
+      inSelectedIds: [widget.selectedLocationId].nonNulls.toSet(),
       onInsertNewRequested: widget.insertNew
           ? () {
               Navigator.of(context).push(

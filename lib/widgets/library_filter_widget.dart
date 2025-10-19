@@ -66,7 +66,7 @@ class _LibraryFilterWidgetState extends State<LibraryFilterWidget> {
 
                   // Authors selection.
                   AuthorsSelectionWidget(
-                    inSelectedIds: _filters.authorsFilter.toList(),
+                    inSelectedIds: {..._filters.authorsFilter},
                     onAuthorsSelected: (Set<int?> selectedAuthorIds) {
                       setState(() {
                         _filters.authorsFilter.addAll(selectedAuthorIds);

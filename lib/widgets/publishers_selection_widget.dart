@@ -52,7 +52,7 @@ class _PublishersSelectionWidgetState extends State<PublishersSelectionWidget> {
     return MultipleSelectionWidget(
       title: strings.bookInfoPublishers,
       controller: _selectionController,
-      inSelectedIds: widget.selectedPublisherIds,
+      // inSelectedIds: widget.selectedPublisherIds,
       onInsertNewRequested: widget.insertNew
           ? () {
               Navigator.of(context).push(

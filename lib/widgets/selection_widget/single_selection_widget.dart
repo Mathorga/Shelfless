@@ -14,7 +14,7 @@ class SingleSelectionWidget extends StatelessWidget {
   final void Function()? onInsertNewRequested;
   final bool Function(int? id, String? filter) listItemsFilter;
   final Widget Function(int? id) listItemBuilder;
-  final List<int?> selecteIds;
+  final Set<int?> selecteIds;
   final void Function(int? id)? onItemSelected;
   final void Function(int id)? onItemUnselected;
 
@@ -25,10 +25,10 @@ class SingleSelectionWidget extends StatelessWidget {
     this.onInsertNewRequested,
     required this.listItemsFilter,
     required this.listItemBuilder,
-    List<int?>? inSelectedIds,
+    Set<int?>? inSelectedIds,
     this.onItemSelected,
     this.onItemUnselected,
-  }) : selecteIds = inSelectedIds ?? [];
+  }) : selecteIds = inSelectedIds ?? {};
 
   @override
   Widget build(BuildContext context) {

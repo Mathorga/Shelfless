@@ -52,7 +52,7 @@ class _LocationsSelectionWidgetState extends State<LocationsSelectionWidget> {
     return MultipleSelectionWidget(
       title: strings.bookInfoLocations,
       controller: _selectionController,
-      inSelectedIds: widget.selectedLocationIds,
+      // inSelectedIds: widget.selectedLocationIds,
       onInsertNewRequested: widget.insertNew
           ? () {
               Navigator.of(context).push(

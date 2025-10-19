@@ -14,6 +14,7 @@ class MultipleSelectionWidget extends StatelessWidget {
   final void Function()? onInsertNewRequested;
   final bool Function(int? id, String? filter) listItemsFilter;
   final Widget Function(int? id) listItemBuilder;
+  final Set<int?> inSelectedIds;
   final void Function(Set<int?> ids)? onItemsSelected;
   final void Function(int id)? onItemUnselected;
 
@@ -24,7 +25,7 @@ class MultipleSelectionWidget extends StatelessWidget {
     this.onInsertNewRequested,
     required this.listItemsFilter,
     required this.listItemBuilder,
-    List<int?>? inSelectedIds,
+    this.inSelectedIds = const {},
     this.onItemsSelected,
     this.onItemUnselected,
   });
@@ -78,12 +79,12 @@ class MultipleSelectionWidget extends StatelessWidget {
             ),
           ],
         ),
-        if (controller.selectedIds.isNotEmpty)
+        if (inSelectedIds.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(Themes.spacingMedium),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: controller.selectedIds.map((int? id) => _buildPreview(id)).toList(),
+              children: inSelectedIds.map((int? id) => _buildPreview(id)).toList(),
             ),
           ),
       ],
@@ -101,6 +102,7 @@ class MultipleSelectionWidget extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
+            controller.removeSelection({id});
             onItemUnselected?.call(id);
           },
           child: Icon(

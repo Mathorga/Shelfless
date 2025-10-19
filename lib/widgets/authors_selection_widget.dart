@@ -10,7 +10,7 @@ import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dar
 
 class AuthorsSelectionWidget extends StatefulWidget {
   /// Already selected author ids.
-  final List<int?> selectedAuthorIds;
+  final Set<int?> inSelectedIds;
 
   /// Whether the widget should allow the user to add a new author if not present already.
   final bool insertNew;
@@ -21,13 +21,13 @@ class AuthorsSelectionWidget extends StatefulWidget {
   /// Called when an author is removed from the selection list.
   final void Function(int authorId)? onAuthorUnselected;
 
-  AuthorsSelectionWidget({
+  const AuthorsSelectionWidget({
     super.key,
-    List<int?>? inSelectedIds,
+    this.inSelectedIds = const {},
     this.insertNew = false,
     this.onAuthorsSelected,
     this.onAuthorUnselected,
-  }) : selectedAuthorIds = inSelectedIds ?? [];
+  });
 
   @override
   State<AuthorsSelectionWidget> createState() => _AuthorsSelectionWidgetState();
@@ -36,23 +36,14 @@ class AuthorsSelectionWidget extends StatefulWidget {
 class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
   late final SelectionController _selectionController = SelectionController(
     sourceIds: LibraryContentProvider.instance.authors.keys.toList(),
-    selectedIds: widget.selectedAuthorIds,
+    selectedIds: {...widget.inSelectedIds},
   );
-
-  @override
-  void initState() {
-    super.initState();
-
-    LibraryContentProvider.instance.addListener(() {
-      _selectionController.setSourceIds(LibraryContentProvider.instance.authors.keys.toList());
-    });
-  }
 
   @override
   void didUpdateWidget(covariant AuthorsSelectionWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectionController.selectedIds = widget.selectedAuthorIds;
+    _selectionController.addSelection({...widget.inSelectedIds});
   }
 
   @override
@@ -60,23 +51,25 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
     return MultipleSelectionWidget(
       title: strings.bookInfoAuthors,
       controller: _selectionController,
-      // inSelectedIds: widget.selectedAuthorIds,
+      inSelectedIds: widget.inSelectedIds,
       onInsertNewRequested: widget.insertNew
           ? () async {
-              final Author newAuthor = await Navigator.of(context).push(
+              final Author? newAuthor = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => const EditAuthorScreen(),
                 ),
               );
 
-              _selectionController.addSelection(newAuthor.id);
+              if (newAuthor == null) return;
+
+              _selectionController.addSourceId(newAuthor.id, select: true);
             }
           : null,
       onItemsSelected: widget.onAuthorsSelected,
       onItemUnselected: widget.onAuthorUnselected,
       listItemsFilter: (int? authorId, String? filter) => filter != null ? LibraryContentProvider.instance.authors[authorId].toString().toLowerCase().contains(filter) : true,
-      listItemBuilder: (int? id) {
-        final Author? author = LibraryContentProvider.instance.authors[id];
+      listItemBuilder: (int? authorId) {
+        final Author? author = LibraryContentProvider.instance.authors[authorId];
 
         if (author == null) return Placeholder();
 
