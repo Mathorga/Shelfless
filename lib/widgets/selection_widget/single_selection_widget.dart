@@ -6,11 +6,10 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
 
 class SingleSelectionWidget extends StatelessWidget {
   final String? title;
-  final SelectionController controller;
+  final SelectionController<int?> controller;
   final void Function()? onInsertNewRequested;
   final bool Function(int? id, String? filter) listItemsFilter;
   final Widget Function(int? id) listItemBuilder;
@@ -60,8 +59,7 @@ class SingleSelectionWidget extends StatelessWidget {
                   });
 
                   return SearchListWidget<int?>(
-                    values: controller.sourceIds,
-                    selectedValues: selecteIds,
+                    selectionController: controller,
                     multiple: false,
                     filter: listItemsFilter,
                     builder: listItemBuilder,

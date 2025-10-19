@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SelectionController extends ChangeNotifier {
+class IdsSelectionController extends ChangeNotifier {
   List<int?> sourceIds;
   Set<int?> selectedIds;
 
-  SelectionController({
+  IdsSelectionController({
     this.sourceIds = const [],
     this.selectedIds = const {},
   });

@@ -5,7 +5,8 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/genre_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/search_list_widget.dart';
+import 'package:shelfless/widgets/selection_widget/ids_selection_controller.dart';
 import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 
 class GenresSelectionWidget extends StatefulWidget {
@@ -34,9 +35,9 @@ class GenresSelectionWidget extends StatefulWidget {
 }
 
 class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
-  late final SelectionController _selectionController = SelectionController(
-    sourceIds: LibraryContentProvider.instance.genres.keys.toList(),
-    selectedIds: {...widget.inSelectedIds},
+  late final SelectionController<int?> _selectionController = SelectionController(
+    domain: LibraryContentProvider.instance.genres.keys.toList(),
+    selection: {...widget.inSelectedIds},
   );
 
   @override
@@ -44,7 +45,7 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
     super.initState();
 
     LibraryContentProvider.instance.addListener(() {
-      _selectionController.setSourceIds(LibraryContentProvider.instance.genres.keys.toList());
+      _selectionController.setDomain(LibraryContentProvider.instance.genres.keys.toList());
     });
   }
 
@@ -52,14 +53,14 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
   void didUpdateWidget(covariant GenresSelectionWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectionController.addSelection({...widget.inSelectedIds});
+    _selectionController.addToSelection({...widget.inSelectedIds});
   }
 
   @override
   Widget build(BuildContext context) {
     return MultipleSelectionWidget(
       title: strings.bookInfoGenres,
-      controller: _selectionController,
+      selectionController: _selectionController,
       onInsertNewRequested: widget.insertNew
           ? () async {
               final RawGenre? newGenre = await Navigator.of(context).push(
@@ -70,7 +71,7 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
 
               if (newGenre == null) return;
 
-              _selectionController.addSourceId(newGenre.id, select: true);
+              _selectionController.addToDomain(newGenre.id, select: true);
             }
           : null,
       onItemsSelected: widget.onGenresSelected,

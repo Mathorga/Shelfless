@@ -5,7 +5,8 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_location_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/location_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/search_list_widget.dart';
+import 'package:shelfless/widgets/selection_widget/ids_selection_controller.dart';
 import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 
 class LocationsSelectionWidget extends StatefulWidget {
@@ -34,8 +35,8 @@ class LocationsSelectionWidget extends StatefulWidget {
 }
 
 class _LocationsSelectionWidgetState extends State<LocationsSelectionWidget> {
-  final SelectionController _selectionController = SelectionController(
-    sourceIds: LibraryContentProvider.instance.locations.keys.toList(),
+  final SelectionController<int?> _selectionController = SelectionController(
+    domain: LibraryContentProvider.instance.locations.keys.toList(),
   );
 
   @override
@@ -43,7 +44,7 @@ class _LocationsSelectionWidgetState extends State<LocationsSelectionWidget> {
     super.initState();
 
     LibraryContentProvider.instance.addListener(() {
-      _selectionController.setSourceIds(LibraryContentProvider.instance.locations.keys.toList());
+      _selectionController.setDomain(LibraryContentProvider.instance.locations.keys.toList());
     });
   }
 
@@ -51,7 +52,7 @@ class _LocationsSelectionWidgetState extends State<LocationsSelectionWidget> {
   Widget build(BuildContext context) {
     return MultipleSelectionWidget(
       title: strings.bookInfoLocations,
-      controller: _selectionController,
+      selectionController: _selectionController,
       // inSelectedIds: widget.selectedLocationIds,
       onInsertNewRequested: widget.insertNew
           ? () {

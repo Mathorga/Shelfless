@@ -1,9 +1,53 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/slippery_text_form_field_widget.dart';
+
+class SelectionController<T> with ChangeNotifier {
+  List<T> domain;
+  Set<T> selection;
+
+  SelectionController({
+    this.domain = const [],
+    this.selection = const {},
+  });
+
+  void setDomain(List<T> elements) {
+    domain = [...elements];
+    notifyListeners();
+  }
+
+  void setSelection(Set<T> elements) {
+    selection = {...elements};
+    notifyListeners();
+  }
+
+  void clearSelection() {
+    selection.clear();
+    notifyListeners();
+  }
+
+  /// Adds [element] to the list of all possible elements.
+  /// If [select] is true, then [element] is also selected.
+  void addToDomain(T element, {bool select = false}) {
+    domain.add(element);
+
+    if (select) selection.add(element);
+
+    notifyListeners();
+  }
+
+  void addToSelection(Set<T> elements) {
+    selection.addAll(elements);
+    notifyListeners();
+  }
+
+  void removeFromSelection(Set<T> ids) {
+    selection.removeAll(ids);
+    notifyListeners();
+  }
+}
 
 /// Simple searchable list of elements.
 class SearchListWidget<T> extends StatefulWidget {
@@ -13,11 +57,8 @@ class SearchListWidget<T> extends StatefulWidget {
   final void Function()? onCancel;
   final bool multiple;
 
-  /// List of all values.
-  final List<T> values;
-
-  /// Set of all preselected values.
-  final Set<T> selectedValues;
+  final SelectionController<T> selectionController;
+  final ScrollController? scrollController;
 
   const SearchListWidget({
     super.key,
@@ -26,8 +67,8 @@ class SearchListWidget<T> extends StatefulWidget {
     this.onElementsSelected,
     this.onCancel,
     this.multiple = false,
-    this.values = const [],
-    this.selectedValues = const {},
+    required this.selectionController,
+    this.scrollController,
   });
 
   @override
@@ -36,39 +77,17 @@ class SearchListWidget<T> extends StatefulWidget {
 
 class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   String? _filter;
-  final Set<T> _selection = {};
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
 
-    _selection.addAll(widget.selectedValues);
-  }
-
-  @override
-  void didUpdateWidget(covariant SearchListWidget<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (!setEquals(widget.selectedValues, _selection)) {
-      _selection.addAll(widget.selectedValues);
-
-      // Wait for the next frame to be rendered.
-      WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
-        // Move the scroll view to the end.
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent + _scrollController.offset,
-          duration: Themes.durationShort,
-          // TODO Move to Themes.
-          curve: Curves.fastOutSlowIn,
-        );
-      });
-    }
+    widget.selectionController.addListener(_onSelectionControllerUpdated);
   }
 
   @override
   void dispose() {
-    _selection.clear();
+    widget.selectionController.removeListener(_onSelectionControllerUpdated);
 
     super.dispose();
   }
@@ -92,10 +111,10 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
         Expanded(
           child: SingleChildScrollView(
             physics: Themes.scrollPhysics,
-            controller: _scrollController,
+            controller: widget.scrollController,
             child: Column(
               children: [
-                ...widget.values
+                ...widget.selectionController.domain
                     .where(
                       (T element) => widget.filter(element, _filter),
                     )
@@ -104,13 +123,13 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
                         children: [
                           if (widget.multiple)
                             Checkbox(
-                              value: _selection.contains(element),
+                              value: widget.selectionController.selection.contains(element),
                               onChanged: (bool? value) {
                                 setState(() {
                                   if (value == true) {
-                                    _selection.add(element);
+                                    widget.selectionController.addToSelection({element});
                                   } else {
-                                    _selection.remove(element);
+                                    widget.selectionController.removeFromSelection({element});
                                   }
                                 });
                               },
@@ -118,7 +137,9 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
                           Expanded(
                             child: GestureDetector(
                               onTap: widget.multiple
-                                  ? () => setState(() => _selection.contains(element) ? _selection.remove(element) : _selection.add(element))
+                                  ? () => setState(() => widget.selectionController.selection.contains(element)
+                                      ? widget.selectionController.removeFromSelection({element})
+                                      : widget.selectionController.addToSelection({element}))
                                   : () => widget.onElementsSelected?.call({element}),
                               child: widget.builder(element),
                             ),
@@ -149,7 +170,13 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
                   ),
                   Themes.spacer,
                   ElevatedButton(
-                    onPressed: () => widget.onElementsSelected?.call(_selection),
+                    onPressed: () {
+                      final NavigatorState navigator = Navigator.of(context);
+
+                      widget.onElementsSelected?.call(widget.selectionController.selection);
+
+                      navigator.pop();
+                    },
                     child: Text(strings.confirm),
                   ),
                 ],
@@ -158,5 +185,13 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
           ),
       ],
     );
+  }
+
+  /// Reacts to changes in the provided selection controller.
+  void _onSelectionControllerUpdated() {
+    // Make sure setState is called AFTER the build phase is finished.
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+      if (context.mounted) setState(() {});
+    });
   }
 }

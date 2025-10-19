@@ -5,7 +5,8 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/publisher_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/search_list_widget.dart';
+import 'package:shelfless/widgets/selection_widget/ids_selection_controller.dart';
 import 'package:shelfless/widgets/selection_widget/single_selection_widget.dart';
 
 class PublisherSelectionWidget extends StatefulWidget {
@@ -34,8 +35,8 @@ class PublisherSelectionWidget extends StatefulWidget {
 }
 
 class _PublisherSelectionWidgetState extends State<PublisherSelectionWidget> {
-  final SelectionController _selectionController = SelectionController(
-    sourceIds: LibraryContentProvider.instance.publishers.keys.toList(),
+  final SelectionController<int?> _selectionController = SelectionController(
+    domain: LibraryContentProvider.instance.publishers.keys.toList(),
   );
 
   @override
@@ -43,7 +44,7 @@ class _PublisherSelectionWidgetState extends State<PublisherSelectionWidget> {
     super.initState();
 
     LibraryContentProvider.instance.addListener(() {
-      _selectionController.setSourceIds(LibraryContentProvider.instance.publishers.keys.toList());
+      _selectionController.setDomain(LibraryContentProvider.instance.publishers.keys.toList());
     });
   }
 

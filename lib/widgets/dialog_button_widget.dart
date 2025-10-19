@@ -9,12 +9,14 @@ class DialogButtonWidget extends StatelessWidget {
   final Widget label;
   final Widget title;
   final Widget content;
+  final void Function()? onPressed;
 
   const DialogButtonWidget({
     super.key,
     required this.label,
     required this.title,
     required this.content,
+    this.onPressed,
   });
 
   @override
@@ -24,6 +26,8 @@ class DialogButtonWidget extends StatelessWidget {
     return ElevatedButton(
       child: label,
       onPressed: () {
+        onPressed?.call();
+
         showDialog(
           context: context,
           builder: (BuildContext context) {

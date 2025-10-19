@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
+import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/author_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 
 class AuthorsSelectionWidget extends StatefulWidget {
@@ -34,24 +35,33 @@ class AuthorsSelectionWidget extends StatefulWidget {
 }
 
 class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
-  late final SelectionController _selectionController = SelectionController(
-    sourceIds: LibraryContentProvider.instance.authors.keys.toList(),
-    selectedIds: {...widget.inSelectedIds},
+  late final SelectionController<int?> _selectionController = SelectionController(
+    domain: LibraryContentProvider.instance.authors.keys.toList(),
+    selection: {...widget.inSelectedIds},
   );
+  final ScrollController _searchScrollController = ScrollController();
 
   @override
   void didUpdateWidget(covariant AuthorsSelectionWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectionController.addSelection({...widget.inSelectedIds});
+    _selectionController.addToSelection({...widget.inSelectedIds});
+  }
+
+  @override
+  void dispose() {
+    // Get rid of the selection controller.
+    _selectionController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultipleSelectionWidget(
       title: strings.bookInfoAuthors,
-      controller: _selectionController,
-      inSelectedIds: widget.inSelectedIds,
+      selectionController: _selectionController,
+      searchScrollController: _searchScrollController,
       onInsertNewRequested: widget.insertNew
           ? () async {
               final Author? newAuthor = await Navigator.of(context).push(
@@ -62,7 +72,18 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
 
               if (newAuthor == null) return;
 
-              _selectionController.addSourceId(newAuthor.id, select: true);
+              _selectionController.addToDomain(newAuthor.id, select: true);
+
+              // Wait for the next frame to be rendered.
+              WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+                // Move the scroll view to the end.
+                _searchScrollController.animateTo(
+                  _searchScrollController.position.maxScrollExtent + _searchScrollController.offset,
+                  duration: Themes.durationShort,
+                  // TODO Move to Themes.
+                  curve: Curves.fastOutSlowIn,
+                );
+              });
             }
           : null,
       onItemsSelected: widget.onAuthorsSelected,
@@ -75,6 +96,8 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
 
         return AuthorLabelWidget(author: author);
       },
+      // Reset input selection on selection canceled.
+      onSelectionCanceled: () => _selectionController.setSelection({...widget.inSelectedIds}),
     );
   }
 }
