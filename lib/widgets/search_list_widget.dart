@@ -39,12 +39,12 @@ class SelectionController<T> with ChangeNotifier {
   }
 
   void addToSelection(Set<T> elements) {
-    selection.addAll(elements);
+    if (elements.isNotEmpty) selection.addAll(elements);
     notifyListeners();
   }
 
-  void removeFromSelection(Set<T> ids) {
-    selection.removeAll(ids);
+  void removeFromSelection(Set<T> elements) {
+    if (elements.isNotEmpty) selection.removeAll(elements);
     notifyListeners();
   }
 }
@@ -77,11 +77,16 @@ class SearchListWidget<T> extends StatefulWidget {
 
 class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   String? _filter;
-  late double _currentScrollExtent = widget.scrollController?.position.maxScrollExtent ?? 0.0;
+  double _currentScrollExtent = 0.0;
 
   @override
   void initState() {
     super.initState();
+
+    // Make sure the controller is actually attached to a view before querying it.
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+      if (widget.scrollController != null) _currentScrollExtent = widget.scrollController!.position.maxScrollExtent;
+    });
 
     widget.selectionController.addListener(_onSelectionControllerUpdated);
   }
@@ -95,6 +100,11 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
 
   @override
   Widget build(BuildContext context) {
+    // Make sure the controller is used AFTER the build phase is finished.
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+      _scrollDown();
+    });
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -188,27 +198,31 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
     );
   }
 
+  void _scrollDown() {
+    // Make sure a scroll controller is provided and return otherwise.
+    final double? maxScrollExtent = widget.scrollController?.position.maxScrollExtent;
+    if (maxScrollExtent == null) return;
+
+    // Only go on if the scroll controller max extent increaded.
+    if (_currentScrollExtent >= maxScrollExtent) return;
+
+    // Move to the end of the list.
+    _currentScrollExtent = maxScrollExtent;
+    WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+      widget.scrollController?.animateTo(
+        maxScrollExtent,
+        duration: Themes.durationShort,
+        curve: Curves.fastOutSlowIn,
+      );
+    });
+  }
+
   /// Reacts to changes in the provided selection controller.
   void _onSelectionControllerUpdated() {
     // Make sure setState is called AFTER the build phase is finished.
     WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
       // Refresh the widget upon change.
       if (context.mounted) setState(() {});
-
-      // Make sure a scroll controller is provided and return otherwise.
-      final double? maxScrollExtent = widget.scrollController?.position.maxScrollExtent;
-      if (maxScrollExtent == null) return;
-
-      // Only go on if the scroll controller max extent increaded.
-      if (_currentScrollExtent >= maxScrollExtent) return;
-
-      // Move to the end of the list.
-      _currentScrollExtent = maxScrollExtent;
-      widget.scrollController?.animateTo(
-        maxScrollExtent,
-        duration: Themes.durationShort,
-        curve: Curves.fastOutSlowIn,
-      );
     });
   }
 }

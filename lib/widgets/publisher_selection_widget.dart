@@ -6,13 +6,9 @@ import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/publisher_label_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
-import 'package:shelfless/widgets/selection_widget/ids_selection_controller.dart';
 import 'package:shelfless/widgets/selection_widget/single_selection_widget.dart';
 
 class PublisherSelectionWidget extends StatefulWidget {
-  /// Already selected publisher id.
-  final int? selectedPublisherId;
-
   /// Whether the widget should allow the user to add a new publisher if not present already.
   final bool insertNew;
 
@@ -24,7 +20,6 @@ class PublisherSelectionWidget extends StatefulWidget {
 
   const PublisherSelectionWidget({
     super.key,
-    this.selectedPublisherId,
     this.insertNew = false,
     this.onPublisherSelected,
     this.onPublisherUnselected,
@@ -38,29 +33,34 @@ class _PublisherSelectionWidgetState extends State<PublisherSelectionWidget> {
   final SelectionController<int?> _selectionController = SelectionController(
     domain: LibraryContentProvider.instance.publishers.keys.toList(),
   );
+  final ScrollController _searchScrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    // Get rid of controllers.
+    _selectionController.dispose();
+    _searchScrollController.dispose();
 
-    LibraryContentProvider.instance.addListener(() {
-      _selectionController.setDomain(LibraryContentProvider.instance.publishers.keys.toList());
-    });
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleSelectionWidget(
       title: strings.bookInfoPublisher,
-      controller: _selectionController,
-      inSelectedIds: [widget.selectedPublisherId].nonNulls.toSet(),
+      selectionController: _selectionController,
+      searchScrollController: _searchScrollController,
       onInsertNewRequested: widget.insertNew
-          ? () {
-              Navigator.of(context).push(
+          ? () async {
+              final Publisher? newPublisher = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => const EditPublisherScreen(),
                 ),
               );
+
+              if (newPublisher == null) return;
+
+              _selectionController.addToDomain(newPublisher.id, select: false);
             }
           : null,
       onItemSelected: widget.onPublisherSelected,

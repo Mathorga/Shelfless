@@ -90,8 +90,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            "${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
+        title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.bookTitle}"),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -111,10 +110,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       SlipperyTextFormFieldWidget(
                         initialValue: widget.book?.raw.title,
                         onChanged: (String value) => _book.raw.title = value,
-                        textCapitalization: TextCapitalization
-                            .values[SharedPrefsHelper.instance.data
-                                .getInt(SharedPrefsKeys.titlesCapitalization) ??
-                            Config.defaultTitlesCapitalization.index],
+                        textCapitalization:
+                            TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
                       ),
                     ],
                   ),
@@ -133,19 +130,16 @@ class _EditBookScreenState extends State<EditBookScreen> {
                               child: GestureDetector(
                                 onTap: _pickImage,
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                      Themes.radiusMedium),
+                                  borderRadius: BorderRadius.circular(Themes.radiusMedium),
                                   child: BookCoverImageWidget(
                                     book: _book,
                                     child: Card(
                                       color: ShelflessColors.mainContentActive,
                                       child: Center(
                                         child: Padding(
-                                          padding: const EdgeInsets.all(
-                                              Themes.spacingSmall),
+                                          padding: const EdgeInsets.all(Themes.spacingSmall),
                                           child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             spacing: Themes.spacingSmall,
                                             children: [
                                               Icon(Icons.image_rounded),
@@ -174,9 +168,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                       _book.raw.cover = null;
                                     });
                                   },
-                                  style: IconButton.styleFrom(
-                                      backgroundColor:
-                                          ShelflessColors.errorLight),
+                                  style: IconButton.styleFrom(backgroundColor: ShelflessColors.errorLight),
                                   icon: Icon(Icons.close_rounded),
                                 ),
                               ),
@@ -238,11 +230,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           child: Card(
                             color: ShelflessColors.mainContentActive,
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.all(Themes.spacingMedium),
-                              child: Center(
-                                  child:
-                                      Text((_book.raw.publishYear).toString())),
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
+                              child: Center(child: Text((_book.raw.publishYear).toString())),
                             ),
                           ),
                         ),
@@ -259,12 +248,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         onTap: () async {
                           final DateTime? pickedDate = await showDatePicker(
                             context: context,
-                            initialDate:
-                                _book.raw.dateAcquired ?? DateTime.now(),
-                            firstDate: DateTime(
-                                currentYear - Config.pastBookDateThreshold),
-                            lastDate: DateTime(
-                                currentYear + Config.futureBookDateThreshold),
+                            initialDate: _book.raw.dateAcquired ?? DateTime.now(),
+                            firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
+                            lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
                           );
 
                           if (pickedDate == null) return;
@@ -278,13 +264,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           child: Card(
                             color: ShelflessColors.mainContentActive,
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.all(Themes.spacingMedium),
-                              child: Center(
-                                  child: Text(_book.raw.dateAcquired != null
-                                      ? DateFormat.yMd()
-                                          .format(_book.raw.dateAcquired!)
-                                      : "-")),
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
+                              child: Center(child: Text(_book.raw.dateAcquired != null ? DateFormat.yMd().format(_book.raw.dateAcquired!) : "-")),
                             ),
                           ),
                         ),
@@ -302,10 +283,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           final DateTime? pickedDate = await showDatePicker(
                             context: context,
                             initialDate: _book.raw.dateRead ?? DateTime.now(),
-                            firstDate: DateTime(
-                                currentYear - Config.pastBookDateThreshold),
-                            lastDate: DateTime(
-                                currentYear + Config.futureBookDateThreshold),
+                            firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
+                            lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
                           );
 
                           if (pickedDate == null) return;
@@ -319,13 +298,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                           child: Card(
                             color: ShelflessColors.mainContentActive,
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.all(Themes.spacingMedium),
-                              child: Center(
-                                  child: Text(_book.raw.dateRead != null
-                                      ? DateFormat.yMd()
-                                          .format(_book.raw.dateRead!)
-                                      : "-")),
+                              padding: const EdgeInsets.all(Themes.spacingMedium),
+                              child: Center(child: Text(_book.raw.dateRead != null ? DateFormat.yMd().format(_book.raw.dateRead!) : "-")),
                             ),
                           ),
                         ),
@@ -343,8 +317,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       });
                     },
                     onGenreUnselected: (int genreId) {
-                      // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
-                      // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
                       setState(() {
                         _book.genreIds.remove(genreId);
                       });
@@ -354,18 +326,15 @@ class _EditBookScreenState extends State<EditBookScreen> {
                   // Publisher.
                   PublisherSelectionWidget(
                     insertNew: true,
-                    selectedPublisherId: _book.raw.publisherId,
                     onPublisherSelected: (int? publisherId) {
                       // Make sure the publisherId is not null.
                       if (publisherId == null) return;
 
                       // Set the book publisher.
-                      LibraryContentProvider.instance
-                          .addPublisherToBook(publisherId, _book);
+                      LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
                     },
                     onPublisherUnselected: (int? publisherId) {
-                      LibraryContentProvider.instance
-                          .removePublisherFromBook(_book);
+                      LibraryContentProvider.instance.removePublisherFromBook(_book);
                     },
                   ),
 
@@ -378,12 +347,10 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       if (locationId == null) return;
 
                       // Set the book location.
-                      LibraryContentProvider.instance
-                          .addLocationToBook(locationId, _book);
+                      LibraryContentProvider.instance.addLocationToBook(locationId, _book);
                     },
                     onLocationUnselected: (int? locationId) {
-                      LibraryContentProvider.instance
-                          .removeLocationFromBook(_book);
+                      LibraryContentProvider.instance.removeLocationFromBook(_book);
                     },
                   ),
 
@@ -449,9 +416,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
           widget.onDone?.call(_book);
 
           // Actually save the book by upsert.
-          _inserting
-              ? LibraryContentProvider.instance.storeNewBook(_book)
-              : LibraryContentProvider.instance.storeBookUpdate(_book);
+          _inserting ? LibraryContentProvider.instance.storeNewBook(_book) : LibraryContentProvider.instance.storeBookUpdate(_book);
 
           navigator.pop();
         },
@@ -513,8 +478,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
     if (imageSource == null) return;
 
     // Pick file and make sure one is actually picked.
-    final XFile? pickedFile =
-        await ImagePicker().pickImage(source: imageSource);
+    final XFile? pickedFile = await ImagePicker().pickImage(source: imageSource);
 
     if (pickedFile == null) return;
 

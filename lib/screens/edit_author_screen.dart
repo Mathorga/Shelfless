@@ -66,7 +66,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
                   ),
                 ],
               ),
-    
+
               // Last name.
               EditSectionWidget(
                 spacing: Themes.spacingMedium,
@@ -80,7 +80,7 @@ class _EditAuthorScreenState extends State<EditAuthorScreen> {
                   ),
                 ],
               ),
-    
+
               // Home Land.
               EditSectionWidget(
                 spacing: Themes.spacingMedium,

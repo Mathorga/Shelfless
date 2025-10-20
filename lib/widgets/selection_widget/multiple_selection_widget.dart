@@ -7,6 +7,7 @@ import 'package:shelfless/widgets/dialog_button_widget.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
 
+// TODO Merge with SingleSelectionWidget.
 class MultipleSelectionWidget extends StatelessWidget {
   final String? title;
   final SelectionController<int?> selectionController;
