@@ -335,7 +335,6 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       setState(() {
                         _book.raw.publisherId = publisherId;
                       });
-                      // LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
                     },
                     onPublisherUnselected: (int? publisherId) {
                       if (publisherId != _book.raw.publisherId) return;
@@ -343,23 +342,28 @@ class _EditBookScreenState extends State<EditBookScreen> {
                       setState(() {
                         _book.raw.publisherId = null;
                       });
-                      // LibraryContentProvider.instance.removePublisherFromBook(_book);
                     },
                   ),
 
                   // Location.
                   LocationSelectionWidget(
+                    inSelectedId: _book.raw.locationId,
                     insertNew: true,
-                    selectedLocationId: _book.raw.locationId,
                     onLocationSelected: (int? locationId) {
                       // Make sure the locationId is not null.
                       if (locationId == null) return;
 
                       // Set the book location.
-                      LibraryContentProvider.instance.addLocationToBook(locationId, _book);
+                      setState(() {
+                        _book.raw.locationId = locationId;
+                      });
                     },
                     onLocationUnselected: (int? locationId) {
-                      LibraryContentProvider.instance.removeLocationFromBook(_book);
+                      if (locationId != _book.raw.locationId) return;
+
+                      setState(() {
+                        _book.raw.locationId = null;
+                      });
                     },
                   ),
 
