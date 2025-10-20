@@ -49,8 +49,9 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
 
   @override
   void dispose() {
-    // Get rid of the selection controller.
+    // Get rid of controllers.
     _selectionController.dispose();
+    _searchScrollController.dispose();
 
     super.dispose();
   }
