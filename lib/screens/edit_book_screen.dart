@@ -325,16 +325,25 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                   // Publisher.
                   PublisherSelectionWidget(
+                    inSelectedId: _book.raw.publisherId,
                     insertNew: true,
                     onPublisherSelected: (int? publisherId) {
                       // Make sure the publisherId is not null.
                       if (publisherId == null) return;
 
                       // Set the book publisher.
-                      LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
+                      setState(() {
+                        _book.raw.publisherId = publisherId;
+                      });
+                      // LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
                     },
                     onPublisherUnselected: (int? publisherId) {
-                      LibraryContentProvider.instance.removePublisherFromBook(_book);
+                      if (publisherId != _book.raw.publisherId) return;
+
+                      setState(() {
+                        _book.raw.publisherId = null;
+                      });
+                      // LibraryContentProvider.instance.removePublisherFromBook(_book);
                     },
                   ),
 

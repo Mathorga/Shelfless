@@ -59,7 +59,11 @@ class SingleSelectionWidget extends StatelessWidget {
                 multiple: false,
                 filter: listItemsFilter,
                 builder: listItemBuilder,
-                onElementsSelected: (Set<int?> selectedIds) => onItemSelected?.call(selectedIds.first),
+                onElementsSelected: (Set<int?> selectedIds) {
+                  onItemSelected?.call(selectedIds.first);
+
+                  Navigator.of(context).pop();
+                },
               ),
             ),
           ],

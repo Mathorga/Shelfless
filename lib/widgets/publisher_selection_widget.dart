@@ -9,6 +9,9 @@ import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/selection_widget/single_selection_widget.dart';
 
 class PublisherSelectionWidget extends StatefulWidget {
+  /// Already selected publisher id.
+  final int? inSelectedId;
+
   /// Whether the widget should allow the user to add a new publisher if not present already.
   final bool insertNew;
 
@@ -20,6 +23,7 @@ class PublisherSelectionWidget extends StatefulWidget {
 
   const PublisherSelectionWidget({
     super.key,
+    this.inSelectedId,
     this.insertNew = false,
     this.onPublisherSelected,
     this.onPublisherUnselected,
@@ -30,10 +34,18 @@ class PublisherSelectionWidget extends StatefulWidget {
 }
 
 class _PublisherSelectionWidgetState extends State<PublisherSelectionWidget> {
-  final SelectionController<int?> _selectionController = SelectionController(
+  late final SelectionController<int?> _selectionController = SelectionController(
     domain: LibraryContentProvider.instance.publishers.keys.toList(),
+    selection: {if (widget.inSelectedId != null) widget.inSelectedId}
   );
   final ScrollController _searchScrollController = ScrollController();
+
+  @override
+  void didUpdateWidget(covariant PublisherSelectionWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _selectionController.setSelection({if (widget.inSelectedId != null) widget.inSelectedId});
+  }
 
   @override
   void dispose() {
