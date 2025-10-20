@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
-import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/author_label_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
@@ -73,17 +72,6 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
               if (newAuthor == null) return;
 
               _selectionController.addToDomain(newAuthor.id, select: true);
-
-              // Wait for the next frame to be rendered.
-              WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
-                // Move the scroll view to the end.
-                _searchScrollController.animateTo(
-                  _searchScrollController.position.maxScrollExtent,
-                  duration: Themes.durationShort,
-                  // TODO Move to Themes.
-                  curve: Curves.fastOutSlowIn,
-                );
-              });
             }
           : null,
       onItemsSelected: widget.onAuthorsSelected,

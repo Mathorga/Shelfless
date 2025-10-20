@@ -77,6 +77,7 @@ class SearchListWidget<T> extends StatefulWidget {
 
 class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   String? _filter;
+  late double _currentScrollExtent = widget.scrollController?.position.maxScrollExtent ?? 0.0;
 
   @override
   void initState() {
@@ -191,7 +192,23 @@ class _SearchListWidgetState<T> extends State<SearchListWidget<T>> {
   void _onSelectionControllerUpdated() {
     // Make sure setState is called AFTER the build phase is finished.
     WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
+      // Refresh the widget upon change.
       if (context.mounted) setState(() {});
+
+      // Make sure a scroll controller is provided and return otherwise.
+      final double? maxScrollExtent = widget.scrollController?.position.maxScrollExtent;
+      if (maxScrollExtent == null) return;
+
+      // Only go on if the scroll controller max extent increaded.
+      if (_currentScrollExtent >= maxScrollExtent) return;
+
+      // Move to the end of the list.
+      _currentScrollExtent = maxScrollExtent;
+      widget.scrollController?.animateTo(
+        maxScrollExtent,
+        duration: Themes.durationShort,
+        curve: Curves.fastOutSlowIn,
+      );
     });
   }
 }
