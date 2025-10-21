@@ -20,9 +20,7 @@ class RouterScreen extends StatefulWidget {
 
 class _RouterScreenState extends State<RouterScreen> {
   // Latest selected app locale, used to update the UI when necessary.
-  int _appLocaleIndex =
-      SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ??
-          Config.defaultAppLocale;
+  int _appLocaleIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? Config.defaultAppLocale;
 
   @override
   void initState() {
@@ -51,16 +49,12 @@ class _RouterScreenState extends State<RouterScreen> {
         });
 
         // Show an introductory library creation wizard instead of a bare EditLibraryScreen.
-        if (LibrariesProvider.instance.libraries.isEmpty)
-          return WelcomeScreen();
+        if (LibrariesProvider.instance.libraries.isEmpty) return WelcomeScreen();
 
         // Try and read the latest open library from shared preferences.
         LibraryPreview library = LibrariesProvider.instance.libraries.first;
-        int? storedLibraryId =
-            SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.openLibrary);
-        LibraryPreview? foundLibrary = LibrariesProvider.instance.libraries
-            .firstWhereOrNull(
-                (LibraryPreview preview) => preview.raw.id == storedLibraryId);
+        int? storedLibraryId = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.openLibrary);
+        LibraryPreview? foundLibrary = LibrariesProvider.instance.libraries.firstWhereOrNull((LibraryPreview preview) => preview.raw.id == storedLibraryId);
         library = foundLibrary ?? library;
 
         return LibraryContentScreen(
@@ -73,9 +67,7 @@ class _RouterScreenState extends State<RouterScreen> {
   void _onPrefsChanged() {
     if (!mounted) return;
 
-    final int currentAppLocaleIndex =
-        SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ??
-            Config.defaultAppLocale;
+    final int currentAppLocaleIndex = SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? Config.defaultAppLocale;
     if (currentAppLocaleIndex != _appLocaleIndex) {
       _appLocaleIndex = currentAppLocaleIndex;
       setState(() {});

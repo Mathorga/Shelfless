@@ -70,10 +70,14 @@ class _EditPublisherScreenState extends State<EditPublisherScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
+          final NavigatorState navigator = Navigator.of(context);
+
           // Actually save the author.
-          _inserting ? LibraryContentProvider.instance.addPublisher(_publisher) : LibraryContentProvider.instance.updatePublisher(widget.publisher!..copyFrom(_publisher));
-          Navigator.of(context).pop();
+          _inserting
+              ? await LibraryContentProvider.instance.addPublisher(_publisher)
+              : await LibraryContentProvider.instance.updatePublisher(widget.publisher!..copyFrom(_publisher));
+          navigator.pop(_publisher);
         },
         label: Row(
           spacing: Themes.spacingMedium,

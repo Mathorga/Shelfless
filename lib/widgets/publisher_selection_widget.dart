@@ -5,12 +5,12 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/publisher_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/selection_widget/single_selection_widget.dart';
 
 class PublisherSelectionWidget extends StatefulWidget {
   /// Already selected publisher id.
-  final int? selectedPublisherId;
+  final int? inSelectedId;
 
   /// Whether the widget should allow the user to add a new publisher if not present already.
   final bool insertNew;
@@ -23,7 +23,7 @@ class PublisherSelectionWidget extends StatefulWidget {
 
   const PublisherSelectionWidget({
     super.key,
-    this.selectedPublisherId,
+    this.inSelectedId,
     this.insertNew = false,
     this.onPublisherSelected,
     this.onPublisherUnselected,
@@ -34,32 +34,45 @@ class PublisherSelectionWidget extends StatefulWidget {
 }
 
 class _PublisherSelectionWidgetState extends State<PublisherSelectionWidget> {
-  final SelectionController _selectionController = SelectionController(
-    sourceIds: LibraryContentProvider.instance.publishers.keys.toList(),
+  late final SelectionController<int?> _selectionController = SelectionController(
+    domain: LibraryContentProvider.instance.publishers.keys.toList(),
+    selection: {if (widget.inSelectedId != null) widget.inSelectedId}
   );
+  final ScrollController _searchScrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
+  void didUpdateWidget(covariant PublisherSelectionWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-    LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.publishers.keys.toList());
-    });
+    _selectionController.setSelection({if (widget.inSelectedId != null) widget.inSelectedId});
+  }
+
+  @override
+  void dispose() {
+    // Get rid of controllers.
+    _selectionController.dispose();
+    _searchScrollController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleSelectionWidget(
       title: strings.bookInfoPublisher,
-      controller: _selectionController,
-      inSelectedIds: [widget.selectedPublisherId].nonNulls.toList(),
+      selectionController: _selectionController,
+      searchScrollController: _searchScrollController,
       onInsertNewRequested: widget.insertNew
-          ? () {
-              Navigator.of(context).push(
+          ? () async {
+              final Publisher? newPublisher = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => const EditPublisherScreen(),
                 ),
               );
+
+              if (newPublisher == null) return;
+
+              _selectionController.addToDomain(newPublisher.id, select: false);
             }
           : null,
       onItemSelected: widget.onPublisherSelected,

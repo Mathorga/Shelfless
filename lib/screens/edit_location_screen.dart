@@ -70,10 +70,12 @@ class _EditLocationScreenState extends State<EditLocationScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
+          final NavigatorState navigator = Navigator.of(context);
+
           // Actually save the author.
-          _inserting ? LibraryContentProvider.instance.addLocation(_location) : LibraryContentProvider.instance.updateLocation(widget.location!..copyFrom(_location));
-          Navigator.of(context).pop();
+          _inserting ? await LibraryContentProvider.instance.addLocation(_location) : await LibraryContentProvider.instance.updateLocation(widget.location!..copyFrom(_location));
+          navigator.pop(_location);
         },
         label: Row(
           spacing: Themes.spacingMedium,

@@ -181,7 +181,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                   // Authors.
                   AuthorsSelectionWidget(
-                    inSelectedIds: _book.authorIds,
+                    initialSelection: {..._book.authorIds},
                     insertNew: true,
                     onAuthorsSelected: (Set<int?> selectedAuthorIds) {
                       setState(() {
@@ -309,36 +309,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                   // Genres.
                   GenresSelectionWidget(
-                    inSelectedIds: _book.genreIds,
+                    initialSelection: {..._book.genreIds},
                     insertNew: true,
                     onGenresSelected: (Set<int?> selectedGenreIds) {
-                      bool duplicates = false;
-                      Set<int> genreIds = {};
-                      for (int? genreId in selectedGenreIds) {
-                        // Make sure the genreId is not null.
-                        if (genreId == null) continue;
-
-                        if (!_book.genreIds.contains(genreId)) {
-                          genreIds.add(genreId);
-                        } else {
-                          duplicates = true;
-                        }
-                      }
-
-                      if (duplicates) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(strings.genreAlreadyAdded),
-                            duration: const Duration(milliseconds: 1000),
-                          ),
-                        );
-                      }
-
-                      LibraryContentProvider.instance.addGenresToBook(genreIds, _book);
+                      setState(() {
+                        _book.genreIds = selectedGenreIds.nonNulls.toList();
+                      });
                     },
                     onGenreUnselected: (int genreId) {
-                      // It's not strictly needed to call LibraryContentProvider to update the UI here, since working on the same object ensures
-                      // consistency and not calling the provider allows the current widget to be the only one rebuilt by the state update.
                       setState(() {
                         _book.genreIds.remove(genreId);
                       });
@@ -347,33 +325,45 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                   // Publisher.
                   PublisherSelectionWidget(
+                    inSelectedId: _book.raw.publisherId,
                     insertNew: true,
-                    selectedPublisherId: _book.raw.publisherId,
                     onPublisherSelected: (int? publisherId) {
                       // Make sure the publisherId is not null.
                       if (publisherId == null) return;
 
                       // Set the book publisher.
-                      LibraryContentProvider.instance.addPublisherToBook(publisherId, _book);
+                      setState(() {
+                        _book.raw.publisherId = publisherId;
+                      });
                     },
                     onPublisherUnselected: (int? publisherId) {
-                      LibraryContentProvider.instance.removePublisherFromBook(_book);
+                      if (publisherId != _book.raw.publisherId) return;
+
+                      setState(() {
+                        _book.raw.publisherId = null;
+                      });
                     },
                   ),
 
                   // Location.
                   LocationSelectionWidget(
+                    inSelectedId: _book.raw.locationId,
                     insertNew: true,
-                    selectedLocationId: _book.raw.locationId,
                     onLocationSelected: (int? locationId) {
                       // Make sure the locationId is not null.
                       if (locationId == null) return;
 
                       // Set the book location.
-                      LibraryContentProvider.instance.addLocationToBook(locationId, _book);
+                      setState(() {
+                        _book.raw.locationId = locationId;
+                      });
                     },
                     onLocationUnselected: (int? locationId) {
-                      LibraryContentProvider.instance.removeLocationFromBook(_book);
+                      if (locationId != _book.raw.locationId) return;
+
+                      setState(() {
+                        _book.raw.locationId = null;
+                      });
                     },
                   ),
 

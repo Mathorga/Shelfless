@@ -5,12 +5,12 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_location_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/location_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/selection_widget/single_selection_widget.dart';
 
 class LocationSelectionWidget extends StatefulWidget {
   /// Already selected location id.
-  final int? selectedLocationId;
+  final int? inSelectedId;
 
   /// Whether the widget should allow the user to add a new location if not present already.
   final bool insertNew;
@@ -23,7 +23,7 @@ class LocationSelectionWidget extends StatefulWidget {
 
   const LocationSelectionWidget({
     super.key,
-    this.selectedLocationId,
+    this.inSelectedId,
     this.insertNew = false,
     this.onLocationSelected,
     this.onLocationUnselected,
@@ -34,32 +34,46 @@ class LocationSelectionWidget extends StatefulWidget {
 }
 
 class _LocationSelectionWidgetState extends State<LocationSelectionWidget> {
-  final SelectionController _selectionController = SelectionController(
-    sourceIds: LibraryContentProvider.instance.locations.keys.toList(),
+  late final SelectionController<int?> _selectionController = SelectionController(
+    domain: LibraryContentProvider.instance.locations.keys.toList(),
+    selection: {if (widget.inSelectedId != null) widget.inSelectedId}
   );
 
-  @override
-  void initState() {
-    super.initState();
+  final ScrollController _searchScrollController = ScrollController();
 
-    LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.locations.keys.toList());
-    });
+  @override
+  void didUpdateWidget(covariant LocationSelectionWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _selectionController.setSelection({if (widget.inSelectedId != null) widget.inSelectedId});
+  }
+
+  @override
+  void dispose() {
+    // Get rid of controllers.
+    _selectionController.dispose();
+    _searchScrollController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleSelectionWidget(
       title: strings.bookInfoLocation,
-      controller: _selectionController,
-      inSelectedIds: [widget.selectedLocationId].nonNulls.toList(),
+      selectionController: _selectionController,
+      searchScrollController: _searchScrollController,
       onInsertNewRequested: widget.insertNew
-          ? () {
-              Navigator.of(context).push(
+          ? () async {
+              final StoreLocation? newLocation = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => const EditLocationScreen(),
                 ),
               );
+
+              if (newLocation == null) return;
+
+              _selectionController.addToDomain(newLocation.id, select: false);
             }
           : null,
       onItemSelected: widget.onLocationSelected,

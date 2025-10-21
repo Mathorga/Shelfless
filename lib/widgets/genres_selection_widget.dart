@@ -5,12 +5,12 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/genre_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 
 class GenresSelectionWidget extends StatefulWidget {
   /// Already selected genre ids.
-  final List<int?> selectedGenreIds;
+  final Set<int?> initialSelection;
 
   /// Whether the widget should allow the user to add a new genre if not present already.
   final bool insertNew;
@@ -21,45 +21,59 @@ class GenresSelectionWidget extends StatefulWidget {
   /// Called when a genre is removed from the selection list.
   final void Function(int genreId)? onGenreUnselected;
 
-  GenresSelectionWidget({
+  const GenresSelectionWidget({
     super.key,
-    List<int?>? inSelectedIds,
+    this.initialSelection = const {},
     this.insertNew = false,
     this.onGenresSelected,
     this.onGenreUnselected,
-  }) : selectedGenreIds = inSelectedIds ?? [];
+  });
 
   @override
   State<GenresSelectionWidget> createState() => _GenresSelectionWidgetState();
 }
 
 class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
-  final SelectionController _selectionController = SelectionController(
-    sourceIds: LibraryContentProvider.instance.genres.keys.toList(),
+  late final SelectionController<int?> _selectionController = SelectionController(
+    domain: LibraryContentProvider.instance.genres.keys.toList(),
+    selection: {...widget.initialSelection},
   );
+  final ScrollController _searchScrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
+  void didUpdateWidget(covariant GenresSelectionWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-    LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.genres.keys.toList());
-    });
+    _selectionController.addToSelection({...widget.initialSelection});
+  }
+
+  @override
+  void dispose() {
+    // Get rid of controllers.
+    _selectionController.dispose();
+    _searchScrollController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultipleSelectionWidget(
       title: strings.bookInfoGenres,
-      controller: _selectionController,
-      inSelectedIds: widget.selectedGenreIds,
+      selectionController: _selectionController,
+      searchScrollController: _searchScrollController,
+      initialSelection: widget.initialSelection,
       onInsertNewRequested: widget.insertNew
-          ? () {
-              Navigator.of(context).push(
+          ? () async {
+              final RawGenre? newGenre = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => const EditGenreScreen(),
                 ),
               );
+
+              if (newGenre == null) return;
+
+              _selectionController.addToDomain(newGenre.id, select: true);
             }
           : null,
       onItemsSelected: widget.onGenresSelected,
@@ -72,6 +86,8 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
 
         return GenreLabelWidget(genre: rawGenre);
       },
+      // Reset input selection on selection canceled.
+      onSelectionCanceled: () => _selectionController.setSelection({...widget.initialSelection}),
     );
   }
 }

@@ -5,12 +5,12 @@ import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/author_label_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
+import 'package:shelfless/widgets/search_list_widget.dart';
 import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 
 class AuthorsSelectionWidget extends StatefulWidget {
   /// Already selected author ids.
-  final List<int?> selectedAuthorIds;
+  final Set<int?> initialSelection;
 
   /// Whether the widget should allow the user to add a new author if not present already.
   final bool insertNew;
@@ -21,57 +21,73 @@ class AuthorsSelectionWidget extends StatefulWidget {
   /// Called when an author is removed from the selection list.
   final void Function(int authorId)? onAuthorUnselected;
 
-  AuthorsSelectionWidget({
+  const AuthorsSelectionWidget({
     super.key,
-    List<int?>? inSelectedIds,
+    this.initialSelection = const {},
     this.insertNew = false,
     this.onAuthorsSelected,
     this.onAuthorUnselected,
-  }) : selectedAuthorIds = inSelectedIds ?? [];
+  });
 
   @override
   State<AuthorsSelectionWidget> createState() => _AuthorsSelectionWidgetState();
 }
 
 class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
-  final SelectionController _selectionController = SelectionController(
-    sourceIds: LibraryContentProvider.instance.authors.keys.toList(),
+  late final SelectionController<int?> _selectionController = SelectionController(
+    domain: LibraryContentProvider.instance.authors.keys.toList(),
+    selection: {...widget.initialSelection},
   );
+  final ScrollController _searchScrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
+  void didUpdateWidget(covariant AuthorsSelectionWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
-    LibraryContentProvider.instance.addListener(() {
-      _selectionController.setIds(LibraryContentProvider.instance.authors.keys.toList());
-    });
+    _selectionController.addToSelection({...widget.initialSelection});
+  }
+
+  @override
+  void dispose() {
+    // Get rid of controllers.
+    _selectionController.dispose();
+    _searchScrollController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultipleSelectionWidget(
       title: strings.bookInfoAuthors,
-      controller: _selectionController,
-      inSelectedIds: widget.selectedAuthorIds,
+      selectionController: _selectionController,
+      searchScrollController: _searchScrollController,
+      initialSelection: widget.initialSelection,
       onInsertNewRequested: widget.insertNew
-          ? () {
-              Navigator.of(context).push(
+          ? () async {
+              final Author? newAuthor = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (BuildContext context) => const EditAuthorScreen(),
                 ),
               );
+
+              if (newAuthor == null) return;
+
+              _selectionController.addToDomain(newAuthor.id, select: true);
             }
           : null,
       onItemsSelected: widget.onAuthorsSelected,
       onItemUnselected: widget.onAuthorUnselected,
       listItemsFilter: (int? authorId, String? filter) => filter != null ? LibraryContentProvider.instance.authors[authorId].toString().toLowerCase().contains(filter) : true,
-      listItemBuilder: (int? id) {
-        final Author? author = LibraryContentProvider.instance.authors[id];
+      listItemBuilder: (int? authorId) {
+        final Author? author = LibraryContentProvider.instance.authors[authorId];
 
         if (author == null) return Placeholder();
 
         return AuthorLabelWidget(author: author);
       },
+      // Reset input selection on selection canceled.
+      onSelectionCanceled: () => _selectionController.setSelection({...widget.initialSelection}),
     );
   }
 }

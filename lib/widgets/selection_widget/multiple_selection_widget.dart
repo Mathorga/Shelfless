@@ -6,29 +6,33 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
-import 'package:shelfless/widgets/selection_widget/selection_controller.dart';
 
+// TODO Merge with SingleSelectionWidget.
 class MultipleSelectionWidget extends StatelessWidget {
   final String? title;
-  final SelectionController controller;
+  final SelectionController<int?> selectionController;
+  final ScrollController? searchScrollController;
+  final Set<int?> initialSelection;
   final void Function()? onInsertNewRequested;
   final bool Function(int? id, String? filter) listItemsFilter;
   final Widget Function(int? id) listItemBuilder;
-  final List<int?> selecteIds;
   final void Function(Set<int?> ids)? onItemsSelected;
   final void Function(int id)? onItemUnselected;
+  final void Function()? onSelectionCanceled;
 
-  MultipleSelectionWidget({
+  const MultipleSelectionWidget({
     super.key,
     this.title,
-    required this.controller,
+    required this.selectionController,
+    this.searchScrollController,
+    this.initialSelection = const{},
     this.onInsertNewRequested,
     required this.listItemsFilter,
     required this.listItemBuilder,
-    List<int?>? inSelectedIds,
     this.onItemsSelected,
     this.onItemUnselected,
-  }) : selecteIds = inSelectedIds ?? [];
+    this.onSelectionCanceled,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,39 +56,24 @@ class MultipleSelectionWidget extends StatelessWidget {
                     ),
                 ],
               ),
-              content: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-                  // Make sure updates are reacted to.
-                  controller.addListener(() {
-                    if (context.mounted) setState(() {});
-                  });
-
-                  return SearchListWidget<int?>(
-                    values: controller.sourceIds,
-                    selectedValues: selecteIds,
-                    multiple: true,
-                    filter: listItemsFilter,
-                    builder: listItemBuilder,
-                    onElementsSelected: (Set<int?> selectedIds) {
-                      // Prefetch handlers.
-                      final NavigatorState navigator = Navigator.of(context);
-
-                      onItemsSelected?.call(selectedIds);
-
-                      navigator.pop();
-                    },
-                  );
-                },
+              content: SearchListWidget<int?>(
+                selectionController: selectionController,
+                scrollController: searchScrollController,
+                multiple: true,
+                filter: listItemsFilter,
+                builder: listItemBuilder,
+                onCancel: onSelectionCanceled,
+                onElementsSelected: (Set<int?> selectedIds) => onItemsSelected?.call(selectedIds),
               ),
             ),
           ],
         ),
-        if (selecteIds.isNotEmpty)
+        if (initialSelection.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(Themes.spacingMedium),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: selecteIds.map((int? id) => _buildPreview(id)).toList(),
+              children: initialSelection.map((int? id) => _buildPreview(id)).toList(),
             ),
           ),
       ],
@@ -102,6 +91,7 @@ class MultipleSelectionWidget extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
+            selectionController.removeFromSelection({id});
             onItemUnselected?.call(id);
           },
           child: Icon(
