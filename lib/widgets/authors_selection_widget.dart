@@ -10,7 +10,7 @@ import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dar
 
 class AuthorsSelectionWidget extends StatefulWidget {
   /// Already selected author ids.
-  final Set<int?> inSelectedIds;
+  final Set<int?> initialSelection;
 
   /// Whether the widget should allow the user to add a new author if not present already.
   final bool insertNew;
@@ -23,7 +23,7 @@ class AuthorsSelectionWidget extends StatefulWidget {
 
   const AuthorsSelectionWidget({
     super.key,
-    this.inSelectedIds = const {},
+    this.initialSelection = const {},
     this.insertNew = false,
     this.onAuthorsSelected,
     this.onAuthorUnselected,
@@ -36,7 +36,7 @@ class AuthorsSelectionWidget extends StatefulWidget {
 class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
   late final SelectionController<int?> _selectionController = SelectionController(
     domain: LibraryContentProvider.instance.authors.keys.toList(),
-    selection: {...widget.inSelectedIds},
+    selection: {...widget.initialSelection},
   );
   final ScrollController _searchScrollController = ScrollController();
 
@@ -44,7 +44,7 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
   void didUpdateWidget(covariant AuthorsSelectionWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectionController.addToSelection({...widget.inSelectedIds});
+    _selectionController.addToSelection({...widget.initialSelection});
   }
 
   @override
@@ -62,6 +62,7 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
       title: strings.bookInfoAuthors,
       selectionController: _selectionController,
       searchScrollController: _searchScrollController,
+      initialSelection: widget.initialSelection,
       onInsertNewRequested: widget.insertNew
           ? () async {
               final Author? newAuthor = await Navigator.of(context).push(
@@ -86,7 +87,7 @@ class _AuthorsSelectionWidgetState extends State<AuthorsSelectionWidget> {
         return AuthorLabelWidget(author: author);
       },
       // Reset input selection on selection canceled.
-      onSelectionCanceled: () => _selectionController.setSelection({...widget.inSelectedIds}),
+      onSelectionCanceled: () => _selectionController.setSelection({...widget.initialSelection}),
     );
   }
 }

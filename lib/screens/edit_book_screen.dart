@@ -181,7 +181,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                   // Authors.
                   AuthorsSelectionWidget(
-                    inSelectedIds: {..._book.authorIds},
+                    initialSelection: {..._book.authorIds},
                     insertNew: true,
                     onAuthorsSelected: (Set<int?> selectedAuthorIds) {
                       setState(() {
@@ -309,7 +309,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
 
                   // Genres.
                   GenresSelectionWidget(
-                    inSelectedIds: _book.genreIds,
+                    initialSelection: {..._book.genreIds},
                     insertNew: true,
                     onGenresSelected: (Set<int?> selectedGenreIds) {
                       setState(() {

@@ -10,7 +10,7 @@ import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dar
 
 class GenresSelectionWidget extends StatefulWidget {
   /// Already selected genre ids.
-  final List<int?> inSelectedIds;
+  final Set<int?> initialSelection;
 
   /// Whether the widget should allow the user to add a new genre if not present already.
   final bool insertNew;
@@ -23,7 +23,7 @@ class GenresSelectionWidget extends StatefulWidget {
 
   const GenresSelectionWidget({
     super.key,
-    this.inSelectedIds = const [],
+    this.initialSelection = const {},
     this.insertNew = false,
     this.onGenresSelected,
     this.onGenreUnselected,
@@ -36,7 +36,7 @@ class GenresSelectionWidget extends StatefulWidget {
 class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
   late final SelectionController<int?> _selectionController = SelectionController(
     domain: LibraryContentProvider.instance.genres.keys.toList(),
-    selection: {...widget.inSelectedIds},
+    selection: {...widget.initialSelection},
   );
   final ScrollController _searchScrollController = ScrollController();
 
@@ -44,7 +44,7 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
   void didUpdateWidget(covariant GenresSelectionWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _selectionController.addToSelection({...widget.inSelectedIds});
+    _selectionController.addToSelection({...widget.initialSelection});
   }
 
   @override
@@ -62,6 +62,7 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
       title: strings.bookInfoGenres,
       selectionController: _selectionController,
       searchScrollController: _searchScrollController,
+      initialSelection: widget.initialSelection,
       onInsertNewRequested: widget.insertNew
           ? () async {
               final RawGenre? newGenre = await Navigator.of(context).push(
@@ -86,7 +87,7 @@ class _GenresSelectionWidgetState extends State<GenresSelectionWidget> {
         return GenreLabelWidget(genre: rawGenre);
       },
       // Reset input selection on selection canceled.
-      onSelectionCanceled: () => _selectionController.setSelection({...widget.inSelectedIds}),
+      onSelectionCanceled: () => _selectionController.setSelection({...widget.initialSelection}),
     );
   }
 }

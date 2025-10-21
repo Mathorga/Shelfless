@@ -12,6 +12,7 @@ class MultipleSelectionWidget extends StatelessWidget {
   final String? title;
   final SelectionController<int?> selectionController;
   final ScrollController? searchScrollController;
+  final Set<int?> initialSelection;
   final void Function()? onInsertNewRequested;
   final bool Function(int? id, String? filter) listItemsFilter;
   final Widget Function(int? id) listItemBuilder;
@@ -24,6 +25,7 @@ class MultipleSelectionWidget extends StatelessWidget {
     this.title,
     required this.selectionController,
     this.searchScrollController,
+    this.initialSelection = const{},
     this.onInsertNewRequested,
     required this.listItemsFilter,
     required this.listItemBuilder,
@@ -66,12 +68,12 @@ class MultipleSelectionWidget extends StatelessWidget {
             ),
           ],
         ),
-        if (selectionController.selection.isNotEmpty)
+        if (initialSelection.isNotEmpty)
           Padding(
             padding: const EdgeInsets.all(Themes.spacingMedium),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: selectionController.selection.map((int? id) => _buildPreview(id)).toList(),
+              children: initialSelection.map((int? id) => _buildPreview(id)).toList(),
             ),
           ),
       ],
