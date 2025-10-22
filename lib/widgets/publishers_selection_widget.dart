@@ -6,7 +6,6 @@ import 'package:shelfless/screens/edit_publisher_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/publisher_label_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
-import 'package:shelfless/widgets/selection_widget/ids_selection_controller.dart';
 import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 
 class PublishersSelectionWidget extends StatefulWidget {

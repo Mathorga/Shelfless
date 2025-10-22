@@ -6,7 +6,6 @@ import 'package:shelfless/screens/edit_location_screen.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/location_label_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
-import 'package:shelfless/widgets/selection_widget/ids_selection_controller.dart';
 import 'package:shelfless/widgets/selection_widget/multiple_selection_widget.dart';
 
 class LocationsSelectionWidget extends StatefulWidget {
