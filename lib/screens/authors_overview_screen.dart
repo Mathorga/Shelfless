@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:shelfless/models/author.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/providers/library_filters_provider.dart';
+import 'package:shelfless/models/library_filters.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';

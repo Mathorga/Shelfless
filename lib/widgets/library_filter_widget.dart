@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/providers/library_content_provider.dart';
-import 'package:shelfless/providers/library_filters_provider.dart';
+import 'package:shelfless/models/library_filters.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';

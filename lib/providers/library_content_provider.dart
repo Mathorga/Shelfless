@@ -10,7 +10,7 @@ import 'package:shelfless/models/raw_library.dart';
 import 'package:shelfless/models/publisher.dart';
 import 'package:shelfless/models/store_location.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
-import 'package:shelfless/providers/library_filters_provider.dart';
+import 'package:shelfless/models/library_filters.dart';
 import 'package:shelfless/utils/database_helper.dart';
 import 'package:shelfless/utils/shared_prefs_helper.dart';
 import 'package:shelfless/utils/shared_prefs_keys.dart';
@@ -161,7 +161,7 @@ class LibraryContentProvider with ChangeNotifier {
   Future<void> moveBookTo(Book book, RawLibrary toLibrary) async {
     // Fetch the source library before going on with moving.
     RawLibrary? srcLibrary = library ?? LibrariesProvider.instance.libraries.firstWhereOrNull((LibraryPreview library) => library.raw.id == book.raw.libraryId)?.raw;
-    
+
     assert(srcLibrary != null, "No source library: cannot move book");
 
     // Update the book's library id.
@@ -243,6 +243,9 @@ class LibraryContentProvider with ChangeNotifier {
 
     authors.remove(author.id);
 
+    // Update library filters if the deleted author is in them.
+    _filters.authorsFilter.remove(author.id);
+
     notifyListeners();
   }
 
@@ -273,6 +276,9 @@ class LibraryContentProvider with ChangeNotifier {
     await DatabaseHelper.instance.deleteGenre(genre);
 
     genres.remove(genre.id);
+
+    // Update library filters if the deleted genre is in them.
+    _filters.authorsFilter.remove(genre.id);
 
     notifyListeners();
   }
@@ -305,6 +311,9 @@ class LibraryContentProvider with ChangeNotifier {
 
     publishers.remove(publisher.id);
 
+    // Update library filters if the deleted publisher is in them.
+    _filters.authorsFilter.remove(publisher.id);
+
     notifyListeners();
   }
 
@@ -335,6 +344,9 @@ class LibraryContentProvider with ChangeNotifier {
     await DatabaseHelper.instance.deleteLocation(location);
 
     locations.remove(location.id);
+
+    // Update library filters if the deleted location is in them.
+    _filters.authorsFilter.remove(location.id);
 
     notifyListeners();
   }

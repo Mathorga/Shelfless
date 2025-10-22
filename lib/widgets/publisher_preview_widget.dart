@@ -83,69 +83,71 @@ class PublisherPreviewWidget extends StatelessWidget {
                     case ElementAction.delete:
                       final bool publisherIsRogue = await LibraryContentProvider.instance.isPublisherRogue(publisher);
 
-                      if (context.mounted) {
-                        if (!publisherIsRogue) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: Text(strings.genericCannotDelete),
-                              content: Text(strings.cannotDeletePublisherContent),
-                            ),
-                          );
-                          return;
-                        }
+                      if (!context.mounted) return;
+
+                      // The publisher cannot be deleted as it's referenced by at least one book.
+                      if (!publisherIsRogue) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            title: Text(strings.deletePublisherTitle),
-                            content: Text(strings.deletePublisherContent),
-                            actions: [
-                              // Cancel button.
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: ShelflessColors.onMainContentActive,
-                                ),
-                                child: Text(strings.cancel),
-                              ),
-
-                              // Confirm button.
-                              ElevatedButton(
-                                onPressed: () async {
-                                  // Prefetch handlers before async gaps.
-                                  final NavigatorState navigator = Navigator.of(context);
-                                  final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
-
-                                  // Delete the publisher.
-                                  await LibraryContentProvider.instance.deletePublisher(publisher);
-
-                                  messenger.showSnackBar(
-                                    SnackBar(
-                                      // margin: const EdgeInsets.all(Themes.spacingMedium),
-                                      duration: Themes.durationShort,
-                                      behavior: SnackBarBehavior.floating,
-                                      width: Themes.snackBarSizeSmall,
-                                      content: Text(
-                                        strings.publisherDeleted,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  );
-
-                                  // Pop back.
-                                  navigator.pop();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: ShelflessColors.errorLight,
-                                  iconColor: ShelflessColors.onMainContentActive,
-                                  foregroundColor: ShelflessColors.onMainContentActive,
-                                ),
-                                child: Text(strings.ok),
-                              ),
-                            ],
+                            title: Text(strings.genericCannotDelete),
+                            content: Text(strings.cannotDeletePublisherContent),
                           ),
                         );
+                        return;
                       }
+
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text(strings.deletePublisherTitle),
+                          content: Text(strings.deletePublisherContent),
+                          actions: [
+                            // Cancel button.
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              style: TextButton.styleFrom(
+                                foregroundColor: ShelflessColors.onMainContentActive,
+                              ),
+                              child: Text(strings.cancel),
+                            ),
+
+                            // Confirm button.
+                            ElevatedButton(
+                              onPressed: () async {
+                                // Prefetch handlers before async gaps.
+                                final NavigatorState navigator = Navigator.of(context);
+                                final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
+                                // Delete the publisher.
+                                await LibraryContentProvider.instance.deletePublisher(publisher);
+
+                                messenger.showSnackBar(
+                                  SnackBar(
+                                    // margin: const EdgeInsets.all(Themes.spacingMedium),
+                                    duration: Themes.durationShort,
+                                    behavior: SnackBarBehavior.floating,
+                                    width: Themes.snackBarSizeSmall,
+                                    content: Text(
+                                      strings.publisherDeleted,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+
+                                // Pop back.
+                                navigator.pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ShelflessColors.errorLight,
+                                iconColor: ShelflessColors.onMainContentActive,
+                                foregroundColor: ShelflessColors.onMainContentActive,
+                              ),
+                              child: Text(strings.ok),
+                            ),
+                          ],
+                        ),
+                      );
                       break;
                     default:
                       break;

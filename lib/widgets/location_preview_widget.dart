@@ -78,69 +78,71 @@ class LocationPreviewWidget extends StatelessWidget {
                     case ElementAction.delete:
                       final bool locationIsRogue = await LibraryContentProvider.instance.isLocationRogue(location);
 
-                      if (context.mounted) {
-                        if (!locationIsRogue) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: Text(strings.genericCannotDelete),
-                              content: Text(strings.cannotDeleteLocationContent),
-                            ),
-                          );
-                          return;
-                        }
+                      if (!context.mounted) return;
+
+                      // The Location cannot be deleted as it's referenced by at least one book.
+                      if (!locationIsRogue) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            title: Text(strings.deleteLocationTitle),
-                            content: Text(strings.deleteLocationContent),
-                            actions: [
-                              // Cancel button.
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                style: TextButton.styleFrom(
-                                  foregroundColor: ShelflessColors.onMainContentActive,
-                                ),
-                                child: Text(strings.cancel),
-                              ),
-
-                              // Confirm button.
-                              ElevatedButton(
-                                onPressed: () async {
-                                  // Prefetch handlers before async gaps.
-                                  final NavigatorState navigator = Navigator.of(context);
-                                  final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
-
-                                  // Delete the location.
-                                  await LibraryContentProvider.instance.deleteLocation(location);
-
-                                  messenger.showSnackBar(
-                                    SnackBar(
-                                      // margin: const EdgeInsets.all(Themes.spacingMedium),
-                                      duration: Themes.durationShort,
-                                      behavior: SnackBarBehavior.floating,
-                                      width: Themes.snackBarSizeSmall,
-                                      content: Text(
-                                        strings.locationDeleted,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  );
-
-                                  // Pop back.
-                                  navigator.pop();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: ShelflessColors.errorLight,
-                                  iconColor: ShelflessColors.onMainContentActive,
-                                  foregroundColor: ShelflessColors.onMainContentActive,
-                                ),
-                                child: Text(strings.ok),
-                              ),
-                            ],
+                            title: Text(strings.genericCannotDelete),
+                            content: Text(strings.cannotDeleteLocationContent),
                           ),
                         );
+                        return;
                       }
+
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text(strings.deleteLocationTitle),
+                          content: Text(strings.deleteLocationContent),
+                          actions: [
+                            // Cancel button.
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              style: TextButton.styleFrom(
+                                foregroundColor: ShelflessColors.onMainContentActive,
+                              ),
+                              child: Text(strings.cancel),
+                            ),
+
+                            // Confirm button.
+                            ElevatedButton(
+                              onPressed: () async {
+                                // Prefetch handlers before async gaps.
+                                final NavigatorState navigator = Navigator.of(context);
+                                final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+
+                                // Delete the location.
+                                await LibraryContentProvider.instance.deleteLocation(location);
+
+                                messenger.showSnackBar(
+                                  SnackBar(
+                                    // margin: const EdgeInsets.all(Themes.spacingMedium),
+                                    duration: Themes.durationShort,
+                                    behavior: SnackBarBehavior.floating,
+                                    width: Themes.snackBarSizeSmall,
+                                    content: Text(
+                                      strings.locationDeleted,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+
+                                // Pop back.
+                                navigator.pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ShelflessColors.errorLight,
+                                iconColor: ShelflessColors.onMainContentActive,
+                                foregroundColor: ShelflessColors.onMainContentActive,
+                              ),
+                              child: Text(strings.ok),
+                            ),
+                          ],
+                        ),
+                      );
                       break;
                     default:
                       break;
