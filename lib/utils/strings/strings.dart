@@ -13,7 +13,7 @@ enum AppLocale {
   String get label => switch (this) {
         AppLocale.en => "English",
         AppLocale.it => "Italiano",
-        AppLocale.system => "System default",
+        AppLocale.system => strings.settingAppLanguageSystem,
       };
 }
 
@@ -29,6 +29,7 @@ abstract class Strings {
   String get settingDefaultCover;
   String get settingTitlesCapitalization;
   String get settingAppLanguage;
+  String get settingAppLanguageSystem;
   String get settingDateFormat;
   String get legalsSectionTitle;
   String get privacyPolicyLabel;
