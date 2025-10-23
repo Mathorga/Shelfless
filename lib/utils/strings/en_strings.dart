@@ -131,6 +131,10 @@ class EnStrings implements Strings {
   @override String get sortByTitleDesc => "Title Z -> A";
   @override String get sortByPublishYearAsc => "Publication year 0 -> 9";
   @override String get sortByPublishYearDesc => "Publication year 9 -> 0";
+  @override String get sortByAcquisitionDateAsc => "Acquisition date 0 -> 9";
+  @override String get sortByAcquisitionDateDesc => "Acquisition date 9 -> 0";
+  @override String get sortByReadDateAsc => "Read date 0 -> 9";
+  @override String get sortByReadDateDesc => "Read date 9 -> 0";
   @override String get filtersTitle => "Filters";
   @override String get filtersApply => "Apply";
   @override String get filtersCancel => "Cancel";

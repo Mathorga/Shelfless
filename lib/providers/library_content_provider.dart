@@ -21,6 +21,10 @@ enum SortOrder {
   titleDesc,
   publishYearAsc,
   publishYearDesc,
+  dateAcquiredAsc,
+  dateAcquiredDesc,
+  dateReadAsc,
+  dateReadDesc,
   authorsCountAsc,
   authorsCountDesc,
   genresCountAsc,
@@ -35,6 +39,10 @@ enum SortOrder {
         SortOrder.titleDesc => true,
         SortOrder.publishYearAsc => true,
         SortOrder.publishYearDesc => true,
+        SortOrder.dateAcquiredAsc => true,
+        SortOrder.dateAcquiredDesc => true,
+        SortOrder.dateReadAsc => true,
+        SortOrder.dateReadDesc => true,
         _ => false,
       };
 
@@ -44,6 +52,10 @@ enum SortOrder {
       SortOrder.titleDesc => strings.sortByTitleDesc,
       SortOrder.publishYearAsc => strings.sortByPublishYearAsc,
       SortOrder.publishYearDesc => strings.sortByPublishYearDesc,
+      SortOrder.dateAcquiredAsc => strings.sortByAcquisitionDateAsc,
+      SortOrder.dateAcquiredDesc => strings.sortByAcquisitionDateDesc,
+      SortOrder.dateReadAsc => strings.sortByReadDateAsc,
+      SortOrder.dateReadDesc => strings.sortByReadDateDesc,
       _ => name,
     };
   }
@@ -477,6 +489,54 @@ class LibraryContentProvider with ChangeNotifier {
         break;
       case SortOrder.publishYearDesc:
         books.sort((Book a, Book b) => b.raw.publishYear.compareTo(a.raw.publishYear));
+        break;
+      case SortOrder.dateAcquiredAsc:
+        books.sort((Book a, Book b) {
+          // Null checks.
+          if (a.raw.dateAcquired == null && b.raw.dateAcquired == null) return 0;
+          if (a.raw.dateAcquired == null && b.raw.dateAcquired != null) return 1;
+          if (a.raw.dateAcquired != null && b.raw.dateAcquired == null) return -1;
+
+          if (a.raw.dateAcquired!.isBefore(b.raw.dateAcquired!)) return 1;
+          if (a.raw.dateAcquired!.isAfter(b.raw.dateAcquired!)) return -1;
+          return 0;
+        });
+        break;
+      case SortOrder.dateAcquiredDesc:
+        books.sort((Book a, Book b) {
+          // Null checks.
+          if (a.raw.dateAcquired == null && b.raw.dateAcquired == null) return 0;
+          if (a.raw.dateAcquired == null && b.raw.dateAcquired != null) return -1;
+          if (a.raw.dateAcquired != null && b.raw.dateAcquired == null) return 1;
+
+          if (a.raw.dateAcquired!.isBefore(b.raw.dateAcquired!)) return -1;
+          if (a.raw.dateAcquired!.isAfter(b.raw.dateAcquired!)) return 1;
+          return 0;
+        });
+        break;
+      case SortOrder.dateReadAsc:
+        books.sort((Book a, Book b) {
+          // Null checks.
+          if (a.raw.dateRead == null && b.raw.dateRead == null) return 0;
+          if (a.raw.dateRead == null && b.raw.dateRead != null) return 1;
+          if (a.raw.dateRead != null && b.raw.dateRead == null) return -1;
+
+          if (a.raw.dateRead!.isBefore(b.raw.dateRead!)) return 1;
+          if (a.raw.dateRead!.isAfter(b.raw.dateRead!)) return -1;
+          return 0;
+        });
+        break;
+      case SortOrder.dateReadDesc:
+        books.sort((Book a, Book b) {
+          // Null checks.
+          if (a.raw.dateRead == null && b.raw.dateRead == null) return 0;
+          if (a.raw.dateRead == null && b.raw.dateRead != null) return -1;
+          if (a.raw.dateRead != null && b.raw.dateRead == null) return 1;
+
+          if (a.raw.dateRead!.isBefore(b.raw.dateRead!)) return -1;
+          if (a.raw.dateRead!.isAfter(b.raw.dateRead!)) return 1;
+          return 0;
+        });
         break;
       case SortOrder.publisherAsc:
         books.sort((Book a, Book b) {

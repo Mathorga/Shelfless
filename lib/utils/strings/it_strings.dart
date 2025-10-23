@@ -133,6 +133,10 @@ class ItStrings implements Strings {
   @override String get sortByTitleDesc => "Titolo Z -> A";
   @override String get sortByPublishYearAsc => "Anno di pubblicazione 0 -> 9";
   @override String get sortByPublishYearDesc => "Anno di pubblicazione 9 -> 0";
+  @override String get sortByAcquisitionDateAsc => "Data di acquisizione 0 -> 9";
+  @override String get sortByAcquisitionDateDesc => "Data di acquisizione 9 -> 0";
+  @override String get sortByReadDateAsc => "Data di lettura 0 -> 9";
+  @override String get sortByReadDateDesc => "Data di lettura 9 -> 0";
   @override String get filtersTitle => "Filtri";
   @override String get filtersApply => "Applica";
   @override String get filtersCancel => "Annulla";

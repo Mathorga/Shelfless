@@ -147,6 +147,10 @@ abstract class Strings {
   String get sortByTitleDesc;
   String get sortByPublishYearAsc;
   String get sortByPublishYearDesc;
+  String get sortByAcquisitionDateAsc;
+  String get sortByAcquisitionDateDesc;
+  String get sortByReadDateAsc;
+  String get sortByReadDateDesc;
   String get filtersTitle;
   String get filtersApply;
   String get filtersCancel;
