@@ -35,6 +35,7 @@ class GenrePreviewWidget extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 PopupMenuButton<ElementAction>(
+                  icon: Icon(Icons.more_vert_rounded),
                   itemBuilder: (BuildContext context) {
                     return [
                       PopupMenuItem(

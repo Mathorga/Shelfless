@@ -276,6 +276,7 @@ class BookPreviewWidget extends StatelessWidget {
 
   Widget _buildPopupMenuButton(BuildContext context) {
     return PopupMenuButton<ElementAction>(
+      icon: Icon(Icons.more_vert_rounded),
       itemBuilder: (BuildContext context) {
         return _buildActions();
       },

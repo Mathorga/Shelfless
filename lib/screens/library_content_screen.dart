@@ -210,6 +210,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
 
                 // More actions.
                 PopupMenuButton<LibraryAction>(
+                  icon: Icon(Icons.more_vert_rounded),
                   itemBuilder: (BuildContext context) {
                     return [
                       // Sort order button.

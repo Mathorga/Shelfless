@@ -54,6 +54,7 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
           backgroundColor: Colors.transparent,
           actions: [
             PopupMenuButton<ElementAction>(
+              icon: Icon(Icons.more_vert_rounded),
               itemBuilder: (BuildContext context) {
                 return [
                   PopupMenuItem(

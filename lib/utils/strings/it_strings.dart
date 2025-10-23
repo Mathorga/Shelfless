@@ -69,8 +69,8 @@ class ItStrings implements Strings {
   @override String get bookMoveTo => "Sposta in";
   @override String get bookMoveToNoLibrary => "Non ci sono altre librerie, non puoi spostare libri al momento.";
   @override String get bookMoveToDescription => "Scegli una libreria in cui spostare il libro:";
-  @override String get bookMarkOutAction => "Imposta non disponibile";
-  @override String get bookMarkInAction => "Imposta disponibile";
+  @override String get bookMarkOutAction => "Disponibile";
+  @override String get bookMarkInAction => "Non disponibile";
   @override String get bookDeleteAction => "Elimina";
   @override String get bookDeleted => "Libro cancellato";
   @override String get deleteBookTitle => "Eliminazione";

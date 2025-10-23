@@ -46,6 +46,7 @@ class PublisherPreviewWidget extends StatelessWidget {
                 ],
               ),
               PopupMenuButton<ElementAction>(
+                icon: Icon(Icons.more_vert_rounded),
                 itemBuilder: (BuildContext context) {
                   return [
                     PopupMenuItem(
