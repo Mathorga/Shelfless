@@ -364,6 +364,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                           crossAxisCount: gridCrossAxisCount,
                           crossAxisSpacing: crossAxisSpacing,
                           mainAxisSpacing: mainAxisSpacing,
+                          // TODO Can do better on iPhone.
                           childAspectRatio: ((screenSize.width - (leftRightPadding + crossAxisSpacing)) / gridCrossAxisCount) / itemHeight,
                           // childAspectRatio: itemWidth / itemHeight,
                         ),

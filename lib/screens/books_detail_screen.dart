@@ -37,6 +37,17 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
     _pageController = PageController(
       initialPage: LibraryContentProvider.instance.books.indexOf(_book),
     );
+
+    // Add a custom listener on library changes.
+    LibraryContentProvider.instance.addListener(_onLibraryUpdated);
+  }
+
+  @override
+  void dispose() {
+    // Remove the custom listener in order to prevent it from being called after dispose.
+    LibraryContentProvider.instance.removeListener(_onLibraryUpdated);
+
+    super.dispose();
   }
 
   @override
@@ -197,5 +208,13 @@ class _BooksDetailScreenState extends State<BooksDetailScreen> {
         ),
       ),
     );
+  }
+
+  /// Reacts to changes in the currently displayed library.
+  void _onLibraryUpdated() {
+    // Make sure the currently displayed page does not change upon changes in library.
+    // This can happen when a book is edited in a way that changes its sorting position,
+    // potentially resulting in the page view displaying a different book when back from editing.
+    _pageController.jumpToPage(LibraryContentProvider.instance.books.indexOf(_book));
   }
 }
