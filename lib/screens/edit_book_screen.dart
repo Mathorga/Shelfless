@@ -251,6 +251,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             initialDate: _book.raw.dateAcquired ?? DateTime.now(),
                             firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
                             lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
+
+                            // Locale is read from shared prefs.
+                            locale: Locale(AppLocale.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? AppLocale.system.index].languageCode),
                           );
 
                           if (pickedDate == null) return;
@@ -285,6 +288,9 @@ class _EditBookScreenState extends State<EditBookScreen> {
                             initialDate: _book.raw.dateRead ?? DateTime.now(),
                             firstDate: DateTime(currentYear - Config.pastBookDateThreshold),
                             lastDate: DateTime(currentYear + Config.futureBookDateThreshold),
+
+                            // Locale is read from shared prefs.
+                            locale: Locale(AppLocale.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.appLocale) ?? AppLocale.system.index].languageCode),
                           );
 
                           if (pickedDate == null) return;

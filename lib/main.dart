@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shelfless/providers/libraries_provider.dart';
@@ -41,6 +42,15 @@ class Shelfless extends StatelessWidget {
     return MaterialApp(
       title: Themes.appName,
       theme: Themes.shelflessTheme,
+      localizationsDelegates: const {
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      },
+      supportedLocales: {
+        const Locale("it"),
+        const Locale("en"),
+      },
       home: Builder(
         builder: (BuildContext context) {
           // Check whether startup credits were shown or not.

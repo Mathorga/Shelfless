@@ -15,6 +15,18 @@ enum AppLocale {
         AppLocale.it => "Italiano",
         AppLocale.system => strings.settingAppLanguageSystem,
       };
+
+  String get languageCode => switch (this) {
+        AppLocale.en => "en",
+        AppLocale.it => "it",
+        AppLocale.system => Platform.localeName.split("_").first,
+      };
+
+  String get countryCode => switch (this) {
+        AppLocale.en => "US",
+        AppLocale.it => "IT",
+        AppLocale.system => "",
+      };
 }
 
 abstract class Strings {
@@ -203,5 +215,4 @@ Strings get strings {
         return EnStrings();
       }
   }
-  
 }
