@@ -20,7 +20,7 @@ class Author {
       : id = map["${DatabaseHelper.authorsTable}_id"],
         firstName = map["${DatabaseHelper.authorsTable}_first_name"],
         lastName = map["${DatabaseHelper.authorsTable}_last_name"],
-        homeLand = map["${DatabaseHelper.authorsTable}_homeland"];
+        homeLand = map["${DatabaseHelper.authorsTable}_homeland"] ?? "";
 
   Map<String, dynamic> toMap() {
     return {

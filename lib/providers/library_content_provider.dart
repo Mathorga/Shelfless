@@ -485,10 +485,10 @@ class LibraryContentProvider with ChangeNotifier {
         books.sort((Book a, Book b) => b.genreIds.length.compareTo(a.genreIds.length));
         break;
       case SortOrder.publishYearAsc:
-        books.sort((Book a, Book b) => a.raw.publishYear.compareTo(b.raw.publishYear));
+        books.sort((Book a, Book b) => (a.raw.publishYear == null || b.raw.publishYear == null) ? 0 : a.raw.publishYear!.compareTo(b.raw.publishYear!));
         break;
       case SortOrder.publishYearDesc:
-        books.sort((Book a, Book b) => b.raw.publishYear.compareTo(a.raw.publishYear));
+        books.sort((Book a, Book b) => (a.raw.publishYear == null || b.raw.publishYear == null) ? 0 : b.raw.publishYear!.compareTo(a.raw.publishYear!));
         break;
       case SortOrder.dateAcquiredAsc:
         books.sort((Book a, Book b) {

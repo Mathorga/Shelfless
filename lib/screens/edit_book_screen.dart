@@ -212,8 +212,8 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                 child: YearPicker(
                                   firstDate: DateTime(0),
                                   lastDate: DateTime(currentYear),
-                                  selectedDate: DateTime(_book.raw.publishYear),
-                                  currentDate: DateTime(_book.raw.publishYear),
+                                  selectedDate: DateTime(_book.raw.publishYear ?? currentYear),
+                                  currentDate: DateTime(_book.raw.publishYear ?? currentYear),
                                   onChanged: (DateTime value) {
                                     Navigator.of(context).pop();
                                     setState(() {

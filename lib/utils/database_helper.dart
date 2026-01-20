@@ -446,7 +446,7 @@ class DatabaseHelper {
       (Map<String, dynamic> bookRecord) {
         // String nino = utf8.decode(bookRecord["${booksTable}_cover"], allowMalformed: true);
         Map<String, dynamic> updatedRecord = {...bookRecord};
-        updatedRecord["${booksTable}_cover"] = base64Encode(updatedRecord["${booksTable}_cover"]);
+        updatedRecord["${booksTable}_cover"] = base64Encode(updatedRecord["${booksTable}_cover"] ?? []);
         return updatedRecord;
       },
     ).toList();

@@ -8,7 +8,7 @@ class RawBook {
   String title;
   Uint8List? cover;
   int? libraryId;
-  int publishYear;
+  int? publishYear;
   DateTime? dateAcquired;
   DateTime? dateRead;
   int? publisherId;
