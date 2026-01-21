@@ -124,7 +124,7 @@ class EnStrings implements Strings {
   @override String get genresSectionTitle => "Genres";
   @override String get authorsSectionTitle => "Authors";
   @override String get publishersSectionTitle => "Publishers";
-  @override String get locationsSectionTitle => "Locaitons";
+  @override String get locationsSectionTitle => "Locations";
   @override String get librarySortBy => "Sort by";
   @override String get libraryShare => "Share";
   @override String get libraryExport => "Export";
