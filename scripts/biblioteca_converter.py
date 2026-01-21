@@ -80,7 +80,7 @@ def convert_csv_to_muntlabets(input_path, output_dir):
                 if loc not in loc_map:
                     loc_id = len(locations) + 1
                     loc_map[loc] = loc_id
-                    locations.append({"locations_id": loc_id, "locations_name": loc})
+                    locations.append({"locations_id": loc_id, "locations_name": loc.replace("'", "\'")})
                 else:
                     loc_id = loc_map[loc]
                 
@@ -89,7 +89,7 @@ def convert_csv_to_muntlabets(input_path, output_dir):
                 if pub not in pub_map:
                     pub_id = len(publishers) + 1
                     pub_map[pub] = pub_id
-                    publishers.append({"publishers_id": pub_id, "publishers_name": pub})
+                    publishers.append({"publishers_id": pub_id, "publishers_name": pub.replace("'", "\'")})
                 else:
                     pub_id = pub_map[pub]
 
@@ -103,7 +103,7 @@ def convert_csv_to_muntlabets(input_path, output_dir):
 
                 books.append({
                     "books_id": book_id,
-                    "books_title": row['TITOLO'].strip(),
+                    "books_title": row['TITOLO'].strip().replace("'", "\'"),
                     "books_publish_year": year,
                     "books_publisher_id": pub_id,
                     "books_location_id": loc_id,
@@ -119,8 +119,8 @@ def convert_csv_to_muntlabets(input_path, output_dir):
                         author_map[key] = a_id
                         authors.append({
                             "authors_id": a_id, 
-                            "authors_first_name": first, 
-                            "authors_last_name": last,
+                            "authors_first_name": first.replace("'", "\'"), 
+                            "authors_last_name": last.replace("'", "\'"),
                             "authors_homeland": ""
                         })
                     else:
@@ -138,7 +138,7 @@ def convert_csv_to_muntlabets(input_path, output_dir):
                             genre_map[g] = g_id
                             genres.append({
                                 "genres_id": g_id, 
-                                "genres_name": g, 
+                                "genres_name": g.replace("'", "\'"), 
                                 "genres_color": get_random_color()
                             })
                         else:
