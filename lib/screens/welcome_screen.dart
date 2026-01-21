@@ -82,8 +82,7 @@ class WelcomeScreen extends StatelessWidget {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
-                    // TODO Move to strings!
-                    builder: (BuildContext context) => LoadingDialog(title: "Loading library"),
+                    builder: (BuildContext context) => LoadingDialog(title: strings.loadingLibrary),
                   );
 
                   try {

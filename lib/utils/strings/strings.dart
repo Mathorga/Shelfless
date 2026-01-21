@@ -56,6 +56,7 @@ abstract class Strings {
   String get books;
   String get importLib;
   String get newLib;
+  String get loadingLibrary;
   String get addLibraryTitle;
   String get deleteLibraryTitle;
   String get deleteLibraryContent;

@@ -28,6 +28,7 @@ class EnStrings implements Strings {
   @override String get books => "books";
   @override String get importLib => "Import";
   @override String get newLib => "New";
+  @override String get loadingLibrary => "Loading library";
   @override String get addLibraryTitle => "Add a library";
   @override String get deleteLibraryTitle => "Deleting Library";
   @override String get deleteLibraryContent => "Are you sure you want to delete this library?\nAll contained books will be deleted as well.\nThis is irreversible.";
