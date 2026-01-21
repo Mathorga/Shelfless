@@ -305,7 +305,7 @@ class _LibraryContentScreenState extends State<LibraryContentScreen> {
                         if (library?.raw.id == null) return;
 
                         // Extract the library.
-                        final Map<String, String> libraryStrings = await DatabaseHelper.instance.serializeLibrary(library!.raw.id!);
+                        final Map<String, String> libraryStrings = await DatabaseHelper.instance.fetchLibrary(library!.raw.id!);
 
                         // Compress the library files to a single .slz file.
                         final Archive archive = Archive();

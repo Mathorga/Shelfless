@@ -10,7 +10,7 @@ import 'package:shelfless/utils/constants.dart';
 class Utils {
   static int randomColor() => (Random().nextDouble() * 0x00FFFFFF + 0xFF000000).toInt();
 
-  static Future<Map<String, String>> deserializeLibrary() async {
+  static Future<Map<String, String>> pickLibrary() async {
     // Let the user pick the library file.
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.any,

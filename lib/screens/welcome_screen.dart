@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:shelfless/dialogs/error_dialog.dart';
+import 'package:shelfless/dialogs/loading_dialog.dart';
 import 'package:shelfless/providers/libraries_provider.dart';
 import 'package:shelfless/screens/edit_library_screen.dart';
 import 'package:shelfless/themes/themes.dart';
@@ -72,10 +73,21 @@ class WelcomeScreen extends StatelessWidget {
                   ));
                 },
                 onSecondOptionSelected: () async {
+                  // Prefetch handlers before async gaps.
+                  final NavigatorState navigator = Navigator.of(context);
+
                   final Map<String, String>? libraryStrings;
 
+                  // Show loading indicator.
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    // TODO Move to strings!
+                    builder: (BuildContext context) => LoadingDialog(title: "Loading library"),
+                  );
+
                   try {
-                    libraryStrings = await Utils.deserializeLibrary();
+                    libraryStrings = await Utils.pickLibrary();
 
                     // Only check for database version if outdated libraries are not allowed.
                     if (!Config.allowOutdatedLibraries) {
@@ -92,15 +104,18 @@ class WelcomeScreen extends StatelessWidget {
                     }
 
                     // Store read library to DB.
-                    await DatabaseHelper.instance.deserializeLibrary(libraryStrings);
+                    await DatabaseHelper.instance.storeLibrary(libraryStrings);
 
                     // Refetch libraries.
-                    LibrariesProvider.instance.fetchLibraries();
+                    await LibrariesProvider.instance.fetchLibraries();
                   } catch (e) {
                     // Let the user know something went wrong.
-                    if (context.mounted) showUnexpectedErrorDialog(context);
+                    if (context.mounted) await showUnexpectedErrorDialog(context);
 
                     return;
+                  } finally {
+                    // Pop overlay dialog.
+                    navigator.pop();
                   }
                 },
                 firstOption: Column(

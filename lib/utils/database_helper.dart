@@ -204,6 +204,14 @@ class DatabaseHelper {
     await db.execute("ALTER TABLE $booksTable DROP COLUMN ${booksTable}_date_read TEXT");
   }
 
+  Future<bool> validateDbInfo(Map<String, dynamic> dbInfo) async {
+    if (!dbInfo.containsKey("version")) return false;
+
+    if (dbInfo["version"] != await _db.getVersion()) return false;
+
+    return true;
+  }
+
   // ###############################################################################################################################################################################
   // Helper queries.
   // ###############################################################################################################################################################################
@@ -417,7 +425,7 @@ class DatabaseHelper {
   }
 
   /// Extracts all data regarding the library with the provided id.
-  Future<Map<String, String>> serializeLibrary(int libraryId) async {
+  Future<Map<String, String>> fetchLibrary(int libraryId) async {
     final Map<String, String> result = {};
 
     // Fetch database info.
@@ -515,17 +523,9 @@ class DatabaseHelper {
     return result;
   }
 
-  Future<bool> validateDbInfo(Map<String, dynamic> dbInfo) async {
-    if (!dbInfo.containsKey("version")) return false;
-
-    if (dbInfo["version"] != await _db.getVersion()) return false;
-
-    return true;
-  }
-
-  /// Desirializes a library to DB from the provided map of library strings.
+  /// Stores a library to DB from the provided map of library strings.
   /// WARNING: The provided library should already be valid as no validation is performed here.
-  Future<void> deserializeLibrary(Map<String, String> libraryStrings) async {
+  Future<void> storeLibrary(Map<String, String> libraryStrings) async {
     // Store mappings between input ids and actual ids (after insert in DB).
     Map<int, int> libraryIdsMapping = {};
     Map<int, int> bookIdsMapping = {};
@@ -534,155 +534,156 @@ class DatabaseHelper {
     Map<int, int> publisherIdsMapping = {};
     Map<int, int> locationIdsMapping = {};
 
-    _db.transaction((Transaction tnx) async {
-      // Read libraries data.
-      if (libraryStrings.containsKey(librariesTable)) {
-        final List<dynamic> elements = jsonDecode(libraryStrings[librariesTable]!);
-        for (Map<String, dynamic> inData in elements) {
-          // Remove the id before inserting in order not to clash with existing data.
-          final int inId = inData["${librariesTable}_id"];
-          inData["${librariesTable}_id"] = null;
+    _db.transaction(
+      (Transaction tnx) async {
+        // Read libraries data.
+        if (libraryStrings.containsKey(librariesTable)) {
+          final List<dynamic> elements = jsonDecode(libraryStrings[librariesTable]!);
+          for (Map<String, dynamic> inData in elements) {
+            // Remove the id before inserting in order not to clash with existing data.
+            final int inId = inData["${librariesTable}_id"];
+            inData["${librariesTable}_id"] = null;
 
-          // Check whether the element already exists or not.
-          // If there's a matching element in DB, then use that one instead.
-          List<Map<String, dynamic>> existingElements = await tnx.query(
-            librariesTable,
-            where: "${librariesTable}_name = ?",
-            whereArgs: [inData["${librariesTable}_name"]],
-            limit: 1,
-          );
-          Map<String, dynamic>? existingElement = existingElements.firstOrNull;
+            // Check whether the element already exists or not.
+            // If there's a matching element in DB, then use that one instead.
+            List<Map<String, dynamic>> existingElements = await tnx.query(
+              librariesTable,
+              where: "${librariesTable}_name = ?",
+              whereArgs: [inData["${librariesTable}_name"]],
+              limit: 1,
+            );
+            Map<String, dynamic>? existingElement = existingElements.firstOrNull;
 
-          // Map the id of the existing library or insert a new one.
-          libraryIdsMapping[inId] = existingElement != null ? existingElement["${librariesTable}_id"] : await tnx.insert(librariesTable, inData);
+            // Map the id of the existing library or insert a new one.
+            libraryIdsMapping[inId] = existingElement != null ? existingElement["${librariesTable}_id"] : await tnx.insert(librariesTable, inData);
+          }
         }
-      }
 
-      // Read authors data.
-      if (libraryStrings.containsKey(authorsTable)) {
-        final List<dynamic> elements = jsonDecode(libraryStrings[authorsTable]!);
-        for (Map<String, dynamic> inData in elements) {
-          // Remove the id before inserting in order not to clash with existing data.
-          final int inId = inData["${authorsTable}_id"];
-          inData["${authorsTable}_id"] = null;
+        // Read authors data.
+        if (libraryStrings.containsKey(authorsTable)) {
+          final List<dynamic> elements = jsonDecode(libraryStrings[authorsTable]!);
+          for (Map<String, dynamic> inData in elements) {
+            // Remove the id before inserting in order not to clash with existing data.
+            final int inId = inData["${authorsTable}_id"];
+            inData["${authorsTable}_id"] = null;
 
-          // Check whether the element already exists or not.
-          // If there's a matching element in DB, then use that one instead.
-          List<Map<String, dynamic>> existingElements = await tnx.query(
-            authorsTable,
-            where: "${authorsTable}_first_name = ? AND ${authorsTable}_last_name = ? AND ${authorsTable}_homeland = ?",
-            whereArgs: [
-              inData["${authorsTable}_first_name"],
-              inData["${authorsTable}_last_name"],
-              inData["${authorsTable}_homeland"],
-            ],
-            limit: 1,
-          );
-          Map<String, dynamic>? existingElement = existingElements.firstOrNull;
+            // Check whether the element already exists or not.
+            // If there's a matching element in DB, then use that one instead.
+            List<Map<String, dynamic>> existingElements = await tnx.query(
+              authorsTable,
+              where: "${authorsTable}_first_name = ? AND ${authorsTable}_last_name = ? AND ${authorsTable}_homeland = ?",
+              whereArgs: [
+                inData["${authorsTable}_first_name"],
+                inData["${authorsTable}_last_name"],
+                inData["${authorsTable}_homeland"],
+              ],
+              limit: 1,
+            );
+            Map<String, dynamic>? existingElement = existingElements.firstOrNull;
 
-          // Map the id of the existing library or insert a new one.
-          authorIdsMapping[inId] = existingElement != null ? existingElement["${authorsTable}_id"] : await tnx.insert(authorsTable, inData);
+            // Map the id of the existing library or insert a new one.
+            authorIdsMapping[inId] = existingElement != null ? existingElement["${authorsTable}_id"] : await tnx.insert(authorsTable, inData);
+          }
         }
-      }
 
-      // Read genres data.
-      if (libraryStrings.containsKey(genresTable)) {
-        final List<dynamic> elements = jsonDecode(libraryStrings[genresTable]!);
-        for (Map<String, dynamic> inData in elements) {
-          // Remove the id before inserting in order not to clash with existing data.
-          final int inId = inData["${genresTable}_id"];
-          inData["${genresTable}_id"] = null;
+        // Read genres data.
+        if (libraryStrings.containsKey(genresTable)) {
+          final List<dynamic> elements = jsonDecode(libraryStrings[genresTable]!);
+          for (Map<String, dynamic> inData in elements) {
+            // Remove the id before inserting in order not to clash with existing data.
+            final int inId = inData["${genresTable}_id"];
+            inData["${genresTable}_id"] = null;
 
-          // Check whether the element already exists or not.
-          // If there's a matching element in DB, then use that one instead.
-          List<Map<String, dynamic>> existingElements = await tnx.query(
-            genresTable,
-            where: "${genresTable}_name = ? AND ${genresTable}_color = ?",
-            whereArgs: [
-              inData["${genresTable}_name"],
-              inData["${genresTable}_color"],
-            ],
-            limit: 1,
-          );
-          Map<String, dynamic>? existingElement = existingElements.firstOrNull;
+            // Check whether the element already exists or not.
+            // If there's a matching element in DB, then use that one instead.
+            List<Map<String, dynamic>> existingElements = await tnx.query(
+              genresTable,
+              where: "${genresTable}_name = ? AND ${genresTable}_color = ?",
+              whereArgs: [
+                inData["${genresTable}_name"],
+                inData["${genresTable}_color"],
+              ],
+              limit: 1,
+            );
+            Map<String, dynamic>? existingElement = existingElements.firstOrNull;
 
-          // Map the id of the existing library or insert a new one.
-          genreIdsMapping[inId] = existingElement != null ? existingElement["${genresTable}_id"] : await tnx.insert(genresTable, inData);
+            // Map the id of the existing library or insert a new one.
+            genreIdsMapping[inId] = existingElement != null ? existingElement["${genresTable}_id"] : await tnx.insert(genresTable, inData);
+          }
         }
-      }
 
-      // Read publishers data.
-      if (libraryStrings.containsKey(publishersTable)) {
-        final List<dynamic> elements = jsonDecode(libraryStrings[publishersTable]!);
-        for (Map<String, dynamic> inData in elements) {
-          // Remove the id before inserting in order not to clash with existing data.
-          final int inId = inData["${publishersTable}_id"];
-          inData["${publishersTable}_id"] = null;
+        // Read publishers data.
+        if (libraryStrings.containsKey(publishersTable)) {
+          final List<dynamic> elements = jsonDecode(libraryStrings[publishersTable]!);
+          for (Map<String, dynamic> inData in elements) {
+            // Remove the id before inserting in order not to clash with existing data.
+            final int inId = inData["${publishersTable}_id"];
+            inData["${publishersTable}_id"] = null;
 
-          // Check whether the element already exists or not.
-          // If there's a matching element in DB, then use that one instead.
-          List<Map<String, dynamic>> existingElements = await tnx.query(
-            publishersTable,
-            where: "${publishersTable}_name = ? AND ${publishersTable}_website ${inData["${publishersTable}_id"] == null ? "IS" : "="} ?",
-            whereArgs: [
-              inData["${publishersTable}_name"],
-              inData["${publishersTable}_website"] ?? "NULL",
-            ],
-            limit: 1,
-          );
-          Map<String, dynamic>? existingElement = existingElements.firstOrNull;
+            // Check whether the element already exists or not.
+            // If there's a matching element in DB, then use that one instead.
+            List<Map<String, dynamic>> existingElements = await tnx.query(
+              publishersTable,
+              where: "${publishersTable}_name = ? AND ${publishersTable}_website ${inData["${publishersTable}_id"] == null ? "IS" : "="} ?",
+              whereArgs: [
+                inData["${publishersTable}_name"],
+                inData["${publishersTable}_website"] ?? "NULL",
+              ],
+              limit: 1,
+            );
+            Map<String, dynamic>? existingElement = existingElements.firstOrNull;
 
-          // Map the id of the existing library or insert a new one.
-          publisherIdsMapping[inId] = existingElement != null ? existingElement["${publishersTable}_id"] : await tnx.insert(publishersTable, inData);
+            // Map the id of the existing library or insert a new one.
+            publisherIdsMapping[inId] = existingElement != null ? existingElement["${publishersTable}_id"] : await tnx.insert(publishersTable, inData);
+          }
         }
-      }
 
-      // Read locations data.
-      if (libraryStrings.containsKey(locationsTable)) {
-        final List<dynamic> elements = jsonDecode(libraryStrings[locationsTable]!);
-        for (Map<String, dynamic> inData in elements) {
-          // Remove the id before inserting in order not to clash with existing data.
-          final int inId = inData["${locationsTable}_id"];
-          inData["${locationsTable}_id"] = null;
+        // Read locations data.
+        if (libraryStrings.containsKey(locationsTable)) {
+          final List<dynamic> elements = jsonDecode(libraryStrings[locationsTable]!);
+          for (Map<String, dynamic> inData in elements) {
+            // Remove the id before inserting in order not to clash with existing data.
+            final int inId = inData["${locationsTable}_id"];
+            inData["${locationsTable}_id"] = null;
 
-          // Check whether the element already exists or not.
-          // If there's a matching element in DB, then use that one instead.
-          List<Map<String, dynamic>> existingElements = await tnx.query(
-            locationsTable,
-            where: "${locationsTable}_name = ?",
-            whereArgs: [
-              inData["${locationsTable}_name"],
-            ],
-            limit: 1,
-          );
-          Map<String, dynamic>? existingElement = existingElements.firstOrNull;
+            // Check whether the element already exists or not.
+            // If there's a matching element in DB, then use that one instead.
+            List<Map<String, dynamic>> existingElements = await tnx.query(
+              locationsTable,
+              where: "${locationsTable}_name = ?",
+              whereArgs: [
+                inData["${locationsTable}_name"],
+              ],
+              limit: 1,
+            );
+            Map<String, dynamic>? existingElement = existingElements.firstOrNull;
 
-          // Map the id of the existing library or insert a new one.
-          locationIdsMapping[inId] = existingElement != null ? existingElement["${locationsTable}_id"] : await tnx.insert(locationsTable, inData);
+            // Map the id of the existing library or insert a new one.
+            locationIdsMapping[inId] = existingElement != null ? existingElement["${locationsTable}_id"] : await tnx.insert(locationsTable, inData);
+          }
         }
-      }
 
-      // Read books data.
-      if (libraryStrings.containsKey(booksTable)) {
-        final List<dynamic> elements = jsonDecode(libraryStrings[booksTable]!);
-        for (Map<String, dynamic> inData in elements) {
-          // Remove the id before inserting in order not to clash with existing data.
-          final int inId = inData["${booksTable}_id"];
-          inData["${booksTable}_id"] = null;
+        // Read books data.
+        if (libraryStrings.containsKey(booksTable)) {
+          final List<dynamic> elements = jsonDecode(libraryStrings[booksTable]!);
+          for (Map<String, dynamic> inData in elements) {
+            // Remove the id before inserting in order not to clash with existing data.
+            final int inId = inData["${booksTable}_id"];
+            inData["${booksTable}_id"] = null;
 
-          // Update joins according to mappings.
-          inData["${booksTable}_library_id"] = libraryIdsMapping[inData["${booksTable}_library_id"]];
-          if (inData["${booksTable}_publisher_id"] != null) inData["${booksTable}_publisher_id"] = publisherIdsMapping[inData["${booksTable}_publisher_id"]];
-          if (inData["${booksTable}_location_id"] != null) inData["${booksTable}_location_id"] = locationIdsMapping[inData["${booksTable}_location_id"]];
+            // Update joins according to mappings.
+            inData["${booksTable}_library_id"] = libraryIdsMapping[inData["${booksTable}_library_id"]];
+            if (inData["${booksTable}_publisher_id"] != null) inData["${booksTable}_publisher_id"] = publisherIdsMapping[inData["${booksTable}_publisher_id"]];
+            if (inData["${booksTable}_location_id"] != null) inData["${booksTable}_location_id"] = locationIdsMapping[inData["${booksTable}_location_id"]];
 
-          // Encode cover data.
-          if (inData["${booksTable}_cover"] != null) inData["${booksTable}_cover"] = base64Decode(inData["${booksTable}_cover"]);
+            // Encode cover data.
+            if (inData["${booksTable}_cover"] != null) inData["${booksTable}_cover"] = base64Decode(inData["${booksTable}_cover"]);
 
-          // Check whether the element already exists or not.
-          // If there's a matching element in DB, then use that one instead.
-          List<Map<String, dynamic>> existingElements = await tnx.query(
-            booksTable,
-            where: """
+            // Check whether the element already exists or not.
+            // If there's a matching element in DB, then use that one instead.
+            List<Map<String, dynamic>> existingElements = await tnx.query(
+              booksTable,
+              where: """
                 ${booksTable}_title = ? AND
                 ${booksTable}_library_id = ? AND
                 ${booksTable}_publish_year = ? AND
@@ -691,80 +692,81 @@ class DatabaseHelper {
                 ${booksTable}_edition = ? AND
                 ${booksTable}_notes = ?
                 """,
-            whereArgs: [
-              inData["${booksTable}_title"],
-              inData["${booksTable}_library_id"],
-              inData["${booksTable}_publish_year"],
-              if (inData["${booksTable}_publisher_id"] != null) inData["${booksTable}_publisher_id"],
-              if (inData["${booksTable}_location_id"] != null) inData["${booksTable}_location_id"],
-              inData["${booksTable}_edition"],
-              inData["${booksTable}_notes"],
-            ],
-            limit: 1,
-          );
-          Map<String, dynamic>? existingElement = existingElements.firstOrNull;
+              whereArgs: [
+                inData["${booksTable}_title"],
+                inData["${booksTable}_library_id"],
+                inData["${booksTable}_publish_year"],
+                if (inData["${booksTable}_publisher_id"] != null) inData["${booksTable}_publisher_id"],
+                if (inData["${booksTable}_location_id"] != null) inData["${booksTable}_location_id"],
+                inData["${booksTable}_edition"],
+                inData["${booksTable}_notes"],
+              ],
+              limit: 1,
+            );
+            Map<String, dynamic>? existingElement = existingElements.firstOrNull;
 
-          // Map the id of the existing library or insert a new one.
-          bookIdsMapping[inId] = existingElement != null ? existingElement["${booksTable}_id"] : await tnx.insert(booksTable, inData);
-        }
-      }
-
-      // Read book/author rel data.
-      if (libraryStrings.containsKey(bookAuthorRelTable)) {
-        final List<dynamic> elements = jsonDecode(libraryStrings[bookAuthorRelTable]!);
-        for (Map<String, dynamic> inData in elements) {
-          // Update joins according to mappings.
-          inData["${bookAuthorRelTable}_book_id"] = bookIdsMapping[inData["${bookAuthorRelTable}_book_id"]];
-          inData["${bookAuthorRelTable}_author_id"] = authorIdsMapping[inData["${bookAuthorRelTable}_author_id"]];
-
-          // Check whether the element already exists or not.
-          // If there's a matching element in DB, then use that one instead.
-          List<Map<String, dynamic>> existingElements = await tnx.query(
-            bookAuthorRelTable,
-            where: "${bookAuthorRelTable}_book_id = ? AND ${bookAuthorRelTable}_author_id = ?",
-            whereArgs: [
-              inData["${bookAuthorRelTable}_book_id"],
-              inData["${bookAuthorRelTable}_author_id"],
-            ],
-            limit: 1,
-          );
-          Map<String, dynamic>? existingElement = existingElements.firstOrNull;
-
-          if (existingElement == null) {
-            // Store the element in DB without mapping its id.
-            await tnx.insert(bookAuthorRelTable, inData);
+            // Map the id of the existing library or insert a new one.
+            bookIdsMapping[inId] = existingElement != null ? existingElement["${booksTable}_id"] : await tnx.insert(booksTable, inData);
           }
         }
-      }
 
-      // Read book/genre rel data.
-      if (libraryStrings.containsKey(bookGenreRelTable)) {
-        final List<dynamic> elements = jsonDecode(libraryStrings[bookGenreRelTable]!);
-        for (Map<String, dynamic> inData in elements) {
-          // Update joins according to mappings.
-          inData["${bookGenreRelTable}_book_id"] = bookIdsMapping[inData["${bookGenreRelTable}_book_id"]];
-          inData["${bookGenreRelTable}_genre_id"] = genreIdsMapping[inData["${bookGenreRelTable}_genre_id"]];
+        // Read book/author rel data.
+        if (libraryStrings.containsKey(bookAuthorRelTable)) {
+          final List<dynamic> elements = jsonDecode(libraryStrings[bookAuthorRelTable]!);
+          for (Map<String, dynamic> inData in elements) {
+            // Update joins according to mappings.
+            inData["${bookAuthorRelTable}_book_id"] = bookIdsMapping[inData["${bookAuthorRelTable}_book_id"]];
+            inData["${bookAuthorRelTable}_author_id"] = authorIdsMapping[inData["${bookAuthorRelTable}_author_id"]];
 
-          // Check whether the element already exists or not.
-          // If there's a matching element in DB, then use that one instead.
-          List<Map<String, dynamic>> existingElements = await tnx.query(
-            bookGenreRelTable,
-            where: "${bookGenreRelTable}_book_id = ? AND ${bookGenreRelTable}_genre_id = ?",
-            whereArgs: [
-              inData["${bookGenreRelTable}_book_id"],
-              inData["${bookGenreRelTable}_genre_id"],
-            ],
-            limit: 1,
-          );
-          Map<String, dynamic>? existingElement = existingElements.firstOrNull;
+            // Check whether the element already exists or not.
+            // If there's a matching element in DB, then use that one instead.
+            List<Map<String, dynamic>> existingElements = await tnx.query(
+              bookAuthorRelTable,
+              where: "${bookAuthorRelTable}_book_id = ? AND ${bookAuthorRelTable}_author_id = ?",
+              whereArgs: [
+                inData["${bookAuthorRelTable}_book_id"],
+                inData["${bookAuthorRelTable}_author_id"],
+              ],
+              limit: 1,
+            );
+            Map<String, dynamic>? existingElement = existingElements.firstOrNull;
 
-          if (existingElement == null) {
-            // Store the element in DB without mapping its id.
-            await tnx.insert(bookGenreRelTable, inData);
+            if (existingElement == null) {
+              // Store the element in DB without mapping its id.
+              await tnx.insert(bookAuthorRelTable, inData);
+            }
           }
         }
-      }
-    });
+
+        // Read book/genre rel data.
+        if (libraryStrings.containsKey(bookGenreRelTable)) {
+          final List<dynamic> elements = jsonDecode(libraryStrings[bookGenreRelTable]!);
+          for (Map<String, dynamic> inData in elements) {
+            // Update joins according to mappings.
+            inData["${bookGenreRelTable}_book_id"] = bookIdsMapping[inData["${bookGenreRelTable}_book_id"]];
+            inData["${bookGenreRelTable}_genre_id"] = genreIdsMapping[inData["${bookGenreRelTable}_genre_id"]];
+
+            // Check whether the element already exists or not.
+            // If there's a matching element in DB, then use that one instead.
+            List<Map<String, dynamic>> existingElements = await tnx.query(
+              bookGenreRelTable,
+              where: "${bookGenreRelTable}_book_id = ? AND ${bookGenreRelTable}_genre_id = ?",
+              whereArgs: [
+                inData["${bookGenreRelTable}_book_id"],
+                inData["${bookGenreRelTable}_genre_id"],
+              ],
+              limit: 1,
+            );
+            Map<String, dynamic>? existingElement = existingElements.firstOrNull;
+
+            if (existingElement == null) {
+              // Store the element in DB without mapping its id.
+              await tnx.insert(bookGenreRelTable, inData);
+            }
+          }
+        }
+      },
+    );
   }
 
   // ###############################################################################################################################################################################
