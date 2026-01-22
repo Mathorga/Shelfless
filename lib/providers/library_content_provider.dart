@@ -518,8 +518,8 @@ class LibraryContentProvider with ChangeNotifier {
         books.sort((Book a, Book b) {
           // Null checks.
           if (a.raw.dateRead == null && b.raw.dateRead == null) return 0;
-          if (a.raw.dateRead == null && b.raw.dateRead != null) return 1;
-          if (a.raw.dateRead != null && b.raw.dateRead == null) return -1;
+          if (a.raw.dateRead == null && b.raw.dateRead != null) return -1;
+          if (a.raw.dateRead != null && b.raw.dateRead == null) return 1;
 
           if (a.raw.dateRead!.isBefore(b.raw.dateRead!)) return 1;
           if (a.raw.dateRead!.isAfter(b.raw.dateRead!)) return -1;
@@ -530,8 +530,8 @@ class LibraryContentProvider with ChangeNotifier {
         books.sort((Book a, Book b) {
           // Null checks.
           if (a.raw.dateRead == null && b.raw.dateRead == null) return 0;
-          if (a.raw.dateRead == null && b.raw.dateRead != null) return -1;
-          if (a.raw.dateRead != null && b.raw.dateRead == null) return 1;
+          if (a.raw.dateRead == null && b.raw.dateRead != null) return 1;
+          if (a.raw.dateRead != null && b.raw.dateRead == null) return -1;
 
           if (a.raw.dateRead!.isBefore(b.raw.dateRead!)) return -1;
           if (a.raw.dateRead!.isAfter(b.raw.dateRead!)) return 1;
