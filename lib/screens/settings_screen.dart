@@ -18,7 +18,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/utils/text_capitalization_extension.dart';
 import 'package:shelfless/widgets/colored_border_widget.dart';
 
-const TextStyle settingValueTextStyle = TextStyle(
+TextStyle settingValueTextStyle = TextStyle(
   color: ShelflessColors.onMainContentInactive,
   fontSize: Themes.fontSizeSmall,
 );

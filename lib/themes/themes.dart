@@ -115,8 +115,8 @@ class Themes {
       secondary: ShelflessColors.secondary,
       surface: ShelflessColors.backgroundMedium,
     ),
-    appBarTheme: const AppBarTheme(
-      color: ShelflessColors.backgroundMedium,
+    appBarTheme: AppBarTheme(
+      backgroundColor: ShelflessColors.backgroundMedium,
       elevation: 0.0,
       scrolledUnderElevation: 0.0,
       centerTitle: true,
