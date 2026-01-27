@@ -77,9 +77,8 @@ class BookPreviewWidget extends StatelessWidget {
                   child: Row(
                     spacing: Themes.spacingMedium,
                     children: [
-                      if (book.raw.out) ...[
-                        Icon(Icons.do_disturb_alt_rounded),
-                      ],
+                      if (book.raw.out) Icon(Icons.do_disturb_alt_rounded),
+                      if (book.raw.dateRead != null) Icon(Icons.done_all_rounded),
                       Expanded(
                         child: Text(
                           book.raw.title,
@@ -96,28 +95,8 @@ class BookPreviewWidget extends StatelessWidget {
           ),
 
         // Compact grid view.
-        ViewMode.compactGrid => Stack(
-            children: [
-              BookThumbnailWidget(
-                book: book,
-                overlay: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black.withValues(alpha: Themes.foregroundHighlightOpacity),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                alignment: Alignment.topRight,
-                child: _buildPopupMenuButton(context),
-              )
-            ],
+        ViewMode.compactGrid => BookThumbnailWidget(
+            book: book,
           ),
 
         // Extended grid view.

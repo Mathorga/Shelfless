@@ -57,14 +57,22 @@ class BookThumbnailWidget extends StatelessWidget {
             child: BookCoverImageWidget(book: book),
           ),
         ),
-        if (book.raw.out)
-          Positioned(
-            bottom: Themes.spacingSmall,
-            right: Themes.spacingSmall,
-            child: Icon(
-              Icons.do_disturb_alt_rounded,
-            ),
+        Positioned(
+          bottom: Themes.spacingSmall,
+          right: Themes.spacingSmall,
+          child: Column(
+            children: [
+              if (book.raw.dateRead != null)
+                Icon(
+                  Icons.done_all_rounded,
+                ),
+              if (book.raw.out)
+                Icon(
+                  Icons.do_disturb_alt_rounded,
+                ),
+            ],
           ),
+        ),
       ],
     );
   }
