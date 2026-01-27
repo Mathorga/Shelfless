@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:collection/collection.dart';
-import 'package:shelfless/screens/dedication_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yaml/yaml.dart';
 
 import 'package:shelfless/dialogs/settings/date_format_setting_dialog.dart';
 import 'package:shelfless/screens/privacy_policy_screen.dart';
+import 'package:shelfless/screens/dedication_screen.dart';
 import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/assets.dart';
@@ -317,8 +317,27 @@ class _DateFormatSettingState extends State<_DateFormatSetting> {
   }
 }
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    SharedPrefsHelper.instance.addListener(_onSharedPrefsUpdated);
+  }
+
+  @override
+  void dispose() {
+    SharedPrefsHelper.instance.removeListener(_onSharedPrefsUpdated);
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -512,5 +531,9 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onSharedPrefsUpdated() {
+    setState(() {});
   }
 }
