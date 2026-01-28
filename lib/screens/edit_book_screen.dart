@@ -21,6 +21,7 @@ import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/authors_selection_widget.dart';
 import 'package:shelfless/widgets/book_cover_image_widget.dart';
 import 'package:shelfless/dialogs/double_choice_dialog.dart';
+import 'package:shelfless/widgets/delete_button.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/genres_selection_widget.dart';
 import 'package:shelfless/widgets/slippery_text_form_field_widget.dart';
@@ -264,12 +265,28 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         },
                         child: SizedBox(
                           width: double.infinity,
-                          child: Card(
-                            color: ShelflessColors.mainContentActive,
-                            child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingMedium),
-                              child: Center(child: Text(_book.raw.dateAcquired != null ? DateFormat.yMd().format(_book.raw.dateAcquired!) : "-")),
-                            ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  color: ShelflessColors.mainContentActive,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(Themes.spacingMedium),
+                                    child: Center(
+                                      child: Text(_book.raw.dateAcquired != null ? DateFormat.yMd().format(_book.raw.dateAcquired!) : "-"),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (_book.raw.dateAcquired != null)
+                                DeleteButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _book.raw.dateAcquired = null;
+                                    });
+                                  },
+                                ),
+                            ],
                           ),
                         ),
                       ),
@@ -301,12 +318,26 @@ class _EditBookScreenState extends State<EditBookScreen> {
                         },
                         child: SizedBox(
                           width: double.infinity,
-                          child: Card(
-                            color: ShelflessColors.mainContentActive,
-                            child: Padding(
-                              padding: const EdgeInsets.all(Themes.spacingMedium),
-                              child: Center(child: Text(_book.raw.dateRead != null ? DateFormat.yMd().format(_book.raw.dateRead!) : "-")),
-                            ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Card(
+                                  color: ShelflessColors.mainContentActive,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(Themes.spacingMedium),
+                                    child: Center(child: Text(_book.raw.dateRead != null ? DateFormat.yMd().format(_book.raw.dateRead!) : "-")),
+                                  ),
+                                ),
+                              ),
+                              if (_book.raw.dateRead != null)
+                                DeleteButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _book.raw.dateRead = null;
+                                    });
+                                  },
+                                ),
+                            ],
                           ),
                         ),
                       ),

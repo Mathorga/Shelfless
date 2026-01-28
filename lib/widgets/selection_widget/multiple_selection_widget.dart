@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:shelfless/themes/shelfless_colors.dart';
 import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
+import 'package:shelfless/widgets/delete_button.dart';
 import 'package:shelfless/widgets/dialog_button_widget.dart';
 import 'package:shelfless/widgets/edit_section_widget.dart';
 import 'package:shelfless/widgets/search_list_widget.dart';
@@ -25,7 +25,7 @@ class MultipleSelectionWidget extends StatelessWidget {
     this.title,
     required this.selectionController,
     this.searchScrollController,
-    this.initialSelection = const{},
+    this.initialSelection = const {},
     this.onInsertNewRequested,
     required this.listItemsFilter,
     required this.listItemBuilder,
@@ -89,15 +89,11 @@ class MultipleSelectionWidget extends StatelessWidget {
         Expanded(
           child: listItemBuilder(id),
         ),
-        TextButton(
+        DeleteButton(
           onPressed: () {
             selectionController.removeFromSelection({id});
             onItemUnselected?.call(id);
           },
-          child: Icon(
-            Icons.close_rounded,
-            color: ShelflessColors.errorLight,
-          ),
         ),
       ],
     );
