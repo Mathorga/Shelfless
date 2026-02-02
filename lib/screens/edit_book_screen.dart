@@ -83,11 +83,14 @@ class _EditBookScreenState extends State<EditBookScreen> {
   @override
   Widget build(BuildContext context) {
     // Fetch providers.
+    // TODO Move to themes?
     const double dialogWidth = 300.0;
 
     final int currentYear = DateTime.now().year;
 
     final EdgeInsets devicePadding = MediaQuery.paddingOf(context);
+
+    final String? dateFormat = SharedPrefsHelper.instance.data.getString(SharedPrefsKeys.dateFormat);
 
     return Scaffold(
       appBar: AppBar(
@@ -95,7 +98,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: Themes.scrollPhysics,
           child: Padding(
             padding: const EdgeInsets.all(Themes.spacingMedium),
             child: SizedBox(
@@ -273,7 +276,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(Themes.spacingMedium),
                                     child: Center(
-                                      child: Text(_book.raw.dateAcquired != null ? DateFormat.yMd().format(_book.raw.dateAcquired!) : "-"),
+                                      child: Text(_book.raw.dateAcquired != null ? DateFormat(dateFormat).format(_book.raw.dateAcquired!) : "-"),
                                     ),
                                   ),
                                 ),
@@ -325,7 +328,7 @@ class _EditBookScreenState extends State<EditBookScreen> {
                                   color: ShelflessColors.mainContentActive,
                                   child: Padding(
                                     padding: const EdgeInsets.all(Themes.spacingMedium),
-                                    child: Center(child: Text(_book.raw.dateRead != null ? DateFormat.yMd().format(_book.raw.dateRead!) : "-")),
+                                    child: Center(child: Text(_book.raw.dateRead != null ? DateFormat(dateFormat).format(_book.raw.dateRead!) : "-")),
                                   ),
                                 ),
                               ),

@@ -50,19 +50,30 @@ class _EditLibraryScreenState extends State<EditLibraryScreen> {
             title: Text("${_inserting ? strings.insertTitle : strings.editTitle} ${strings.libraryTitle}"),
           ),
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(Themes.spacingMedium),
-              child: EditSectionWidget(
-                spacing: Themes.spacingMedium,
-                children: [
-                  Text(strings.libraryInfoName),
-                  SlipperyTextFormFieldWidget(
-                    initialValue: _library?.raw.name,
-                    textCapitalization:
-                        TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
-                    onChanged: (String value) => _library?.raw.name = value,
+            child: SingleChildScrollView(
+              physics: Themes.scrollPhysics,
+              child: Padding(
+                padding: const EdgeInsets.all(Themes.spacingMedium),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      EditSectionWidget(
+                        spacing: Themes.spacingMedium,
+                        children: [
+                          Text(strings.libraryInfoName),
+                          SlipperyTextFormFieldWidget(
+                            initialValue: _library?.raw.name,
+                            textCapitalization:
+                                TextCapitalization.values[SharedPrefsHelper.instance.data.getInt(SharedPrefsKeys.titlesCapitalization) ?? Config.defaultTitlesCapitalization.index],
+                            onChanged: (String value) => _library?.raw.name = value,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

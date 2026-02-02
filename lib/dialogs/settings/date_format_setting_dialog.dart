@@ -24,6 +24,7 @@ class DateFormatDialogContentWidget extends StatefulWidget {
 
 class __DateFormatStateDialogContentWidget extends State<DateFormatDialogContentWidget> {
   late final TextEditingController _controller = TextEditingController(text: widget.startingValue ?? "");
+  late final ValueNotifier<String> _stringFormat = ValueNotifier<String>(widget.startingValue ?? "");
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +35,16 @@ class __DateFormatStateDialogContentWidget extends State<DateFormatDialogContent
         TextFormField(
           controller: _controller,
           onChanged: (String value) {
-            _controller.text = value;
+            _stringFormat.value = value;
 
             widget.onChanged?.call(value);
           },
         ),
-        Text("${strings.example}: ${DateFormat(_controller.text).format(DateTime.now())}"),
+        ValueListenableBuilder(
+            valueListenable: _stringFormat,
+            builder: (BuildContext context, String value, Widget? child) {
+              return Text("${strings.example}: ${DateFormat(_controller.text).format(DateTime.now())}");
+            }),
       ],
     );
   }
@@ -71,9 +76,8 @@ class _DateFormatSettingDialogState extends State<DateFormatSettingDialog> {
         child: DateFormatDialogContentWidget(
           startingValue: _value,
           onChanged: (String value) {
-            setState(() {
-              _value = value;
-            });
+            // Store the obtained value.
+            _value = value;
           },
         ),
       ),

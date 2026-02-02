@@ -4,6 +4,7 @@ import 'package:shelfless/models/raw_genre.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/models/library_filters.dart';
 import 'package:shelfless/screens/edit_genre_screen.dart';
+import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/genre_preview_widget.dart';
 
@@ -50,7 +51,7 @@ class _GenresOverviewScreenState extends State<GenresOverviewScreen> {
                 child: Text(strings.noGenresFound),
               )
             : ListView(
-                physics: const BouncingScrollPhysics(),
+                physics: Themes.scrollPhysics,
                 padding: const EdgeInsets.all(12.0),
                 children: [
                   ...List.generate(

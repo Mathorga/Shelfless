@@ -4,6 +4,7 @@ import 'package:shelfless/models/author.dart';
 import 'package:shelfless/providers/library_content_provider.dart';
 import 'package:shelfless/models/library_filters.dart';
 import 'package:shelfless/screens/edit_author_screen.dart';
+import 'package:shelfless/themes/themes.dart';
 import 'package:shelfless/utils/constants.dart';
 import 'package:shelfless/utils/strings/strings.dart';
 import 'package:shelfless/widgets/author_preview_widget.dart';
@@ -42,7 +43,7 @@ class _AuthorsOverviewScreenState extends State<AuthorsOverviewScreen> {
                 child: Text(strings.noAuthorsFound),
               )
             : ListView(
-                physics: const BouncingScrollPhysics(),
+                physics: Themes.scrollPhysics,
                 padding: const EdgeInsets.all(12.0),
                 children: [
                   ...List.generate(
